@@ -1,0 +1,8 @@
+dependencies:
+  - name: d3
+    version: 3.5.5
+    src: htmlwidgets/lib
+    script:
+      - d3-3.5.5.min.js
+    stylesheet: scatterD3.css
+
