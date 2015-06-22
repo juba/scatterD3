@@ -3,7 +3,8 @@
     // File-global variables
     var data;
     var margin, legend_width, width, height, total_width, total_height;
-    var xlab, ylab, col_lab, symbol_lab, labels_size, fixed, nolegend;
+    var xlab, ylab, col_lab, symbol_lab, labels_size, fixed;
+    var color_legend, symbol_legend, has_legend;
 
     // First setup : initialization    
     function setup(obj, init) {
@@ -18,7 +19,9 @@
 	// options
 	labels_size = obj.settings.labels_size;
 	fixed = obj.settings.fixed;
-	nolegend = (data[0].col_var === undefined) && (data[0].symbol_var === undefined);
+	color_legend = !(data[0].col_var === undefined);
+	symbol_legend = !(data[0].symbol_var === undefined); 
+	has_legend = color_legend || symbol_legend;
 	xlab = obj.settings.xlab;
 	ylab = obj.settings.ylab;
 	col_lab = obj.settings.col_lab;
@@ -33,8 +36,8 @@
     function setup_size(init_width, init_height) {
 
 	margin = {top: 0, right: 10, bottom: 20, left: 20};
-	legend_width = 150;
-	if (nolegend) legend_width = 0;
+	legend_width = 0;
+	if (has_legend) legend_width = 150;
 
 	width = init_width - legend_width;
 	height = init_height;
@@ -54,7 +57,7 @@
     // Main drawing function
     function draw(el) {
 
-	var min_x, min_y, max_x, max_y, x, y, color, xAxis, yAxis, zoom;
+	var min_x, min_y, max_x, max_y, x, y, color_scale, symbol_scale, xAxis, yAxis, zoom;
 	var svg, tooltip, tooltip_text;
 
 	// Drawing init
@@ -77,7 +80,11 @@
 	    // scales and zomm
 	    x = d3.scale.linear().range([0, width]);
 	    y = d3.scale.linear().range([height, 0]);
-	    color = d3.scale.category10();
+
+	    color_scale = d3.scale.category10();
+
+	    symbol_scale = d3.scale.ordinal().range(d3.range(d3.svg.symbolTypes.length));
+	    
 	    zoom = d3.behavior.zoom()
 		.x(x)
 		.y(y)
@@ -188,45 +195,95 @@
 	}
 
 	// Add legend
-	function add_legend() {
+	function add_color_legend() {
+
+	    var color_legend_y = 90
+	    
 	    root.append("g")
     		.append("text")
     		.attr("x", total_width - margin.right - legend_width)
-    		.attr("y", 90)
+    		.attr("y", color_legend_y)
     		.style("text-anchor", "beginning")
     		.style("fill", "#000")
     		.style("font-weight", "bold")
     		.text(col_lab);
 
 
-	    var legend = root.selectAll(".legend")
-    		.data(color.domain())
+	    var color_legend = root.selectAll(".color-legend")
+    		.data(color_scale.domain())
     		.enter().append("g")
-    		.attr("class", "legend")
-    		.attr("transform", function(d, i) { return "translate(0," + (100 + i * 20) + ")"; });
+    		.attr("class", "color-legend")
+    		.attr("transform", function(d, i) { return "translate(0," + (color_legend_y + 10 + i * 20) + ")"; });
 
-	    legend.append("rect")
+	    color_legend.append("rect")
     		.attr("x", total_width - margin.right - legend_width )
     		.attr("width", 18)
     		.attr("height", 18)
-    		.attr("class", function(d,i) { return "rectleg color color-" + color(d,i).substring(1)})
-    		.style("fill", color)
+    		.attr("class", function(d,i) { return "rectleg color color-" + color_scale(d,i).substring(1)})
+    		.style("fill", color_scale)
     		.on("mouseover", function(d,i) {
-    		    var sel = ".color:not(.color-" + color(d,i).substring(1) + ")";
+    		    var sel = ".color:not(.color-" + color_scale(d,i).substring(1) + ")";
     		    svg.selectAll(sel).transition().style("opacity", 0.2);
     		})
     		.on("mouseout", function(d,i) {
-    		    var sel = ".color:not(.color-" + color(d,i).substring(1) + ")";
+    		    var sel = ".color:not(.color-" + color_scale(d,i).substring(1) + ")";
     		    svg.selectAll(sel).transition().style("opacity", 1);
     		});
 
-	    legend.append("text")
+	    color_legend.append("text")
     		.attr("x", total_width - margin.right - legend_width + 24)
     		.attr("y", 9)
     		.attr("dy", ".35em")
     		.style("text-anchor", "beginning")
     		.style("fill", "#000")
-    		.attr("class", function(d,i) { return "color color-" + color(d,i).substring(1)})
+    		.attr("class", function(d,i) { return "color color-" + color_scale(d,i).substring(1)})
+    		.text(function(d) { return d; });
+	}
+
+	function add_symbol_legend() {
+
+	    var color_legend_height = color_scale.domain().length * 20 + 100;
+	    var symbol_legend_y = color_legend_height + 50;
+
+	    root.append("g")
+    		.append("text")
+    		.attr("x", total_width - margin.right - legend_width)
+    		.attr("y", symbol_legend_y)
+    		.style("text-anchor", "beginning")
+    		.style("fill", "#000")
+    		.style("font-weight", "bold")
+    		.text(symbol_lab);
+
+	    var symbol_legend = root.selectAll(".symbol-legend")
+    		.data(symbol_scale.domain())
+    		.enter().append("g")
+    		.attr("class", "symbol-legend")
+    		.attr("transform", function(d, i) { return "translate(0," + (symbol_legend_y + 10 + i * 20) + ")"; });
+
+	    var x_trans = total_width - margin.right - legend_width + 9;
+	    symbol_legend.append("path")
+	        .attr("transform","translate(" + x_trans + ",9)")
+    		.attr("class", function(d,i) { return "symbol symbol-" + symbol_scale(d)})
+	        .style("fill", "#000")
+	       	.attr("d", d3.svg.symbol()
+		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d)]})
+		  .size(64))
+    		.on("mouseover", function(d,i) {
+    		    var sel = ".symbol:not(.symbol-" + symbol_scale(d) + ")";
+    		    svg.selectAll(sel).transition().style("opacity", 0.2);
+    		})
+    		.on("mouseout", function(d,i) {
+    		    var sel = ".symbol:not(.symbol-" + symbol_scale(d) + ")";
+    		    svg.selectAll(sel).transition().style("opacity", 1);
+    		});
+
+	    symbol_legend.append("text")
+    		.attr("x", total_width - margin.right - legend_width + 24)
+    		.attr("y", 9)
+    		.attr("dy", ".35em")
+    		.style("text-anchor", "beginning")
+    		.style("fill", "#000")
+    		.attr("class", function(d,i) { return "color color-" + symbol_scale(d)})
     		.text(function(d) { return d; });
 	}
 
@@ -282,10 +339,12 @@
 
 	dot.enter().append("path")
     	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
-    	    .attr("class", function(d) { return "dot "+"color color-" + color(d.col_var).substring(1); })
-    	    .style("fill", function(d) { return color(d.col_var); })
+    	    .attr("class", function(d) { return "dot "+"color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
+    	    .style("fill", function(d) { return color_scale(d.col_var); })
     	    .style("stroke", "#FFF")
-    	    .attr("d", point);
+    	    .attr("d", d3.svg.symbol()
+		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
+		  .size(64));
 
 	//tooltips
 	dot.on("mousemove", function(d,i) {
@@ -301,16 +360,17 @@
 	chartBody.selectAll(".point-label")
     	    .data(data)
     	    .enter().append("text")
-    	    .attr("class", function(d) { return "point-label " + "color color-" + color(d.col_var).substring(1); })
+    	    .attr("class", function(d) { return "point-label " + "color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     	    .attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
-    	    .style("fill", function(d) { return color(d.col_var); })
+    	    .style("fill", function(d) { return color_scale(d.col_var); })
     	    .style("font-size", labels_size + "px")
     	    .attr("text-anchor", "middle")
     	    .attr("dy", "-1.3ex")
     	    .text(function(d) {return(d.lab)})
     	    .call(drag);
 
-	if (!nolegend) { add_legend() };
+	if (color_legend) { add_color_legend() };
+	if (symbol_legend) { add_symbol_legend() };
 
     }
 
