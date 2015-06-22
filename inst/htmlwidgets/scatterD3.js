@@ -194,7 +194,7 @@
     		.text(ylab);
 	}
 
-	// Add legend
+	// Add color legend
 	function add_color_legend() {
 
 	    var color_legend_y = 90
@@ -215,6 +215,7 @@
     		.attr("class", "color-legend")
     		.attr("transform", function(d, i) { return "translate(0," + (color_legend_y + 10 + i * 20) + ")"; });
 
+	    // Color rectangles
 	    color_legend.append("rect")
     		.attr("x", total_width - margin.right - legend_width )
     		.attr("width", 18)
@@ -230,6 +231,7 @@
     		    svg.selectAll(sel).transition().style("opacity", 1);
     		});
 
+	    // Labels
 	    color_legend.append("text")
     		.attr("x", total_width - margin.right - legend_width + 24)
     		.attr("y", 9)
@@ -240,8 +242,10 @@
     		.text(function(d) { return d; });
 	}
 
+	// Add symbol legend
 	function add_symbol_legend() {
 
+	    // Height of color legend
 	    var color_legend_height = color_scale.domain().length * 20 + 100;
 	    var symbol_legend_y = color_legend_height + 50;
 
@@ -261,6 +265,7 @@
     		.attr("transform", function(d, i) { return "translate(0," + (symbol_legend_y + 10 + i * 20) + ")"; });
 
 	    var x_trans = total_width - margin.right - legend_width + 9;
+	    // Symbols
 	    symbol_legend.append("path")
 	        .attr("transform","translate(" + x_trans + ",9)")
     		.attr("class", function(d,i) { return "symbol symbol-" + symbol_scale(d)})
@@ -277,6 +282,7 @@
     		    svg.selectAll(sel).transition().style("opacity", 1);
     		});
 
+	    // Labels
 	    symbol_legend.append("text")
     		.attr("x", total_width - margin.right - legend_width + 24)
     		.attr("y", 9)
