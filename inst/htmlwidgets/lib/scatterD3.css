@@ -1,4 +1,4 @@
-div.tooltip {
+.tooltip {
     color: #222;
     background: #fff;
     padding: .5em;
@@ -27,14 +27,14 @@ div.tooltip {
 
 #scatterD3 .axis .tick line {
     stroke: #ddd;
-    
+
 }
 
 #scatterD3 .axis text {
     fill: #000;
 }
 
-#scatterD3 path.zeroline {
+#scatterD3 .zeroline {
     stroke-width: 1;
     stroke: #444;
     stroke-dasharray: 5,5;
