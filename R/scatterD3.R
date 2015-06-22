@@ -3,8 +3,8 @@
 #' <Add Description>
 #'
 #' @import htmlwidgets
-#'
 #' @export
+#'
 scatterD3 <- function(x, y, lab = NULL,
                       size = NULL, labels_size = 10,
                       fixed = FALSE, var = NULL,
