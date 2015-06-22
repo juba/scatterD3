@@ -15,16 +15,16 @@
 	data.laby = data.y;
 	data = HTMLWidgets.dataframeToD3(data);
 
-	setup_size(init.width, init.height);
-
 	// options
 	labels_size = obj.settings.labels_size;
 	fixed = obj.settings.fixed;
-	nolegend = (data[0].col_var === undefined & data[0].symbol_var === undefined);
+	nolegend = (data[0].col_var === undefined) && (data[0].symbol_var === undefined);
 	xlab = obj.settings.xlab;
 	ylab = obj.settings.ylab;
 	col_lab = obj.settings.col_lab;
 	symbol_lab = obj.settings.symbol_lab;
+
+	setup_size(init.width, init.height);
 	
     }
 
@@ -32,7 +32,7 @@
     // Figure size    
     function setup_size(init_width, init_height) {
 
-	margin = {top: 0, right: 0, bottom: 20, left: 20};
+	margin = {top: 0, right: 10, bottom: 20, left: 20};
 	legend_width = 150;
 	if (nolegend) legend_width = 0;
 
