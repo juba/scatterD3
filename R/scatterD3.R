@@ -7,13 +7,16 @@
 #'
 scatterD3 <- function(x, y, lab = NULL,
                       size = NULL, labels_size = 10,
-                      fixed = FALSE, var = NULL,
-                      xlab = NULL, ylab = NULL, varlab = NULL,
+                      fixed = FALSE, col_var = NULL,
+                      symbol_var = NULL,
+                      col_lab = NULL, symbol_lab = NULL,
+                      xlab = NULL, ylab = NULL,
                       width = NULL, height = NULL) {
 
   if (is.null(xlab)) xlab <- deparse(substitute(x))
   if (is.null(ylab)) ylab <- deparse(substitute(y))
-  if (is.null(varlab)) varlab <- deparse(substitute(var))
+  if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
+  if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
 
   # create a list that contains the settings
   settings <- list(
@@ -21,14 +24,17 @@ scatterD3 <- function(x, y, lab = NULL,
     size = size,
     xlab = xlab,
     ylab = ylab,
-    var = var,
-    varlab = varlab,
+    col_var = col_var,
+    col_lab = col_lab,
+    symbol_var = symbol_var,
+    symbol_lab = symbol_lab,
     fixed = fixed
   )
 
   if (is.null(lab)) lab <- rep("", length(x))
   data <- data.frame(x=x, y=y, lab=lab)
-  if (!is.null(var)) data <- cbind(data, var=var)
+  if (!is.null(col_var)) data <- cbind(data, col_var=col_var)
+  if (!is.null(symbol_var)) data <- cbind(data, symbol_var=symbol_var)
 
   # pass the data and settings using 'x'
   x <- list(
