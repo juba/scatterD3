@@ -118,11 +118,11 @@ function draw(el) {
     	    zoom.translate(t);
 	}
 
-	svg.select(".x.axis").call(xAxis);
-	svg.select(".y.axis").call(yAxis);
-	svg.selectAll(".dot").attr("transform", transform);
-	svg.selectAll(".point-label").attr("transform", transform_text);
-	svg.selectAll(".zeroline").remove();
+	root.select(".x.axis").call(xAxis);
+	root.select(".y.axis").call(yAxis);
+	root.selectAll(".dot").attr("transform", transform);
+	root.selectAll(".point-label").attr("transform", transform_text);
+	root.selectAll(".zeroline").remove();
 	add_zerolines();
     }
 
@@ -161,7 +161,7 @@ function draw(el) {
 	    .orient("left")
 	    .tickSize(-width);
 
-	svg.append("g")
+	root.append("g")
     	    .attr("class", "x axis")
     	    .attr("transform", "translate(0," + height + ")")
     	    .call(xAxis)
@@ -172,7 +172,7 @@ function draw(el) {
     	    .style("text-anchor", "end")
     	    .text(xlab);
 
-	svg.append("g")
+	root.append("g")
     	    .attr("class", "y axis")
     	    .call(yAxis)
     	    .append("text")
@@ -187,7 +187,7 @@ function draw(el) {
 
     // Add legend
     function add_legend() {
-	svg.append("g")
+	root.append("g")
     	    .append("text")
     	    .attr("x", total_width - margin.right - legend_width)
     	    .attr("y", 90)
@@ -197,7 +197,7 @@ function draw(el) {
     	    .text(varlab);
 
 
-	var legend = svg.selectAll(".legend")
+	var legend = root.selectAll(".legend")
     	    .data(color.domain())
     	    .enter().append("g")
     	    .attr("class", "legend")
