@@ -1,7 +1,5 @@
-
-- Var values ordering in legend
-- Resize
-- Different symbols
+- values ordering in legend
 - highlight point and label on hover
 - Reset Zoom
 - Save as SVG
+- Custom tooltip

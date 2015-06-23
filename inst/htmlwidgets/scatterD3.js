@@ -298,6 +298,7 @@
 
 	// Text labels dragging
 	var drag = d3.behavior.drag()
+	    .origin(function(d) { return {x:x(d.labx), y:y(d.laby)}; })
     	    .on('dragstart', function(d) { d3.select(this).style('font-weight', 'bold'); })
     	    .on('drag', function(d) {
     		d3.select(this).attr('transform', "translate("+d3.event.x+","+d3.event.y+")");
