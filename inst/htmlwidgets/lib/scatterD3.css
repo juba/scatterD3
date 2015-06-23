@@ -15,31 +15,10 @@
     display: none;
 }
 
-#scatterD3 {
-    font: 10px sans-serif;
-}
-
-#scatterD3 .axis line, .axis path {
-    stroke: #000;
-    fill: none;
-    shape-rendering: CrispEdges;
-}
-
-#scatterD3 .axis .tick line {
-    stroke: #ddd;
-
-}
-
-#scatterD3 .axis text {
-    fill: #000;
-}
-
-#scatterD3 .zeroline {
-    stroke-width: 1;
-    stroke: #444;
-    stroke-dasharray: 5,5;
-}
-
 #scatterD3 .point-label {
-    cursor: pointer;
+  cursor: pointer;
+}
+
+#scatterD3 .pane {
+  cursor: move;
 }

@@ -22,9 +22,9 @@
 	point_size = obj.settings.point_size;
 	point_opacity = obj.settings.point_opacity;
 	fixed = obj.settings.fixed;
-	color_legend = !(data[0].col_var === undefined);
-	symbol_legend = !(data[0].symbol_var === undefined); 
-	has_legend = color_legend || symbol_legend;
+	has_color_legend = !(data[0].col_var === undefined);
+	has_symbol_legend = !(data[0].symbol_var === undefined); 
+	has_legend = has_color_legend || has_symbol_legend;
 	has_labels = !(data[0].lab === undefined);
 	has_tooltips = obj.settings.tooltips;
 	has_custom_tooltips = !(data[0].tooltip_text === undefined);
@@ -63,7 +63,8 @@
     // Main drawing function
     function draw(el) {
 
-	var min_x, min_y, max_x, max_y, x, y, color_scale, symbol_scale, xAxis, yAxis, zoom;
+	var min_x, min_y, max_x, max_y, gap_x, gap_y;
+	var x, y, color_scale, symbol_scale, xAxis, yAxis, zoom;
 	var svg, tooltip, tooltip_text;
 
 	// Drawing init
@@ -77,17 +78,32 @@
 		.attr("width", total_width)
 		.attr("height", total_height);
 
+	    css = svg.append("style")
+		.text("#scatterD3 {font: 10px sans-serif;} " +
+		      "#scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
+		      "#scatterD3 .axis .tick line { stroke: #ddd;} " +
+		      "#scatterD3 .axis text { fill: #000;} " + 
+		      "#scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} "
+		     );
+	    
 	    // tooltips placeholder and function
 	    if (has_tooltips) {
 		tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
-		if (has_custom_tooltips) {
-		    tooltip_text = function(d) { return d.tooltip_text; }
-		} else {
+		if (has_custom_tooltips) { tooltip_text = function(d) { return d.tooltip_text; }}
+		else {
 		    tooltip_text = function(d) {
-			return Array("<b>"+d.lab+"</b>", "<b>"+xlab+":</b> "+d.x.toFixed(3), "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
+			var text = Array();
+			if (has_labels) text.push("<b>"+d.lab+"</b>");
+			text.push("<b>"+xlab+":</b> "+d.x.toFixed(3));
+			text.push("<b>"+ylab+":</b> "+d.y.toFixed(3));
+			if (has_color_legend) text.push("<b>"+col_lab+":</b> "+d.col_var);
+			if (has_symbol_legend) text.push("<b>"+symbol_lab+":</b> "+d.symbol_var);
+			return text.join("<br />");
+			//return Array("<b>"+d.lab+"</b>", , "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
 		    }
 		    
 		};
+		    
 	    }
 
 	    // scales and zomm
@@ -164,7 +180,7 @@
     		.y(function(d) {return y(d.y)});
 	    chartBody.append("path")
     		.attr("class", "zeroline hline")
-    		.attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
+	        .attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
 	    chartBody.append("path")
     		.attr("class", "zeroline vline")
     		.attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
@@ -205,6 +221,7 @@
     		.attr("dy", ".71em")
     		.style("text-anchor", "end")
     		.text(ylab);
+
 	}
 
 	// Add color legend
@@ -362,7 +379,6 @@
     	    .attr("class", "pane")
     	    .attr("width", width)
     	    .attr("height", height)
-    	    .style("cursor", "move")
     	    .style("fill", "none")
     	    .style("pointer-events", "all")
     	    .call(zoom);
@@ -417,11 +433,51 @@
     		.call(drag);
 	}
 
-	if (color_legend) { add_color_legend() };
-	if (symbol_legend) { add_symbol_legend() };
-	    
+	if (has_color_legend) { add_color_legend() };
+	if (has_symbol_legend) { add_symbol_legend() };
+
+
+	// Reset zoom handler must be inside draw() (to fix)
+	function reset_zoom() {
+	    d3.transition().duration(750).tween("zoom", function() {
+	    	var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
+	    	    iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
+	    	return function(t) {
+	    	    zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
+	    	    zoomed(reset=true);
+	    	};
+	    });
+	}
+
+	d3.select("#scatterD3-resetzoom").on("click", reset_zoom);
+	
     }
 
+    function add_controls_handlers() {
+	
+	d3.select("#scatterD3-size").on("change", function() {
+	    labels_size = this.value;
+	    d3.selectAll(".point-label").transition().style("font-size", labels_size + "px");
+	});
+
+	d3.select("#scatterD3-opacity").on("change", function() {
+	    point_opacity = this.value;
+	    d3.selectAll(".dot").transition().style("opacity", point_opacity);
+	});
+	
+	d3.select("#scatterD3-download")
+    	    .on("click", function(){
+		var svg = d3.select("svg#scatterD3")
+    		    .attr("xmlns", "http://www.w3.org/2000/svg")
+    		    .attr("version", 1.1)
+		    .node().parentNode
+		    .innerHTML;
+		var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
+    		d3.select(this)
+		    .attr("download", "scatterD3.svg")
+    		    .attr("href", imageUrl);
+    	    });
+    }
 
 
     HTMLWidgets.widget({
@@ -430,57 +486,21 @@
 
 	type: 'output',
 
-
 	initialize: function(el, width, height) {
 	    var init = {width: width, height: height};
 	    return init;
 	},
-
 
 	resize: function(el, width, height, instance) {
 	    setup_size(width, height);
 	    draw(el);
 	},
 
-
 	renderValue: function(el, obj, init) {
-
 	    setup(obj, init);
 	    draw(el);
-
-	    d3.select("#resetzoom").on("click", reset_zoom);
-
-	    function reset_zoom() {
-		d3.transition().duration(750).tween("zoom", function() {
-		    var ix = d3.interpolate(x.domain(), [min*1.4, max*1.4]),
-			iy = d3.interpolate(y.domain(), [min*1.4, max*1.4]);
-		    return function(t) {
-			zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
-			zoomed(reset=true);
-		    };
-		});
-	    }
-
-	    d3.select("#varsize").on("change", function() {
-		labels_size = this.value;
-		console.log(labels_size);
-		d3.selectAll(".point-label")
-    		    .style("font-size", labels_size + "px");
-	    });
-
-	    d3.select("#download")
-    		.on("mouseover", function(){
-    		    var html = d3.select("svg#scatterD3")
-    			.attr("version", 1.1)
-    			.attr("xmlns", "http://www.w3.org/2000/svg")
-    			.node().parentNode.innerHTML;
-
-    		    d3.select(this)
-    			.attr("href-lang", "image/svg+xml")
-    			.attr("href", "data:image/svg+xml;base64,\n" + btoa(html));
-    		});
+	    add_controls_handlers();
 	}
-
 
     });
 
