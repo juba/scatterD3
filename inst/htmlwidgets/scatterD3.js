@@ -359,7 +359,7 @@
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
 		  .size(64));
 
-	// tooltips when hovering points
+	// tooltips when hovering points 
 	if (has_tooltips) {
 	    dot.on("mousemove", function(d,i) {
     		var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
