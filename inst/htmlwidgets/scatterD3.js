@@ -77,9 +77,14 @@
 	    // tooltips placeholder and function
 	    if (has_tooltips) {
 		tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
-		tooltip_text = function(d) {
-		    return Array("<b>"+d.lab+"</b>", "<b>"+xlab+":</b> "+d.x.toFixed(3), "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
-	    };
+		if (has_custom_tooltips) {
+		    tooltip_text = function(d) { return d.tooltip_text; }
+		} else {
+		    tooltip_text = function(d) {
+			return Array("<b>"+d.lab+"</b>", "<b>"+xlab+":</b> "+d.x.toFixed(3), "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
+		    }
+		    
+		};
 	    }
 
 	    // scales and zomm
