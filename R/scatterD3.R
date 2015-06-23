@@ -10,6 +10,7 @@ scatterD3 <- function(x, y, lab = NULL,
                       fixed = FALSE, col_var = NULL,
                       symbol_var = NULL,
                       col_lab = NULL, symbol_lab = NULL,
+                      tooltips = TRUE,
                       tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
                       width = NULL, height = NULL) {
@@ -29,6 +30,7 @@ scatterD3 <- function(x, y, lab = NULL,
     col_lab = col_lab,
     symbol_var = symbol_var,
     symbol_lab = symbol_lab,
+    tooltips = tooltips,
     tooltip_text = tooltip_text,
     fixed = fixed
   )

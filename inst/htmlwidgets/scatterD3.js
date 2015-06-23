@@ -23,6 +23,7 @@
 	symbol_legend = !(data[0].symbol_var === undefined); 
 	has_legend = color_legend || symbol_legend;
 	has_labels = !(data[0].lab === undefined);
+	has_tooltips = obj.settings.tooltips;
 	has_custom_tooltips = !(data[0].tooltip_text === undefined);
 	xlab = obj.settings.xlab;
 	ylab = obj.settings.ylab;
@@ -74,10 +75,12 @@
 		.attr("height", total_height);
 
 	    // tooltips placeholder and function
-	    tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
-	    tooltip_text = function(d) {
-		return Array("<b>"+d.lab+"</b>", "<b>"+xlab+":</b> "+d.x.toFixed(3), "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
+	    if (has_tooltips) {
+		tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
+		tooltip_text = function(d) {
+		    return Array("<b>"+d.lab+"</b>", "<b>"+xlab+":</b> "+d.x.toFixed(3), "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
 	    };
+	    }
 
 	    // scales and zomm
 	    x = d3.scale.linear().range([0, width]);
@@ -349,7 +352,7 @@
 	dot.enter().append("path")
     	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
 	    .attr("id", function(d,i) { return "point-id" + i;})
-    	    .attr("class", function(d,i) { return "dot point point-id"+ i +" color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
+    	    .attr("class", function(d,i) { return "dot color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     	    .style("fill", function(d) { return color_scale(d.col_var); })
     	    .style("stroke", "#FFF")
     	    .attr("d", d3.svg.symbol()
@@ -357,27 +360,23 @@
 		  .size(64));
 
 	// tooltips and opacity when hovering points
-	dot.on("mousemove", function(d,i) {
-    	    var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
-    	    tooltip.classed("hidden", false)
-    		.attr("style", "left:"+(mouse[0]+el.offsetLeft+40)+"px;top:"+(mouse[1]+el.offsetTop+40)+"px")
-    		.html(tooltip_text(d));})
-    	    .on("mouseout",  function(d,i) {
-    		tooltip.classed("hidden", true);
-    		var sel = ".point:not(.point-id" + i + ")";
-    		svg.selectAll(sel).transition().style("opacity", 1);
-    	    })
-	    .on("mouseover", function(d,i) {
-    		var sel = ".point:not(.point-id" + i + ")";
-    		svg.selectAll(sel).transition().style("opacity", 0.2);
-    	    });
+	if (has_tooltips) {
+	    dot.on("mousemove", function(d,i) {
+    		var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
+    		tooltip.classed("hidden", false)
+    		    .attr("style", "left:"+(mouse[0]+el.offsetLeft+40)+"px;top:"+(mouse[1]+el.offsetTop+40)+"px")
+    		    .html(tooltip_text(d));})
+    		.on("mouseout",  function(d,i) {
+    		    tooltip.classed("hidden", true);
+    		})
+	}
 	
 	// Add text labels
 	if (has_labels) {
 	    chartBody.selectAll(".point-label")
     		.data(data)
     		.enter().append("text")
-    		.attr("class", function(d,i) { return "point-label point point-id" + i  + " color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
+    		.attr("class", function(d,i) { return "point-label color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     		.attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
     		.style("fill", function(d) { return color_scale(d.col_var); })
     		.style("font-size", labels_size + "px")
