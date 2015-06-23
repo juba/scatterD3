@@ -22,6 +22,8 @@
 	color_legend = !(data[0].col_var === undefined);
 	symbol_legend = !(data[0].symbol_var === undefined); 
 	has_legend = color_legend || symbol_legend;
+	has_labels = !(data[0].lab === undefined);
+	has_custom_tooltips = !(data[0].tooltip_text === undefined);
 	xlab = obj.settings.xlab;
 	ylab = obj.settings.ylab;
 	col_lab = obj.settings.col_lab;
@@ -74,7 +76,7 @@
 	    // tooltips placeholder and function
 	    tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
 	    tooltip_text = function(d) {
-		return Array("<b>"+d.lab+"</b>", "<b>x:</b> "+d.x, "<b>y:</b> "+d.y).join("<br />");
+		return Array("<b>"+d.lab+"</b>", "<b>"+xlab+":</b> "+d.x.toFixed(3), "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
 	    };
 
 	    // scales and zomm
@@ -354,7 +356,7 @@
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
 		  .size(64));
 
-	// tooltips et opacity when hovering points
+	// tooltips and opacity when hovering points
 	dot.on("mousemove", function(d,i) {
     	    var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
     	    tooltip.classed("hidden", false)
@@ -371,21 +373,23 @@
     	    });
 	
 	// Add text labels
-	chartBody.selectAll(".point-label")
-    	    .data(data)
-    	    .enter().append("text")
-    	    .attr("class", function(d,i) { return "point-label point point-id" + i  + " color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
-    	    .attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
-    	    .style("fill", function(d) { return color_scale(d.col_var); })
-    	    .style("font-size", labels_size + "px")
-    	    .attr("text-anchor", "middle")
-    	    .attr("dy", "-1.3ex")
-    	    .text(function(d) {return(d.lab)})
-    	    .call(drag);
+	if (has_labels) {
+	    chartBody.selectAll(".point-label")
+    		.data(data)
+    		.enter().append("text")
+    		.attr("class", function(d,i) { return "point-label point point-id" + i  + " color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
+    		.attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
+    		.style("fill", function(d) { return color_scale(d.col_var); })
+    		.style("font-size", labels_size + "px")
+    		.attr("text-anchor", "middle")
+    		.attr("dy", "-1.3ex")
+    		.text(function(d) {return(d.lab)})
+    		.call(drag);
+	}
 
 	if (color_legend) { add_color_legend() };
 	if (symbol_legend) { add_symbol_legend() };
-
+	    
     }
 
 
