@@ -1,6 +1,38 @@
-#' <Add Title>
+#' Scatter plot HTML widget
 #'
-#' <Add Description>
+#' Interactive scatter plots based on htmlwidgets and d3.js
+#'
+#' @param x numerical vector of x values
+#' @param y numerical vector of y values
+#' @param lab optional character vector of text labels
+#' @param point_size points size
+#' @param labels_size text labels size
+#' @param point_opacity points opacity
+#' @param fixed force a 1:1 aspect ratio
+#' @param col_var optional vector for points color mapping
+#' @param symbol_var optional vector for points symbol mapping
+#' @param col_lab color legend title
+#' @param symbol_lab symbols legend title
+#' @param tooltips logical value to display tooltips when hovering points
+#' @param tooltip_text optional character vector of tooltips text
+#' @param xlab x axis label
+#' @param ylab y axis label
+#' @param width figure width, computed when displayed
+#' @param height figure height, computed when displayed
+#'
+#' @description Generates an interactive scatter plot based on d3.js.
+#' Interactive features include zooming, panning, text labels moving, tooltips,
+#' fading effects in legend. Additional handlers are provided to change label
+#' size, point opacity or export the figure as an SVG file via HTML form controls.
+#'
+#' @author Julien Barnier <julien.barnier@@ens-lyon.fr>
+#'
+#' @examples
+#' scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
+#'           col_var = mtcars$cyl, symbol_var = mtcars$am,
+#'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
+#'           symbol_lab = "Manual transmission")
+#'
 #'
 #' @import htmlwidgets
 #' @export
