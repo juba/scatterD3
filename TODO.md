@@ -1,4 +1,4 @@
 - values ordering in legend
 - Reset Zoom
 - Save as SVG
-- Default point size and opacity
+

@@ -3,8 +3,9 @@
     // File-global variables
     var data;
     var margin, legend_width, width, height, total_width, total_height;
-    var xlab, ylab, col_lab, symbol_lab, labels_size, fixed;
-    var color_legend, symbol_legend, has_legend;
+    var point_size, labels_size, point_opacity;
+    var xlab, ylab, col_lab, symbol_lab, fixed;
+    var color_legend, symbol_legend, has_legend, has_labels, has_tooltips, has_custom_tooltips;
 
     // First setup : initialization    
     function setup(obj, init) {
@@ -18,6 +19,8 @@
 
 	// options
 	labels_size = obj.settings.labels_size;
+	point_size = obj.settings.point_size;
+	point_opacity = obj.settings.point_opacity;
 	fixed = obj.settings.fixed;
 	color_legend = !(data[0].col_var === undefined);
 	symbol_legend = !(data[0].symbol_var === undefined); 
@@ -230,15 +233,27 @@
     		.attr("x", total_width - margin.right - legend_width )
     		.attr("width", 18)
     		.attr("height", 18)
-    		.attr("class", function(d,i) { return "rectleg color color-" + color_scale(d,i).substring(1)})
+    		.attr("class", function(d,i) { return "colorleg color color-" + color_scale(d,i).substring(1)})
     		.style("fill", color_scale)
     		.on("mouseover", function(d,i) {
-    		    var sel = ".color:not(.color-" + color_scale(d,i).substring(1) + ")";
-    		    svg.selectAll(sel).transition().style("opacity", 0.2);
+    		    var nsel = ".color:not(.color-" + color_scale(d,i).substring(1) + ")";
+    		    var sel = ".color-" + color_scale(d,i).substring(1);
+    		    svg.selectAll(nsel)
+			.transition()
+			.style("opacity", 0.2);
+		    svg.selectAll(sel)
+			.transition()
+			.style("opacity", 1);
     		})
     		.on("mouseout", function(d,i) {
-    		    var sel = ".color:not(.color-" + color_scale(d,i).substring(1) + ")";
-    		    svg.selectAll(sel).transition().style("opacity", 1);
+    		    var sel = ".color-" + color_scale(d,i).substring(1);
+		    var legsel = ".colorleg";
+    		    svg.selectAll(sel)
+			.transition()
+			.style("opacity", point_opacity);
+		    svg.selectAll(legsel)
+			.transition()
+			.style("opacity", 1);
     		});
 
 	    // Labels
@@ -248,7 +263,7 @@
     		.attr("dy", ".35em")
     		.style("text-anchor", "beginning")
     		.style("fill", "#000")
-    		.attr("class", function(d,i) { return "color color-" + color_scale(d,i).substring(1)})
+    		.attr("class", function(d,i) { return "colorleg color color-" + color_scale(d,i).substring(1)})
     		.text(function(d) { return d; });
 	}
 
@@ -278,18 +293,30 @@
 	    // Symbols
 	    symbol_legend.append("path")
 	        .attr("transform","translate(" + x_trans + ",9)")
-    		.attr("class", function(d,i) { return "symbol symbol-" + symbol_scale(d)})
+    		.attr("class", function(d,i) { return "symbleg symbol symbol-" + symbol_scale(d)})
 	        .style("fill", "#000")
 	       	.attr("d", d3.svg.symbol()
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d)]})
-		  .size(64))
+		  .size(point_size))
     		.on("mouseover", function(d,i) {
-    		    var sel = ".symbol:not(.symbol-" + symbol_scale(d) + ")";
-    		    svg.selectAll(sel).transition().style("opacity", 0.2);
+    		    var nsel = ".symbol:not(.symbol-" + symbol_scale(d) + ")";
+    		    var sel = ".symbol-" + symbol_scale(d);
+    		    svg.selectAll(nsel)
+			.transition()
+			.style("opacity", 0.2);
+		    svg.selectAll(sel)
+			.transition()
+			.style("opacity", 1);
     		})
     		.on("mouseout", function(d,i) {
-    		    var sel = ".symbol:not(.symbol-" + symbol_scale(d) + ")";
-    		    svg.selectAll(sel).transition().style("opacity", 1);
+    		    var sel = ".symbol-" + symbol_scale(d);
+		    var legsel = ".symbleg";
+    		    svg.selectAll(sel)
+			.transition()
+			.style("opacity", point_opacity);
+		    svg.selectAll(legsel)
+			.transition()
+			.style("opacity", 1);
     		});
 
 	    // Labels
@@ -299,7 +326,7 @@
     		.attr("dy", ".35em")
     		.style("text-anchor", "beginning")
     		.style("fill", "#000")
-    		.attr("class", function(d,i) { return "color color-" + symbol_scale(d)})
+    		.attr("class", function(d,i) { return "symbleg symbol symbol-" + symbol_scale(d)})
     		.text(function(d) { return d; });
 	}
 
@@ -348,21 +375,19 @@
 	add_zerolines();
 
 	// Add points
-	var point = d3.svg.symbol()
-    	    .type("circle")
-    	    .size(64);
-
-	var dot = chartBody.selectAll(".dot").data(data);
+	var dot = chartBody
+	    .selectAll(".dot")
+	    .data(data);
 
 	dot.enter().append("path")
     	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
 	    .attr("id", function(d,i) { return "point-id" + i;})
     	    .attr("class", function(d,i) { return "dot color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     	    .style("fill", function(d) { return color_scale(d.col_var); })
-    	    .style("stroke", "#FFF")
+	    .style("opacity", point_opacity)
     	    .attr("d", d3.svg.symbol()
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
-		  .size(64));
+		  .size(point_size));
 
 	// tooltips when hovering points 
 	if (has_tooltips) {
@@ -385,6 +410,7 @@
     		.attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
     		.style("fill", function(d) { return color_scale(d.col_var); })
     		.style("font-size", labels_size + "px")
+	    	.style("opacity", point_opacity)
     		.attr("text-anchor", "middle")
     		.attr("dy", "-1.3ex")
     		.text(function(d) {return(d.lab)})

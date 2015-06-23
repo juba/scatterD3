@@ -6,7 +6,8 @@
 #' @export
 #'
 scatterD3 <- function(x, y, lab = NULL,
-                      size = NULL, labels_size = 10,
+                      point_size = 64, labels_size = 10,
+                      point_opacity = 1,
                       fixed = FALSE, col_var = NULL,
                       symbol_var = NULL,
                       col_lab = NULL, symbol_lab = NULL,
@@ -23,7 +24,8 @@ scatterD3 <- function(x, y, lab = NULL,
   # create a list that contains the settings
   settings <- list(
     labels_size = labels_size,
-    size = size,
+    point_size = point_size,
+    point_opacity = point_opacity,
     xlab = xlab,
     ylab = ylab,
     col_var = col_var,
