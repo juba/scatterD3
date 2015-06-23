@@ -346,14 +346,15 @@
 
 	dot.enter().append("path")
     	    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
-    	    .attr("class", function(d) { return "dot "+"color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
+	    .attr("id", function(d,i) { return "point-id" + i;})
+    	    .attr("class", function(d,i) { return "dot point point-id"+ i +" color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     	    .style("fill", function(d) { return color_scale(d.col_var); })
     	    .style("stroke", "#FFF")
     	    .attr("d", d3.svg.symbol()
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
 		  .size(64));
 
-	//tooltips
+	// tooltips et opacity when hovering points
 	dot.on("mousemove", function(d,i) {
     	    var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
     	    tooltip.classed("hidden", false)
@@ -361,13 +362,19 @@
     		.html(tooltip_text(d));})
     	    .on("mouseout",  function(d,i) {
     		tooltip.classed("hidden", true);
+    		var sel = ".point:not(.point-id" + i + ")";
+    		svg.selectAll(sel).transition().style("opacity", 1);
+    	    })
+	    .on("mouseover", function(d,i) {
+    		var sel = ".point:not(.point-id" + i + ")";
+    		svg.selectAll(sel).transition().style("opacity", 0.2);
     	    });
-
+	
 	// Add text labels
 	chartBody.selectAll(".point-label")
     	    .data(data)
     	    .enter().append("text")
-    	    .attr("class", function(d) { return "point-label " + "color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
+    	    .attr("class", function(d,i) { return "point-label point point-id" + i  + " color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     	    .attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
     	    .style("fill", function(d) { return color_scale(d.col_var); })
     	    .style("font-size", labels_size + "px")
