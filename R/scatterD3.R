@@ -10,6 +10,7 @@ scatterD3 <- function(x, y, lab = NULL,
                       fixed = FALSE, col_var = NULL,
                       symbol_var = NULL,
                       col_lab = NULL, symbol_lab = NULL,
+                      tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
                       width = NULL, height = NULL) {
 
@@ -28,13 +29,15 @@ scatterD3 <- function(x, y, lab = NULL,
     col_lab = col_lab,
     symbol_var = symbol_var,
     symbol_lab = symbol_lab,
+    tooltip_text = tooltip_text,
     fixed = fixed
   )
 
-  if (is.null(lab)) lab <- rep("", length(x))
-  data <- data.frame(x=x, y=y, lab=lab)
+  data <- data.frame(x=x, y=y)
+  if (!is.null(lab)) data <- cbind(data, lab=lab)
   if (!is.null(col_var)) data <- cbind(data, col_var=col_var)
   if (!is.null(symbol_var)) data <- cbind(data, symbol_var=symbol_var)
+  if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text=tooltip_text)
 
   # pass the data and settings using 'x'
   x <- list(
