@@ -223,7 +223,7 @@
 
 
 	    var color_legend = root.selectAll(".color-legend")
-    		.data(color_scale.domain())
+    		.data(color_scale.domain().sort())
     		.enter().append("g")
     		.attr("class", "color-legend")
     		.attr("transform", function(d, i) { return "translate(0," + (color_legend_y + 10 + i * 20) + ")"; });
@@ -284,7 +284,7 @@
     		.text(symbol_lab);
 
 	    var symbol_legend = root.selectAll(".symbol-legend")
-    		.data(symbol_scale.domain())
+    		.data(symbol_scale.domain().sort())
     		.enter().append("g")
     		.attr("class", "symbol-legend")
     		.attr("transform", function(d, i) { return "translate(0," + (symbol_legend_y + 10 + i * 20) + ")"; });
