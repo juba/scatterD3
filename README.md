@@ -8,8 +8,7 @@ This is alpha software.
 
 - Display points and text labels
 - Possibility to map color and symbol with other variables (automatic legend)
-- Zoom with mouse wheel
-- Pan with mouse while zommed in
+- Zoom with mouse wheel, pan with mouse while zoomed in
 - Ability to drag and move text labels
 - Customizable tooltips when hovering points
 - Points highlighting when hovering legend items
