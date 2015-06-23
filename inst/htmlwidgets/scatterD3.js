@@ -304,13 +304,13 @@
 	// Text labels dragging
 	var drag = d3.behavior.drag()
 	    .origin(function(d) { return {x:x(d.labx), y:y(d.laby)}; })
-    	    .on('dragstart', function(d) { d3.select(this).style('font-weight', 'bold'); })
+    	    .on('dragstart', function(d) { d3.select(this).style('fill', '#000'); })
     	    .on('drag', function(d) {
     		d3.select(this).attr('transform', "translate("+d3.event.x+","+d3.event.y+")");
     		d.labx = x.invert(d3.event.x);
     		d.laby = y.invert(d3.event.y);
     	    })
-    	    .on('dragend', function(d) { d3.select(this).style('font-weight', 'normal'); });
+    	    .on('dragend', function(d) { d3.select(this).style('fill', color_scale(d.col_var)); });
 
 	var root = svg.append("g")
 	    .style("fill", "#FFF")
@@ -359,7 +359,7 @@
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
 		  .size(64));
 
-	// tooltips and opacity when hovering points
+	// tooltips when hovering points
 	if (has_tooltips) {
 	    dot.on("mousemove", function(d,i) {
     		var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
