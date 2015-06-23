@@ -263,7 +263,7 @@
 			.style("opacity", 1);
     		})
     		.on("mouseout", function(d,i) {
-    		    var sel = ".color-" + color_scale(d,i).substring(1);
+    		    var sel = ".color";
 		    var legsel = ".colorleg";
     		    svg.selectAll(sel)
 			.transition()
@@ -326,7 +326,7 @@
 			.style("opacity", 1);
     		})
     		.on("mouseout", function(d,i) {
-    		    var sel = ".symbol-" + symbol_scale(d);
+    		    var sel = ".symbol";
 		    var legsel = ".symbleg";
     		    svg.selectAll(sel)
 			.transition()
