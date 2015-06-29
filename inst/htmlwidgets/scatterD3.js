@@ -267,7 +267,7 @@
     		})
     		.on("mouseout", function(d,i) {
     		    var sel = ".color";
-		    var legsel = ".colorleg";
+		    var legsel = ".colorleg, .point-label";
     		    svg.selectAll(sel)
 			.transition()
 			.style("opacity", point_opacity);
@@ -330,7 +330,7 @@
     		})
     		.on("mouseout", function(d,i) {
     		    var sel = ".symbol";
-		    var legsel = ".symbleg";
+		    var legsel = ".symbleg, .point-label";
     		    svg.selectAll(sel)
 			.transition()
 			.style("opacity", point_opacity);
