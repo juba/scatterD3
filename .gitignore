@@ -14,4 +14,4 @@ vignettes/*.pdf
 .Rproj.user
 
 example.R
-rsconnect/
+
