@@ -33,6 +33,8 @@
 	col_lab = obj.settings.col_lab;
 	symbol_lab = obj.settings.symbol_lab;
 
+	html_id = obj.settings.html_id;
+	
 	setup_size(init.width, init.height);
 	
     }
@@ -74,16 +76,17 @@
 	    d3.select(el).select("svg").remove();
 
 	    svg = d3.select(el).append("svg")
-		.attr("id", "scatterD3")
+	        .attr("class", "scatterD3")
+		.attr("id", html_id)
 		.attr("width", total_width)
 		.attr("height", total_height);
 
 	    css = svg.append("style")
-		.text("#scatterD3 {font: 10px sans-serif;} " +
-		      "#scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
-		      "#scatterD3 .axis .tick line { stroke: #ddd;} " +
-		      "#scatterD3 .axis text { fill: #000;} " + 
-		      "#scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} "
+		.text(".scatterD3 {font: 10px sans-serif;} " +
+		      ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
+		      ".scatterD3 .axis .tick line { stroke: #ddd;} " +
+		      ".scatterD3 .axis text { fill: #000;} " + 
+		      ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} "
 		     );
 	    
 	    // tooltips placeholder and function
@@ -467,7 +470,7 @@
 	
 	d3.select("#scatterD3-download")
     	    .on("click", function(){
-		var svg = d3.select("svg#scatterD3")
+		var svg = d3.select("svg#"+html_id)
     		    .attr("xmlns", "http://www.w3.org/2000/svg")
     		    .attr("version", 1.1)
 		    .node().parentNode
