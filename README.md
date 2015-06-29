@@ -36,7 +36,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
           symbol_lab = "Manual transmission")
 ```
               
-See `help("scatterD3")` for details about the different function arguments.
+See [the introduction vignette](http://rpubs.com/juba/scatterD3) for a step-by-step guide and details about the different function arguments.
 
 ## Shiny integration
 
@@ -76,7 +76,5 @@ runApp(shinyApp(
 ))
 ```
 
-Which gives the following interface :
-
-<img src="https://raw.github.com/juba/scatterD3/master/doc/shiny_sample.png" alt="Shiny sample" style="width:400px;" />
+You can see the result of this [minimal scatterD3 shiny app](https://juba.shinyapps.io/scatterD3_shiny_app) hosted on shinyapps.io.
 
