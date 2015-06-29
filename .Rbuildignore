@@ -1,4 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 example.R
-doc
+resources
+rsconnect/
