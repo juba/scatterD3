@@ -16,7 +16,7 @@ This is alpha software.
 
 Here is a small preview of what you will get :
 
-![example](https://raw.github.com/juba/scatterD3/master/doc/scatterD3.gif)
+![example](https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif)
 
 
 ## Installation
