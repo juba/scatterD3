@@ -230,7 +230,7 @@
 	// Add color legend
 	function add_color_legend() {
 
-	    var color_legend_y = 90
+	    var color_legend_y = 20
 	    
 	    root.append("g")
     		.append("text")
@@ -291,7 +291,7 @@
 	function add_symbol_legend() {
 
 	    // Height of color legend
-	    var color_legend_height = color_scale.domain().length * 20 + 100;
+	    var color_legend_height = color_scale.domain().length * 20 + 30;
 	    var symbol_legend_y = color_legend_height + 50;
 
 	    root.append("g")
