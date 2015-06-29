@@ -1,14 +1,16 @@
 Package: scatterD3
 Type: Package
 Title: D3 Javascript Scatterplot from R
-Version: 0.1
-Date: 2015-06-23
+Version: 0.1.1
+Date: 2015-06-29
 Authors@R: c(person("Julien", "Barnier", email = "julien.barnier@ens-lyon.fr", role = c("aut", "cre")))
 Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
 Description: Creates 'D3' 'JavaScript' scatterplots from 'R' with interactive
     features : panning, zooming, tooltips, etc.
 License: GPL (>=3)
+VignetteBuilder: knitr
 URL: https://github.com/juba/scatterD3
+BugReports: https://github.com/juba/scatterD3/issues
 LazyData: TRUE
 Enhances: knitr, shiny
 Imports: htmlwidgets

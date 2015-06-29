@@ -3,4 +3,5 @@
 export(renderScatterD3)
 export(scatterD3)
 export(scatterD3Output)
-import(htmlwidgets)
+importFrom(htmlwidgets,shinyRenderWidget)
+importFrom(htmlwidgets,shinyWidgetOutput)
