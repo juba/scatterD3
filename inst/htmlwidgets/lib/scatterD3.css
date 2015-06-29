@@ -15,10 +15,10 @@
     display: none;
 }
 
-#scatterD3 .point-label {
+.scatterD3 .point-label {
   cursor: pointer;
 }
 
-#scatterD3 .pane {
+.scatterD3 .pane {
   cursor: move;
 }
