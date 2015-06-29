@@ -27,11 +27,15 @@
 #'
 #' @author Julien Barnier <julien.barnier@@ens-lyon.fr>
 #'
+#' @source
+#' D3.js was created by Michael Bostock. See \url{http://d3js.org/}
+#'
 #' @examples
 #' scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
 #'           col_var = mtcars$cyl, symbol_var = mtcars$am,
 #'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
 #'           symbol_lab = "Manual transmission")
+
 #'
 #'
 #' @import htmlwidgets
@@ -96,14 +100,14 @@ scatterD3 <- function(x, y, lab = NULL,
 }
 
 #' Widget output function for use in Shiny
-#'
+#' @rdname scatterD3-shiny
 #' @export
 scatterD3Output <- function(outputId, width = '100%', height = '600px'){
   shinyWidgetOutput(outputId, 'scatterD3', width, height, package = 'scatterD3')
 }
 
 #' Widget render function for use in Shiny
-#'
+#' @rdname scatterD3-shiny
 #' @export
 renderScatterD3 <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
