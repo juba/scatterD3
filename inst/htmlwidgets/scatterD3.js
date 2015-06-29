@@ -386,7 +386,7 @@
     	    .style("pointer-events", "all")
     	    .call(zoom);
 
-	chartBody = root.append("g")
+	var chartBody = root.append("g")
     	    .attr("width", width)
     	    .attr("height", height)
     	    .attr("clip-path", "url(#clip)");
