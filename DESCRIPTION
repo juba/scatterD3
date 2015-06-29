@@ -3,11 +3,11 @@ Type: Package
 Title: D3 Javascript Scatterplot from R
 Version: 0.1
 Date: 2015-06-23
-uthors@R: c(person("Julien", "Barnier", email = "julien.barnier@ens-lyon.fr",
-    role = c("aut", "cre"))
+Authors@R: c(person("Julien", "Barnier", email = "julien.barnier@ens-lyon.fr", role = c("aut", "cre")))
 Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
 Description: Creates 'D3' 'JavaScript' scatterplots from 'R' with interactive
     features : panning, zooming, tooltips, etc.
 License: GPL (>=3)
 LazyData: TRUE
 Enhances: knitr, shiny
+Imports: htmlwidgets
