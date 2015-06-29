@@ -8,6 +8,7 @@ Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
 Description: Creates 'D3' 'JavaScript' scatterplots from 'R' with interactive
     features : panning, zooming, tooltips, etc.
 License: GPL (>=3)
+URL: https://github.com/juba/scatterD3
 LazyData: TRUE
 Enhances: knitr, shiny
 Imports: htmlwidgets
