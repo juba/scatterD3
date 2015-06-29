@@ -102,7 +102,6 @@
 			if (has_color_legend) text.push("<b>"+col_lab+":</b> "+d.col_var);
 			if (has_symbol_legend) text.push("<b>"+symbol_lab+":</b> "+d.symbol_var);
 			return text.join("<br />");
-			//return Array("<b>"+d.lab+"</b>", , "<b>"+ylab+":</b> "+d.y.toFixed(3)).join("<br />");
 		    }
 		    
 		};
