@@ -23,13 +23,13 @@ library(scatterD3)
 scatterD3(x = mtcars$wt, y = mtcars$mpg)
 ```
 
-This will display a simple visualization with the given variables as `x` and `y` axis. There are several interactive feature directly available :
+This will display a simple visualization with the given variables as `x` and `y` axis. There are several interactive features directly available :
 
 - you can zoom in and out with the mouse wheel while the mouse cursor is on the plot
 - while zommed in, you can pan the plot by dragging with your mouse
 - by hovering over a point, you can display a small tooltip window giving the `x` and `y` values
 
-You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed=TRUE`.
+You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed = TRUE`.
 
 ```{r basic_cust}
 scatterD3(x = mtcars$wt, y = mtcars$mpg, point_size = 15, point_opacity = 0.5, fixed = TRUE)
