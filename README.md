@@ -21,7 +21,11 @@ Here is a small preview of what you will get :
 
 ## Installation
 
-Not on CRAN yet :
+Install from CRAN :
+
+    install_packages("scatterD3")
+
+Or from Github for the latest, bleeding edge, full of bugs version :
 
     devtools::install_github("juba/scatterD3")
     
