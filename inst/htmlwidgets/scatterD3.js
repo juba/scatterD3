@@ -12,9 +12,6 @@
 	
 	// data
 	data = obj.data;
-	// text labels coordinates
-	data.labx = data.x;
-	data.laby = data.y;
 	data = HTMLWidgets.dataframeToD3(data);
 
 	// options
@@ -160,8 +157,7 @@
 
 	    root.select(".x.axis").call(xAxis);
 	    root.select(".y.axis").call(yAxis);
-	    root.selectAll(".dot").attr("transform", transform);
-	    root.selectAll(".point-label").attr("transform", transform_text);
+	    root.selectAll(".dot, .point-label").attr("transform", transform);
 	    root.selectAll(".zeroline").remove();
 	    add_zerolines();
 	}
@@ -169,10 +165,6 @@
 	// Coordinates transformation for zoom and pan
 	function transform(d) {
 	    return "translate(" + x(d.x) + "," + y(d.y) + ")";
-	}
-
-	function transform_text(d) {
-	    return "translate(" + x(d.labx) + "," + y(d.laby) + ")";
 	}
 
 	// Draw 0 horizontal and vertical lines
@@ -354,12 +346,18 @@
 
 	// Text labels dragging
 	var drag = d3.behavior.drag()
-	    .origin(function(d) { return {x:x(d.labx), y:y(d.laby)}; })
+	    .origin(function(d) {
+		dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+		dy = (d.lab_dx === undefined) ? -Math.sqrt(point_size) : d.lab_dy;
+		return {x:x(d.x)+dx, y:y(d.y)+dy}; })
     	    .on('dragstart', function(d) { d3.select(this).style('fill', '#000'); })
     	    .on('drag', function(d) {
-    		d3.select(this).attr('transform', "translate("+d3.event.x+","+d3.event.y+")");
-    		d.labx = x.invert(d3.event.x);
-    		d.laby = y.invert(d3.event.y);
+		cx = d3.event.x - x(d.x);
+		cy = d3.event.y - y(d.y);
+    		d3.select(this).attr('dx', cx + "px");
+		d3.select(this).attr('dy', cy + "px");
+    		d.lab_dx = cx;
+    		d.lab_dy = cy;
     	    })
     	    .on('dragend', function(d) { d3.select(this).style('fill', color_scale(d.col_var)); });
 
@@ -421,16 +419,25 @@
 	
 	// Add text labels
 	if (has_labels) {
+	    default_dy = -Math.sqrt(point_size) + "px";
+	    default_dx = "0 px";
 	    chartBody.selectAll(".point-label")
     		.data(data)
     		.enter().append("text")
     		.attr("class", function(d,i) { return "point-label color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
-    		.attr("transform", function(d) { return "translate(" + x(d.labx) + "," + y(d.laby) + ")"; })
+    		.attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
     		.style("fill", function(d) { return color_scale(d.col_var); })
     		.style("font-size", labels_size + "px")
 	    	.style("opacity", point_opacity)
     		.attr("text-anchor", "middle")
-    		.attr("dy", "-1.3ex")
+    		.attr("dx", function(d) {
+		    if (d.lab_dx === undefined) return(default_dx)
+		    else return(d.lab_dx + "px");
+		})
+    		.attr("dy", function(d) {
+		    if (d.lab_dy === undefined) return(default_dy)
+		    else return(d.lab_dy + "py");
+		})
     		.text(function(d) {return(d.lab)})
     		.call(drag);
 	}
