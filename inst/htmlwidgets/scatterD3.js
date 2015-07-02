@@ -420,7 +420,7 @@
 	// Add text labels
 	if (has_labels) {
 	    default_dy = -Math.sqrt(point_size) + "px";
-	    default_dx = "0 px";
+	    default_dx = "0px";
 	    chartBody.selectAll(".point-label")
     		.data(data)
     		.enter().append("text")
