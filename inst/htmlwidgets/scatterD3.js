@@ -1,12 +1,15 @@
-(function() {
+var scatterD3_store = {};
 
-    // File-global variables
+(function() {
+   
+    // Widget global variables
     var data;
     var margin, legend_width, width, height, total_width, total_height;
     var point_size, labels_size, point_opacity;
     var xlab, ylab, col_lab, symbol_lab, fixed;
     var color_legend, symbol_legend, has_legend, has_labels, has_tooltips, has_custom_tooltips;
-
+    var tooltip;
+    
     // First setup : initialization    
     function setup(obj, init) {
 	
@@ -30,10 +33,39 @@
 	col_lab = obj.settings.col_lab;
 	symbol_lab = obj.settings.symbol_lab;
 
+	// Store settings in global store in order
+	// for every widget on the page to be able to
+	// get them
 	html_id = obj.settings.html_id;
+	scatterD3_store[html_id] = {};
+	scatterD3_store[html_id].has_labels = has_labels;
+	scatterD3_store[html_id].has_color_legend = has_color_legend;
+	scatterD3_store[html_id].has_symbol_legend = has_symbol_legend;
+	scatterD3_store[html_id].xlab = xlab;
+	scatterD3_store[html_id].ylab = ylab;
+	scatterD3_store[html_id].col_lab = col_lab;
+	scatterD3_store[html_id].symbol_lab = symbol_lab;
 	
 	setup_size(init.width, init.height);
-	
+
+	// tooltips placeholder and function
+	if (has_tooltips) {
+	    tooltip = d3.select(".tooltip");
+	    if (tooltip.empty()) tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
+	    // Create tooltip content function
+	    if (has_custom_tooltips) { scatterD3_store[html_id].tooltip_func = function(d, html_id) { return d.tooltip_text; }}
+	    else {
+		scatterD3_store[html_id].tooltip_func = function(d, html_id) {
+		    var text = Array();
+		    if (scatterD3_store[html_id].has_labels) text.push("<b>"+d.lab+"</b>");
+		    text.push("<b>"+scatterD3_store[html_id].xlab+":</b> "+d.x.toFixed(3));
+		    text.push("<b>"+scatterD3_store[html_id].ylab+":</b> "+d.y.toFixed(3));
+		    if (scatterD3_store[html_id].has_color_legend) text.push("<b>"+scatterD3_store[html_id].col_lab+":</b> "+d.col_var);
+		    if (scatterD3_store[html_id].has_symbol_legend) text.push("<b>"+scatterD3_store[html_id].symbol_lab+":</b> "+d.symbol_var);
+		    return text.join("<br />");
+		}
+	    };
+	}
     }
 
     
@@ -64,7 +96,7 @@
 
 	var min_x, min_y, max_x, max_y, gap_x, gap_y;
 	var x, y, color_scale, symbol_scale, xAxis, yAxis, zoom;
-	var svg, tooltip, tooltip_text;
+	var svg;
 
 	// Drawing init
 	function init_draw() {
@@ -86,26 +118,6 @@
 		      ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} "
 		     );
 	    
-	    // tooltips placeholder and function
-	    if (has_tooltips) {
-		tooltip = d3.select(".tooltip");
-		if (tooltip.empty()) tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
-		if (has_custom_tooltips) { tooltip_text = function(d) { return d.tooltip_text; }}
-		else {
-		    tooltip_text = function(d) {
-			var text = Array();
-			if (has_labels) text.push("<b>"+d.lab+"</b>");
-			text.push("<b>"+xlab+":</b> "+d.x.toFixed(3));
-			text.push("<b>"+ylab+":</b> "+d.y.toFixed(3));
-			if (has_color_legend) text.push("<b>"+col_lab+":</b> "+d.col_var);
-			if (has_symbol_legend) text.push("<b>"+symbol_lab+":</b> "+d.symbol_var);
-			return text.join("<br />");
-		    }
-		    
-		};
-		    
-	    }
-
 	    // scales and zomm
 	    x = d3.scale.linear().range([0, width]);
 	    y = d3.scale.linear().range([height, 0]);
@@ -385,6 +397,7 @@
     	    .call(zoom);
 
 	var chartBody = root.append("g")
+	    .attr("id", "chartBody-"+html_id)
     	    .attr("width", width)
     	    .attr("height", height)
     	    .attr("clip-path", "url(#clip)");
@@ -409,10 +422,12 @@
 	// tooltips when hovering points 
 	if (has_tooltips) {
 	    dot.on("mouseover", function(d,i) {
+		var current_id = d3.select(this.parentNode).attr("id").replace("chartBody-", "");
+		console.log(scatterD3_store[current_id]);
     		var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
     		tooltip.classed("hidden", false)
     		    .attr("style", "left:"+(mouse[0]+el.offsetLeft+40)+"px; top:"+(mouse[1]+el.offsetTop+40)+"px")
-    		    .html(tooltip_text(d));})
+    		    .html(scatterD3_store[current_id].tooltip_func(d, current_id));})
     		.on("mouseout",  function(d,i) {
     		    tooltip.classed("hidden", true);
     		})
