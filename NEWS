@@ -1,3 +1,11 @@
+scatterD3 0.1.2
+------------------------------------------------------
+
+* Fix tooltip content when serveral scatter plots are displayed on the same page
+* Respect custom label position when zooming
+
+
+
 scatterD3 0.1.1
 ------------------------------------------------------
 
