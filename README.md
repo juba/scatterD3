@@ -1,7 +1,5 @@
 `scatterD3` is an HTML R widget for interactive scatter plots visualization. It is based on the [htmlwidgets](http://www.htmlwidgets.org/) R package and on the [d3.js](http://d3js.org/) javascript library.
 
-This is alpha software.
-
 ## Features
 
 `scatterD3` currently provides the following features :
@@ -21,7 +19,11 @@ Here is a small preview of what you will get :
 
 ## Installation
 
-Not on CRAN yet :
+Install from CRAN :
+
+    install_packages("scatterD3")
+
+Or from Github for the latest, bleeding edge, full of bugs version :
 
     devtools::install_github("juba/scatterD3")
     
