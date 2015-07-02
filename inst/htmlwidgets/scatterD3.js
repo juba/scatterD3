@@ -36,6 +36,7 @@ var scatterD3_store = {};
 	// Store settings in global store in order
 	// for every widget on the page to be able to
 	// get them
+	// FIX : I know, it's ugly
 	html_id = obj.settings.html_id;
 	scatterD3_store[html_id] = {};
 	scatterD3_store[html_id].has_labels = has_labels;
