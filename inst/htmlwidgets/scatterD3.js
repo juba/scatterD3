@@ -88,7 +88,8 @@
 	    
 	    // tooltips placeholder and function
 	    if (has_tooltips) {
-		tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
+		tooltip = d3.select(".tooltip");
+		if (tooltip.empty()) tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
 		if (has_custom_tooltips) { tooltip_text = function(d) { return d.tooltip_text; }}
 		else {
 		    tooltip_text = function(d) {
@@ -407,10 +408,10 @@
 
 	// tooltips when hovering points 
 	if (has_tooltips) {
-	    dot.on("mousemove", function(d,i) {
+	    dot.on("mouseover", function(d,i) {
     		var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
     		tooltip.classed("hidden", false)
-    		    .attr("style", "left:"+(mouse[0]+el.offsetLeft+40)+"px;top:"+(mouse[1]+el.offsetTop+40)+"px")
+    		    .attr("style", "left:"+(mouse[0]+el.offsetLeft+40)+"px; top:"+(mouse[1]+el.offsetTop+40)+"px")
     		    .html(tooltip_text(d));})
     		.on("mouseout",  function(d,i) {
     		    tooltip.classed("hidden", true);
