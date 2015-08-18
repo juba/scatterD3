@@ -50,13 +50,30 @@ scatterD3 <- function(x, y, lab = NULL,
                       tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
                       html_id = NULL,
-                      width = NULL, height = NULL) {
+                      width = NULL, height = NULL,
+                      xlim = NULL, ylim = NULL) {
 
   if (is.null(xlab)) xlab <- deparse(substitute(x))
   if (is.null(ylab)) ylab <- deparse(substitute(y))
   if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
   if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
   if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace=TRUE),collapse=""))
+
+  if (is.null(xlim)) {
+    xmin <- NULL
+    xmax <- NULL
+  } else {
+    xmin <- xlim[1]
+    xmax <- xlim[2]
+  }
+
+  if (is.null(ylim)) {
+    ymin <- NULL
+    ymax <- NULL
+  } else {
+    ymin <- ylim[1]
+    ymax <- ylim[2]
+  }
 
   # create a list that contains the settings
   settings <- list(
@@ -72,7 +89,11 @@ scatterD3 <- function(x, y, lab = NULL,
     tooltips = tooltips,
     tooltip_text = tooltip_text,
     fixed = fixed,
-    html_id = html_id
+    html_id = html_id,
+    xmin = xmin,
+    xmax = xmax,
+    ymin = ymin,
+    ymax = ymax
   )
 
   data <- data.frame(x=x, y=y)
