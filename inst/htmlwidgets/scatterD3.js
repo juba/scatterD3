@@ -6,7 +6,7 @@ var scatterD3_store = {};
     var data;
     var margin, legend_width, width, height, total_width, total_height;
     var point_size, labels_size, point_opacity;
-    var xlab, ylab, col_lab, symbol_lab, fixed;
+    var xlab, ylab, col_lab, symbol_lab, xmin, xmax, ymin, ymax, fixed;
     var color_legend, symbol_legend, has_legend, has_labels, has_tooltips, has_custom_tooltips;
     var tooltip;
     
