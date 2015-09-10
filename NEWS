@@ -1,6 +1,7 @@
 scatterD3 0.1.2
 ------------------------------------------------------
 
+* Fix tooltips not showing under Shiny/Bootstrap (Thanks @tinyheero for reporting)
 * Fix tooltip content when serveral scatter plots are displayed on the same page
 * Respect custom label position when zooming
 
