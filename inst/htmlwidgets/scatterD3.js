@@ -6,7 +6,7 @@ var scatterD3_store = {};
     var data;
     var margin, legend_width, width, height, total_width, total_height;
     var point_size, labels_size, point_opacity;
-    var xlab, ylab, col_lab, symbol_lab, fixed;
+    var xlab, ylab, col_lab, symbol_lab, xmin, xmax, ymin, ymax, fixed;
     var color_legend, symbol_legend, has_legend, has_labels, has_tooltips, has_custom_tooltips;
     var tooltip;
 
@@ -32,6 +32,10 @@ var scatterD3_store = {};
 	ylab = obj.settings.ylab;
 	col_lab = obj.settings.col_lab;
 	symbol_lab = obj.settings.symbol_lab;
+	xmin = obj.settings.xmin;
+	xmax = obj.settings.xmax;
+	ymin = obj.settings.ymin;
+	ymax = obj.settings.ymax;
 
 	// Store settings in global store in order
 	// for every widget on the page to be able to
@@ -141,15 +145,35 @@ var scatterD3_store = {};
 		.scaleExtent([1, 32])
 		.on("zoom", zoomed);
 
-	    if (fixed) {
-		    min_x = min_y = d3.min(data, function(d) { return Math.min(d.x,d.y);} );
-		    max_x = max_y = d3.max(data, function(d) { return Math.max(d.x,d.y);} );
-	    } else {
-		    min_x = d3.min(data, function(d) { return Math.min(d.x);} );
-		    max_x = d3.max(data, function(d) { return Math.max(d.x);} );
-		    min_y = d3.min(data, function(d) { return Math.min(d.y);} );
-		    max_y = d3.max(data, function(d) { return Math.max(d.y);} );
-	    }
+		if (xmin === null) {
+			min_x = d3.min(data, function(d) { return Math.min(d.x);} );
+		} else {
+			min_x = xmin;
+		} 
+
+		if (xmax === null) {
+			max_x = d3.max(data, function(d) { return Math.max(d.x);} );
+		} else {
+			max_x = xmax;
+		} 
+
+		if (ymin === null) {
+			min_y = d3.min(data, function(d) { return Math.min(d.y);} );
+		} else {
+			min_y = ymin;
+		} 
+
+		if (ymax === null) {
+			max_y = d3.max(data, function(d) { return Math.max(d.y);} );
+		} else {
+			max_y = ymax;
+		} 
+
+		if (fixed) {
+			min_x = min_y = Math.min(min_x, min_y);
+			max_x = max_y = Math.max(max_x, max_y);
+		}
+
 	    gap_x = (max_x - min_x) * 0.2;
 	    gap_y = (max_y - min_y) * 0.2;
 	    x.domain([min_x - gap_x, max_x + gap_x]);
