@@ -11,7 +11,7 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
   point_opacity = 1, fixed = FALSE, col_var = NULL, symbol_var = NULL,
   col_lab = NULL, symbol_lab = NULL, tooltips = TRUE,
   tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
-  width = NULL, height = NULL)
+  width = NULL, height = NULL, xlim = NULL, ylim = NULL)
 }
 \arguments{
 \item{x}{numerical vector of x values}
@@ -49,6 +49,10 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
 \item{width}{figure width, computed when displayed}
 
 \item{height}{figure height, computed when displayed}
+
+\item{xlim}{numeric vector of length 2, manual x axis limits}
+
+\item{ylim}{numeric vector of length 2, manual y axis limits}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.
