@@ -56,6 +56,15 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtca
 
 Note that when hovering over a legend item with your mouse, the corresponding points are highlighted. Also note that the mapped variables values are automatically added to the default tooltips.
 
+## Axis limits
+
+You can manually specify the `x` or `y` axis limits with the `xlim` and `ylim` arguments :
+
+```{r axis_limits}
+scatterD3(x = mtcars$wt, y = mtcars$mpg, xlim=c(0,10), ylim=c(10,35))
+```
+
+
 
 ## Custom axis and legend labels
 
