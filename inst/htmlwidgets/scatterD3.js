@@ -72,7 +72,7 @@ var scatterD3_store = {};
     // Figure size
     function setup_size(init_width, init_height) {
 
-	margin = {top: 0, right: 10, bottom: 20, left: 20};
+	margin = {top: 5, right: 10, bottom: 20, left: 50};
 	legend_width = 0;
 	if (has_legend) legend_width = 150;
 
@@ -122,7 +122,7 @@ var scatterD3_store = {};
 		.attr("height", total_height);
 
 	    css = svg.append("style")
-		.text(".scatterD3 {font: 10px sans-serif;} " +
+		.text(".scatterD3 {font: 10px sans-serif;}" +
 		      ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
 		      ".scatterD3 .axis .tick line { stroke: #ddd;} " +
 		      ".scatterD3 .axis text { fill: #000;} " +
