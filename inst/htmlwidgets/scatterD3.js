@@ -1,7 +1,7 @@
 var scatterD3_store = {};
 
 (function() {
-   
+
     // Widget global variables
     var data;
     var margin, legend_width, width, height, total_width, total_height;
@@ -9,10 +9,10 @@ var scatterD3_store = {};
     var xlab, ylab, col_lab, symbol_lab, fixed;
     var color_legend, symbol_legend, has_legend, has_labels, has_tooltips, has_custom_tooltips;
     var tooltip;
-    
-    // First setup : initialization    
+
+    // First setup : initialization
     function setup(obj, init) {
-	
+
 	// data
 	data = obj.data;
 	data = HTMLWidgets.dataframeToD3(data);
@@ -23,7 +23,7 @@ var scatterD3_store = {};
 	point_opacity = obj.settings.point_opacity;
 	fixed = obj.settings.fixed;
 	has_color_legend = !(data[0].col_var === undefined);
-	has_symbol_legend = !(data[0].symbol_var === undefined); 
+	has_symbol_legend = !(data[0].symbol_var === undefined);
 	has_legend = has_color_legend || has_symbol_legend;
 	has_labels = !(data[0].lab === undefined);
 	has_tooltips = obj.settings.tooltips;
@@ -46,14 +46,11 @@ var scatterD3_store = {};
 	scatterD3_store[html_id].ylab = ylab;
 	scatterD3_store[html_id].col_lab = col_lab;
 	scatterD3_store[html_id].symbol_lab = symbol_lab;
-	
+
 	setup_size(init.width, init.height);
 
-	// tooltips placeholder and function
+	// Create tooltip content function
 	if (has_tooltips) {
-	    tooltip = d3.select(".tooltip");
-	    if (tooltip.empty()) tooltip = d3.select("body").append("div").attr("class", "tooltip hidden");
-	    // Create tooltip content function
 	    if (has_custom_tooltips) { scatterD3_store[html_id].tooltip_func = function(d, html_id) { return d.tooltip_text; }}
 	    else {
 		scatterD3_store[html_id].tooltip_func = function(d, html_id) {
@@ -69,8 +66,8 @@ var scatterD3_store = {};
 	}
     }
 
-    
-    // Figure size    
+
+    // Figure size
     function setup_size(init_width, init_height) {
 
 	margin = {top: 0, right: 10, bottom: 20, left: 20};
@@ -102,6 +99,17 @@ var scatterD3_store = {};
 	// Drawing init
 	function init_draw() {
 
+	    // Tooltip div
+	    if (has_tooltips) {
+		tooltip = d3.select(".scatterD3-tooltip");
+		if (tooltip.empty()) {
+		    tooltip = d3.select("body")
+			.append("div")
+			.style("visibility", "hidden")
+			.attr("class", "scatterD3-tooltip");
+		}
+	    }
+	    
 	    // recreate SVG root element
 	    d3.select(el).select("svg").remove();
 
@@ -115,10 +123,10 @@ var scatterD3_store = {};
 		.text(".scatterD3 {font: 10px sans-serif;} " +
 		      ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
 		      ".scatterD3 .axis .tick line { stroke: #ddd;} " +
-		      ".scatterD3 .axis text { fill: #000;} " + 
+		      ".scatterD3 .axis text { fill: #000;} " +
 		      ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} "
 		     );
-	    
+
 	    // scales and zomm
 	    x = d3.scale.linear().range([0, width]);
 	    y = d3.scale.linear().range([height, 0]);
@@ -126,7 +134,7 @@ var scatterD3_store = {};
 	    color_scale = d3.scale.category10();
 
 	    symbol_scale = d3.scale.ordinal().range(d3.range(d3.svg.symbolTypes.length));
-	    
+
 	    zoom = d3.behavior.zoom()
 		.x(x)
 		.y(y)
@@ -134,13 +142,13 @@ var scatterD3_store = {};
 		.on("zoom", zoomed);
 
 	    if (fixed) {
-		min_x = min_y = d3.min(data, function(d) { return Math.min(d.x,d.y);} );
-		max_x = max_y = d3.max(data, function(d) { return Math.max(d.x,d.y);} );
+		    min_x = min_y = d3.min(data, function(d) { return Math.min(d.x,d.y);} );
+		    max_x = max_y = d3.max(data, function(d) { return Math.max(d.x,d.y);} );
 	    } else {
-		min_x = d3.min(data, function(d) { return Math.min(d.x);} );
-		max_x = d3.max(data, function(d) { return Math.max(d.x);} );
-		min_y = d3.min(data, function(d) { return Math.min(d.y);} );
-		max_y = d3.max(data, function(d) { return Math.max(d.y);} );
+		    min_x = d3.min(data, function(d) { return Math.min(d.x);} );
+		    max_x = d3.max(data, function(d) { return Math.max(d.x);} );
+		    min_y = d3.min(data, function(d) { return Math.min(d.y);} );
+		    max_y = d3.max(data, function(d) { return Math.max(d.y);} );
 	    }
 	    gap_x = (max_x - min_x) * 0.2;
 	    gap_y = (max_y - min_y) * 0.2;
@@ -169,10 +177,10 @@ var scatterD3_store = {};
     		zoom.translate(t);
 	    }
 
+	    root.selectAll(".zeroline").remove();
 	    root.select(".x.axis").call(xAxis);
 	    root.select(".y.axis").call(yAxis);
 	    root.selectAll(".dot, .point-label").attr("transform", transform);
-	    root.selectAll(".zeroline").remove();
 	    add_zerolines();
 	}
 
@@ -236,7 +244,7 @@ var scatterD3_store = {};
 	function add_color_legend() {
 
 	    var color_legend_y = 20
-	    
+
 	    root.append("g")
     		.append("text")
     		.attr("x", total_width - margin.right - legend_width)
@@ -420,20 +428,21 @@ var scatterD3_store = {};
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
 		  .size(point_size));
 
-	// tooltips when hovering points 
+	// tooltips when hovering points
 	if (has_tooltips) {
-	    dot.on("mouseover", function(d,i) {
+	    dot.on("mouseover", function(d, i){
 		var current_id = d3.select(this.parentNode).attr("id").replace("chartBody-", "");
-		console.log(scatterD3_store[current_id]);
-    		var mouse = d3.mouse(root.node()).map( function(d) { return parseInt(d); } );
-    		tooltip.classed("hidden", false)
-    		    .attr("style", "left:"+(mouse[0]+el.offsetLeft+40)+"px; top:"+(mouse[1]+el.offsetTop+40)+"px")
-    		    .html(scatterD3_store[current_id].tooltip_func(d, current_id));})
-    		.on("mouseout",  function(d,i) {
-    		    tooltip.classed("hidden", true);
-    		})
+		tooltip.style("visibility", "visible")
+		    .html(scatterD3_store[current_id].tooltip_func(d, current_id));
+	    })
+	    .on("mousemove", function(){
+		tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
+	    })
+	    .on("mouseout", function(){
+		tooltip.style("visibility", "hidden");
+	    });
 	}
-	
+
 	// Add text labels
 	if (has_labels) {
 	    default_dy = -Math.sqrt(point_size) + "px";
@@ -476,11 +485,11 @@ var scatterD3_store = {};
 	}
 
 	d3.select("#scatterD3-resetzoom").on("click", reset_zoom);
-	
+
     }
 
     function add_controls_handlers() {
-	
+
 	d3.select("#scatterD3-size").on("change", function() {
 	    labels_size = this.value;
 	    d3.selectAll(".point-label").transition().style("font-size", labels_size + "px");
@@ -490,7 +499,7 @@ var scatterD3_store = {};
 	    point_opacity = this.value;
 	    d3.selectAll(".dot").transition().style("opacity", point_opacity);
 	});
-	
+
 	d3.select("#scatterD3-download")
     	    .on("click", function(){
 		var svg = d3.select("svg#"+html_id)
