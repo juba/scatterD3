@@ -7,7 +7,7 @@ var scatterD3_store = {};
     var dims = {};
 
     // First setup : initialization
-    function setup(obj, init) {
+    function global_setup(obj, init) {
 
         // data
         data = obj.data;
@@ -35,8 +35,6 @@ var scatterD3_store = {};
         scatterD3_store[settings.html_id].col_lab = settings.col_lab;
         scatterD3_store[settings.html_id].symbol_lab = settings.symbol_lab;
 
-        setup_size(init.width, init.height);
-
         // Create tooltip content function
         if (settings.has_tooltips) {
             if (settings.has_custom_tooltips) {
@@ -60,7 +58,7 @@ var scatterD3_store = {};
 
 
     // Figure size
-    function setup_size(init_width, init_height) {
+    function size_setup(init_width, init_height) {
 
         dims.margin = {top: 5, right: 10, bottom: 20, left: 50};
         dims.legend_width = 0;
@@ -529,12 +527,13 @@ var scatterD3_store = {};
         },
 
         resize: function(el, width, height, instance) {
-            setup_size(width, height);
+            size_setup(width, height);
             draw(el);
         },
 
         renderValue: function(el, obj, init) {
-            setup(obj, init);
+            global_setup(obj, init);
+            size_setup(init.width, init.height);
             draw(el);
             add_controls_handlers();
         }
