@@ -3,11 +3,8 @@ var scatterD3_store = {};
 (function() {
 
     // Widget global variables
-    var data;
-    var margin, legend_width, width, height, total_width, total_height;
-    var settings;
-    var color_legend, symbol_legend;
-    var tooltip;
+    var data, settings;
+    var dims = {};
 
     // First setup : initialization
     function setup(obj, init) {
@@ -42,7 +39,11 @@ var scatterD3_store = {};
 
         // Create tooltip content function
         if (settings.has_tooltips) {
-            if (settings.has_custom_tooltips) { scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) { return d.tooltip_text; }}
+            if (settings.has_custom_tooltips) {
+              scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) {
+                return d.tooltip_text;
+              }
+            }
             else {
                 scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) {
                     var text = Array();
@@ -61,23 +62,23 @@ var scatterD3_store = {};
     // Figure size
     function setup_size(init_width, init_height) {
 
-        margin = {top: 5, right: 10, bottom: 20, left: 50};
-        legend_width = 0;
-        if (settings.has_legend) legend_width = 150;
+        dims.margin = {top: 5, right: 10, bottom: 20, left: 50};
+        dims.legend_width = 0;
+        if (settings.has_legend) dims.legend_width = 150;
 
-        width = init_width - legend_width;
-        height = init_height;
+        dims.width = init_width - dims.legend_width;
+        dims.height = init_height;
 
         // Fixed ratio
         if (settings.fixed) {
-            height = Math.min(height, width);
-            width = height;
+            dims.height = Math.min(dims.height, dims.width);
+            dims.width = dims.height;
         }
 
-        height = height - margin.top - margin.bottom;
-        width = width - margin.left - margin.right;
-        total_width = width + margin.left + margin.right + legend_width;
-        total_height = height + margin.top + margin.bottom;
+        dims.height = dims.height - dims.margin.top - dims.margin.bottom;
+        dims.width = dims.width - dims.margin.left - dims.margin.right;
+        dims.total_width = dims.width + dims.margin.left + dims.margin.right + dims.legend_width;
+        dims.total_height = dims.height + dims.margin.top + dims.margin.bottom;
     }
 
     // Main drawing function
@@ -92,7 +93,7 @@ var scatterD3_store = {};
 
             // Tooltip div
             if (settings.has_tooltips) {
-                tooltip = d3.select(".scatterD3-tooltip");
+                var tooltip = d3.select(".scatterD3-tooltip");
                 if (tooltip.empty()) {
                     tooltip = d3.select("body")
                     .append("div")
@@ -107,8 +108,8 @@ var scatterD3_store = {};
             svg = d3.select(el).append("svg")
             .attr("class", "scatterD3")
             .attr("id", settings.html_id)
-            .attr("width", total_width)
-            .attr("height", total_height);
+            .attr("width", dims.total_width)
+            .attr("height", dims.total_height);
 
             css = svg.append("style")
             .text(".scatterD3 {font: 10px sans-serif;}" +
@@ -119,8 +120,8 @@ var scatterD3_store = {};
         );
 
         // scales and zomm
-        x = d3.scale.linear().range([0, width]);
-        y = d3.scale.linear().range([height, 0]);
+        x = d3.scale.linear().range([0, dims.width]);
+        y = d3.scale.linear().range([dims.height, 0]);
 
         color_scale = d3.scale.category10();
 
@@ -167,12 +168,12 @@ var scatterD3_store = {};
             var s = d3.event.scale;
             zscale = s;
             t[0] = Math.min(
-                (width/height)  * (s - 1),
-                Math.max( width * (1 - s), t[0] )
+                (dims.width/dims.height)  * (s - 1),
+                Math.max( dims.width * (1 - s), t[0] )
             );
             t[1] = Math.min(
-                (width/height)  * (s - 1),
-                Math.max( width * (1 - s), t[1] )
+                (dims.width/dims.height)  * (s - 1),
+                Math.max( dims.width * (1 - s), t[1] )
             );
             zoom.translate(t);
         }
@@ -208,20 +209,20 @@ var scatterD3_store = {};
         xAxis = d3.svg.axis()
         .scale(x)
         .orient("bottom")
-        .tickSize(-height);
+        .tickSize(-dims.height);
 
         yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .tickSize(-width);
+        .tickSize(-dims.width);
 
         root.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + dims.height + ")")
         .call(xAxis)
         .append("text")
         .attr("class", "label")
-        .attr("x", width - 5)
+        .attr("x", dims.width - 5)
         .attr("y", -6)
         .style("text-anchor", "end")
         .text(settings.xlab);
@@ -247,7 +248,7 @@ var scatterD3_store = {};
 
         root.append("g")
         .append("text")
-        .attr("x", total_width - margin.right - legend_width)
+        .attr("x", dims.total_width - dims.margin.right - dims.legend_width)
         .attr("y", color_legend_y)
         .style("text-anchor", "beginning")
         .style("fill", "#000")
@@ -263,7 +264,7 @@ var scatterD3_store = {};
 
         // Color rectangles
         color_legend.append("rect")
-        .attr("x", total_width - margin.right - legend_width )
+        .attr("x", dims.total_width - dims.margin.right - dims.legend_width )
         .attr("width", 18)
         .attr("height", 18)
         .attr("class", function(d,i) { return "colorleg color color-" + color_scale(d,i).substring(1)})
@@ -291,7 +292,7 @@ var scatterD3_store = {};
 
         // Labels
         color_legend.append("text")
-        .attr("x", total_width - margin.right - legend_width + 24)
+        .attr("x", dims.total_width - dims.margin.right - dims.legend_width + 24)
         .attr("y", 9)
         .attr("dy", ".35em")
         .style("text-anchor", "beginning")
@@ -309,7 +310,7 @@ var scatterD3_store = {};
 
         root.append("g")
         .append("text")
-        .attr("x", total_width - margin.right - legend_width)
+        .attr("x", dims.total_width - dims.margin.right - dims.legend_width)
         .attr("y", symbol_legend_y)
         .style("text-anchor", "beginning")
         .style("fill", "#000")
@@ -322,7 +323,7 @@ var scatterD3_store = {};
         .attr("class", "symbol-legend")
         .attr("transform", function(d, i) { return "translate(0," + (symbol_legend_y + 10 + i * 20) + ")"; });
 
-        var x_trans = total_width - margin.right - legend_width + 9;
+        var x_trans = dims.total_width - dims.margin.right - dims.legend_width + 9;
         // Symbols
         symbol_legend.append("path")
         .attr("transform","translate(" + x_trans + ",9)")
@@ -354,7 +355,7 @@ var scatterD3_store = {};
 
         // Labels
         symbol_legend.append("text")
-        .attr("x", total_width - margin.right - legend_width + 24)
+        .attr("x", dims.total_width - dims.margin.right - dims.legend_width + 24)
         .attr("y", 9)
         .attr("dy", ".35em")
         .style("text-anchor", "beginning")
@@ -385,30 +386,30 @@ var scatterD3_store = {};
 
         var root = svg.append("g")
         .style("fill", "#FFF")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + dims.margin.left + "," + dims.margin.top + ")");
 
         // clipping rectangle
         root.append("clipPath")
         .attr('id', 'clip')
         .append('rect')
         .style("stroke-width", 0)
-        .attr('width', width)
-        .attr('height', height);
+        .attr('width', dims.width)
+        .attr('height', dims.height);
 
         add_axis();
 
         root.append("rect")
         .attr("class", "pane")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", dims.width)
+        .attr("height", dims.height)
         .style("fill", "none")
         .style("pointer-events", "all")
         .call(zoom);
 
         var chartBody = root.append("g")
         .attr("id", "chartBody-"+settings.html_id)
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", dims.width)
+        .attr("height", dims.height)
         .attr("clip-path", "url(#clip)");
 
         add_zerolines();
@@ -430,6 +431,7 @@ var scatterD3_store = {};
 
         // tooltips when hovering points
         if (settings.has_tooltips) {
+            var tooltip = d3.select(".scatterD3-tooltip");
             dot.on("mouseover", function(d, i){
                 var current_id = d3.select(this.parentNode).attr("id").replace("chartBody-", "");
                 tooltip.style("visibility", "visible")
