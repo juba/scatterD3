@@ -5,90 +5,78 @@ var scatterD3_store = {};
     // Widget global variables
     var data;
     var margin, legend_width, width, height, total_width, total_height;
-    var point_size, labels_size, point_opacity;
-    var xlab, ylab, col_lab, symbol_lab, xlim, ylim, fixed;
-    var color_legend, symbol_legend, has_legend, has_labels, has_tooltips, has_custom_tooltips;
+    var settings;
+    var color_legend, symbol_legend;
     var tooltip;
 
     // First setup : initialization
     function setup(obj, init) {
 
-	// data
-	data = obj.data;
-	data = HTMLWidgets.dataframeToD3(data);
+        // data
+        data = obj.data;
+        data = HTMLWidgets.dataframeToD3(data);
 
-	// options
-	labels_size = obj.settings.labels_size;
-	point_size = obj.settings.point_size;
-	point_opacity = obj.settings.point_opacity;
-	fixed = obj.settings.fixed;
-	has_color_legend = !(data[0].col_var === undefined);
-	has_symbol_legend = !(data[0].symbol_var === undefined);
-	has_legend = has_color_legend || has_symbol_legend;
-	has_labels = !(data[0].lab === undefined);
-	has_tooltips = obj.settings.tooltips;
-	has_custom_tooltips = !(data[0].tooltip_text === undefined);
-	xlab = obj.settings.xlab;
-	ylab = obj.settings.ylab;
-	col_lab = obj.settings.col_lab;
-	symbol_lab = obj.settings.symbol_lab;
-	xlim = obj.settings.xlim;
-	ylim = obj.settings.ylim;
-	
-	// Store settings in global store in order
-	// for every widget on the page to be able to
-	// get them
-	// FIX : I know, it's ugly
-	html_id = obj.settings.html_id;
-	scatterD3_store[html_id] = {};
-	scatterD3_store[html_id].has_labels = has_labels;
-	scatterD3_store[html_id].has_color_legend = has_color_legend;
-	scatterD3_store[html_id].has_symbol_legend = has_symbol_legend;
-	scatterD3_store[html_id].xlab = xlab;
-	scatterD3_store[html_id].ylab = ylab;
-	scatterD3_store[html_id].col_lab = col_lab;
-	scatterD3_store[html_id].symbol_lab = symbol_lab;
+        // settings
+        settings = obj.settings;
+        settings.has_color_legend = !(data[0].col_var === undefined);
+        settings.has_symbol_legend = !(data[0].symbol_var === undefined);
+        settings.has_legend = settings.has_color_legend || settings.has_symbol_legend;
+        settings.has_labels = !(data[0].lab === undefined);
+        settings.has_custom_tooltips = !(data[0].tooltip_text === undefined);
 
-	setup_size(init.width, init.height);
+        // Store settings in global store in order
+        // for every widget on the page to be able to
+        // get them
+        // FIX : I know, it's ugly
+        scatterD3_store[settings.html_id] = {};
+        scatterD3_store[settings.html_id].has_labels = settings.has_labels;
+        scatterD3_store[settings.html_id].has_color_legend = settings.has_color_legend;
+        scatterD3_store[settings.html_id].has_symbol_legend = settings.has_symbol_legend;
+        scatterD3_store[settings.html_id].xlab = settings.xlab;
+        scatterD3_store[settings.html_id].ylab = settings.ylab;
+        scatterD3_store[settings.html_id].col_lab = settings.col_lab;
+        scatterD3_store[settings.html_id].symbol_lab = settings.symbol_lab;
 
-	// Create tooltip content function
-	if (has_tooltips) {
-	    if (has_custom_tooltips) { scatterD3_store[html_id].tooltip_func = function(d, html_id) { return d.tooltip_text; }}
-	    else {
-		scatterD3_store[html_id].tooltip_func = function(d, html_id) {
-		    var text = Array();
-		    if (scatterD3_store[html_id].has_labels) text.push("<b>"+d.lab+"</b>");
-		    text.push("<b>"+scatterD3_store[html_id].xlab+":</b> "+d.x.toFixed(3));
-		    text.push("<b>"+scatterD3_store[html_id].ylab+":</b> "+d.y.toFixed(3));
-		    if (scatterD3_store[html_id].has_color_legend) text.push("<b>"+scatterD3_store[html_id].col_lab+":</b> "+d.col_var);
-		    if (scatterD3_store[html_id].has_symbol_legend) text.push("<b>"+scatterD3_store[html_id].symbol_lab+":</b> "+d.symbol_var);
-		    return text.join("<br />");
-		}
-	    };
-	}
+        setup_size(init.width, init.height);
+
+        // Create tooltip content function
+        if (settings.has_tooltips) {
+            if (settings.has_custom_tooltips) { scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) { return d.tooltip_text; }}
+            else {
+                scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) {
+                    var text = Array();
+                    if (scatterD3_store[settings.html_id].has_labels) text.push("<b>"+d.lab+"</b>");
+                    text.push("<b>"+scatterD3_store[settings.html_id].xlab+":</b> "+d.x.toFixed(3));
+                    text.push("<b>"+scatterD3_store[settings.html_id].ylab+":</b> "+d.y.toFixed(3));
+                    if (scatterD3_store[settings.html_id].has_color_legend) text.push("<b>"+scatterD3_store[settings.html_id].col_lab+":</b> "+d.col_var);
+                    if (scatterD3_store[settings.html_id].has_symbol_legend) text.push("<b>"+scatterD3_store[settings.html_id].symbol_lab+":</b> "+d.symbol_var);
+                    return text.join("<br />");
+                }
+            };
+        }
     }
 
 
     // Figure size
     function setup_size(init_width, init_height) {
 
-	margin = {top: 5, right: 10, bottom: 20, left: 50};
-	legend_width = 0;
-	if (has_legend) legend_width = 150;
+        margin = {top: 5, right: 10, bottom: 20, left: 50};
+        legend_width = 0;
+        if (settings.has_legend) legend_width = 150;
 
-	width = init_width - legend_width;
-	height = init_height;
+        width = init_width - legend_width;
+        height = init_height;
 
-	// Fixed ratio
-	if (fixed) {
-	    height = Math.min(height, width);
-	    width = height;
-	}
+        // Fixed ratio
+        if (settings.fixed) {
+            height = Math.min(height, width);
+            width = height;
+        }
 
-	height = height - margin.top - margin.bottom;
-	width = width - margin.left - margin.right;
-	total_width = width + margin.left + margin.right + legend_width;
-	total_height = height + margin.top + margin.bottom;
+        height = height - margin.top - margin.bottom;
+        width = width - margin.left - margin.right;
+        total_width = width + margin.left + margin.right + legend_width;
+        total_height = height + margin.top + margin.bottom;
     }
 
     // Main drawing function
@@ -101,23 +89,23 @@ var scatterD3_store = {};
 	// Drawing init
 	function init_draw() {
 
-	    // Tooltip div
-	    if (has_tooltips) {
-		tooltip = d3.select(".scatterD3-tooltip");
-		if (tooltip.empty()) {
-		    tooltip = d3.select("body")
-			.append("div")
-			.style("visibility", "hidden")
-			.attr("class", "scatterD3-tooltip");
-		}
-	    }
-	    
+        // Tooltip div
+        if (settings.has_tooltips) {
+            tooltip = d3.select(".scatterD3-tooltip");
+            if (tooltip.empty()) {
+                tooltip = d3.select("body")
+                .append("div")
+                .style("visibility", "hidden")
+                .attr("class", "scatterD3-tooltip");
+            }
+        }
+
 	    // recreate SVG root element
 	    d3.select(el).select("svg").remove();
 
 	    svg = d3.select(el).append("svg")
 	        .attr("class", "scatterD3")
-		.attr("id", html_id)
+		.attr("id", settings.html_id)
 		.attr("width", total_width)
 		.attr("height", total_height);
 
@@ -143,25 +131,25 @@ var scatterD3_store = {};
 		.scaleExtent([1, 32])
 		.on("zoom", zoomed);
 
-	    if(xlim === null) {
-		min_x = d3.min(data, function(d) { return Math.min(d.x);} );		
-		max_x = d3.max(data, function(d) { return Math.max(d.x);} );
-		gap_x = (max_x - min_x) * 0.2;
-	    } else {
-		min_x = xlim[0];
-		max_x = xlim[1];
-		gap_x = 0;
-	    }
-	    
-	    if(ylim === null) {
-		min_y = d3.min(data, function(d) { return Math.min(d.y);} );		
-		max_y = d3.max(data, function(d) { return Math.max(d.y);} );
-		gap_y = (max_y - min_y) * 0.2;
-	    } else {
-		min_y = ylim[0];
-		max_y = ylim[1];
-		gap_y = 0;
-	    }
+        if (settings.xlim === null) {
+            min_x = d3.min(data, function(d) { return Math.min(d.x);} );
+            max_x = d3.max(data, function(d) { return Math.max(d.x);} );
+            gap_x = (max_x - min_x) * 0.2;
+        } else {
+            min_x = settings.xlim[0];
+            max_x = settings.xlim[1];
+            gap_x = 0;
+        }
+
+        if (settings.ylim === null) {
+            min_y = d3.min(data, function(d) { return Math.min(d.y);} );
+            max_y = d3.max(data, function(d) { return Math.max(d.y);} );
+            gap_y = (max_y - min_y) * 0.2;
+        } else {
+            min_y = settings.ylim[0];
+            max_y = settings.ylim[1];
+            gap_y = 0;
+        }
 
 	    x.domain([min_x - gap_x, max_x + gap_x]);
 	    y.domain([min_y - gap_y, max_y + gap_y]);
@@ -235,7 +223,7 @@ var scatterD3_store = {};
     		.attr("x", width - 5)
     		.attr("y", -6)
     		.style("text-anchor", "end")
-    		.text(xlab);
+    		.text(settings.xlab);
 
 	    root.append("g")
     		.attr("class", "y axis")
@@ -247,7 +235,7 @@ var scatterD3_store = {};
        		.attr("y", 6)
     		.attr("dy", ".71em")
     		.style("text-anchor", "end")
-    		.text(ylab);
+    		.text(settings.ylab);
 
 	}
 
@@ -263,7 +251,7 @@ var scatterD3_store = {};
     		.style("text-anchor", "beginning")
     		.style("fill", "#000")
     		.style("font-weight", "bold")
-    		.text(col_lab);
+    		.text(settings.col_lab);
 
 
 	    var color_legend = root.selectAll(".color-legend")
@@ -294,7 +282,7 @@ var scatterD3_store = {};
 		    var legsel = ".colorleg, .point-label";
     		    svg.selectAll(sel)
 			.transition()
-			.style("opacity", point_opacity);
+			.style("opacity", settings.point_opacity);
 		    svg.selectAll(legsel)
 			.transition()
 			.style("opacity", 1);
@@ -325,7 +313,7 @@ var scatterD3_store = {};
     		.style("text-anchor", "beginning")
     		.style("fill", "#000")
     		.style("font-weight", "bold")
-    		.text(symbol_lab);
+    		.text(settings.symbol_lab);
 
 	    var symbol_legend = root.selectAll(".symbol-legend")
     		.data(symbol_scale.domain().sort())
@@ -341,7 +329,7 @@ var scatterD3_store = {};
 	        .style("fill", "#000")
 	       	.attr("d", d3.svg.symbol()
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d)]})
-		  .size(point_size))
+		  .size(settings.point_size))
     		.on("mouseover", function(d,i) {
     		    var nsel = ".symbol:not(.symbol-" + symbol_scale(d) + ")";
     		    var sel = ".symbol-" + symbol_scale(d);
@@ -357,7 +345,7 @@ var scatterD3_store = {};
 		    var legsel = ".symbleg, .point-label";
     		    svg.selectAll(sel)
 			.transition()
-			.style("opacity", point_opacity);
+			.style("opacity", settings.point_opacity);
 		    svg.selectAll(legsel)
 			.transition()
 			.style("opacity", 1);
@@ -381,7 +369,7 @@ var scatterD3_store = {};
 	var drag = d3.behavior.drag()
 	    .origin(function(d) {
 		dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-		dy = (d.lab_dx === undefined) ? -Math.sqrt(point_size) : d.lab_dy;
+		dy = (d.lab_dx === undefined) ? -Math.sqrt(settings.point_size) : d.lab_dy;
 		return {x:x(d.x)+dx, y:y(d.y)+dy}; })
     	    .on('dragstart', function(d) { d3.select(this).style('fill', '#000'); })
     	    .on('drag', function(d) {
@@ -417,7 +405,7 @@ var scatterD3_store = {};
     	    .call(zoom);
 
 	var chartBody = root.append("g")
-	    .attr("id", "chartBody-"+html_id)
+	    .attr("id", "chartBody-"+settings.html_id)
     	    .attr("width", width)
     	    .attr("height", height)
     	    .attr("clip-path", "url(#clip)");
@@ -434,13 +422,13 @@ var scatterD3_store = {};
 	    .attr("id", function(d,i) { return "point-id" + i;})
     	    .attr("class", function(d,i) { return "dot color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     	    .style("fill", function(d) { return color_scale(d.col_var); })
-	    .style("opacity", point_opacity)
+	    .style("opacity", settings.point_opacity)
     	    .attr("d", d3.svg.symbol()
 		  .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
-		  .size(point_size));
+		  .size(settings.point_size));
 
 	// tooltips when hovering points
-	if (has_tooltips) {
+	if (settings.has_tooltips) {
 	    dot.on("mouseover", function(d, i){
 		var current_id = d3.select(this.parentNode).attr("id").replace("chartBody-", "");
 		tooltip.style("visibility", "visible")
@@ -455,8 +443,8 @@ var scatterD3_store = {};
 	}
 
 	// Add text labels
-	if (has_labels) {
-	    default_dy = -Math.sqrt(point_size) + "px";
+	if (settings.has_labels) {
+	    default_dy = -Math.sqrt(settings.point_size) + "px";
 	    default_dx = "0px";
 	    chartBody.selectAll(".point-label")
     		.data(data)
@@ -464,8 +452,8 @@ var scatterD3_store = {};
     		.attr("class", function(d,i) { return "point-label color color-" + color_scale(d.col_var).substring(1) + " symbol symbol-" + symbol_scale(d.symbol_var); })
     		.attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; })
     		.style("fill", function(d) { return color_scale(d.col_var); })
-    		.style("font-size", labels_size + "px")
-	    	.style("opacity", point_opacity)
+    		.style("font-size", settings.labels_size + "px")
+	    	.style("opacity", settings.point_opacity)
     		.attr("text-anchor", "middle")
     		.attr("dx", function(d) {
 		    if (d.lab_dx === undefined) return(default_dx)
@@ -479,8 +467,8 @@ var scatterD3_store = {};
     		.call(drag);
 	}
 
-	if (has_color_legend) { add_color_legend() };
-	if (has_symbol_legend) { add_symbol_legend() };
+	if (settings.has_color_legend) { add_color_legend() };
+	if (settings.has_symbol_legend) { add_symbol_legend() };
 
 
 	// Reset zoom handler must be inside draw() (to fix)
@@ -513,7 +501,7 @@ var scatterD3_store = {};
 
 	d3.select("#scatterD3-download")
     	    .on("click", function(){
-		var svg = d3.select("svg#"+html_id)
+		var svg = d3.select("svg#"+settings.html_id)
     		    .attr("xmlns", "http://www.w3.org/2000/svg")
     		    .attr("version", 1.1)
 		    .node().parentNode
