@@ -22,6 +22,7 @@ var scatterD3_store = {};
         settings.has_symbol_legend = !(data[0].symbol_var === undefined);
         settings.has_legend = settings.has_color_legend || settings.has_symbol_legend;
         settings.has_labels = !(data[0].lab === undefined);
+        settings.has_tooltips = obj.settings.tooltips;
         settings.has_custom_tooltips = !(data[0].tooltip_text === undefined);
 
         // Store settings in global store in order
