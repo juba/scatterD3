@@ -15,12 +15,12 @@ var scatterD3_store = {};
 
         // settings
         settings = obj.settings;
-        settings.has_color_legend = !(data[0].col_var === undefined);
-        settings.has_symbol_legend = !(data[0].symbol_var === undefined);
+        settings.has_color_legend = not(data[0].col_var === undefined);
+        settings.has_symbol_legend = not(data[0].symbol_var === undefined);
         settings.has_legend = settings.has_color_legend || settings.has_symbol_legend;
-        settings.has_labels = !(data[0].lab === undefined);
+        settings.has_labels = not(data[0].lab === undefined);
         settings.has_tooltips = obj.settings.tooltips;
-        settings.has_custom_tooltips = !(data[0].tooltip_text === undefined);
+        settings.has_custom_tooltips = not(data[0].tooltip_text === undefined);
 
         // Store settings in global store in order
         // for every widget on the page to be able to
@@ -40,7 +40,7 @@ var scatterD3_store = {};
             if (settings.has_custom_tooltips) {
               scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) {
                 return d.tooltip_text;
-              }
+              };
             }
             else {
                 scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) {
@@ -51,8 +51,8 @@ var scatterD3_store = {};
                     if (scatterD3_store[settings.html_id].has_color_legend) text.push("<b>"+scatterD3_store[settings.html_id].col_lab+":</b> "+d.col_var);
                     if (scatterD3_store[settings.html_id].has_symbol_legend) text.push("<b>"+scatterD3_store[settings.html_id].symbol_lab+":</b> "+d.symbol_var);
                     return text.join("<br />");
-                }
-            };
+                };
+            }
         }
     }
 
@@ -242,7 +242,7 @@ var scatterD3_store = {};
     // Add color legend
     function add_color_legend() {
 
-        var color_legend_y = 20
+        var color_legend_y = 20;
 
         root.append("g")
         .append("text")
@@ -457,19 +457,19 @@ var scatterD3_store = {};
             .style("opacity", settings.point_opacity)
             .attr("text-anchor", "middle")
             .attr("dx", function(d) {
-                if (d.lab_dx === undefined) return(default_dx)
+                if (d.lab_dx === undefined) return(default_dx);
                 else return(d.lab_dx + "px");
             })
             .attr("dy", function(d) {
-                if (d.lab_dy === undefined) return(default_dy)
+                if (d.lab_dy === undefined) return(default_dy);
                 else return(d.lab_dy + "py");
             })
             .text(function(d) {return(d.lab)})
             .call(drag);
         }
 
-        if (settings.has_color_legend) { add_color_legend() };
-        if (settings.has_symbol_legend) { add_symbol_legend() };
+        if (settings.has_color_legend) { add_color_legend() }
+        if (settings.has_symbol_legend) { add_symbol_legend() }
 
 
         // Reset zoom handler must be inside draw() (to fix)
