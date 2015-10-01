@@ -59,7 +59,7 @@ scatterD3 <- function(x, y, lab = NULL,
   if (is.null(ylab)) ylab <- deparse(substitute(y))
   if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
   if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
-  if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace=TRUE),collapse=""))
+  if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
 
   # create a list that contains the settings
   settings <- list(
@@ -68,23 +68,27 @@ scatterD3 <- function(x, y, lab = NULL,
     point_opacity = point_opacity,
     xlab = xlab,
     ylab = ylab,
+    has_labels = !is.null(lab),
     col_var = col_var,
     col_lab = col_lab,
     symbol_var = symbol_var,
     symbol_lab = symbol_lab,
-    tooltips = tooltips,
+    has_color_legend = !is.null(col_var),
+    has_symbol_legend = !is.null(symbol_var),
+    has_tooltips = tooltips,
     tooltip_text = tooltip_text,
+    has_custom_tooltips = !is.null(tooltip_text),
     fixed = fixed,
     html_id = html_id,
     xlim = xlim,
     ylim = ylim
   )
 
-  data <- data.frame(x=x, y=y)
-  if (!is.null(lab)) data <- cbind(data, lab=lab)
-  if (!is.null(col_var)) data <- cbind(data, col_var=col_var)
-  if (!is.null(symbol_var)) data <- cbind(data, symbol_var=symbol_var)
-  if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text=tooltip_text)
+  data <- data.frame(x = x, y = y)
+  if (!is.null(lab)) data <- cbind(data, lab = lab)
+  if (!is.null(col_var)) data <- cbind(data, col_var = col_var)
+  if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
+  if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
   # pass the data and settings using 'x'
   x <- list(

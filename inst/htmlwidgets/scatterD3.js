@@ -1,9 +1,10 @@
-var scatterD3_store = {};
+//var scatterD3_store = {};
 
 (function() {
 
     // Widget global variables
     var data, settings;
+    var scatterD3_store = {};
     var dims = {};
 
     // First setup : initialization
@@ -15,12 +16,7 @@ var scatterD3_store = {};
 
         // settings
         settings = obj.settings;
-        settings.has_color_legend = not(data[0].col_var === undefined);
-        settings.has_symbol_legend = not(data[0].symbol_var === undefined);
         settings.has_legend = settings.has_color_legend || settings.has_symbol_legend;
-        settings.has_labels = not(data[0].lab === undefined);
-        settings.has_tooltips = obj.settings.tooltips;
-        settings.has_custom_tooltips = not(data[0].tooltip_text === undefined);
 
         // Store settings in global store in order
         // for every widget on the page to be able to
