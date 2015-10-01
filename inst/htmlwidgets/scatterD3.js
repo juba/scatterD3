@@ -1,11 +1,9 @@
-//var scatterD3_store = {};
-
 (function() {
 
     // Widget global variables
     var data, settings;
-    var scatterD3_store = {};
     var dims = {};
+    var scatterD3_store = {};
 
     // First setup : initialization
     function global_setup(obj, init) {
@@ -41,11 +39,11 @@
             else {
                 scatterD3_store[settings.html_id].tooltip_func = function(d, html_id) {
                     var text = Array();
-                    if (scatterD3_store[settings.html_id].has_labels) text.push("<b>"+d.lab+"</b>");
-                    text.push("<b>"+scatterD3_store[settings.html_id].xlab+":</b> "+d.x.toFixed(3));
-                    text.push("<b>"+scatterD3_store[settings.html_id].ylab+":</b> "+d.y.toFixed(3));
-                    if (scatterD3_store[settings.html_id].has_color_legend) text.push("<b>"+scatterD3_store[settings.html_id].col_lab+":</b> "+d.col_var);
-                    if (scatterD3_store[settings.html_id].has_symbol_legend) text.push("<b>"+scatterD3_store[settings.html_id].symbol_lab+":</b> "+d.symbol_var);
+                    if (this.has_labels) text.push("<b>"+d.lab+"</b>");
+                    text.push("<b>"+this.xlab+":</b> "+d.x.toFixed(3));
+                    text.push("<b>"+this.ylab+":</b> "+d.y.toFixed(3));
+                    if (this.has_color_legend) text.push("<b>"+this.col_lab+":</b> "+d.col_var);
+                    if (this.has_symbol_legend) text.push("<b>"+this.symbol_lab+":</b> "+d.symbol_var);
                     return text.join("<br />");
                 };
             }
