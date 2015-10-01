@@ -68,7 +68,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, xlim=c(0,10), ylim=c(10,35))
 
 ## Custom axis and legend labels
 
-You can customize the axis and legend labels with the `xlab`, `ylab`, `col_lab` and `symbol_lab` :
+You can customize the axis and legend labels with `xlab`, `ylab`, `col_lab` and `symbol_lab` :
 
 ```{r cust_labels}
 scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtcars$gear,
