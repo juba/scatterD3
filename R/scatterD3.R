@@ -5,15 +5,18 @@
 #' @param x numerical vector of x values
 #' @param y numerical vector of y values
 #' @param lab optional character vector of text labels
-#' @param point_size points size
+#' @param point_size points size. Ignored if size_var is not NULL.
 #' @param labels_size text labels size
 #' @param point_opacity points opacity
 #' @param fixed force a 1:1 aspect ratio
 #' @param col_var optional vector for points color mapping
 #' @param colors vector of custom points colors. Colors must be defined as an hexadecimal string (eg "#FF0000")
 #' @param symbol_var optional vector for points symbol mapping
+#' @param size_var optional vector for points size mapping
+#' @param size_range numeric vector of length 2, giving the minimum and maximum point sizes when mapping with size_var
 #' @param col_lab color legend title
 #' @param symbol_lab symbols legend title
+#' @param size_lab size legend title
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
 #' @param xlab x axis label
@@ -50,7 +53,10 @@ scatterD3 <- function(x, y, lab = NULL,
                       fixed = FALSE, col_var = NULL,
                       colors = NULL,
                       symbol_var = NULL,
+                      size_var = NULL,
+                      size_range = c(10,300),
                       col_lab = NULL, symbol_lab = NULL,
+                      size_lab = NULL,
                       tooltips = TRUE,
                       tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
@@ -63,6 +69,7 @@ scatterD3 <- function(x, y, lab = NULL,
   if (is.null(ylab)) ylab <- deparse(substitute(y))
   if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
   if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
+  if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
   if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
 
   # create a list that contains the settings
@@ -78,9 +85,13 @@ scatterD3 <- function(x, y, lab = NULL,
     colors = colors,
     symbol_var = symbol_var,
     symbol_lab = symbol_lab,
+    size_var = size_var,
+    size_range = size_range,
+    size_lab = size_lab,
     has_color_legend = !is.null(col_var),
     has_symbol_legend = !is.null(symbol_var),
-    has_legend = !is.null(col_var) || !is.null(symbol_var),
+    has_size_legend = !is.null(size_var),
+    has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
     has_tooltips = tooltips,
     tooltip_text = tooltip_text,
     has_custom_tooltips = !is.null(tooltip_text),
@@ -95,6 +106,7 @@ scatterD3 <- function(x, y, lab = NULL,
   if (!is.null(lab)) data <- cbind(data, lab = lab)
   if (!is.null(col_var)) data <- cbind(data, col_var = col_var)
   if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
+  if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
   if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
   # pass the data and settings using 'x'
