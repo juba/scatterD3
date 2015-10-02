@@ -1,6 +1,7 @@
 scatterD3 0.2
 ------------------------------------------------------
 
+* Add `colors` argument to specify a custom set of point colors
 * Complete code reorganisation, much cleaner
 * New `legend_width` argument
 * Use `d3-legend` plugin for legend generation (http://d3-legend.susielu.com/)
