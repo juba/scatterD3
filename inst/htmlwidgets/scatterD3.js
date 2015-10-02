@@ -465,12 +465,12 @@ function scatterD3() {
         // SVG export
         d3.select("#scatterD3-download")
         .on("click", function(){
-            svg
+            var svg_content = svg
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .attr("version", 1.1)
             .node().parentNode
             .innerHTML;
-            var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
+            var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg_content);
             d3.select(this)
             .attr("download", "scatterD3.svg")
             .attr("href", imageUrl);
