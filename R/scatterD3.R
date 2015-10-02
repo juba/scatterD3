@@ -10,6 +10,7 @@
 #' @param point_opacity points opacity
 #' @param fixed force a 1:1 aspect ratio
 #' @param col_var optional vector for points color mapping
+#' @param colors vector of custom points colors. Colors must be defined as an hexadecimal string (eg "#FF0000")
 #' @param symbol_var optional vector for points symbol mapping
 #' @param col_lab color legend title
 #' @param symbol_lab symbols legend title
@@ -47,6 +48,7 @@ scatterD3 <- function(x, y, lab = NULL,
                       point_size = 64, labels_size = 10,
                       point_opacity = 1,
                       fixed = FALSE, col_var = NULL,
+                      colors = NULL,
                       symbol_var = NULL,
                       col_lab = NULL, symbol_lab = NULL,
                       tooltips = TRUE,
@@ -73,6 +75,7 @@ scatterD3 <- function(x, y, lab = NULL,
     has_labels = !is.null(lab),
     col_var = col_var,
     col_lab = col_lab,
+    colors = colors,
     symbol_var = symbol_var,
     symbol_lab = symbol_lab,
     has_color_legend = !is.null(col_var),

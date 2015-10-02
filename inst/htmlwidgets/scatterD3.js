@@ -57,7 +57,12 @@ function scatterD3() {
         y = d3.scale.linear().range([dims.height, 0]);
         x.domain([min_x - gap_x, max_x + gap_x]);
         y.domain([min_y - gap_y, max_y + gap_y]);
-        color_scale = d3.scale.category10();
+        if (settings.colors == null) {
+            color_scale = d3.scale.category10();
+        } else {
+            console.log(settings.colors);
+            color_scale = d3.scale.ordinal().range(settings.colors);
+        }
         symbol_scale = d3.scale.ordinal().range(d3.range(d3.svg.symbolTypes.length));
 
         // zoom behavior
@@ -511,7 +516,7 @@ function scatterD3() {
 HTMLWidgets.widget({
 
     name: 'scatterD3',
-    
+
     type: 'output',
 
     initialize: function(el, width, height) {
