@@ -215,7 +215,7 @@ function scatterD3() {
             .attr("class", "chart-body")
             .attr("width", dims.width)
             .attr("height", dims.height)
-            .attr("clip-path", "url(#scatterclip)");
+            .attr("clip-path", "url(" + document.location.href + "#scatterclip)");
 
             // Zero horizontal and vertical lines
             var zeroline = d3.svg.line()
