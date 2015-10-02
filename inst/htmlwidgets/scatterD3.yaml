@@ -4,5 +4,5 @@ dependencies:
     src: htmlwidgets/lib
     script:
       - d3-3.5.5.min.js
+      - d3-legend.min.js
     stylesheet: scatterD3.css
-
