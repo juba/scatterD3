@@ -192,7 +192,6 @@ function scatterD3() {
             .append("clipPath")
             .attr('id', 'scatterclip')
             .append('rect')
-            .attr("class", "cliprect")
             .attr('class', 'cliprect')
             .attr('width', dims.width)
             .attr('height', dims.height);
