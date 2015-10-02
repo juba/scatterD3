@@ -1,6 +1,9 @@
-scatterD3 0.1.2
+scatterD3 0.2
 ------------------------------------------------------
 
+* Complete code reorganisation, much cleaner
+* New `legend_width` argument
+* Use `d3-legend` plugin for legend generation (http://d3-legend.susielu.com/)
 * New `xlim` and `ylim` arguments for manual axis limits specification (Thanks @tinyheero)
 * Fix tooltips not showing under Shiny/Bootstrap (Thanks @tinyheero for reporting)
 * Fix tooltip content when several scatter plots are displayed on the same page
