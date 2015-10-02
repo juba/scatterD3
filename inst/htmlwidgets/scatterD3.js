@@ -163,7 +163,8 @@ function scatterD3() {
         }
       }
 
-      function chart(selection) {
+
+        function chart(selection) {
           selection.each(function(data) {
               svg = d3.select(this).select("svg");
 
@@ -378,10 +379,45 @@ function scatterD3() {
                   .call(symbol_legend);
                 }
 
-
-
           })
       }
+
+     chart.add_controls_handlers = function() {
+
+          d3.select("#scatterD3-resetzoom").on("click", function() {
+              d3.transition().duration(750).tween("zoom", function() {
+                  var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
+                  iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
+                  return function(t) {
+                      zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
+                      zoomed(reset=true);
+                  };
+              })});
+
+          d3.select("#scatterD3-size").on("change", function() {
+              labels_size = this.value;
+              svg.selectAll(".point-label").transition().style("font-size", labels_size + "px");
+          });
+
+          d3.select("#scatterD3-opacity").on("change", function() {
+              point_opacity = this.value;
+              svg.selectAll(".dot").transition().style("opacity", point_opacity);
+          });
+
+          d3.select("#scatterD3-download")
+          .on("click", function(){
+              svg
+              .attr("xmlns", "http://www.w3.org/2000/svg")
+              .attr("version", 1.1)
+              .node().parentNode
+              .innerHTML;
+              var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg);
+              d3.select(this)
+              .attr("download", "scatterD3.svg")
+              .attr("href", imageUrl);
+          });
+      }
+
 
   chart.resize = function() {
     // recompute sizes
@@ -471,6 +507,8 @@ HTMLWidgets.widget({
 
     initialize: function(el, width, height) {
 
+        if (width < 0) width = 0;
+        if (height < 0) height = 0;
         // Create root svg element
         d3.select(el).append("svg")
         .attr("width", width)
@@ -498,6 +536,8 @@ HTMLWidgets.widget({
 
     resize: function(el, width, height, scatter) {
 
+        if (width < 0) width = 0;
+        if (height < 0) height = 0;
         // resize root svg element
         d3.select(el).select("svg")
         .attr("width", width)
@@ -511,6 +551,7 @@ HTMLWidgets.widget({
         data = HTMLWidgets.dataframeToD3(obj.data);
         // initialize chart with settings
         scatter = scatter.settings(obj.settings);
+        scatter.add_controls_handlers();
         // draw chart
         d3.select(el)
         .datum(data)
