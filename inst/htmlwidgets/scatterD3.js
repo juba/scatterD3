@@ -612,6 +612,10 @@ HTMLWidgets.widget({
     },
 
     renderValue: function(el, obj, scatter) {
+
+        // FIXME: make the chart updatable instead of removing/recreating it
+        d3.select(el).select("svg").selectAll("*:not(style)").remove();
+
         // convert data to d3 format
         data = HTMLWidgets.dataframeToD3(obj.data);
         // initialize chart with settings
