@@ -135,7 +135,7 @@ function scatterD3() {
         .attr("transform", "translate(0," + dims.height + ")")
         .call(xAxis)
         .append("text")
-        .attr("class", "label")
+        .attr("class", "axis-label")
         .attr("x", dims.width - 5)
         .attr("y", -6)
         .style("text-anchor", "end")
@@ -146,7 +146,7 @@ function scatterD3() {
         .attr("class", "y axis")
         .call(yAxis)
         .append("text")
-        .attr("class", "label")
+        .attr("class", "axis-label")
         .attr("transform", "rotate(-90)")
         .attr("x", -5)
         .attr("y", 6)
@@ -188,14 +188,16 @@ function scatterD3() {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             // clipping rectangle
-            root.append("clipPath")
-            .attr('id', 'scatterD3-clip')
+            svg.append("defs")
+            .append("clipPath")
+            .attr('id', 'scatterclip')
             .append('rect')
             .attr("class", "cliprect")
-            .style("stroke-width", 0)
+            .attr('class', 'cliprect')
             .attr('width', dims.width)
-            .attr('height', dims.height)
-            .style("fill", "none");
+            .attr('height', dims.height);
+            //.style("stroke-width", 0)
+            //.style("fill", "none");
 
             // add x and y axes
             add_axes(root);
@@ -214,7 +216,7 @@ function scatterD3() {
             .attr("class", "chart-body")
             .attr("width", dims.width)
             .attr("height", dims.height)
-            .attr("clip-path", "url(#scatterD3-clip)");
+            .attr("clip-path", "url(#scatterclip)");
 
             // Zero horizontal and vertical lines
             var zeroline = d3.svg.line()
@@ -499,7 +501,7 @@ function scatterD3() {
         svg.select(".pane").attr("width", dims.width).attr("height", dims.height);
         svg.select(".chart-body").attr("width", dims.width).attr("height", dims.height);
         svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
-        svg.select(".x.axis .label").attr("x", dims.width - 5);
+        svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
         svg.select(".y.axis").call(yAxis);
         svg.selectAll(".dot").attr("transform", translation);
         if (settings.has_labels) {
