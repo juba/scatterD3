@@ -10,7 +10,10 @@
 #' @param point_opacity points opacity
 #' @param fixed force a 1:1 aspect ratio
 #' @param col_var optional vector for points color mapping
-#' @param colors vector of custom points colors. Colors must be defined as an hexadecimal string (eg "#FF0000")
+#' @param colors vector of custom points colors. Colors must be
+#'          defined as an hexadecimal string (eg "#FF0000").  If
+#'          \code{colors} is a named list or vector, then the colors will
+#'          be associated with their name within \code{col_var}.
 #' @param symbol_var optional vector for points symbol mapping
 #' @param size_var optional vector for points size mapping
 #' @param size_range numeric vector of length 2, giving the minimum and maximum point sizes when mapping with size_var
@@ -43,7 +46,10 @@
 #'           col_var = mtcars$cyl, symbol_var = mtcars$am,
 #'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
 #'           symbol_lab = "Manual transmission", html_id = NULL)
-#'
+#' scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
+#'           col_var = mtcars$cyl, symbol_var = mtcars$am,
+#'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
+#'           symbol_lab = "Manual transmission", html_id = NULL)
 #'
 #' @export
 #'
@@ -71,6 +77,13 @@ scatterD3 <- function(x, y, lab = NULL,
   if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
   if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
   if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
+
+  #colors can be named
+  #  we'll need to convert named vector to a named list
+  #  for the JSON conversion
+  if(!is.null(colors) && !is.null(names(colors))) {
+    colors <- as.list(colors)
+  }
 
   # create a list that contains the settings
   settings <- list(
