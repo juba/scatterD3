@@ -5,6 +5,7 @@ function scatterD3() {
     height = 600, // default height
     dims = {},
     margin = {top: 5, right: 10, bottom: 20, left: 50, legend_top: 50},
+    old_settings = {},
     settings = {},
     x, y, color_scale, symbol_scale, size_scale,
     xAxis, yAxis,
@@ -454,18 +455,6 @@ function scatterD3() {
             })
         });
 
-        // Labels size
-        d3.select("#scatterD3-size").on("change", function() {
-            labels_size = this.value;
-            svg.selectAll(".point-label").transition().style("font-size", labels_size + "px");
-        });
-
-        // Point opacity
-        d3.select("#scatterD3-opacity").on("change", function() {
-            point_opacity = this.value;
-            svg.selectAll(".dot").transition().style("opacity", point_opacity);
-        });
-
         // SVG export
         d3.select("#scatterD3-download")
         .on("click", function(){
@@ -481,7 +470,7 @@ function scatterD3() {
         });
     };
 
-
+    // Dynamically resize chart elements
     chart.resize = function() {
         // recompute sizes
         setup_sizes();
@@ -538,6 +527,19 @@ function scatterD3() {
 
 
     };
+
+    // Update chart with transitions
+    chart.update_chart = function(old_settings, new_settings) {
+        settings = new_settings;
+        if (old_settings.point_opacity != settings.point_opacity) {
+            svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
+        }
+        if (old_settings.labels_size != settings.labels_size) {
+            console.log("labels");
+            svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
+        }
+        return chart;
+    }
 
     // settings getter/setter
     chart.settings = function(value) {
@@ -618,18 +620,26 @@ HTMLWidgets.widget({
     renderValue: function(el, obj, scatter) {
 
         // FIXME: make the chart updatable instead of removing/recreating it
-        d3.select(el).select("svg").selectAll("*:not(style)").remove();
+        //d3.select(el).select("svg").selectAll("*:not(style)").remove();
 
-        // convert data to d3 format
-        data = HTMLWidgets.dataframeToD3(obj.data);
-        // initialize chart with settings
-        scatter = scatter.settings(obj.settings);
-        // add controls handlers for shiny apps
-        scatter.add_controls_handlers();
-        // draw chart
-        d3.select(el)
-        .datum(data)
-        .call(scatter);
+        // First call
+        if (Object.keys(scatter.settings()).length === 0) {
+            // convert data to d3 format
+            data = HTMLWidgets.dataframeToD3(obj.data);
+            // initialize chart with settings
+            scatter = scatter.settings(obj.settings);
+            // add controls handlers for shiny apps
+            scatter.add_controls_handlers();
+            // draw chart
+            d3.select(el)
+            .datum(data)
+            .call(scatter);
+        }
+        // Update
+        else {
+            old_settings = scatter.settings();
+            scatter = scatter.update_chart(old_settings, obj.settings)
+        }
     }
 
 });
