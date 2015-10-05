@@ -46,10 +46,6 @@
 #'           col_var = mtcars$cyl, symbol_var = mtcars$am,
 #'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
 #'           symbol_lab = "Manual transmission", html_id = NULL)
-#' scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
-#'           col_var = mtcars$cyl, symbol_var = mtcars$am,
-#'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
-#'           symbol_lab = "Manual transmission", html_id = NULL)
 #'
 #' @export
 #'
@@ -78,11 +74,12 @@ scatterD3 <- function(x, y, lab = NULL,
   if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
   if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
 
-  #colors can be named
+  # colors can be named
   #  we'll need to convert named vector to a named list
   #  for the JSON conversion
-  if(!is.null(colors) && !is.null(names(colors))) {
+  if (!is.null(colors) && !is.null(names(colors))) {
     colors <- as.list(colors)
+    if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
   }
 
   # create a list that contains the settings
