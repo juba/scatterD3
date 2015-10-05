@@ -267,7 +267,7 @@ function scatterD3() {
 
             // Text labels dragging
             function default_dy(size) {
-                return (-Math.sqrt(size) / 2) - 10;
+                return (-Math.sqrt(size) / 2) - 7;
             }
             var drag = d3.behavior.drag()
             .origin(function(d) {
