@@ -174,6 +174,7 @@ function scatterD3() {
             text.push("<b>"+settings.ylab+":</b> "+d.y.toFixed(3));
             if (settings.has_color_legend) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
             if (settings.has_symbol_legend) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
+            if (settings.has_size_legend) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
             return text.join("<br />");
         }
     }
