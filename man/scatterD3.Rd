@@ -32,7 +32,10 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
 
 \item{col_var}{optional vector for points color mapping}
 
-\item{colors}{vector of custom points colors. Colors must be defined as an hexadecimal string (eg "#FF0000")}
+\item{colors}{vector of custom points colors. Colors must be
+defined as an hexadecimal string (eg "#FF0000").  If
+\code{colors} is a named list or vector, then the colors will
+be associated with their name within \code{col_var}.}
 
 \item{symbol_var}{optional vector for points symbol mapping}
 
