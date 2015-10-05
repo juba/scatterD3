@@ -59,15 +59,14 @@ function scatterD3() {
         y = d3.scale.linear().range([dims.height, 0]);
         x.domain([min_x - gap_x, max_x + gap_x]);
         y.domain([min_y - gap_y, max_y + gap_y]);
-        if (settings.colors == null) {
+        if (settings.colors === null) {
             color_scale = d3.scale.category10();
         } else if (Array.isArray(settings.colors)) {
-            console.log(settings.colors);
             color_scale = d3.scale.ordinal().range(settings.colors);
         } else if (typeof(settings.colors) === "object"){
             color_scale = d3.scale.ordinal()
-                            .range(d3.values(settings.colors))
-                            .domain(d3.keys(settings.colors));
+                          .range(d3.values(settings.colors))
+                          .domain(d3.keys(settings.colors));
         }
         symbol_scale = d3.scale.ordinal().range(d3.range(d3.svg.symbolTypes.length));
         size_scale = d3.scale.linear()
