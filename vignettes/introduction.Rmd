@@ -46,7 +46,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), labels_size = 9
 Note that text labels are fully movable : click and drag a label with your mouse to place it where you want. Custom positions are preserved while zooming/panning.
 
 
-## Mapping colors and symbols to variables
+## Mapping colors, symbols and size to variables
 
 By passing vectors to the `col_var` and/or `symbol_var` arguments, you can map points colors and symbols to other variables.
 
@@ -55,6 +55,12 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtca
 ```
 
 Note that when hovering over a legend item with your mouse, the corresponding points are highlighted. Also note that the mapped variables values are automatically added to the default tooltips.
+
+You can also map symbol sizes with a variable with the `size_var` argument. `size_range` allows to customize the sizes range :
+
+```{r map_size}
+scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, size_var = mtcars$hp, size_range = c(10,1000), point_opacity = 0.7)
+```
 
 ## Axis limits
 
@@ -68,7 +74,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, xlim=c(0,10), ylim=c(10,35))
 
 ## Custom axis and legend labels
 
-You can customize the axis and legend labels with `xlab`, `ylab`, `col_lab` and `symbol_lab` :
+You can customize the axis and legend labels with `xlab`, `ylab`, `col_lab`, `symbol_lab` and `size_lab` :
 
 ```{r cust_labels}
 scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtcars$gear,
