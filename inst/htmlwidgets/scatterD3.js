@@ -7,6 +7,7 @@ function scatterD3() {
     margin = {top: 5, right: 10, bottom: 20, left: 50, legend_top: 50},
     old_settings = {},
     settings = {},
+    data = [],
     x, y, color_scale, symbol_scale, size_scale,
     xAxis, yAxis,
     svg,
@@ -182,7 +183,7 @@ function scatterD3() {
 
 
     function chart(selection) {
-        selection.each(function(data) {
+        selection.each(function() {
 
             svg = d3.select(this).select("svg");
 
@@ -436,6 +437,12 @@ function scatterD3() {
                 .call(size_legend);
             }
 
+            // Update chart with transitions
+            update_settings = function(old_settings, new_settings) {
+                settings = new_settings;
+                if (old_settings.point_opacity != settings.point_opacity) svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
+                if (old_settings.labels_size != settings.labels_size) svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
+            }
 
         });
     }
@@ -528,26 +535,26 @@ function scatterD3() {
 
     };
 
-    // Update chart with transitions
-    chart.update_chart = function(old_settings, new_settings) {
-        settings = new_settings;
-        if (old_settings.point_opacity != settings.point_opacity) {
-            svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
-        }
-        if (old_settings.labels_size != settings.labels_size) {
-            console.log("labels");
-            svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
-        }
+    // settings getter/setter
+    chart.data = function(value) {
+        if (!arguments.length) return data;
+        data = value;
+        if (typeof update_data === 'function') update_data();
         return chart;
-    }
+    };
 
     // settings getter/setter
     chart.settings = function(value) {
         if (!arguments.length) return settings;
-        settings = value;
-        // update dims and scales
-        setup_sizes();
-        setup_scales();
+        if (typeof update_settings === 'function') {
+            update_settings(settings, value);
+        }
+        else {
+            settings = value;
+            // update dims and scales
+            setup_sizes();
+            setup_scales();
+        }
         return chart;
     };
 
@@ -622,23 +629,20 @@ HTMLWidgets.widget({
         // FIXME: make the chart updatable instead of removing/recreating it
         //d3.select(el).select("svg").selectAll("*:not(style)").remove();
 
+        // convert data to d3 format
+        data = HTMLWidgets.dataframeToD3(obj.data);
+        scatter = scatter.data(data);
+        // initialize chart with settings
+        var first_draw = (Object.keys(scatter.settings()).length === 0);
+        scatter = scatter.settings(obj.settings);
+
         // First call
-        if (Object.keys(scatter.settings()).length === 0) {
-            // convert data to d3 format
-            data = HTMLWidgets.dataframeToD3(obj.data);
-            // initialize chart with settings
-            scatter = scatter.settings(obj.settings);
+        if (first_draw) {
             // add controls handlers for shiny apps
             scatter.add_controls_handlers();
             // draw chart
             d3.select(el)
-            .datum(data)
             .call(scatter);
-        }
-        // Update
-        else {
-            old_settings = scatter.settings();
-            scatter = scatter.update_chart(old_settings, obj.settings)
         }
     }
 
