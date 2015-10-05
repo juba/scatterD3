@@ -296,7 +296,6 @@ function scatterD3() {
                 .attr("transform", translation)
                 .style("fill", function(d) { return color_scale(d.col_var); })
                 .style("font-size", settings.labels_size + "px")
-                .style("opacity", settings.point_opacity)
                 .attr("text-anchor", "middle")
                 .attr("dx", function(d) {
                     if (d.lab_dx === undefined) return("0px");
