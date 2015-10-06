@@ -11,7 +11,7 @@ function scatterD3() {
     x, y, color_scale, symbol_scale, size_scale,
     xAxis, yAxis,
     svg,
-    zoom;
+    zoom, drag;
 
     function setup_sizes() {
         dims.legend_width = 0;
@@ -93,6 +93,11 @@ function scatterD3() {
         .orient("left")
         .tickSize(-dims.width);
 
+    }
+
+    // Key function to identify rows when interactively filtering
+    function key(d) {
+        return d.key_var;
     }
 
     // Default translation function for points and labels
@@ -181,6 +186,93 @@ function scatterD3() {
         }
     }
 
+    // Initial dot attributes
+    function dot_init (selection) {
+        // tooltips when hovering points
+        if (settings.has_tooltips) {
+            var tooltip = d3.select(".scatterD3-tooltip");
+            selection.on("mouseover", function(d, i){
+                tooltip.style("visibility", "visible")
+                .html(tooltip_content(d));
+                console.log(d.x);
+                console.log(x(d.x));
+            })
+            selection.on("mousemove", function(){
+                tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
+            })
+            selection.on("mouseout", function(){
+                tooltip.style("visibility", "hidden");
+            });
+        }
+    }
+
+    // Apply format to dot
+    function dot_formatting (selection) {
+        selection
+        .attr("transform", translation)
+        .style("opacity", settings.point_opacity)
+        // fill color
+        .style("fill", function(d) { return color_scale(d.col_var); })
+        // symbol and size
+        .attr("d", d3.svg.symbol()
+            .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
+            .size(function(d) {
+                if (settings.has_size_legend) { return size_scale(d.size_var)}
+                else { return settings.point_size };
+            })
+        )
+        .attr("class", function(d,i) { return "dot color color-" + d.col_var + " symbol symbol-" + d.symbol_var; });
+    }
+
+    // Initial text label attributes
+    function label_init (selection) {
+        selection
+        .text(function(d) {return(d.lab)})
+        .attr("text-anchor", "middle")
+        .attr("dx", function(d) {
+            if (d.lab_dx === undefined) return("0px");
+            else return(d.lab_dx + "px");
+        })
+    }
+
+    // Compute default vertical offset for labels
+    function default_label_dy(size) {
+        return (-Math.sqrt(size) / 2) - 7;
+    }
+
+    // Apply format to text label
+    function label_formatting (selection) {
+        selection
+        .style("font-size", settings.labels_size + "px")
+        .attr("class", function(d,i) { return "point-label color color-" + d.col_var + " symbol symbol-" + d.symbol_var; })
+        .attr("transform", translation)
+        .style("fill", function(d) { return color_scale(d.col_var); })
+        .attr("dy", function(d) {
+            if (d.lab_dy !== undefined) return(d.lab_dy + "px");
+            var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+            return default_label_dy(size) + "px";
+        })
+    }
+
+    // Text labels dragging function
+    drag = d3.behavior.drag()
+    .origin(function(d) {
+        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+        dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+        dy = (d.lab_dx === undefined) ? default_label_dy(size) : d.lab_dy;
+        return {x:x(d.x)+dx, y:y(d.y)+dy};
+    })
+    .on('dragstart', function(d) { d3.select(this).style('fill', '#000'); })
+    .on('drag', function(d) {
+        cx = d3.event.x - x(d.x);
+        cy = d3.event.y - y(d.y);
+        d3.select(this).attr('dx', cx + "px");
+        d3.select(this).attr('dy', cy + "px");
+        d.lab_dx = cx;
+        d.lab_dy = cy;
+    })
+    .on('dragend', function(d) { d3.select(this).style('fill', color_scale(d.col_var)); });
+
 
     function chart(selection) {
         selection.each(function() {
@@ -217,7 +309,7 @@ function scatterD3() {
             .call(zoom);
 
             // chart body
-            var chartBody = root.append("g")
+            var chart_body = root.append("g")
             .attr("class", "chart-body")
             .attr("width", dims.width)
             .attr("height", dims.height)
@@ -227,88 +319,32 @@ function scatterD3() {
             var zeroline = d3.svg.line()
             .x(function(d) {return x(d.x)})
             .y(function(d) {return y(d.y)});
-            chartBody.append("path")
+            chart_body.append("path")
             .attr("class", "zeroline hline")
             .attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-            chartBody.append("path")
+            chart_body.append("path")
             .attr("class", "zeroline vline")
             .attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 
             // Add points
-            var dot = chartBody
+            var dot = chart_body
             .selectAll(".dot")
-            .data(data);
+            .data(data, key);
 
-            dot.enter().append("path")
-            .attr("transform", translation)
-            .attr("class", function(d,i) { return "dot color color-" + d.col_var + " symbol symbol-" + d.symbol_var; })
-            .style("opacity", settings.point_opacity)
-            .style("fill", function(d) { return color_scale(d.col_var); })
-            .attr("d", d3.svg.symbol()
-                .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
-                .size(function(d) {
-                    if (settings.has_size_legend) { return size_scale(d.size_var)}
-                    else { return settings.point_size };
-                })
-            );
-
-            // tooltips when hovering points
-            if (settings.has_tooltips) {
-                var tooltip = d3.select(".scatterD3-tooltip");
-                dot.on("mouseover", function(d, i){
-                    tooltip.style("visibility", "visible")
-                    .html(tooltip_content(d));
-                })
-                .on("mousemove", function(){
-                    tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
-                })
-                .on("mouseout", function(){
-                    tooltip.style("visibility", "hidden");
-                });
-            }
-
-            // Text labels dragging
-            function default_dy(size) {
-                return (-Math.sqrt(size) / 2) - 7;
-            }
-            var drag = d3.behavior.drag()
-            .origin(function(d) {
-                var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-                dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-                dy = (d.lab_dx === undefined) ? default_dy(size) : d.lab_dy;
-                return {x:x(d.x)+dx, y:y(d.y)+dy};
-            })
-            .on('dragstart', function(d) { d3.select(this).style('fill', '#000'); })
-            .on('drag', function(d) {
-                cx = d3.event.x - x(d.x);
-                cy = d3.event.y - y(d.y);
-                d3.select(this).attr('dx', cx + "px");
-                d3.select(this).attr('dy', cy + "px");
-                d.lab_dx = cx;
-                d.lab_dy = cy;
-            })
-            .on('dragend', function(d) { d3.select(this).style('fill', color_scale(d.col_var)); });
+            dot.enter()
+            .append("path")
+            .call(dot_init)
+            .call(dot_formatting);
 
             // Add text labels
             if (settings.has_labels) {
-                chartBody.selectAll(".point-label")
-                .data(data)
-                .enter().append("text")
-                .attr("class", function(d,i) { return "point-label color color-" + d.col_var + " symbol symbol-" + d.symbol_var; })
-                .attr("transform", translation)
-                .style("fill", function(d) { return color_scale(d.col_var); })
-                .style("font-size", settings.labels_size + "px")
-                .attr("text-anchor", "middle")
-                .attr("dx", function(d) {
-                    if (d.lab_dx === undefined) return("0px");
-                    else return(d.lab_dx + "px");
-                })
-                .attr("dy", function(d) {
-                    if (d.lab_dy !== undefined) return(d.lab_dy + "px");
-                    var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-                    return default_dy(size) + "px";
-                })
-                .text(function(d) {return(d.lab)})
+                var labels = chart_body.selectAll(".point-label")
+                .data(data, key);
+
+                labels.enter()
+                .append("text")
+                .call(label_init)
+                .call(label_formatting)
                 .call(drag);
             }
 
@@ -339,6 +375,9 @@ function scatterD3() {
                     svg.selectAll(sel)
                     .transition()
                     .style("opacity", settings.point_opacity);
+                    svg.selectAll(".point-label")
+                    .transition()
+                    .style("opacity", 1);
                 });
 
                 svg.append("g")
@@ -355,7 +394,6 @@ function scatterD3() {
                 .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 8) + ")")
                 .call(color_legend);
             }
-
 
             // Symbol legend
             if (settings.has_symbol_legend) {
@@ -388,6 +426,9 @@ function scatterD3() {
                     svg.selectAll(sel)
                     .transition()
                     .style("opacity", settings.point_opacity);
+                    svg.selectAll(".point-label")
+                    .transition()
+                    .style("opacity", 1);
                 });
 
                 svg.append("g")
@@ -440,9 +481,46 @@ function scatterD3() {
             // Update chart with transitions
             update_settings = function(old_settings, new_settings) {
                 settings = new_settings;
-                if (old_settings.point_opacity != settings.point_opacity) svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
-                if (old_settings.labels_size != settings.labels_size) svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
+                if (old_settings.point_opacity != settings.point_opacity)
+                    svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
+                if (old_settings.labels_size != settings.labels_size)
+                    svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
             }
+
+            // Update data with transitions
+            update_data = function() {
+
+                setup_scales();
+
+                svg.select(".x.axis .axis-label").text(settings.xlab);
+                svg.select(".y.axis .axis-label").text(settings.ylab);
+                svg.select(".pane").call(zoom);
+                zoom.x(x);
+                zoom.y(y);
+                var t0 = svg.transition().duration(1000);
+                t0.select(".x.axis").call(xAxis);
+                t0.select(".y.axis").call(yAxis);
+                t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
+                t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
+
+                var chart_body = svg.select(".chart-body");
+                var dots = chart_body.selectAll(".dot")
+                .data(data, key);
+                dots.enter().append("path").call(dot_init);
+                dots.transition().duration(1000).call(dot_formatting);
+                dots.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+
+                if (settings.has_labels) {
+                    var labels = chart_body.selectAll(".point-label")
+                    .data(data, key);
+
+                    labels.enter().append("text").call(label_init).call(drag);
+                    labels.transition().duration(1000).call(label_formatting);
+                    labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+                }
+
+            }
+
 
         });
     }
@@ -496,7 +574,7 @@ function scatterD3() {
         // Change svg attributes
         svg.select(".root").attr("width", dims.width).attr("height", dims.height);
         svg.select(".cliprect").attr("width", dims.width).attr("height", dims.height);
-        svg.select(".pane").attr("width", dims.width).attr("height", dims.height);
+        svg.select(".pane").attr("width", dims.width).attr("height", dims.height).call(zoom);
         svg.select(".chart-body").attr("width", dims.width).attr("height", dims.height);
         svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
         svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
@@ -626,23 +704,23 @@ HTMLWidgets.widget({
 
     renderValue: function(el, obj, scatter) {
 
-        // FIXME: make the chart updatable instead of removing/recreating it
-        //d3.select(el).select("svg").selectAll("*:not(style)").remove();
-
         // convert data to d3 format
         data = HTMLWidgets.dataframeToD3(obj.data);
-        scatter = scatter.data(data);
         // initialize chart with settings
         var first_draw = (Object.keys(scatter.settings()).length === 0);
-        scatter = scatter.settings(obj.settings);
 
         // First call
         if (first_draw) {
+            scatter = scatter.data(data);
+            scatter = scatter.settings(obj.settings);
             // add controls handlers for shiny apps
             scatter.add_controls_handlers();
             // draw chart
             d3.select(el)
             .call(scatter);
+        } else {
+            scatter = scatter.settings(obj.settings);
+            scatter = scatter.data(data);
         }
     }
 

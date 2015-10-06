@@ -20,6 +20,7 @@
 #' @param col_lab color legend title
 #' @param symbol_lab symbols legend title
 #' @param size_lab size legend title
+#' @param key_var optional vector of rows ids. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
 #' @param xlab x axis label
@@ -59,6 +60,7 @@ scatterD3 <- function(x, y, lab = NULL,
                       size_range = c(10,300),
                       col_lab = NULL, symbol_lab = NULL,
                       size_lab = NULL,
+                      key_var = NULL,
                       tooltips = TRUE,
                       tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
@@ -98,6 +100,7 @@ scatterD3 <- function(x, y, lab = NULL,
     size_var = size_var,
     size_range = size_range,
     size_lab = size_lab,
+    key_var = key_var,
     has_color_legend = !is.null(col_var),
     has_symbol_legend = !is.null(symbol_var),
     has_size_legend = !is.null(size_var),
@@ -117,6 +120,7 @@ scatterD3 <- function(x, y, lab = NULL,
   if (!is.null(col_var)) data <- cbind(data, col_var = col_var)
   if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
   if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
+  if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
   if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
   # pass the data and settings using 'x'
