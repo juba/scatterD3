@@ -179,9 +179,9 @@ function scatterD3() {
             if (settings.has_labels) text.push("<b>"+d.lab+"</b>");
             text.push("<b>"+settings.xlab+":</b> "+d.x.toFixed(3));
             text.push("<b>"+settings.ylab+":</b> "+d.y.toFixed(3));
-            if (settings.has_color_legend) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
-            if (settings.has_symbol_legend) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
-            if (settings.has_size_legend) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
+            if (settings.has_color_var) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
+            if (settings.has_symbol_var) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
+            if (settings.has_size_var) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
             return text.join("<br />");
         }
     }
@@ -217,7 +217,7 @@ function scatterD3() {
         .attr("d", d3.svg.symbol()
             .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
             .size(function(d) {
-                if (settings.has_size_legend) { return size_scale(d.size_var)}
+                if (settings.has_size_var) { return size_scale(d.size_var)}
                 else { return settings.point_size };
             })
         )
@@ -273,6 +273,137 @@ function scatterD3() {
     })
     .on('dragend', function(d) { d3.select(this).style('fill', color_scale(d.col_var)); });
 
+    // Format legend label
+    function legend_label_formatting (selection, margin_top) {
+        selection
+        .style("text-anchor", "beginning")
+        .style("fill", "#000")
+        .style("font-weight", "bold")
+    }
+
+    // Create color legend
+    function add_color_legend(el) {
+        var legend_color_domain = color_scale.domain().sort();
+        var legend_color_scale = d3.scale.category10();
+        legend_color_scale
+        .domain(legend_color_domain)
+        .range(legend_color_domain.map(function(d) {return color_scale(d)}));
+
+        var color_legend = d3.legend.color()
+        .shapePadding(3)
+        .scale(legend_color_scale)
+        .on("cellover", function(d) {
+            var nsel = ".color:not(.color-" + d + ")";
+            var sel = ".color-" + d;
+            svg.selectAll(nsel)
+            .transition()
+            .style("opacity", 0.2);
+            svg.selectAll(sel)
+            .transition()
+            .style("opacity", 1);
+        })
+        .on("cellout", function(d) {
+            var sel = ".color";
+            svg.selectAll(sel)
+            .transition()
+            .style("opacity", settings.point_opacity);
+            svg.selectAll(".point-label")
+            .transition()
+            .style("opacity", 1);
+        });
+
+        el.append("g")
+        .append("text")
+        .attr("class", "color-legend-label")
+        .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")")
+        .text(settings.col_lab)
+        .call(legend_label_formatting);
+
+        el.append("g")
+        .attr("class", "color-legend")
+        .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 8) + ")")
+        .call(color_legend);
+    }
+
+    // Create symbol legend
+    function add_symbol_legend(el) {
+        // Height of color legend
+        var color_legend_height = settings.has_color_var ? color_scale.domain().length * 20 + 30 : 0;
+        margin.symbol_legend_top = color_legend_height + margin.legend_top;
+
+        var legend_symbol_domain = symbol_scale.domain().sort();
+        var legend_symbol_scale = d3.scale.ordinal();
+        legend_symbol_scale
+        .domain(legend_symbol_domain)
+        .range(legend_symbol_domain.map(function(d) {return d3.svg.symbol().type(d3.svg.symbolTypes[symbol_scale(d)])()}));
+
+        var symbol_legend = d3.legend.symbol()
+        .shapePadding(5)
+        .scale(legend_symbol_scale)
+        .on("cellover", function(d) {
+            var nsel = ".symbol:not(.symbol-" + d + ")";
+            var sel = ".symbol-" + d;
+            svg.selectAll(nsel)
+            .transition()
+            .style("opacity", 0.2);
+            svg.selectAll(sel)
+            .transition()
+            .style("opacity", 1);
+        })
+        .on("cellout", function(d) {
+            var sel = ".symbol";
+            svg.selectAll(sel)
+            .transition()
+            .style("opacity", settings.point_opacity);
+            svg.selectAll(".point-label")
+            .transition()
+            .style("opacity", 1);
+        });
+
+        el.append("g")
+        .append("text")
+        .attr("class", "symbol-legend-label")
+        .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")")
+        .text(settings.symbol_lab)
+        .call(legend_label_formatting);
+
+        el.append("g")
+        .attr("class", "symbol-legend")
+        .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")")
+        .call(symbol_legend);
+
+    }
+
+    // Create size legend
+    function add_size_legend(el) {
+        // Height of color and symbol legends
+        var color_legend_height = settings.has_color_var ? color_scale.domain().length * 20 + 30 : 0;
+        var symbol_legend_height = settings.has_symbol_var ? symbol_scale.domain().length * 20 + 30 : 0;
+        margin.size_legend_top = color_legend_height + symbol_legend_height + margin.legend_top;
+
+        legend_size_scale = d3.scale.linear()
+        .domain(size_scale.domain())
+        // FIXME : find exact formula
+        .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8}));
+
+        var size_legend = d3.legend.size()
+        .shapePadding(3)
+        .shape('circle')
+        .scale(legend_size_scale);
+
+        el.append("g")
+        .append("text")
+        .attr("class", "size-legend-label")
+        .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")")
+        .text(settings.size_lab)
+        .call(legend_label_formatting);
+
+        el.append("g")
+        .attr("class", "size-legend")
+        .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")")
+        .call(size_legend);
+
+    }
 
     function chart(selection) {
         selection.each(function() {
@@ -348,134 +479,15 @@ function scatterD3() {
                 .call(drag);
             }
 
-            // Color legend
-            if (settings.has_color_legend) {
-
-                var legend_color_domain = color_scale.domain().sort();
-                var legend_color_scale = d3.scale.category10();
-                legend_color_scale
-                .domain(legend_color_domain)
-                .range(legend_color_domain.map(function(d) {return color_scale(d)}));
-
-                var color_legend = d3.legend.color()
-                .shapePadding(3)
-                .scale(legend_color_scale)
-                .on("cellover", function(d) {
-                    var nsel = ".color:not(.color-" + d + ")";
-                    var sel = ".color-" + d;
-                    svg.selectAll(nsel)
-                    .transition()
-                    .style("opacity", 0.2);
-                    svg.selectAll(sel)
-                    .transition()
-                    .style("opacity", 1);
-                })
-                .on("cellout", function(d) {
-                    var sel = ".color";
-                    svg.selectAll(sel)
-                    .transition()
-                    .style("opacity", settings.point_opacity);
-                    svg.selectAll(".point-label")
-                    .transition()
-                    .style("opacity", 1);
-                });
-
-                svg.append("g")
-                .append("text")
-                .attr("class", "color-legend-label")
-                .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")")
-                .style("text-anchor", "beginning")
-                .style("fill", "#000")
-                .style("font-weight", "bold")
-                .text(settings.col_lab);
-
-                svg.append("g")
-                .attr("class", "color-legend")
-                .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 8) + ")")
-                .call(color_legend);
-            }
-
-            // Symbol legend
-            if (settings.has_symbol_legend) {
-
-                // Height of color legend
-                var color_legend_height = color_scale.domain().length * 20 + 30;
-                margin.symbol_legend_top = color_legend_height + margin.legend_top;
-
-                var legend_symbol_domain = symbol_scale.domain().sort();
-                var legend_symbol_scale = d3.scale.ordinal();
-                legend_symbol_scale
-                .domain(legend_symbol_domain)
-                .range(legend_symbol_domain.map(function(d) {return d3.svg.symbol().type(d3.svg.symbolTypes[symbol_scale(d)])()}));
-
-                var symbol_legend = d3.legend.symbol()
-                .shapePadding(5)
-                .scale(legend_symbol_scale)
-                .on("cellover", function(d) {
-                    var nsel = ".symbol:not(.symbol-" + d + ")";
-                    var sel = ".symbol-" + d;
-                    svg.selectAll(nsel)
-                    .transition()
-                    .style("opacity", 0.2);
-                    svg.selectAll(sel)
-                    .transition()
-                    .style("opacity", 1);
-                })
-                .on("cellout", function(d) {
-                    var sel = ".symbol";
-                    svg.selectAll(sel)
-                    .transition()
-                    .style("opacity", settings.point_opacity);
-                    svg.selectAll(".point-label")
-                    .transition()
-                    .style("opacity", 1);
-                });
-
-                svg.append("g")
-                .append("text")
-                .attr("class", "symbol-legend-label")
-                .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")")
-                .style("text-anchor", "beginning")
-                .style("fill", "#000")
-                .style("font-weight", "bold")
-                .text(settings.symbol_lab);
-
-                svg.append("g")
-                .attr("class", "symbol-legend")
-                .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")")
-                .call(symbol_legend);
-            }
-
-            // Size legend
-            if (settings.has_size_legend) {
-
-                // Height of color and symbol legends
-                var other_legends_height = (color_scale.domain().length + symbol_scale.domain().length) * 20 + 60;
-                margin.size_legend_top = other_legends_height + margin.legend_top;
-
-                legend_size_scale = d3.scale.linear()
-                .domain(size_scale.domain())
-                // FIXME : find exact formula
-                .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8}));
-
-                var size_legend = d3.legend.size()
-                .shapePadding(3)
-                .shape('circle')
-                .scale(legend_size_scale);
-
-                svg.append("g")
-                .append("text")
-                .attr("class", "size-legend-label")
-                .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")")
-                .style("text-anchor", "beginning")
-                .style("fill", "#000")
-                .style("font-weight", "bold")
-                .text(settings.size_lab);
-
-                svg.append("g")
-                .attr("class", "size-legend")
-                .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")")
-                .call(size_legend);
+            // Legends
+            if (settings.has_legend) {
+                var legend = svg.append("g").attr("class", "legend");
+                // Color legend
+                if (settings.has_color_var) add_color_legend(legend);
+                // Symbol legend
+                if (settings.has_symbol_var) add_symbol_legend(legend);
+                // Size legend
+                if (settings.has_size_var) add_size_legend(legend);
             }
 
             // Update chart with transitions
@@ -485,6 +497,8 @@ function scatterD3() {
                     svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
                 if (old_settings.labels_size != settings.labels_size)
                     svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
+                if (old_settings.has_legend != settings.has_legend)
+                    resize_chart()
             }
 
             // Update data with transitions
@@ -519,44 +533,25 @@ function scatterD3() {
                     labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
                 }
 
+                var legend = svg.select(".legend");
+                // Remove existing legends
+                legend.selectAll("*").remove();
+                // Recreate them
+                if (settings.has_legend) {
+                    // Color legend
+                    if (settings.has_color_var) add_color_legend(legend);
+                    // Symbol legend
+                    if (settings.has_symbol_var) add_symbol_legend(legend);
+                    // Size legend
+                    if (settings.has_size_var) add_size_legend(legend);
+                }
             }
-
 
         });
     }
 
-    // Add controls handlers for shiny
-    chart.add_controls_handlers = function() {
-
-        // Zoom reset
-        d3.select("#scatterD3-resetzoom").on("click", function() {
-            d3.transition().duration(750).tween("zoom", function() {
-                var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
-                iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
-                return function(t) {
-                    zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
-                    zoomed(reset=true);
-                };
-            })
-        });
-
-        // SVG export
-        d3.select("#scatterD3-download")
-        .on("click", function(){
-            var svg_content = svg
-            .attr("xmlns", "http://www.w3.org/2000/svg")
-            .attr("version", 1.1)
-            .node().parentNode
-            .innerHTML;
-            var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg_content);
-            d3.select(this)
-            .attr("download", "scatterD3.svg")
-            .attr("href", imageUrl);
-        });
-    };
-
     // Dynamically resize chart elements
-    chart.resize = function() {
+    function resize_chart () {
         // recompute sizes
         setup_sizes();
         // recompute scales and zoom
@@ -591,19 +586,19 @@ function scatterD3() {
         svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
         svg.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
         // Move legends
-        if (settings.has_color_legend) {
+        if (settings.has_color_var) {
             svg.select(".color-legend-label")
             .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")");
             svg.select(".color-legend")
             .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 12) + ")");
         }
-        if (settings.has_symbol_legend) {
+        if (settings.has_symbol_var) {
             svg.select(".symbol-legend-label")
             .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")");
             svg.select(".symbol-legend")
             .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")");
         }
-        if (settings.has_size_legend) {
+        if (settings.has_size_var) {
             svg.select(".size-legend-label")
             .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")");
             svg.select(".size-legend")
@@ -612,6 +607,43 @@ function scatterD3() {
 
 
     };
+
+
+
+    // Add controls handlers for shiny
+    chart.add_controls_handlers = function() {
+
+        // Zoom reset
+        d3.select("#scatterD3-resetzoom").on("click", function() {
+            d3.transition().duration(750).tween("zoom", function() {
+                var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
+                iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
+                return function(t) {
+                    zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
+                    zoomed(reset=true);
+                };
+            })
+        });
+
+        // SVG export
+        d3.select("#scatterD3-download")
+        .on("click", function(){
+            var svg_content = svg
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .attr("version", 1.1)
+            .node().parentNode
+            .innerHTML;
+            var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg_content);
+            d3.select(this)
+            .attr("download", "scatterD3.svg")
+            .attr("href", imageUrl);
+        });
+    };
+
+    // resize
+    chart.resize = function() {
+        resize_chart();
+    }
 
     // settings getter/setter
     chart.data = function(value) {
@@ -674,7 +706,7 @@ HTMLWidgets.widget({
         .text(".scatterD3 {font: 10px sans-serif;}" +
         ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
         ".scatterD3 .axis .tick line { stroke: #ddd;} " +
-        ".scatterD3 .axis text { fill: #000;} " +
+        ".scatterD3 .axis text { fill: #000; font-size: 0.9rem; } " +
         ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} ");
 
         // Create tooltip content div
