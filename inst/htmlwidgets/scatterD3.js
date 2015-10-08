@@ -74,7 +74,7 @@ function scatterD3() {
         size_scale = d3.scale.linear()
         .range(settings.size_range)
         .domain([d3.min(data, function(d) { return Math.min(d.size_var);} ),
-                 d3.max(data, function(d) { return Math.min(d.size_var);} )])
+                 d3.max(data, function(d) { return Math.max(d.size_var);} )]);
 
         // zoom behavior
         zoom = d3.behavior.zoom()
@@ -194,8 +194,6 @@ function scatterD3() {
             selection.on("mouseover", function(d, i){
                 tooltip.style("visibility", "visible")
                 .html(tooltip_content(d));
-                console.log(d.x);
-                console.log(x(d.x));
             })
             selection.on("mousemove", function(){
                 tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
@@ -291,6 +289,7 @@ function scatterD3() {
 
         var color_legend = d3.legend.color()
         .shapePadding(3)
+        .shape("rect")
         .scale(legend_color_scale)
         .on("cellover", function(d) {
             var nsel = ".color:not(.color-" + d + ")";
@@ -332,8 +331,7 @@ function scatterD3() {
         margin.symbol_legend_top = color_legend_height + margin.legend_top;
 
         var legend_symbol_domain = symbol_scale.domain().sort();
-        var legend_symbol_scale = d3.scale.ordinal();
-        legend_symbol_scale
+        var legend_symbol_scale = d3.scale.ordinal()
         .domain(legend_symbol_domain)
         .range(legend_symbol_domain.map(function(d) {return d3.svg.symbol().type(d3.svg.symbolTypes[symbol_scale(d)])()}));
 
@@ -381,7 +379,7 @@ function scatterD3() {
         var symbol_legend_height = settings.has_symbol_var ? symbol_scale.domain().length * 20 + 30 : 0;
         margin.size_legend_top = color_legend_height + symbol_legend_height + margin.legend_top;
 
-        legend_size_scale = d3.scale.linear()
+        var legend_size_scale = d3.scale.linear()
         .domain(size_scale.domain())
         // FIXME : find exact formula
         .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8}));
@@ -410,6 +408,9 @@ function scatterD3() {
 
             svg = d3.select(this).select("svg");
 
+            setup_sizes();
+            setup_scales();
+
             // Root chart element
             root = svg.append("g")
             .attr("class", "root")
@@ -424,8 +425,6 @@ function scatterD3() {
             .attr('class', 'cliprect')
             .attr('width', dims.width)
             .attr('height', dims.height);
-            //.style("stroke-width", 0)
-            //.style("fill", "none");
 
             // add x and y axes
             add_axes(root);
@@ -497,25 +496,30 @@ function scatterD3() {
                     svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
                 if (old_settings.labels_size != settings.labels_size)
                     svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
-                if (old_settings.has_legend != settings.has_legend)
-                    resize_chart()
             }
 
             // Update data with transitions
             update_data = function() {
 
+                if (old_settings.has_legend != settings.has_legend)
+                    resize_chart()
+
                 setup_scales();
 
-                svg.select(".x.axis .axis-label").text(settings.xlab);
-                svg.select(".y.axis .axis-label").text(settings.ylab);
+                var t0 = svg.transition().duration(1000);
+                if (settings.x_changed) {
+                    svg.select(".x.axis .axis-label").text(settings.xlab);
+                    t0.select(".x.axis").call(xAxis);
+                    t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
+                }
+                if (settings.y_changed) {
+                    svg.select(".y.axis .axis-label").text(settings.ylab);
+                    t0.select(".y.axis").call(yAxis);
+                    t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
+                }
                 svg.select(".pane").call(zoom);
                 zoom.x(x);
                 zoom.y(y);
-                var t0 = svg.transition().duration(1000);
-                t0.select(".x.axis").call(xAxis);
-                t0.select(".y.axis").call(yAxis);
-                t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-                t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 
                 var chart_body = svg.select(".chart-body");
                 var dots = chart_body.selectAll(".dot")
@@ -533,17 +537,19 @@ function scatterD3() {
                     labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
                 }
 
-                var legend = svg.select(".legend");
-                // Remove existing legends
-                legend.selectAll("*").remove();
-                // Recreate them
-                if (settings.has_legend) {
-                    // Color legend
-                    if (settings.has_color_var) add_color_legend(legend);
-                    // Symbol legend
-                    if (settings.has_symbol_var) add_symbol_legend(legend);
-                    // Size legend
-                    if (settings.has_size_var) add_size_legend(legend);
+                if(settings.legend_changed) {
+                    var legend = svg.select(".legend");
+                    // Remove existing legends
+                    legend.selectAll("*").remove();
+                    // Recreate them
+                    if (settings.has_legend) {
+                        // Color legend
+                        if (settings.has_color_var) add_color_legend(legend);
+                        // Symbol legend
+                        if (settings.has_symbol_var) add_symbol_legend(legend);
+                        // Size legend
+                        if (settings.has_size_var) add_size_legend(legend);
+                    }
                 }
             }
 
@@ -646,10 +652,10 @@ function scatterD3() {
     }
 
     // settings getter/setter
-    chart.data = function(value) {
+    chart.data = function(value, redraw) {
         if (!arguments.length) return data;
         data = value;
-        if (typeof update_data === 'function') update_data();
+        if (!redraw) update_data();
         return chart;
     };
 
@@ -736,23 +742,42 @@ HTMLWidgets.widget({
 
     renderValue: function(el, obj, scatter) {
 
+        // Check if update or redraw
+        var first_draw = (Object.keys(scatter.settings()).length === 0);
+        var redraw = first_draw || !obj.settings.transitions;
+
         // convert data to d3 format
         data = HTMLWidgets.dataframeToD3(obj.data);
-        // initialize chart with settings
-        var first_draw = (Object.keys(scatter.settings()).length === 0);
 
-        // First call
-        if (first_draw) {
-            scatter = scatter.data(data);
+        // If no transitions, remove chart and redraw it
+        if (!obj.settings.transitions) {
+            d3.select(el).select("svg").selectAll("*:not(style)").remove();
+        }
+
+        // Complete draw
+        if (redraw) {
+            scatter = scatter.data(data, redraw);
             scatter = scatter.settings(obj.settings);
             // add controls handlers for shiny apps
             scatter.add_controls_handlers();
             // draw chart
             d3.select(el)
             .call(scatter);
-        } else {
+        }
+        // Update only
+        else {
+            obj.settings.previous_hashes = scatter.settings().hashes;
             scatter = scatter.settings(obj.settings);
-            scatter = scatter.data(data);
+            // Check what data did change
+            function changed(varname) {
+                return scatter.settings().previous_hashes[varname] != scatter.settings().hashes[varname];
+            };
+            obj.settings.x_changed = changed("x");
+            obj.settings.y_changed = changed("y");
+            obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var");
+            obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.legend_changed;
+            // Update data only if needed
+            if (obj.settings.data_changed) scatter.data(data, redraw);
         }
     }
 

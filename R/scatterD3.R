@@ -75,6 +75,16 @@ scatterD3 <- function(x, y, lab = NULL,
                       dom_id_svg_export = "scatterD3-svg-export",
                       transitions = FALSE) {
 
+  ## List of hashes for each data variable, to track which data elements changed
+  ## to apply updates and transitions in shiny app.
+  hashes <- list()
+  if (transitions) {
+    for (var in c("x", "y", "col_var", "symbol_var", "size_var")) {
+        hashes[[var]] <- digest::digest(get(var), algo="sha256")
+    }
+  }
+
+  ## Variable names as default labels
   if (is.null(xlab)) xlab <- deparse(substitute(x))
   if (is.null(ylab)) ylab <- deparse(substitute(y))
   if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
@@ -121,7 +131,8 @@ scatterD3 <- function(x, y, lab = NULL,
     ylim = ylim,
     dom_id_reset_zoom = dom_id_reset_zoom,
     dom_id_svg_export = dom_id_svg_export,
-    transitions = transitions
+    transitions = transitions,
+    hashes = hashes
   )
 
   data <- data.frame(x = x, y = y)
@@ -130,6 +141,7 @@ scatterD3 <- function(x, y, lab = NULL,
   if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
   if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
   if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
+  else data <- cbind(data, key_var = seq_along(x))
   if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
   # pass the data and settings using 'x'
