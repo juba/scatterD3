@@ -644,14 +644,13 @@ function scatterD3() {
     // settings getter/setter
     chart.settings = function(value) {
         if (!arguments.length) return settings;
-        if (typeof update_settings === 'function') {
-            update_settings(settings, value);
-        }
-        else {
+        if (Object.keys(settings).length === 0) {
             settings = value;
             // update dims and scales
             setup_sizes();
             setup_scales();
+        } else {
+            update_settings(settings, value);
         }
         return chart;
     };
