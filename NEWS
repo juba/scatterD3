@@ -1,7 +1,8 @@
 scatterD3 0.3
 ------------------------------------------------------
 
-
+* Charts integrated into a shiny app are now fully updatable : when data or settings change, the plot is updated with smooth transitions instead of being redrawn. See the `transitions` and `key_var` arguments.
+* HTML DOM id of elements linked to the "Reset zoom" and "Export to SVG" features can now be given as arguments.
 
 
 scatterD3 0.2
