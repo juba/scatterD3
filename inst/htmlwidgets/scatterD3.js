@@ -402,7 +402,7 @@ function scatterD3() {
             // clipping rectangle
             svg.append("defs")
             .append("clipPath")
-            .attr('id', 'scatterclip')
+            .attr('id', 'scatterclip' + settings.html_id)
             .append('rect')
             .attr('class', 'cliprect')
             .attr('width', dims.width)
@@ -425,7 +425,7 @@ function scatterD3() {
             .attr("class", "chart-body")
             .attr("width", dims.width)
             .attr("height", dims.height)
-            .attr("clip-path", "url(" + document.location.href + "#scatterclip)");
+            .attr("clip-path", "url(" + document.location.href + "#scatterclip" + settings.html_id + ")");
 
             // Zero horizontal and vertical lines
             var zeroline = d3.svg.line()
