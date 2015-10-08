@@ -1,4 +1,3 @@
-
 function scatterD3() {
 
     var width = 600, // default width
@@ -176,10 +175,10 @@ function scatterD3() {
             selection.on("mouseover", function(d, i){
                 tooltip.style("visibility", "visible")
                 .html(tooltip_content(d));
-            })
+            });
             selection.on("mousemove", function(){
                 tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
-            })
+            });
             selection.on("mouseout", function(){
                 tooltip.style("visibility", "hidden");
             });
@@ -198,7 +197,7 @@ function scatterD3() {
             .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
             .size(function(d) {
                 if (settings.has_size_var) { return size_scale(d.size_var)}
-                else { return settings.point_size };
+                else { return settings.point_size }
             })
         )
         .attr("class", function(d,i) { return "dot color color-" + d.col_var + " symbol symbol-" + d.symbol_var; });
@@ -212,7 +211,7 @@ function scatterD3() {
         .attr("dx", function(d) {
             if (d.lab_dx === undefined) return("0px");
             else return(d.lab_dx + "px");
-        })
+        });
     }
 
     // Compute default vertical offset for labels
@@ -231,7 +230,7 @@ function scatterD3() {
             if (d.lab_dy !== undefined) return(d.lab_dy + "px");
             var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
             return default_label_dy(size) + "px";
-        })
+        });
     }
 
     // Text labels dragging function
@@ -258,7 +257,7 @@ function scatterD3() {
         selection
         .style("text-anchor", "beginning")
         .style("fill", "#000")
-        .style("font-weight", "bold")
+        .style("font-weight", "bold");
     }
 
     // Create color legend
@@ -478,13 +477,13 @@ function scatterD3() {
                     svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
                 if (old_settings.labels_size != settings.labels_size)
                     svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
-            }
+            };
 
             // Update data with transitions
             update_data = function() {
 
                 if (old_settings.has_legend != settings.has_legend)
-                    resize_chart()
+                    resize_chart();
 
                 setup_scales();
 
@@ -533,7 +532,7 @@ function scatterD3() {
                         if (settings.has_size_var) add_size_legend(legend);
                     }
                 }
-            }
+            };
 
         });
     }
