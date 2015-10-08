@@ -614,7 +614,7 @@ function scatterD3() {
     chart.add_controls_handlers = function() {
 
         // Zoom reset
-        d3.select("#scatterD3-resetzoom").on("click", function() {
+        d3.select("#" + settings.dom_id_reset_zoom).on("click", function() {
             d3.transition().duration(750).tween("zoom", function() {
                 var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
                 iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
@@ -626,7 +626,7 @@ function scatterD3() {
         });
 
         // SVG export
-        d3.select("#scatterD3-download")
+        d3.select("#" + settings.dom_id_svg_export)
         .on("click", function(){
             var svg_content = svg
             .attr("xmlns", "http://www.w3.org/2000/svg")
