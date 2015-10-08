@@ -107,22 +107,6 @@ function scatterD3() {
 
     // Zoom function
     function zoomed(reset) {
-
-        // if (!reset) {
-        //     var t = d3.event.translate;
-        //     var s = d3.event.scale;
-        //     zscale = s;
-        //     t[0] = Math.min(
-        //         (dims.width/dims.height)  * (s - 1),
-        //         Math.max( dims.width * (1 - s), t[0] )
-        //     );
-        //     t[1] = Math.min(
-        //         (dims.width/dims.height)  * (s - 1),
-        //         Math.max( dims.width * (1 - s), t[1] )
-        //     );
-        //     zoom.translate(t);
-        // }
-
         svg.select(".x.axis").call(xAxis);
         svg.select(".y.axis").call(yAxis);
         svg.selectAll(".dot, .point-label")
@@ -135,12 +119,10 @@ function scatterD3() {
     }
 
     // Create and draw x and y axes
-    function add_axes() {
-
-        root = svg.select(".root");
+    function add_axes(el) {
 
         // x axis
-        root.append("g")
+        el.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + dims.height + ")")
         .call(xAxis)
@@ -152,7 +134,7 @@ function scatterD3() {
         .text(settings.xlab);
 
         // y axis
-        root.append("g")
+        el.append("g")
         .attr("class", "y axis")
         .call(yAxis)
         .append("text")
