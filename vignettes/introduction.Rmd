@@ -96,43 +96,30 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, tooltip_text = tooltips)
 
 You can also disable tooltips entirely with `tooltips = FALSE`.
 
-## Shiny integration : additional controls and SVG export
+## Shiny integration
 
-Like every R HTML widget, shiny integration is straightforward. Furthermore, we provide some additional
-handlers to map form controls to SVG export and interactive effects (text size, points opacity and zoom reset).
-You just have to give the following `id` to your form controls :
+### Transitions
 
-- `#scatterD3-size` : text size in points (numerical value)
-- `#scatterD3-opacity` : point ant text opacity (numerical value, 0 to 1)
-- `#scatterD3-resetzoom` : reset zoom to default on click
-- `#scatterD3-download` : link to download the currently displayed figure as an SVG file
+Like every R HTML widget, shiny integration is straightforward. But as a D3 widget, `scatterD3` is *updatable* : changes in settings or data can be displayed via smooth transitions instead of a complete chart redraw, which can provide interesting visual clues.
 
-Here is a minimal working example :
+To a small demonstration of these transitions, you can take a look at the
+[sample scatterD3 shiny app](https://juba.shinyapps.io/scatterD3_shiny_app) hosted on shinyapps.io.
 
-```R
-library(shiny)
-runApp(shinyApp(
-    ui=fluidPage(
-      sidebarLayout(
-        sidebarPanel(
-          numericInput("scatterD3-size", "Labels size :", min = 2, max = 30, value = 10),
-          numericInput("scatterD3-opacity", "Opacity :", min = 0, max = 1, value = 1, step=0.05),
-          actionButton("scatterD3-resetzoom", "Reset Zoom"),
-          tags$a(id="scatterD3-download", href="#", class="btn btn-default", "Download SVG")
-        ),
-        mainPanel(scatterD3Output("scatterPlot"))
-      )
-    ),
-    server = function(input, output) {
-      output$scatterPlot <- renderScatterD3({
-        scatterD3(x=mtcars$wt,
-                  y=mtcars$mpg,
-                  lab=rownames(mtcars),
-                  col_var=mtcars$cyl)
-      })
-    }
-))
-```
+Enabling transitions in your shiny app is quite simple, you just have to add the `transitions = TRUE` argument to your `scatterD3` calls in your shiny server code. There's only one warning : if your shiny application may filter on your dataset rows via a control, then you must provide a `key_var` variable that uniquely and persistently identify your rows.
 
-You can see the result of this [minimal scatterD3 shiny app](https://juba.shinyapps.io/scatterD3_shiny_app) hosted on shinyapps.io.
 
+### Additional controls : Reset zoom and SVG export
+
+Furthermore, `scatterD3` provides some additional handlers to two interactive features : SVG export and zoom resetting.
+
+By default, you just have to give the following `id` to the corresponding form controls :
+
+- `#scatterD3-reset-zoom` : reset zoom to default on click
+- `#scatterD3-svg-export` : link to download the currently displayed figure as an SVG file
+
+If you are not happy with these ids, you can specify their names yourself with the arguments `dom_id_svg_export` and `dom_id_reset_zoom`.
+
+### Sample app and source code
+
+The
+[sample scatterD3 shiny app](https://juba.shinyapps.io/scatterD3_shiny_app) hosted on shinyapps.io allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) for a better understanding of the different arguments.
