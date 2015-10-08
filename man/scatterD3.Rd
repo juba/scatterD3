@@ -74,9 +74,9 @@ be associated with their name within \code{col_var}.}
 
 \item{dom_id_reset_zoom}{HTML DOM id of the element to bind the "reset zoom" control to.}
 
-\item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
+\item{dom_id_svg_export}{HTML DOM id of the element to bind the "svg export" control to.}
 
-\item{dom_id_reset_zoom}{HTML DOM id of the element to bind the "svg export" control to.}
+\item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.
