@@ -693,7 +693,7 @@ HTMLWidgets.widget({
         .text(".scatterD3 {font: 10px sans-serif;}" +
         ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
         ".scatterD3 .axis .tick line { stroke: #ddd;} " +
-        ".scatterD3 .axis text { fill: #000; font-size: 0.9rem; } " +
+        ".scatterD3 .axis text { fill: #000; } " +
         ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} ");
 
         // Create tooltip content div

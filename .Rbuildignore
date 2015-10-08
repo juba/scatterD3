@@ -3,3 +3,4 @@
 example.R
 resources
 rsconnect/
+vignettes/*.html
