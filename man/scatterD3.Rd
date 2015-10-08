@@ -10,10 +10,11 @@ D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
   point_opacity = 1, fixed = FALSE, col_var = NULL, colors = NULL,
   symbol_var = NULL, size_var = NULL, size_range = c(10, 300),
-  col_lab = NULL, symbol_lab = NULL, size_lab = NULL, tooltips = TRUE,
-  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
-  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
-  ylim = NULL)
+  col_lab = NULL, symbol_lab = NULL, size_lab = NULL, key_var = NULL,
+  tooltips = TRUE, tooltip_text = NULL, xlab = NULL, ylab = NULL,
+  html_id = NULL, width = NULL, height = NULL, legend_width = 150,
+  xlim = NULL, ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
+  dom_id_svg_export = "scatterD3-svg-export", transitions = FALSE)
 }
 \arguments{
 \item{x}{numerical vector of x values}
@@ -49,6 +50,8 @@ be associated with their name within \code{col_var}.}
 
 \item{size_lab}{size legend title}
 
+\item{key_var}{optional vector of rows ids. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.}
+
 \item{tooltips}{logical value to display tooltips when hovering points}
 
 \item{tooltip_text}{optional character vector of tooltips text}
@@ -68,6 +71,12 @@ be associated with their name within \code{col_var}.}
 \item{xlim}{numeric vector of length 2, manual x axis limits}
 
 \item{ylim}{numeric vector of length 2, manual y axis limits}
+
+\item{dom_id_reset_zoom}{HTML DOM id of the element to bind the "reset zoom" control to.}
+
+\item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
+
+\item{dom_id_reset_zoom}{HTML DOM id of the element to bind the "svg export" control to.}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.
