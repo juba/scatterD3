@@ -8,6 +8,7 @@
 # produced vignettes
 vignettes/*.html
 vignettes/*.pdf
+vignettes/rsconnect/*
 .Rproj.user
 example.R
 *~

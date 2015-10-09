@@ -1,7 +1,0 @@
-name: Publish Document
-account: rpubs
-server: rpubs.com
-bundleId:
-        https://api.rpubs.com/api/v1/document/90420/262f6033f22f4fd8967624ef545e2895
-url: http://rpubs.com/juba/90420
-when: 1435844450.38553
