@@ -15,6 +15,8 @@ BugReports: https://github.com/juba/scatterD3/issues
 LazyData: TRUE
 Enhances: shiny
 Imports:
-    htmlwidgets
+    htmlwidgets,
+    digest
 Suggests:
     knitr
+RoxygenNote: 4.1.1.9000

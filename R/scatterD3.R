@@ -80,7 +80,7 @@ scatterD3 <- function(x, y, lab = NULL,
   hashes <- list()
   if (transitions) {
     for (var in c("x", "y", "col_var", "symbol_var", "size_var")) {
-        hashes[[var]] <- digest::digest(get(var), algo="sha256")
+        hashes[[var]] <- digest::digest(get(var), algo = "sha256")
     }
   }
 
