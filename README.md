@@ -25,7 +25,7 @@ Here is a small preview of what you will get :
 
 Install from CRAN (the CRAN version is totally obsolete at the moment) :
 
-    install_packages("scatterD3")
+    install.packages("scatterD3")
 
 Or from Github for the latest, bleeding edge, full of bugs version :
 
