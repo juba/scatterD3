@@ -23,7 +23,7 @@ Here is a small preview of what you will get :
 
 ## Installation
 
-Install from CRAN (the CRAN version is totally obsolete at the moment) :
+Install latest stable release from CRAN :
 
     install.packages("scatterD3")
 
