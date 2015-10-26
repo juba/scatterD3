@@ -618,8 +618,9 @@ function scatterD3() {
             var svg_content = svg
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .attr("version", 1.1)
-            .node().parentNode
-            .innerHTML;
+            .node().parentNode.innerHTML;
+            svg_content = svg_content.replace(/clip-path="url(.*?)"/,
+                                              'clip-path="url(#scatterclip' + settings.html_id + ')"');
             var imageUrl = "data:image/octet-stream;base64,\n" + btoa(svg_content);
             d3.select(this)
             .attr("download", "scatterD3.svg")
