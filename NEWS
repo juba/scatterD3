@@ -1,6 +1,7 @@
 scatterD3 0.4
 ------------------------------------------------------
 
+* Fix tooltips not showing in Firefox
 * Fix clip-path URL problems when exporting to SVG
 
 
