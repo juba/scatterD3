@@ -177,7 +177,7 @@ function scatterD3() {
                 .html(tooltip_content(d));
             });
             selection.on("mousemove", function(){
-                tooltip.style("top", (event.pageY+15)+"px").style("left",(event.pageX+15)+"px");
+                tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
             });
             selection.on("mouseout", function(){
                 tooltip.style("visibility", "hidden");
