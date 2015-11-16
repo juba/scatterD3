@@ -4,7 +4,6 @@ function scatterD3() {
     height = 600, // default height
     dims = {},
     margin = {top: 5, right: 10, bottom: 20, left: 50, legend_top: 50},
-    old_settings = {},
     settings = {},
     data = [],
     x, y, color_scale, symbol_scale, size_scale,
@@ -33,7 +32,7 @@ function scatterD3() {
         dims.legend_x = dims.total_width - margin.right - dims.legend_width + 24;
     }
 
-    function setup_scales() {
+    function setup_scales(data) {
 
         // x and y limits
         if (settings.xlim === null) {
@@ -390,7 +389,7 @@ function scatterD3() {
             svg = d3.select(this).select("svg");
 
             setup_sizes();
-            setup_scales();
+            setup_scales(data);
 
             // Root chart element
             root = svg.append("g")
@@ -471,7 +470,10 @@ function scatterD3() {
             }
 
             // Update chart with transitions
-            update_settings = function(old_settings, new_settings) {
+            update_settings = function(old_settings, new_settings, el) {
+
+                var svg = d3.select(el).select("svg");
+
                 settings = new_settings;
                 if (old_settings.point_opacity != settings.point_opacity)
                     svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
@@ -497,12 +499,14 @@ function scatterD3() {
             };
 
             // Update data with transitions
-            update_data = function() {
+            update_data = function(data, el) {
 
-                if (old_settings.has_legend != settings.has_legend)
+                var svg = d3.select(el).select("svg");
+
+                if (settings.has_legend_changed)
                     resize_chart();
 
-                setup_scales();
+                setup_scales(data);
 
                 var t0 = svg.transition().duration(1000);
                 if (settings.x_changed) {
@@ -651,23 +655,25 @@ function scatterD3() {
     }
 
     // settings getter/setter
-    chart.data = function(value, redraw) {
+    chart.data = function(value, redraw, el) {
         if (!arguments.length) return data;
         data = value;
-        if (!redraw) update_data();
+        if (!redraw) update_data(data, el);
         return chart;
     };
 
     // settings getter/setter
-    chart.settings = function(value) {
+    chart.settings = function(value, el) {
         if (!arguments.length) return settings;
         if (Object.keys(settings).length === 0) {
             settings = value;
             // update dims and scales
             setup_sizes();
-            setup_scales();
+            setup_scales(data);
         } else {
-            update_settings(settings, value);
+            var old_settings = settings;
+            settings = value;
+            update_settings(old_settings, settings, el);
         }
         return chart;
     };
@@ -739,7 +745,6 @@ HTMLWidgets.widget({
     },
 
     renderValue: function(el, obj, scatter) {
-
         // Check if update or redraw
         var first_draw = (Object.keys(scatter.settings()).length === 0);
         var redraw = first_draw || !obj.settings.transitions;
@@ -764,18 +769,19 @@ HTMLWidgets.widget({
         }
         // Update only
         else {
-            obj.settings.previous_hashes = scatter.settings().hashes;
-            scatter = scatter.settings(obj.settings);
+            //obj.settings.previous_hashes = scatter.settings().hashes;
             // Check what data did change
             function changed(varname) {
-                return scatter.settings().previous_hashes[varname] != scatter.settings().hashes[varname];
+                return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
             };
             obj.settings.x_changed = changed("x");
             obj.settings.y_changed = changed("y");
+            obj.settings.has_legend_changed = changed("has_legend");
             obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var");
             obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.legend_changed;
+            scatter = scatter.settings(obj.settings, el);
             // Update data only if needed
-            if (obj.settings.data_changed) scatter.data(data, redraw);
+            if (obj.settings.data_changed) scatter.data(data, redraw, el);
         }
     }
 
