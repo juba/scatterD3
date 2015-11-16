@@ -186,7 +186,7 @@ function scatterD3() {
     }
 
     // Apply format to dot
-    function dot_formatting (selection) {
+    function dot_formatting(selection) {
         selection
         .attr("transform", translation)
         .style("opacity", settings.point_opacity)
@@ -477,6 +477,23 @@ function scatterD3() {
                     svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
                 if (old_settings.labels_size != settings.labels_size)
                     svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
+                if (old_settings.point_size != settings.point_size)
+                    svg.selectAll(".dot").transition().call(dot_formatting);
+                if (old_settings.has_labels != settings.has_labels) {
+                    if (!settings.has_labels) {
+                        svg.selectAll(".point-label").remove();
+                    }
+                    if (settings.has_labels) {
+                        var chart_body = svg.select(".chart-body");
+                        var labels = chart_body.selectAll(".point-label")
+                                    .data(data, key);
+                        labels.enter()
+                        .append("text")
+                        .call(label_init)
+                        .call(label_formatting)
+                        .call(drag);
+                    }
+                }
             };
 
             // Update data with transitions
