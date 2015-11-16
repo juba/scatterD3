@@ -11,7 +11,7 @@ function scatterD3() {
     svg,
     zoom, drag;
 
-    function setup_sizes() {
+    function setup_sizes(settings) {
         dims.legend_width = 0;
         if (settings.has_legend) dims.legend_width = settings.legend_width;
 
@@ -388,7 +388,7 @@ function scatterD3() {
 
             svg = d3.select(this).select("svg");
 
-            setup_sizes();
+            setup_sizes(settings);
             setup_scales(data);
 
             // Root chart element
@@ -504,7 +504,7 @@ function scatterD3() {
                 var svg = d3.select(el).select("svg");
 
                 if (settings.has_legend_changed)
-                    resize_chart();
+                    resize_chart(el);
 
                 setup_scales(data);
 
@@ -559,9 +559,9 @@ function scatterD3() {
     }
 
     // Dynamically resize chart elements
-    function resize_chart () {
+    function resize_chart (el) {
         // recompute sizes
-        setup_sizes();
+        setup_sizes(settings);
         // recompute scales and zoom
         var cache_translate = zoom.translate();
         var cache_scale = zoom.scale();
@@ -575,6 +575,7 @@ function scatterD3() {
         zoom.translate(cache_translate);
         zoom.scale(cache_scale);
         // Change svg attributes
+        var svg = d3.select(el).select("svg");
         svg.select(".root").attr("width", dims.width).attr("height", dims.height);
         svg.select(".cliprect").attr("width", dims.width).attr("height", dims.height);
         svg.select(".pane").attr("width", dims.width).attr("height", dims.height).call(zoom);
@@ -650,8 +651,8 @@ function scatterD3() {
     };
 
     // resize
-    chart.resize = function() {
-        resize_chart();
+    chart.resize = function(el) {
+        resize_chart(el);
     }
 
     // settings getter/setter
@@ -668,7 +669,7 @@ function scatterD3() {
         if (Object.keys(settings).length === 0) {
             settings = value;
             // update dims and scales
-            setup_sizes();
+            setup_sizes(settings);
             setup_scales(data);
         } else {
             var old_settings = settings;
@@ -741,7 +742,7 @@ HTMLWidgets.widget({
         .attr("width", width)
         .attr("height", height);
         // resize chart
-        scatter.width(width).height(height).resize();
+        scatter.width(width).height(height).resize(el);
     },
 
     renderValue: function(el, obj, scatter) {
@@ -769,14 +770,13 @@ HTMLWidgets.widget({
         }
         // Update only
         else {
-            //obj.settings.previous_hashes = scatter.settings().hashes;
-            // Check what data did change
+            // Check what did change
+            obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
             function changed(varname) {
                 return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
             };
             obj.settings.x_changed = changed("x");
             obj.settings.y_changed = changed("y");
-            obj.settings.has_legend_changed = changed("has_legend");
             obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var");
             obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.legend_changed;
             scatter = scatter.settings(obj.settings, el);
