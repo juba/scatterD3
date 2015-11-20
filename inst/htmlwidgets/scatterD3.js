@@ -513,12 +513,10 @@ function scatterD3() {
                 setup_scales(data, svg);
 
                 var t0 = svg.transition().duration(1000);
-                if (settings.x_changed) {
+                if (settings.x_changed || settings.y_changed ) {
                     svg.select(".x.axis .axis-label").text(settings.xlab);
                     t0.select(".x.axis").call(xAxis);
                     t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
-                }
-                if (settings.y_changed) {
                     svg.select(".y.axis .axis-label").text(settings.ylab);
                     t0.select(".y.axis").call(yAxis);
                     t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
