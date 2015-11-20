@@ -32,7 +32,7 @@ function scatterD3() {
         dims.legend_x = dims.total_width - margin.right - dims.legend_width + 24;
     }
 
-    function setup_scales(data) {
+    function setup_scales(data, svg) {
 
         // x and y limits
         if (settings.xlim === null) {
@@ -75,11 +75,14 @@ function scatterD3() {
                  d3.max(data, function(d) { return Math.max(d.size_var);} )]);
 
         // zoom behavior
+        zoomed.svg = svg;
         zoom = d3.behavior.zoom()
         .x(x)
         .y(y)
         .scaleExtent([1, 32])
-        .on("zoom", zoomed);
+        .on("zoom", function() {
+             zoomed();
+         });
 
         // x and y axis functions
         xAxis = d3.svg.axis()
@@ -105,6 +108,7 @@ function scatterD3() {
 
     // Zoom function
     function zoomed(reset) {
+        var svg = zoomed.svg;
         svg.select(".x.axis").call(xAxis);
         svg.select(".y.axis").call(yAxis);
         svg.selectAll(".dot, .point-label")
@@ -389,7 +393,7 @@ function scatterD3() {
             svg = d3.select(this).select("svg");
 
             setup_sizes(settings);
-            setup_scales(data);
+            setup_scales(data, svg);
 
             // Root chart element
             root = svg.append("g")
@@ -506,7 +510,7 @@ function scatterD3() {
                 if (settings.has_legend_changed)
                     resize_chart(el);
 
-                setup_scales(data);
+                setup_scales(data, svg);
 
                 var t0 = svg.transition().duration(1000);
                 if (settings.x_changed) {
@@ -620,7 +624,7 @@ function scatterD3() {
 
 
     // Add controls handlers for shiny
-    chart.add_controls_handlers = function() {
+    chart.add_controls_handlers = function(el) {
 
         // Zoom reset
         d3.select("#" + settings.dom_id_reset_zoom).on("click", function() {
@@ -629,6 +633,7 @@ function scatterD3() {
                 iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
                 return function(t) {
                     zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
+                    zoomed.svg = d3.select(el).select("svg");
                     zoomed(reset=true);
                 };
             })
@@ -670,7 +675,8 @@ function scatterD3() {
             settings = value;
             // update dims and scales
             setup_sizes(settings);
-            setup_scales(data);
+            var svg = d3.select(el).select("svg");
+            setup_scales(data, svg);
         } else {
             var old_settings = settings;
             settings = value;
@@ -760,10 +766,10 @@ HTMLWidgets.widget({
 
         // Complete draw
         if (redraw) {
-            scatter = scatter.data(data, redraw);
-            scatter = scatter.settings(obj.settings);
+            scatter = scatter.data(data, redraw, el);
+            scatter = scatter.settings(obj.settings, el);
             // add controls handlers for shiny apps
-            scatter.add_controls_handlers();
+            scatter.add_controls_handlers(el);
             // draw chart
             d3.select(el)
             .call(scatter);
