@@ -137,9 +137,9 @@ scatterD3 <- function(x, y, lab = NULL,
 
   data <- data.frame(x = x, y = y)
   if (!is.null(lab)) data <- cbind(data, lab = lab)
-  if (!is.null(col_var)) data <- cbind(data, col_var = col_var)
-  if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
-  if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
+  if (!is.null(col_var)) data <- cbind(data, col_var = clean_var_levels(col_var))
+  if (!is.null(symbol_var)) data <- cbind(data, symbol_var = clean_var_levels(symbol_var))
+  if (!is.null(size_var)) data <- cbind(data, size_var = clean_var_levels(size_var))
   if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
   else data <- cbind(data, key_var = seq_along(x))
   if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
@@ -176,3 +176,13 @@ renderScatterD3 <- function(expr, env = parent.frame(), quoted = FALSE) {
   if (!quoted) { expr <- substitute(expr) } # force quoted
   htmlwidgets::shinyRenderWidget(expr, scatterD3Output, env, quoted = TRUE)
 }
+
+#' Clean variable levels to be valid CSS classes
+#' https://stackoverflow.com/a/449000/249691
+#' @param v character vector to be cleaned
+clean_var_levels <- function(v) {
+  gsub("[^[:alnum:]_-]", "_", v)
+}
+
+
+
