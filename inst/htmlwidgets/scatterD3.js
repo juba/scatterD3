@@ -240,20 +240,39 @@ function scatterD3() {
     drag = d3.behavior.drag()
     .origin(function(d) {
         var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-        dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-        dy = (d.lab_dx === undefined) ? default_label_dy(size) : d.lab_dy;
+        var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+        var dy = (d.lab_dx === undefined) ? default_label_dy(size) : d.lab_dy;
         return {x:x(d.x)+dx, y:y(d.y)+dy};
     })
-    .on('dragstart', function(d) { d3.select(this).style('fill', '#000'); })
+    .on('dragstart', function(d) {
+      d3.select(this).style('fill', '#000');
+      var chart = d3.select(this).node().parentNode;
+      var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+      var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+      var dy = (d.lab_dx === undefined) ? default_label_dy(size) : d.lab_dy;
+      d3.select(chart).append("svg:line")
+      .attr("id", "scatterD3-drag-line")
+      .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
+      .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
+      .style("stroke", "#000")
+      .style("opacity", 0.2);
+    })
     .on('drag', function(d) {
         cx = d3.event.x - x(d.x);
         cy = d3.event.y - y(d.y);
-        d3.select(this).attr('dx', cx + "px");
-        d3.select(this).attr('dy', cy + "px");
+        d3.select(this)
+        .attr('dx', cx + "px")
+        .attr('dy', cy + "px");
+        d3.select("#scatterD3-drag-line")
+        .attr('x2', x(d.x) + cx)
+        .attr("y2", y(d.y) + cy);
         d.lab_dx = cx;
         d.lab_dy = cy;
     })
-    .on('dragend', function(d) { d3.select(this).style('fill', color_scale(d.col_var)); });
+    .on('dragend', function(d) {
+      d3.select(this).style('fill', color_scale(d.col_var));
+      d3.select("#scatterD3-drag-line").remove();
+    });
 
     // Format legend label
     function legend_label_formatting (selection, margin_top) {
