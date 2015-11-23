@@ -18,7 +18,8 @@ library.
 
 Here is a small preview of what you will get :
 
-![example](https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif) [![Travis-CI Build Status](https://travis-ci.org/juba/scatterD3.svg?branch=master)](https://travis-ci.org/juba/scatterD3)
+![example](https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif) 
+[![Travis-CI Build Status](https://travis-ci.org/juba/scatterD3.svg?branch=master)](https://travis-ci.org/juba/scatterD3)
 
 
 
