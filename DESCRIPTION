@@ -1,7 +1,7 @@
 Package: scatterD3
 Type: Package
 Title: D3 Javascript Scatterplot from R
-Version: 0.4
+Version: 0.4.1
 Date: 2015-11-23
 Authors@R: c(person("Julien", "Barnier", email = "julien.barnier@ens-lyon.fr",
     role = c("aut", "cre")))
