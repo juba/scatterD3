@@ -86,7 +86,7 @@ Note that default tooltips are updated accordingly.
 
 ## Custom tooltips
 
-If the default tooltip doesn't suit your needs, you can customize them by providing a character vector to the `tooltip_text`. This can contain HTML tags for formatting.
+If the default tooltips don't suit your needs, you can customize them by providing a character vector to the `tooltip_text`. This can contain HTML tags for formatting.
 
 ```{r cust_tooltips}
 tooltips <- paste("This is an incredible <strong>", rownames(mtcars),"</strong><br />with ", 
@@ -102,15 +102,15 @@ You can also disable tooltips entirely with `tooltips = FALSE`.
 
 Like every R HTML widget, shiny integration is straightforward. But as a D3 widget, `scatterD3` is *updatable* : changes in settings or data can be displayed via smooth transitions instead of a complete chart redraw, which can provide interesting visual clues.
 
-To a small demonstration of these transitions, you can take a look at the
+For a small demonstration of these transitions, you can take a look at the
 [sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/).
 
-Enabling transitions in your shiny app is quite simple, you just have to add the `transitions = TRUE` argument to your `scatterD3` calls in your shiny server code. There's only one warning : if your shiny application may filter on your dataset rows via a control, then you must provide a `key_var` variable that uniquely and persistently identify your rows.
+Enabling transitions in your shiny app is quite simple, you just have to add the `transitions = TRUE` argument to your `scatterD3` calls in your shiny server code. There's only one warning : if your shiny application may filter on your dataset rows via a form control, then you must provide a `key_var` variable that uniquely and persistently identify your rows.
 
 
 ### Additional controls : Reset zoom and SVG export
 
-Furthermore, `scatterD3` provides some additional handlers to two interactive features : SVG export and zoom resetting.
+Furthermore, `scatterD3` provides some additional handlers for two interactive features : SVG export and zoom resetting.
 
 By default, you just have to give the following `id` to the corresponding form controls :
 
