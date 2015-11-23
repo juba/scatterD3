@@ -172,7 +172,7 @@ function scatterD3() {
 
     // Initial dot attributes
     function dot_init (selection) {
-        // tooltips when hovering points
+         // tooltips when hovering points
         if (settings.has_tooltips) {
             var tooltip = d3.select(".scatterD3-tooltip");
             selection.on("mouseover", function(d, i){
@@ -209,12 +209,7 @@ function scatterD3() {
     // Initial text label attributes
     function label_init (selection) {
         selection
-        .text(function(d) {return(d.lab)})
-        .attr("text-anchor", "middle")
-        .attr("dx", function(d) {
-            if (d.lab_dx === undefined) return("0px");
-            else return(d.lab_dx + "px");
-        });
+        .attr("text-anchor", "middle");
     }
 
     // Compute default vertical offset for labels
@@ -225,10 +220,15 @@ function scatterD3() {
     // Apply format to text label
     function label_formatting (selection) {
         selection
+        .text(function(d) {return(d.lab)})
         .style("font-size", settings.labels_size + "px")
         .attr("class", function(d,i) { return "point-label color color-" + d.col_var + " symbol symbol-" + d.symbol_var; })
         .attr("transform", translation)
         .style("fill", function(d) { return color_scale(d.col_var); })
+        .attr("dx", function(d) {
+            if (d.lab_dx === undefined) return("0px");
+            else return(d.lab_dx + "px");
+        })
         .attr("dy", function(d) {
             if (d.lab_dy !== undefined) return(d.lab_dy + "px");
             var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
