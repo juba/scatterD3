@@ -219,9 +219,6 @@ function scatterD3() {
     // Initial arrow attributes
     function arrow_init (selection) {
         selection
-        .call(draw_arrow)
-        .style("stroke-width", "1px");
-
          // tooltips when hovering points
         if (settings.has_tooltips) {
             var tooltip = d3.select(".scatterD3-tooltip");
@@ -241,6 +238,8 @@ function scatterD3() {
     // Apply format to arrow
     function arrow_formatting(selection) {
         selection
+        .call(draw_arrow)
+        .style("stroke-width", "1px")
         .style("opacity", settings.point_opacity)
         // stroke color
         .style("stroke", function(d) { return color_scale(d.col_var); })
@@ -608,11 +607,23 @@ function scatterD3() {
                 zoom.y(y);
 
                 var chart_body = svg.select(".chart-body");
-                var dots = chart_body.selectAll(".dot")
-                .data(data, key);
-                dots.enter().append("path").call(dot_init);
-                dots.transition().duration(1000).call(dot_formatting);
-                dots.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+
+                var point_filter = function(d) { return d.type_var === undefined || d.type_var == "point"; };
+                var arrow_filter = function(d) { return d.type_var !==undefined && d.type_var == "arrow"; };
+                // Add arrows
+                var arrow = chart_body
+                .selectAll(".arrow")
+                .data(data.filter(arrow_filter), key(arrow_filter));
+                arrow.enter().append("svg:line").call(arrow_init);
+                arrow.transition().duration(1000).call(arrow_formatting);
+                arrow.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+                // Add points
+                var dot = chart_body
+                .selectAll(".dot")
+                .data(data.filter(point_filter), key(point_filter));
+                dot.enter().append("path").call(dot_init);
+                dot.transition().duration(1000).call(dot_formatting);
+                dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
 
                 if (settings.has_labels) {
                     var labels = chart_body.selectAll(".point-label")
