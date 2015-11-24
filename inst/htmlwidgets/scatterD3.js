@@ -616,7 +616,7 @@ function scatterD3() {
                 .data(data.filter(arrow_filter), key(arrow_filter));
                 arrow.enter().append("svg:line").call(arrow_init);
                 arrow.transition().duration(1000).call(arrow_formatting);
-                arrow.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+                arrow.exit().transition().duration(1000).style("opacity", "0").remove();
                 // Add points
                 var dot = chart_body
                 .selectAll(".dot")
@@ -679,6 +679,7 @@ function scatterD3() {
         svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
         svg.select(".y.axis").call(yAxis);
         svg.selectAll(".dot").attr("transform", translation);
+        svg.selectAll(".arrow").call(draw_arrow);
         if (settings.has_labels) {
             svg.selectAll(".point-label")
             .attr("transform", translation);
