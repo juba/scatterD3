@@ -1,6 +1,7 @@
 scatterD3 0.5
 ------------------------------------------------------
 
+* Text labels are placed below the corresponding point by default when y < 0
 * New `type_var` argument, which allows to selectively draw arrows (starting from origin) instead of points
 
 

@@ -255,8 +255,9 @@ function scatterD3() {
     }
 
     // Compute default vertical offset for labels
-    function default_label_dy(size) {
-        return (-Math.sqrt(size) / 2) - 7;
+    function default_label_dy(size, y) {
+        if (y >= 0) { return (-Math.sqrt(size) / 2) - 6; }
+        else { return (Math.sqrt(size) / 2) + settings.labels_size + 2; }
     }
 
     // Apply format to text label
@@ -274,7 +275,7 @@ function scatterD3() {
         .attr("dy", function(d) {
             if (d.lab_dy !== undefined) return(d.lab_dy + "px");
             var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-            return default_label_dy(size) + "px";
+            return default_label_dy(size, d.y) + "px";
         });
     }
 
@@ -283,7 +284,7 @@ function scatterD3() {
     .origin(function(d) {
         var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
         var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-        var dy = (d.lab_dx === undefined) ? default_label_dy(size) : d.lab_dy;
+        var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y) : d.lab_dy;
         return {x:x(d.x)+dx, y:y(d.y)+dy};
     })
     .on('dragstart', function(d) {
@@ -291,7 +292,7 @@ function scatterD3() {
       var chart = d3.select(this).node().parentNode;
       var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
       var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-      var dy = (d.lab_dx === undefined) ? default_label_dy(size) : d.lab_dy;
+      var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y) : d.lab_dy;
       d3.select(chart).append("svg:line")
       .attr("id", "scatterD3-drag-line")
       .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
