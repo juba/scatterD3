@@ -448,6 +448,15 @@ function scatterD3() {
 
     }
 
+    // Filter points and arrows data
+    function point_filter(d) {
+      return d.type_var === undefined || d.type_var == "point";
+    }
+    function arrow_filter(d) {
+      return d.type_var !== undefined && d.type_var == "arrow";
+    }
+
+
     function chart(selection) {
         selection.each(function() {
 
@@ -514,8 +523,6 @@ function scatterD3() {
             .attr("class", "zeroline vline")
             .attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 
-            var point_filter = function(d) { return d.type_var === undefined || d.type_var == "point"; };
-            var arrow_filter = function(d) { return d.type_var !==undefined && d.type_var == "arrow"; };
             // Add arrows
             var arrow = chart_body
             .selectAll(".arrow")
@@ -608,8 +615,6 @@ function scatterD3() {
 
                 var chart_body = svg.select(".chart-body");
 
-                var point_filter = function(d) { return d.type_var === undefined || d.type_var == "point"; };
-                var arrow_filter = function(d) { return d.type_var !==undefined && d.type_var == "arrow"; };
                 // Add arrows
                 var arrow = chart_body
                 .selectAll(".arrow")
