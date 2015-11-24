@@ -113,6 +113,7 @@ function scatterD3() {
         svg.select(".y.axis").call(yAxis);
         svg.selectAll(".dot, .point-label")
         .attr("transform", translation);
+        svg.selectAll(".arrow").call(draw_arrow);
         var zeroline = d3.svg.line()
         .x(function(d) {return x(d.x)})
         .y(function(d) {return y(d.y)});
@@ -204,6 +205,47 @@ function scatterD3() {
             })
         )
         .attr("class", function(d,i) { return "dot color color-" + d.col_var + " symbol symbol-" + d.symbol_var; });
+    }
+
+    // Arrow drawing function
+    function draw_arrow(selection) {
+        selection
+        .attr("x1", function(d) { return x(0) })
+        .attr("y1", function(d) { return y(0) })
+        .attr("x2", function(d) { return x(d.x) })
+        .attr("y2", function(d) { return y(d.y) })
+    }
+
+    // Initial arrow attributes
+    function arrow_init (selection) {
+        selection
+        .call(draw_arrow)
+        .style("stroke-width", "1px");
+
+         // tooltips when hovering points
+        if (settings.has_tooltips) {
+            var tooltip = d3.select(".scatterD3-tooltip");
+            selection.on("mouseover", function(d, i){
+                tooltip.style("visibility", "visible")
+                .html(tooltip_content(d));
+            });
+            selection.on("mousemove", function(){
+                tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
+            });
+            selection.on("mouseout", function(){
+                tooltip.style("visibility", "hidden");
+            });
+        }
+    }
+
+    // Apply format to arrow
+    function arrow_formatting(selection) {
+        selection
+        .style("opacity", settings.point_opacity)
+        // stroke color
+        .style("stroke", function(d) { return color_scale(d.col_var); })
+        .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
+        .attr("class", function(d,i) { return "arrow color color-" + d.col_var });
     }
 
     // Initial text label attributes
@@ -420,15 +462,28 @@ function scatterD3() {
             .style("fill", "#FFF")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+            // <defs>
+            var defs = svg.append("defs")
             // clipping rectangle
-            svg.append("defs")
-            .append("clipPath")
+            defs.append("clipPath")
             .attr('id', 'scatterclip' + settings.html_id)
             .append('rect')
             .attr('class', 'cliprect')
             .attr('width', dims.width)
             .attr('height', dims.height);
-
+            // arrow head markers
+            color_scale.range().forEach(function(d) {
+                defs.append("marker")
+                .attr("id", "arrow-head-" + settings.html_id + "-" + d)
+                .attr("markerWidth", "10")
+                .attr("markerHeight", "10")
+                .attr("refX", "10")
+                .attr("refY", "4")
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M0,0 L0,8 L10,4 L0,0")
+                .style("fill", d);
+            });
             // add x and y axes
             add_axes(root);
 
@@ -459,11 +514,20 @@ function scatterD3() {
             .attr("class", "zeroline vline")
             .attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 
+            var point_filter = function(d) { return d.type_var === undefined || d.type_var == "point"; };
+            var arrow_filter = function(d) { return d.type_var !==undefined && d.type_var == "arrow"; };
+            // Add arrows
+            var arrow = chart_body
+            .selectAll(".arrow")
+            .data(data.filter(arrow_filter), key(arrow_filter));
+            arrow.enter()
+            .append("svg:line")
+            .call(arrow_init)
+            .call(arrow_formatting);
             // Add points
             var dot = chart_body
             .selectAll(".dot")
-            .data(data, key);
-
+            .data(data.filter(point_filter), key(point_filter));
             dot.enter()
             .append("path")
             .call(dot_init)
