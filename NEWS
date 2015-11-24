@@ -1,3 +1,9 @@
+scatterD3 0.5
+------------------------------------------------------
+
+* New `type_var` argument, which allows to selectively draw arrows (starting from origin) instead of points
+
+
 scatterD3 0.4
 ------------------------------------------------------
 
