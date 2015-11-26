@@ -642,6 +642,10 @@ function scatterD3() {
 
                 var chart_body = svg.select(".chart-body");
 
+                // Unit circle
+                var unit_circle = chart_body.select(".unit-circle")
+                .transition().duration(1000)
+                .call(unit_circle_init);
                 // Add arrows
                 var arrow = chart_body
                 .selectAll(".arrow")
