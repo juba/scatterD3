@@ -119,6 +119,7 @@ function scatterD3() {
         .y(function(d) {return y(d.y)});
         svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
         svg.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
+        svg.select(".unit-circle").call(unit_circle_init);
     }
 
     // Create and draw x and y axes
@@ -245,6 +246,17 @@ function scatterD3() {
         .style("stroke", function(d) { return color_scale(d.col_var); })
         .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
         .attr("class", function(d,i) { return "arrow color color-" + d.col_var });
+    }
+
+    // Unit circle init
+    function unit_circle_init(selection) {
+        selection
+        .attr('cx', x(0))
+        .attr('cy', y(0))
+        .attr('rx', x(1)-x(0))
+        .attr('ry', y(0)-y(1))
+        .style("stroke", "#000")
+        .style("fill", "none");
     }
 
     // Initial text label attributes
@@ -523,6 +535,13 @@ function scatterD3() {
             .attr("class", "zeroline vline")
             .attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 
+            // Unit circle
+            if (settings.unit_circle) {
+              var unit_circle = chart_body.append('svg:ellipse')
+              .attr('class', 'unit-circle')
+              .call(unit_circle_init);
+            }
+
             // Add arrows
             var arrow = chart_body
             .selectAll(".arrow")
@@ -609,6 +628,7 @@ function scatterD3() {
                 svg.select(".y.axis .axis-label").text(settings.ylab);
                 t0.select(".y.axis").call(yAxis);
                 t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
+                t0.select(".unit-circle").call(unit_circle_init)
                 svg.select(".pane").call(zoom);
                 zoom.x(x);
                 zoom.y(y);
@@ -683,6 +703,8 @@ function scatterD3() {
         svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
         svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
         svg.select(".y.axis").call(yAxis);
+        svg.select(".unit-circle").call(unit_circle_init);
+
         svg.selectAll(".dot").attr("transform", translation);
         svg.selectAll(".arrow").call(draw_arrow);
         if (settings.has_labels) {

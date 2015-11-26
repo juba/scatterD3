@@ -22,6 +22,7 @@
 #' @param size_lab size legend title
 #' @param key_var optional vector of rows ids. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.
 #' @param type_var optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.
+#' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
 #' @param xlab x axis label
@@ -66,6 +67,7 @@ scatterD3 <- function(x, y, lab = NULL,
                       size_lab = NULL,
                       key_var = NULL,
                       type_var = NULL,
+                      unit_circle = FALSE,
                       tooltips = TRUE,
                       tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
@@ -120,6 +122,7 @@ scatterD3 <- function(x, y, lab = NULL,
     size_lab = size_lab,
     key_var = key_var,
     type_var = type_var,
+    unit_circle = unit_circle,
     has_color_var = !is.null(col_var),
     has_symbol_var = !is.null(symbol_var),
     has_size_var = !is.null(size_var),
