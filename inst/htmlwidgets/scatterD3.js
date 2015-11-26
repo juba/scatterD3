@@ -17,6 +17,8 @@ function scatterD3() {
 
         dims.width = width - dims.legend_width;
         dims.height = height;
+        dims.height = dims.height - margin.top - margin.bottom;
+        dims.width = dims.width - margin.left - margin.right;
 
         // Fixed ratio
         if (settings.fixed) {
@@ -24,8 +26,6 @@ function scatterD3() {
             dims.width = dims.height;
         }
 
-        dims.height = dims.height - margin.top - margin.bottom;
-        dims.width = dims.width - margin.left - margin.right;
         dims.total_width = dims.width + margin.left + margin.right + dims.legend_width;
         dims.total_height = dims.height + margin.top + margin.bottom;
 
