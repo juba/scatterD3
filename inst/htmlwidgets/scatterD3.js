@@ -247,6 +247,17 @@ function scatterD3() {
         .attr("class", function(d,i) { return "arrow color color-" + d.col_var });
     }
 
+    // Unit circle init
+    function unit_circle_init(selection) {
+        selection
+        .attr('cx', x(0))
+        .attr('cy', y(0))
+        .attr('rx', x(1)-x(0))
+        .attr('ry', y(0)-y(1))
+        .style("stroke", "#000")
+        .style("fill", "none");
+    }
+
     // Initial text label attributes
     function label_init (selection) {
         selection
@@ -523,6 +534,13 @@ function scatterD3() {
             .attr("class", "zeroline vline")
             .attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 
+            // Unit circle
+            if (settings.unit_circle) {
+              var unit_circle = chart_body.append('svg:ellipse')
+              .attr('class', 'unit-circle')
+              .call(unit_circle_init);
+            }
+
             // Add arrows
             var arrow = chart_body
             .selectAll(".arrow")
@@ -615,6 +633,10 @@ function scatterD3() {
 
                 var chart_body = svg.select(".chart-body");
 
+                // Unit circle
+                var unit_circle = chart_body.select(".unit-circle")
+                .transition().duration(1000)
+                .call(unit_circle_init);
                 // Add arrows
                 var arrow = chart_body
                 .selectAll(".arrow")
@@ -683,6 +705,8 @@ function scatterD3() {
         svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
         svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
         svg.select(".y.axis").call(yAxis);
+        svg.select(".unit-circle").call(unit_circle_init);
+
         svg.selectAll(".dot").attr("transform", translation);
         svg.selectAll(".arrow").call(draw_arrow);
         if (settings.has_labels) {

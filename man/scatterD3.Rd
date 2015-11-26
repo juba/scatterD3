@@ -11,10 +11,10 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
   point_opacity = 1, fixed = FALSE, col_var = NULL, colors = NULL,
   symbol_var = NULL, size_var = NULL, size_range = c(10, 300),
   col_lab = NULL, symbol_lab = NULL, size_lab = NULL, key_var = NULL,
-  type_var = NULL, tooltips = TRUE, tooltip_text = NULL, xlab = NULL,
-  ylab = NULL, html_id = NULL, width = NULL, height = NULL,
-  legend_width = 150, xlim = NULL, ylim = NULL,
-  dom_id_reset_zoom = "scatterD3-reset-zoom",
+  type_var = NULL, unit_circle = FALSE, tooltips = TRUE,
+  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
+  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
+  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export", transitions = FALSE)
 }
 \arguments{
@@ -54,6 +54,8 @@ be associated with their name within \code{col_var}.}
 \item{key_var}{optional vector of rows ids. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.}
 
 \item{type_var}{optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.}
+
+\item{unit_circle}{set tot TRUE to draw a unit circle}
 
 \item{tooltips}{logical value to display tooltips when hovering points}
 
