@@ -54,6 +54,13 @@ function scatterD3() {
             gap_y = 0;
         }
 
+        // Fixed ratio
+        if (settings.fixed) {
+            min_x = min_y = Math.min(min_x, min_y);
+            max_x = max_y = Math.max(max_x, max_y);
+            gap_x = gap_y = Math.max(gap_x, gap_y);
+        }
+
         // x, y, color, symbol and size scales
         x = d3.scale.linear().range([0, dims.width]);
         y = d3.scale.linear().range([dims.height, 0]);
