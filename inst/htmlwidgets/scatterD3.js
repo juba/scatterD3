@@ -630,6 +630,7 @@ function scatterD3() {
                 if (settings.has_legend_changed)
                     resize_chart(el);
 
+                setup_sizes(settings);
                 setup_scales(data, svg);
 
                 var t0 = svg.transition().duration(1000);
