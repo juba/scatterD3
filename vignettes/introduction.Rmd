@@ -26,7 +26,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg)
 This will display a simple visualization with the given variables as `x` and `y` axis. There are several interactive features directly available :
 
 - you can zoom in and out with the mouse wheel while the mouse cursor is on the plot
-- while zommed in, you can pan the plot by dragging with your mouse
+- you can pan the plot by dragging with your mouse
 - by hovering over a point, you can display a small tooltip window giving the `x` and `y` values
 
 You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed = TRUE`.
@@ -59,7 +59,8 @@ Note that when hovering over a legend item with your mouse, the corresponding po
 You can also map symbol sizes with a variable with the `size_var` argument. `size_range` allows to customize the sizes range :
 
 ```{r map_size}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, size_var = mtcars$hp, size_range = c(10,1000), point_opacity = 0.7)
+scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, size_var = mtcars$hp, 
+          size_range = c(10,1000), point_opacity = 0.7)
 ```
 
 ## Axis limits
@@ -86,7 +87,7 @@ Note that default tooltips are updated accordingly.
 
 ## Custom tooltips
 
-If the default tooltips don't suit your needs, you can customize them by providing a character vector to the `tooltip_text`. This can contain HTML tags for formatting.
+If the default tooltips don't suit your needs, you can customize them by providing a character vector to the `tooltip_text` argument. This can contain HTML tags for formatting.
 
 ```{r cust_tooltips}
 tooltips <- paste("This is an incredible <strong>", rownames(mtcars),"</strong><br />with ", 
