@@ -91,6 +91,19 @@ function scatterD3() {
              zoomed();
          });
 
+        // Zoom reset
+        d3.select("#" + settings.dom_id_reset_zoom).on("click", function() {
+            d3.transition().duration(750).tween("zoom", function() {
+                var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
+                iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
+                return function(t) {
+                    zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
+                    zoomed.svg = svg;
+                    zoomed(reset = true);
+                };
+            })
+        });
+
         // x and y axis functions
         xAxis = d3.svg.axis()
         .scale(x)
@@ -760,20 +773,6 @@ function scatterD3() {
 
     // Add controls handlers for shiny
     chart.add_controls_handlers = function(el) {
-
-        // Zoom reset
-        d3.select("#" + settings.dom_id_reset_zoom).on("click", function() {
-            d3.transition().duration(750).tween("zoom", function() {
-                var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
-                iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
-                return function(t) {
-                    zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
-                    zoomed.svg = d3.select(el).select("svg");
-                    zoomed(reset=true);
-                };
-            })
-        });
-
         // SVG export
         d3.select("#" + settings.dom_id_svg_export)
         .on("click", function(){
