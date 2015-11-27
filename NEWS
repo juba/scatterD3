@@ -1,9 +1,10 @@
 scatterD3 0.5
 ------------------------------------------------------
 
+* Bugfixes for when several scatterD3 instances are in the same shiny app
 * Fix `fixed` 1:1 aspect ratio not working as intended
 * New `unit_circle` argument to draw a unit circle around origin
-* Text labels are placed below the corresponding point by default when y < 0
+* Text labels are placed below the corresponding arrow by default when y < 0
 * New `type_var` argument, which allows to selectively draw arrows (starting from origin) instead of points
 
 
