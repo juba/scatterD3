@@ -634,6 +634,19 @@ function scatterD3() {
                         .call(drag);
                     }
                 }
+                if (old_settings.unit_circle != settings.unit_circle) {
+                    if (!settings.unit_circle) {
+                        var circle = svg.select(".unit-circle");
+                        circle.transition().duration(1000).call(unit_circle_init)
+                        .style("opacity", "0").remove();
+                    }
+                    if (settings.unit_circle) {
+                        var chart_body = svg.select(".chart-body");
+                        chart_body.append('svg:ellipse')
+                        .attr('class', 'unit-circle')
+                        .style("opacity", "0");
+                    }
+                }
             };
 
             // Update data with transitions
@@ -654,22 +667,22 @@ function scatterD3() {
                 svg.select(".y.axis .axis-label").text(settings.ylab);
                 t0.select(".y.axis").call(yAxis);
                 t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-                t0.select(".unit-circle").call(unit_circle_init)
                 svg.select(".pane").call(zoom);
                 zoom.x(x);
                 zoom.y(y);
+                // Unit circle
+                if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
                 var chart_body = svg.select(".chart-body");
 
-                // Unit circle
-                var unit_circle = chart_body.select(".unit-circle")
-                .transition().duration(1000)
-                .call(unit_circle_init);
                 // Add arrows
                 var arrow = chart_body
                 .selectAll(".arrow")
                 .data(data.filter(arrow_filter), key(arrow_filter));
-                arrow.enter().append("svg:line").call(arrow_init);
+                arrow.enter().append("svg:line").call(arrow_init)
+                .style("opacity", "0")
+                .transition().duration(1000)
+                .style("opacity", "1");
                 arrow.transition().duration(1000).call(arrow_formatting);
                 arrow.exit().transition().duration(1000).style("opacity", "0").remove();
                 // Add points
