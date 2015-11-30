@@ -275,8 +275,9 @@ function scatterD3() {
         .attr('cy', y(0))
         .attr('rx', x(1)-x(0))
         .attr('ry', y(0)-y(1))
-        .style("stroke", "#000")
-        .style("fill", "none");
+        .style("stroke", "#888")
+        .style("fill", "none")
+        .style("opacity", "1");
     }
 
     // Initial text label attributes
@@ -508,7 +509,7 @@ function scatterD3() {
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             // <defs>
-            var defs = svg.append("defs")
+            var defs = svg.append("defs");
             // clipping rectangle
             defs.append("clipPath")
             .attr('id', 'scatterclip' + settings.html_id)
