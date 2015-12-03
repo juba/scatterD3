@@ -1,6 +1,7 @@
 scatterD3 0.5.1
 ------------------------------------------------------
 
+* Fix zoom reset when several charts in the same shiny app
 * Switch to 20 colors ordinary scales if there are more than 10 color variable levels
 * Bugfix : wrong svg reference passed to hover legend functions when several scatterD3 instances in the same shiny app
 * Make point labels updatable

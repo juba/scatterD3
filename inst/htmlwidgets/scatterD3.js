@@ -7,6 +7,7 @@ function scatterD3() {
     settings = {},
     data = [],
     x, y, color_scale, symbol_scale, size_scale,
+    min_x, min_y, max_x, max_y, gap_x, gap_y,
     xAxis, yAxis,
     svg,
     zeroline, zoom, drag;
@@ -796,8 +797,6 @@ function scatterD3() {
         // Zoom reset
         d3.select("#" + settings.dom_id_reset_zoom).on("click", function() {
             d3.transition().duration(750).tween("zoom", function() {
-                setup_sizes();
-                setup_scales();
                 var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
                 iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
                 return function(t) {
