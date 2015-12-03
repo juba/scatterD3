@@ -1,7 +1,9 @@
 scatterD3 0.5.1
 ------------------------------------------------------
 
+* Make point labels updatable
 * Manage changes of unit_circle settings
+
 
 scatterD3 0.5
 ------------------------------------------------------
@@ -40,7 +42,6 @@ scatterD3 0.2
 * Fix tooltips not showing under Shiny/Bootstrap (Thanks @tinyheero for reporting)
 * Fix tooltip content when several scatter plots are displayed on the same page
 * Respect custom label position when zooming
-
 
 
 scatterD3 0.1.1

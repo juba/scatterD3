@@ -932,8 +932,10 @@ HTMLWidgets.widget({
             };
             obj.settings.x_changed = changed("x");
             obj.settings.y_changed = changed("y");
+            obj.settings.lab_changed = changed("lab");
             obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var");
-            obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.legend_changed || obj.settings.has_labels_changed;
+            obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.lab_changed ||
+                                        obj.settings.legend_changed || obj.settings.has_labels_changed;
             scatter = scatter.settings(obj.settings, el);
             // Update data only if needed
             if (obj.settings.data_changed) scatter.data(data, redraw, el);
