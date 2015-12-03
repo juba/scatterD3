@@ -68,8 +68,9 @@ function scatterD3() {
         x.domain([min_x - gap_x, max_x + gap_x]);
         y.domain([min_y - gap_y, max_y + gap_y]);
         if (settings.colors === null) {
-
-            color_scale = d3.scale.category10();
+            // Number of different levels. See https://github.com/mbostock/d3/issues/472
+            var n = d3.map(data, function(d) { return d.col_var; }).size();
+            color_scale = n <= 10 ? d3.scale.category10() : d3.scale.category20();
         } else if (Array.isArray(settings.colors)) {
             color_scale = d3.scale.ordinal().range(settings.colors);
         } else if (typeof(settings.colors) === "object"){
