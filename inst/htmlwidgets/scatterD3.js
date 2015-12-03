@@ -365,6 +365,7 @@ function scatterD3() {
     function add_color_legend(el) {
         var legend_color_domain = color_scale.domain().sort();
         var legend_color_scale = d3.scale.category10();
+        var svg = add_color_legend.svg;
         legend_color_scale
         .domain(legend_color_domain)
         .range(legend_color_domain.map(function(d) {return color_scale(d)}));
@@ -411,6 +412,7 @@ function scatterD3() {
         // Height of color legend
         var color_legend_height = settings.has_color_var ? color_scale.domain().length * 20 + 30 : 0;
         margin.symbol_legend_top = color_legend_height + margin.legend_top;
+        var svg = add_color_legend.svg;
 
         var legend_symbol_domain = symbol_scale.domain().sort();
         var legend_symbol_scale = d3.scale.ordinal()
@@ -600,9 +602,15 @@ function scatterD3() {
             if (settings.has_legend) {
                 var legend = svg.append("g").attr("class", "legend");
                 // Color legend
-                if (settings.has_color_var) add_color_legend(legend);
+                if (settings.has_color_var) {
+                    add_color_legend.svg = svg;
+                    add_color_legend(legend);
+                }
                 // Symbol legend
-                if (settings.has_symbol_var) add_symbol_legend(legend);
+                if (settings.has_symbol_var) {
+                    add_symbol_legend.svg = svg;
+                    add_symbol_legend(legend);
+                }
                 // Size legend
                 if (settings.has_size_var) add_size_legend(legend);
             }
@@ -709,9 +717,15 @@ function scatterD3() {
                     // Recreate them
                     if (settings.has_legend) {
                         // Color legend
-                        if (settings.has_color_var) add_color_legend(legend);
+                        if (settings.has_color_var) {
+                          add_color_legend.svg = svg;
+                          add_color_legend(legend);
+                        }
                         // Symbol legend
-                        if (settings.has_symbol_var) add_symbol_legend(legend);
+                        if (settings.has_symbol_var) {
+                          add_symbol_legend.svg = svg;
+                          add_symbol_legend(legend);
+                        }
                         // Size legend
                         if (settings.has_size_var) add_size_legend(legend);
                     }
