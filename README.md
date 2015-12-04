@@ -56,3 +56,16 @@ Furthermore, `scatterD3` provides some additional handlers to two interactive fe
 
 The
 [sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) and the [the introduction vignette](http://rpubs.com/juba/scatterD3) for a better understanding of the different arguments.
+
+
+## Credits
+
+This package has been made possible by :
+
+- Michael Bostock's incredible [d3.js](https://d3js.org/) library and documentation
+- RStudio's [shiny](http://shiny.rstudio.com/) and [htmlwidgets](http://www.htmlwidgets.org/) packages
+- Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
+- Rob Moore's [article on reusable d3.js charts](http://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
+
+
+
