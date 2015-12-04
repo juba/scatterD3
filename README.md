@@ -55,7 +55,7 @@ Like every R HTML widget, shiny integration is straightforward. But as a D3 widg
 Furthermore, `scatterD3` provides some additional handlers to two interactive features : SVG export and zoom resetting.
 
 The
-[sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) and the [the introduction vignette](http://rpubs.com/juba/scatterD3) for a better understanding of the different arguments.
+[sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) and the [introduction vignette](http://rpubs.com/juba/scatterD3) for a better understanding of the different arguments.
 
 
 ## Credits
