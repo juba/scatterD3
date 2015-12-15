@@ -1,8 +1,8 @@
 Package: scatterD3
 Type: Package
 Title: D3 JavaScript Scatterplot from R
-Version: 0.5.1
-Date: 2015-11-28
+Version: 0.5.2
+Date: 2015-12-15
 Authors@R: c(person("Julien", "Barnier", email = "julien.barnier@ens-lyon.fr",
     role = c("aut", "cre")))
 Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
