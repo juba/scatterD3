@@ -967,7 +967,6 @@ HTMLWidgets.widget({
             scatter = scatter.settings(obj.settings);
             // Update data only if needed
             if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
-            console.log(scatter.svg().attr("id"));
         }
     }
 
