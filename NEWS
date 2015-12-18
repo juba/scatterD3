@@ -1,6 +1,7 @@
 scatterD3 0.5.2
 ------------------------------------------------------
 
+* Bugfix : wrong legend hover highlighting when the label is "0"
 
 
 scatterD3 0.5.1
