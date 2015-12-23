@@ -599,7 +599,7 @@ function scatterD3() {
             }
 
             // Legends
-            if (settings.has_legend) {
+            if (settings.has_legend && settings.legend_width > 0) {
                 var legend = svg.append("g").attr("class", "legend");
                 // Color legend
                 if (settings.has_color_var) {
@@ -661,7 +661,7 @@ function scatterD3() {
     // Update data with transitions
     function update_data() {
 
-      if (settings.has_legend_changed)
+      if (settings.has_legend_changed && settings.legend_width > 0)
             resize_chart();
 
       setup_sizes();
@@ -714,7 +714,7 @@ function scatterD3() {
           // Remove existing legends
           legend.selectAll("*").remove();
           // Recreate them
-          if (settings.has_legend) {
+          if (settings.has_legend && settings.legend_width > 0) {
               // Color legend
               if (settings.has_color_var) {
                 add_color_legend(legend);

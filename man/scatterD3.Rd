@@ -71,7 +71,7 @@ be associated with their name within \code{col_var}.}
 
 \item{height}{figure height, computed when displayed}
 
-\item{legend_width}{legend area width, in pixels}
+\item{legend_width}{legend area width, in pixels. Set to 0 to disable legend completely.}
 
 \item{xlim}{numeric vector of length 2, manual x axis limits}
 

@@ -1,6 +1,7 @@
 scatterD3 0.5.2
 ------------------------------------------------------
 
+* Bugfix : legend must not be displayed when legend_width = 0 and fixed = TRUE (thanks @TimBock)
 * Bugfix : wrong legend hover highlighting when the label is "0"
 
 

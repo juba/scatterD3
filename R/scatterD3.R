@@ -33,7 +33,7 @@
 #' @param dom_id_reset_zoom HTML DOM id of the element to bind the "reset zoom" control to.
 #' @param dom_id_svg_export HTML DOM id of the element to bind the "svg export" control to.
 #' @param transitions if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.
-#' @param legend_width legend area width, in pixels
+#' @param legend_width legend area width, in pixels. Set to 0 to disable legend completely.
 #' @param width figure width, computed when displayed
 #' @param height figure height, computed when displayed
 #'

@@ -54,6 +54,8 @@ By passing vectors to the `col_var` and/or `symbol_var` arguments, you can map p
 scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtcars$gear)
 ```
 
+A legend is then automatically added. You can manually specify its width with `legend_width` argument. Use `legend_width = 0` to disable legend entirely.
+
 Note that when hovering over a legend item with your mouse, the corresponding points are highlighted. Also note that the mapped variables values are automatically added to the default tooltips.
 
 You can also map symbol sizes with a variable with the `size_var` argument. `size_range` allows to customize the sizes range :
