@@ -201,6 +201,12 @@ function scatterD3() {
         }
     }
 
+    // Clean variables levels to be valid CSS classes
+    function css_clean(s) {
+      if (s === undefined) return "";
+      return s.replace(/[^\w-]/g, "_");
+    }
+
     // Initial dot attributes
     function dot_init (selection) {
          // tooltips when hovering points
@@ -235,7 +241,7 @@ function scatterD3() {
             })
         )
         .attr("class", function(d,i) {
-          return "dot symbol symbol-c" + d.symbol_var + " color color-c" + d.col_var;
+          return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
         })
     }
 
@@ -276,7 +282,7 @@ function scatterD3() {
         // stroke color
         .style("stroke", function(d) { return color_scale(d.col_var); })
         .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
-        .attr("class", function(d,i) { return "arrow color color-c" + d.col_var });
+        .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var) });
     }
 
     // Unit circle init
@@ -312,7 +318,7 @@ function scatterD3() {
         selection
         .text(function(d) {return(d.lab)})
         .style("font-size", settings.labels_size + "px")
-        .attr("class", function(d,i) { return "point-label color color-c" + d.col_var + " symbol symbol-c" + d.symbol_var; })
+        .attr("class", function(d,i) { return "point-label color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var); })
         .attr("transform", translation)
         .style("fill", function(d) { return color_scale(d.col_var); })
         .attr("dx", function(d) {
@@ -389,6 +395,7 @@ function scatterD3() {
         .shape("rect")
         .scale(legend_color_scale)
         .on("cellover", function(d) {
+            d = css_clean(d);
             var nsel = ".color:not(.color-c" + d + ")";
             var sel = ".color-c" + d;
             svg.selectAll(nsel)
@@ -439,6 +446,7 @@ function scatterD3() {
         .shapePadding(5)
         .scale(legend_symbol_scale)
         .on("cellover", function(d) {
+            d = css_clean(d);
             var nsel = ".symbol:not(.symbol-c" + d + ")";
             var sel = ".symbol-c" + d;
             svg.selectAll(nsel)
