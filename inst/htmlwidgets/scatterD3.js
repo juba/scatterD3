@@ -592,7 +592,7 @@ function scatterD3() {
             // Add points
             var dot = chart_body
             .selectAll(".dot")
-            .data(data.filter(point_filter), key(point_filter));
+            .data(data.filter(point_filter), key);
             dot.enter()
             .append("path")
             .call(dot_init)
@@ -600,7 +600,7 @@ function scatterD3() {
             // Add arrows
             var arrow = chart_body
             .selectAll(".arrow")
-            .data(data.filter(arrow_filter), key(arrow_filter));
+            .data(data.filter(arrow_filter), key);
             arrow.enter()
             .append("svg:line")
             .call(arrow_init)
@@ -706,14 +706,14 @@ function scatterD3() {
       // Add points
       var dot = chart_body
       .selectAll(".dot")
-      .data(data.filter(point_filter), key(point_filter));
+      .data(data.filter(point_filter), key);
       dot.enter().append("path").call(dot_init);
       dot.transition().duration(1000).call(dot_formatting);
       dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
       // Add arrows
       var arrow = chart_body
       .selectAll(".arrow")
-      .data(data.filter(arrow_filter), key(arrow_filter));
+      .data(data.filter(arrow_filter), key);
       arrow.enter().append("svg:line").call(arrow_init)
       .style("opacity", "0")
       .transition().duration(1000)
