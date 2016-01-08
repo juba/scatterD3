@@ -18,5 +18,6 @@ Imports:
     htmlwidgets,
     digest
 Suggests:
-    knitr
+    knitr,
+    rmarkdown
 RoxygenNote: 5.0.1
