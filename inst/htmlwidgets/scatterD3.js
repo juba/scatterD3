@@ -978,13 +978,14 @@ HTMLWidgets.widget({
             // Check what did change
             obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
             obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
+            obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
             function changed(varname) {
                 return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
             };
             obj.settings.x_changed = changed("x");
             obj.settings.y_changed = changed("y");
             obj.settings.lab_changed = changed("lab");
-            obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var");
+            obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var") || obj.settings.size_range_changed;
             obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.lab_changed ||
                                         obj.settings.legend_changed || obj.settings.has_labels_changed;
             scatter = scatter.settings(obj.settings);
