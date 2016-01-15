@@ -10,3 +10,4 @@ dependencies:
     version: 1.0.0
     src: htmlwidgets/lib/d3-lasso-plugin
     script: lasso.js
+    stylesheet: lasso.css
