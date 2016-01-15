@@ -105,7 +105,9 @@ function scatterD3() {
         .y(y)
         .scaleExtent([1, 32])
         .on("zoom", function() {
+            if(!d3.event.sourceEvent.shiftKey) {
              zoomed();
+            }
          });
 
         // x and y axis functions
@@ -334,6 +336,7 @@ function scatterD3() {
     }
 
     // Text labels dragging function
+    var dragging = false;
     drag = d3.behavior.drag()
     .origin(function(d) {
         var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
@@ -342,19 +345,24 @@ function scatterD3() {
         return {x:x(d.x)+dx, y:y(d.y)+dy};
     })
     .on('dragstart', function(d) {
-      d3.select(this).style('fill', '#000');
-      var chart = d3.select(this).node().parentNode;
-      var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-      var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-      var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
-      d3.select(chart).append("svg:line")
-      .attr("id", "scatterD3-drag-line")
-      .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
-      .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
-      .style("stroke", "#000")
-      .style("opacity", 0.3);
+      if(!d3.event.sourceEvent.shiftKey){
+        dragging = true;
+
+        d3.select(this).style('fill', '#000');
+        var chart = d3.select(this).node().parentNode;
+        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+        var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+        var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
+        d3.select(chart).append("svg:line")
+        .attr("id", "scatterD3-drag-line")
+        .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
+        .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
+        .style("stroke", "#000")
+        .style("opacity", 0.3);
+      }
     })
     .on('drag', function(d) {
+      if(dragging){
         cx = d3.event.x - x(d.x);
         cy = d3.event.y - y(d.y);
         d3.select(this)
@@ -365,10 +373,15 @@ function scatterD3() {
         .attr("y2", y(d.y) + cy);
         d.lab_dx = cx;
         d.lab_dy = cy;
+      }
     })
     .on('dragend', function(d) {
-      d3.select(this).style('fill', color_scale(d.col_var));
-      d3.select("#scatterD3-drag-line").remove();
+      if(dragging){
+        d3.select(this).style('fill', color_scale(d.col_var));
+        d3.select("#scatterD3-drag-line").remove();
+
+        dragging = false;
+      }
     });
 
     // Format legend label
@@ -871,14 +884,15 @@ function scatterD3() {
       var lasso_area = svg.append("rect")
                             .attr("width",dims.width)
                             .attr("height",dims.height)
-                            .style("opacity",0);
+                            .style("opacity",0)
+                            .style("fill","none");
 
       // Define the lasso
       lasso = d3.lasso()
             .closePathDistance(75) // max distance for the lasso loop to be closed
             .closePathSelect(true) // can items be selected by closing the path?
             .hoverSelect(true) // can items by selected by hovering over them?
-            .area(lasso_area) // area where the lasso can be started
+            .area(svg) // area where the lasso can be started
             .on("start",lasso_start) // lasso start function
             .on("draw",lasso_draw) // lasso draw function
             .on("end",lasso_end); // lasso end function
