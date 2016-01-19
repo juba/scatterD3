@@ -99,6 +99,24 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, tooltip_text = tooltips)
 
 You can also disable tooltips entirely with `tooltips = FALSE`.
 
+## Confidence ellipses
+
+You can draw a confidence ellipse around the points :
+
+```{r ellipses}
+scatterD3(x = mtcars$wt, y = mtcars$mpg, ellipses = TRUE)
+```
+
+Or around the different groups of points defined by `col_var` :
+
+```{r ellipses_col}
+scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, ellipses = TRUE)
+```
+
+Ellipses are computed by the  `ellipse.default()` function of the [ellipse package](https://cran.r-project.org/web/packages/ellipse/). The confidence level can be changed with the `ellipse_level` argument (`0.95` by default).
+
+
+
 ## Other options
 
 Finally, and for more specific use cases, you can represent some points as an arrow starting from the origin by using the `type_var` argument, and you can add a unit circle with `unit_circle = TRUE`.

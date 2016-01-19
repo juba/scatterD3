@@ -15,6 +15,7 @@ library.
 - Ability to drag and move text labels
 - Customizable tooltips when hovering points
 - Points highlighting when hovering legend items
+- Option to draw confidence ellipses around group of points
 - Charts integrated inside a Shiny app are fully updatable with smooth transitions when settings or data change
 
 
