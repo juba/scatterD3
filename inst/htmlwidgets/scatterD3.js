@@ -286,11 +286,6 @@ function scatterD3() {
         .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var) });
     }
 
-    // Ellipses path function
-    ellipseFunc = d3.svg.line()
-    .x(function(d) { return x(d.x); })
-    .y(function(d) { return y(d.y); });
-
     // Initial ellipse attributes
     function ellipse_init(selection) {
         selection
@@ -299,6 +294,12 @@ function scatterD3() {
 
     // Apply format to ellipse
     function ellipse_formatting(selection) {
+
+        // Ellipses path function
+        var ellipseFunc = d3.svg.line()
+        .x(function(d) { return x(d.x); })
+        .y(function(d) { return y(d.y); });
+
         selection
         .attr("d", function(d) {
           var ell = HTMLWidgets.dataframeToD3(d.data);
