@@ -14,6 +14,8 @@
 #'          defined as an hexadecimal string (eg "#FF0000").  If
 #'          \code{colors} is a named list or vector, then the colors will
 #'          be associated with their name within \code{col_var}.
+#' @param ellipses draw confidence ellipses for points or the different color mapping groups
+#' @param ellipses_level confidence level for ellipses (0.95 by default)
 #' @param symbol_var optional vector for points symbol mapping
 #' @param size_var optional vector for points size mapping
 #' @param size_range numeric vector of length 2, giving the minimum and maximum point sizes when mapping with size_var
@@ -53,6 +55,7 @@
 #'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
 #'           symbol_lab = "Manual transmission", html_id = NULL)
 #'
+#' @importFrom ellipse ellipse
 #' @export
 #'
 scatterD3 <- function(x, y, lab = NULL,
@@ -60,6 +63,8 @@ scatterD3 <- function(x, y, lab = NULL,
                       point_opacity = 1,
                       fixed = FALSE, col_var = NULL,
                       colors = NULL,
+                      ellipses = FALSE,
+                      ellipses_level = 0.95,
                       symbol_var = NULL,
                       size_var = NULL,
                       size_range = c(10,300),
@@ -79,15 +84,6 @@ scatterD3 <- function(x, y, lab = NULL,
                       dom_id_svg_export = "scatterD3-svg-export",
                       transitions = FALSE) {
 
-  ## List of hashes for each data variable, to track which data elements changed
-  ## to apply updates and transitions in shiny app.
-  hashes <- list()
-  if (transitions) {
-    for (var in c("x", "y", "lab", "col_var", "symbol_var", "size_var")) {
-        hashes[[var]] <- digest::digest(get(var), algo = "sha256")
-    }
-  }
-
   ## Variable names as default labels
   if (is.null(xlab)) xlab <- deparse(substitute(x))
   if (is.null(ylab)) ylab <- deparse(substitute(y))
@@ -104,6 +100,43 @@ scatterD3 <- function(x, y, lab = NULL,
     if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
   }
 
+  ## Compute confidence ellipses point positions with ellipse::ellipse.default()
+  compute_ellipse <- function(x, y, level = ellipses_level, npoints = 50) {
+    cx <- mean(x)
+    cy <- mean(y)
+    data.frame(ellipse::ellipse(cov(cbind(x,y)), centre = c(cx, cy), level = level, npoints = npoints))
+  }
+
+  ## Compute ellipses points data
+  ellipses_data <- list()
+  if (ellipses) {
+    ## Only one ellipse
+    if (is.null(col_var)) {
+      ell <- compute_ellipse(x, y)
+      ellipses_data <- append(ellipses_data, list(list(level = "_scatterD3_all", data = ell)))
+    } else {
+      ## One ellipse per col_var level
+      for (l in unique(col_var)) {
+        sel <- col_var == l & !is.na(col_var)
+        if (sum(sel) > 2) {
+          tmpx <- x[sel]
+          tmpy <- y[sel]
+          ell <- compute_ellipse(tmpx, tmpy)
+          ellipses_data <- append(ellipses_data, list(list(level = l, data = ell)))
+        }
+      }
+    }
+  }
+
+  ## List of hashes for each data variable, to track which data elements changed
+  ## to apply updates and transitions in shiny app.
+  hashes <- list()
+  if (transitions) {
+    for (var in c("x", "y", "lab", "col_var", "symbol_var", "size_var", "ellipses_data")) {
+      hashes[[var]] <- digest::digest(get(var), algo = "sha256")
+    }
+  }
+
   # create a list that contains the settings
   settings <- list(
     labels_size = labels_size,
@@ -115,6 +148,8 @@ scatterD3 <- function(x, y, lab = NULL,
     col_var = col_var,
     col_lab = col_lab,
     colors = colors,
+    ellipses = ellipses,
+    ellipses_data = ellipses_data,
     symbol_var = symbol_var,
     symbol_lab = symbol_lab,
     size_var = size_var,

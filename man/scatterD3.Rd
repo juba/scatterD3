@@ -9,12 +9,13 @@ D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 \usage{
 scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
   point_opacity = 1, fixed = FALSE, col_var = NULL, colors = NULL,
-  symbol_var = NULL, size_var = NULL, size_range = c(10, 300),
-  col_lab = NULL, symbol_lab = NULL, size_lab = NULL, key_var = NULL,
-  type_var = NULL, unit_circle = FALSE, tooltips = TRUE,
-  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
-  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
-  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
+  ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
+  size_var = NULL, size_range = c(10, 300), col_lab = NULL,
+  symbol_lab = NULL, size_lab = NULL, key_var = NULL, type_var = NULL,
+  unit_circle = FALSE, tooltips = TRUE, tooltip_text = NULL,
+  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
+  height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
+  dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export", transitions = FALSE)
 }
 \arguments{
@@ -38,6 +39,10 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
 defined as an hexadecimal string (eg "#FF0000").  If
 \code{colors} is a named list or vector, then the colors will
 be associated with their name within \code{col_var}.}
+
+\item{ellipses}{draw confidence ellipses for points or the different color mapping groups}
+
+\item{ellipses_level}{confidence level for ellipses (0.95 by default)}
 
 \item{symbol_var}{optional vector for points symbol mapping}
 

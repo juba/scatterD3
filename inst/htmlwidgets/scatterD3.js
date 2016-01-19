@@ -137,6 +137,7 @@ function scatterD3() {
         svg.selectAll(".dot, .point-label")
         .attr("transform", translation);
         svg.selectAll(".arrow").call(draw_arrow);
+        svg.selectAll(".ellipse").call(ellipse_formatting);
         var zeroline = d3.svg.line()
         .x(function(d) {return x(d.x)})
         .y(function(d) {return y(d.y)});
@@ -283,6 +284,37 @@ function scatterD3() {
         .style("stroke", function(d) { return color_scale(d.col_var); })
         .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
         .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var) });
+    }
+
+    // Ellipses path function
+    ellipseFunc = d3.svg.line()
+    .x(function(d) { return x(d.x); })
+    .y(function(d) { return y(d.y); });
+
+    // Initial ellipse attributes
+    function ellipse_init(selection) {
+        selection
+        .style("fill", "none");
+    }
+
+    // Apply format to ellipse
+    function ellipse_formatting(selection) {
+        selection
+        .attr("d", function(d) {
+          var ell = HTMLWidgets.dataframeToD3(d.data);
+          return (ellipseFunc(ell))
+        })
+        .style("stroke", function(d) {
+            // Only one ellipse
+            if (d.level == "_scatterD3_all") {
+                return(color_scale.range()[0]);
+            }
+            return( color_scale(d.level))
+        })
+        .style("opacity", 1)
+        .attr("class", function(d) {
+            return "ellipse color color-c" + css_clean(d.level);
+        });
     }
 
     // Unit circle init
@@ -606,6 +638,16 @@ function scatterD3() {
             .call(arrow_init)
             .call(arrow_formatting);
 
+            // Add ellipses
+            if (settings.ellipses) {
+              var ellipse = chart_body
+              .selectAll(".ellipse")
+              .data(settings.ellipses_data);
+              ellipse.enter()
+              .append("svg:path")
+              .call(ellipse_init)
+              .call(ellipse_formatting);
+            }
 
             // Add text labels
             if (settings.has_labels) {
@@ -642,7 +684,6 @@ function scatterD3() {
 
     // Update chart with transitions
     function update_settings(old_settings) {
-
         if (old_settings.point_opacity != settings.point_opacity)
             svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
         if (old_settings.labels_size != settings.labels_size)
@@ -721,6 +762,18 @@ function scatterD3() {
       arrow.transition().duration(1000).call(arrow_formatting);
       arrow.exit().transition().duration(1000).style("opacity", "0").remove();
 
+      // Add ellipses
+      if (settings.ellipses || settings.ellipses_changed) {
+          var ellipse = chart_body
+          .selectAll(".ellipse")
+          .data(settings.ellipses_data);
+          ellipse.enter().append("path").call(ellipse_init)
+          .style("opacity", "0")
+          .transition().duration(1000)
+          .style("opacity", "1");
+          ellipse.transition().duration(1000).call(ellipse_formatting);
+          ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
+      }
 
       if (settings.has_labels) {
           var labels = chart_body.selectAll(".point-label")
@@ -750,7 +803,6 @@ function scatterD3() {
       }
     };
 
-
     // Dynamically resize chart elements
     function resize_chart () {
         // recompute sizes
@@ -779,6 +831,7 @@ function scatterD3() {
 
         svg.selectAll(".dot").attr("transform", translation);
         svg.selectAll(".arrow").call(draw_arrow);
+        svg.selectAll(".ellipse").call(ellipse_formatting);
         if (settings.has_labels) {
             svg.selectAll(".point-label")
             .attr("transform", translation);
@@ -811,8 +864,6 @@ function scatterD3() {
 
 
     };
-
-
 
     // Add controls handlers for shiny
     chart.add_controls_handlers = function() {
@@ -979,15 +1030,19 @@ HTMLWidgets.widget({
             obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
             obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
             obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
+            obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
             function changed(varname) {
                 return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
             };
             obj.settings.x_changed = changed("x");
             obj.settings.y_changed = changed("y");
             obj.settings.lab_changed = changed("lab");
-            obj.settings.legend_changed = changed("col_var") || changed("symbol_var") || changed("size_var") || obj.settings.size_range_changed;
-            obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed || obj.settings.lab_changed ||
-                                        obj.settings.legend_changed || obj.settings.has_labels_changed;
+            obj.settings.legend_changed = changed("col_var") || changed("symbol_var") ||
+                                          changed("size_var") || obj.settings.size_range_changed;
+            obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
+                                        obj.settings.lab_changed || obj.settings.legend_changed ||
+                                        obj.settings.has_labels_changed || changed("ellipses_data") ||
+                                        obj.settings.ellipses_changed;
             scatter = scatter.settings(obj.settings);
             // Update data only if needed
             if (obj.settings.data_changed) scatter = scatter.data(data, redraw);

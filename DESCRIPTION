@@ -16,7 +16,8 @@ LazyData: TRUE
 Enhances: shiny
 Imports:
     htmlwidgets,
-    digest
+    digest,
+    ellipse
 Suggests:
     knitr,
     rmarkdown
