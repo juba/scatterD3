@@ -47,7 +47,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
           symbol_lab = "Manual transmission")
 ```
               
-See [the introduction vignette](http://rpubs.com/juba/scatterD3) for a step-by-step guide and details about the different function arguments.
+See [the introduction vignette](https://raw.githubusercontent.com/juba/scatterD3/master/vignettes/introduction.html) for a step-by-step guide and details about the different function arguments.
 
 ## Shiny integration
 
@@ -56,7 +56,7 @@ Like every R HTML widget, shiny integration is straightforward. But as a D3 widg
 Furthermore, `scatterD3` provides some additional handlers to two interactive features : SVG export and zoom resetting.
 
 The
-[sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) and the [introduction vignette](http://rpubs.com/juba/scatterD3) for a better understanding of the different arguments.
+[sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) and the [introduction vignette](https://raw.githubusercontent.com/juba/scatterD3/master/vignettes/introduction.html) for a better understanding of the different arguments.
 
 
 ## Credits
