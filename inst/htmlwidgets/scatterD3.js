@@ -102,7 +102,7 @@ function scatterD3() {
         zoom = d3.behavior.zoom()
         .x(x)
         .y(y)
-        .scaleExtent([1, 32])
+        .scaleExtent([0, 32])
         .on("zoom", function() {
              zoomed();
          });
