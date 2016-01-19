@@ -1,6 +1,7 @@
 scatterD3 0.5.2
 ------------------------------------------------------
 
+* New feature : allow to draw confidence ellipses for all points or for col_var groups
 * Bugfix : underscores appearing instead of spaces in legend text (thanks @TimBock)
 * Bugfix : xlim and ylim not taken ignored when fixed = TRUE (thanks @TimBock)
 * Bugfix : legend must not be displayed when legend_width = 0 and fixed = TRUE (thanks @TimBock)
