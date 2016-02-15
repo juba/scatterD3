@@ -57,23 +57,23 @@ d3.lasso = function() {
 
         // Apply drag behaviors
         var drag = d3.behavior.drag()
-            .on("dragstart",dragstart)
-            .on("drag",dragmove)
-            .on("dragend",dragend);
+            .on("dragstart", dragstart)
+            .on("drag", dragmove)
+            .on("dragend", dragend);
 
         // Call drag
         area.call(drag);
 
         function dragstart() {
-            // Initialize paths
+            d3.event.sourceEvent.stopPropagation();
+            if (!d3.event.sourceEvent.shiftKey) { return }           // Initialize paths
             path="";
             tpath = "";
-            dyn_path.attr("d",null);
-            close_path.attr("d",null);
+            dyn_path.attr("d", "M0 0");
+            close_path.attr("d", "M0 0");
 
             // Set path length start
             path_length_start = 0;
-
             // Set every item to have a false selection and reset their center point and counters
             items[0].forEach(function(d) {
                 d.hoverSelected = false;
@@ -102,6 +102,8 @@ d3.lasso = function() {
         }
 
         function dragmove() {
+            d3.event.sourceEvent.stopPropagation();
+            if (!d3.event.sourceEvent.shiftKey) { return }
             // Get mouse position within body, used for calculations
             var x = d3.event.sourceEvent.clientX;
             var y = d3.event.sourceEvent.clientY;
@@ -166,7 +168,7 @@ d3.lasso = function() {
             var path_length_end = path_node.getTotalLength();
             // Get the ending point of the path
             var last_pos = path_node.getPointAtLength(path_length_start-1);
-            
+
             // Iterate through each point on the path
             for (var i = path_length_start; i<=path_length_end; i++) {
                 // Get the current coordinates on the path
@@ -262,7 +264,7 @@ d3.lasso = function() {
                     d.loopSelected = false;
                 });
             }
-            
+
             // Tag possible items
             d3.selectAll(items[0].filter(function(d) {return (d.loopSelected && isPathClosed) || d.hoverSelected;}))
                 .each(function(d) { d.possible = true;});
@@ -277,6 +279,8 @@ d3.lasso = function() {
         }
 
         function dragend() {
+            d3.event.sourceEvent.stopPropagation();
+            if (!d3.event.sourceEvent.shiftKey) { return }
             // Remove mouseover tagging function
             items.on("mouseover.lasso",null);
 
@@ -292,13 +296,12 @@ d3.lasso = function() {
                 .each(function(d) {d.possible = false;});
 
             // Clear lasso
-            dyn_path.attr("d",null);
-            close_path.attr("d",null);
+            dyn_path.attr("d", "M0 0");
+            close_path.attr("d", "M0 0");
             origin_node.attr("display","none");
-
             // Run user defined end function
             on.end();
-            
+
         }
     }
 
