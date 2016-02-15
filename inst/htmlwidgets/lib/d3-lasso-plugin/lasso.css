@@ -4,8 +4,8 @@
 }
 
 .lasso .drawn {
-  fill: #FF0000;
-  fill-opacity: .05 ;
+  fill: #CCCCCC;
+  fill-opacity: .15 ;
 }
 
 .lasso .loop_close {
