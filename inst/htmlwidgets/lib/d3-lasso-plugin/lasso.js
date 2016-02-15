@@ -7,7 +7,6 @@ d3.lasso = function() {
         hoverSelect = true,
         points = [],
         area = null,
-        dragging_lasso = false,
         on = {start:function(){}, draw: function(){}, end: function(){}};
 
     function lasso() {
@@ -66,9 +65,6 @@ d3.lasso = function() {
         area.call(drag);
 
         function dragstart() {
-          if(d3.event.sourceEvent.shiftKey){
-            dragging_lasso = true;
-
             // Initialize paths
             path="";
             tpath = "";
@@ -103,12 +99,9 @@ d3.lasso = function() {
 
             // Run user defined start function
             on.start();
-          }
         }
 
         function dragmove() {
-          if(dragging_lasso){
-
             // Get mouse position within body, used for calculations
             var x = d3.event.sourceEvent.clientX;
             var y = d3.event.sourceEvent.clientY;
@@ -173,7 +166,7 @@ d3.lasso = function() {
             var path_length_end = path_node.getTotalLength();
             // Get the ending point of the path
             var last_pos = path_node.getPointAtLength(path_length_start-1);
-
+            
             // Iterate through each point on the path
             for (var i = path_length_start; i<=path_length_end; i++) {
                 // Get the current coordinates on the path
@@ -269,7 +262,7 @@ d3.lasso = function() {
                     d.loopSelected = false;
                 });
             }
-
+            
             // Tag possible items
             d3.selectAll(items[0].filter(function(d) {return (d.loopSelected && isPathClosed) || d.hoverSelected;}))
                 .each(function(d) { d.possible = true;});
@@ -281,12 +274,9 @@ d3.lasso = function() {
 
             // Continue drawing path from where it left off
             path_length_start = path_length_end+1;
-          }
         }
 
         function dragend() {
-          if(dragging_lasso){
-
             // Remove mouseover tagging function
             items.on("mouseover.lasso",null);
 
@@ -308,10 +298,7 @@ d3.lasso = function() {
 
             // Run user defined end function
             on.end();
-
-            dragging_lasso = false;
-          }
-
+            
         }
     }
 
