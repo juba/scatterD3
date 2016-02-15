@@ -6,3 +6,8 @@ dependencies:
       - d3-3.5.6.min.js
       - d3-legend.min.js
     stylesheet: scatterD3.css
+  - name: d3.lasso-plugin
+    version: 1.0.0
+    src: htmlwidgets/lib/d3-lasso-plugin
+    script: lasso.js
+    stylesheet: lasso.css

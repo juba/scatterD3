@@ -10,7 +10,8 @@ function scatterD3() {
     min_x, min_y, max_x, max_y, gap_x, gap_y,
     xAxis, yAxis,
     svg,
-    zeroline, zoom, drag;
+    zeroline, zoom, drag,
+    lasso;
 
     function setup_sizes() {
 
@@ -104,7 +105,9 @@ function scatterD3() {
         .y(y)
         .scaleExtent([0, 32])
         .on("zoom", function() {
+            if(!d3.event.sourceEvent.shiftKey) {
              zoomed();
+            }
          });
 
         // x and y axis functions
@@ -366,6 +369,7 @@ function scatterD3() {
     }
 
     // Text labels dragging function
+    var dragging = false;
     drag = d3.behavior.drag()
     .origin(function(d) {
         var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
@@ -374,19 +378,24 @@ function scatterD3() {
         return {x:x(d.x)+dx, y:y(d.y)+dy};
     })
     .on('dragstart', function(d) {
-      d3.select(this).style('fill', '#000');
-      var chart = d3.select(this).node().parentNode;
-      var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-      var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-      var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
-      d3.select(chart).append("svg:line")
-      .attr("id", "scatterD3-drag-line")
-      .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
-      .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
-      .style("stroke", "#000")
-      .style("opacity", 0.3);
+      if(!d3.event.sourceEvent.shiftKey){
+        dragging = true;
+
+        d3.select(this).style('fill', '#000');
+        var chart = d3.select(this).node().parentNode;
+        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+        var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+        var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
+        d3.select(chart).append("svg:line")
+        .attr("id", "scatterD3-drag-line")
+        .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
+        .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
+        .style("stroke", "#000")
+        .style("opacity", 0.3);
+      }
     })
     .on('drag', function(d) {
+      if(dragging){
         cx = d3.event.x - x(d.x);
         cy = d3.event.y - y(d.y);
         d3.select(this)
@@ -397,10 +406,15 @@ function scatterD3() {
         .attr("y2", y(d.y) + cy);
         d.lab_dx = cx;
         d.lab_dy = cy;
+      }
     })
     .on('dragend', function(d) {
-      d3.select(this).style('fill', color_scale(d.col_var));
-      d3.select("#scatterD3-drag-line").remove();
+      if(dragging){
+        d3.select(this).style('fill', color_scale(d.col_var));
+        d3.select("#scatterD3-drag-line").remove();
+
+        dragging = false;
+      }
     });
 
     // Format legend label
@@ -546,6 +560,7 @@ function scatterD3() {
         .call(size_legend);
 
     }
+
 
     // Filter points and arrows data
     function point_filter(d) {
@@ -863,8 +878,84 @@ function scatterD3() {
             .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")");
         }
 
-
     };
+
+    // Create lasso if desired
+    chart.add_lasso = function(){
+      // copied mostly from the D3-Lasso-Plugin example
+      //  http://gist.github.org/skokenes/511c5b658c405ad68941
+
+      // Lasso functions to execute while lassoing
+      var lasso_start = function() {
+        lasso.items()
+          .each(function(d){
+            d.lasso_old_fill = d.lasso_old_fill ? d.lasso_old_fill : d3.select(this).style("fill");
+            d.lasso_old_transform = d3.select(this).attr("transform").replace(/\s(scale)\(.*\)/,"");
+          })
+          .attr("transform", function(d){ return d.lasso_old_transform; }) // reset size
+          .style("fill",null) // clear all of the fills
+          .classed({"not-possible-lasso":true,"selected-lasso":false}); // style as not possible
+      };
+
+      var lasso_draw = function() {
+        // Style the possible dots
+        lasso.items().filter(function(d) {return d.possible===true})
+          .classed({"not-possible-lasso":false,"possible-lasso":true});
+
+        // Style the not possible dot
+        lasso.items().filter(function(d) {return d.possible===false})
+          .classed({"not-possible-lasso":true,"possible-lasso":false});
+      };
+
+      var lasso_end = function() {
+        var some_selected = false;
+
+        // Reset the color of all dots
+        lasso.items()
+           .style("fill", function(d) { return d.lasso_old_fill; });
+
+        // Style the selected dots
+        lasso.items().filter(function(d) {return d.selected===true})
+          .classed({"not-possible-lasso":false,"possible-lasso":false})
+          .attr("transform", function(d) { return d.lasso_old_transform + " scale(1.5)"; });
+
+        if(lasso.items().filter(function(d) {return d.selected===true})[0].length !== 0){
+          some_selected = true;
+        }
+
+        // Reset the style of the not selected dots
+        lasso.items().filter(function(d) {return d.selected===false})
+          .classed({"not_possible":false,"possible":false})
+          .attr("transform", function(d) {
+            var scale_to_apply = "";
+            if(some_selected){ scale_to_apply = " scale(0.5)" }
+            return d.lasso_old_transform + scale_to_apply ;
+          });
+
+      };
+
+      // Create the area where the lasso event can be triggered
+      var lasso_area = svg.append("rect")
+                            .attr("width",dims.width)
+                            .attr("height",dims.height)
+                            .style("opacity",0)
+                            .style("fill","none");
+
+      // Define the lasso
+      lasso = d3.lasso()
+            .closePathDistance(75) // max distance for the lasso loop to be closed
+            .closePathSelect(true) // can items be selected by closing the path?
+            .hoverSelect(true) // can items by selected by hovering over them?
+            .area(svg) // area where the lasso can be started
+            .on("start",lasso_start) // lasso start function
+            .on("draw",lasso_draw) // lasso draw function
+            .on("end",lasso_end); // lasso end function
+
+      // Init the lasso on the svg:g that contains the dots
+      svg.call(lasso);
+
+      lasso.items(svg.selectAll(".dot.symbol"));
+    }
 
     // Add controls handlers for shiny
     chart.add_controls_handlers = function() {
@@ -998,6 +1089,11 @@ HTMLWidgets.widget({
         .attr("height", height);
         // resize chart
         scatter.width(width).height(height).svg(svg).resize();
+
+        if (settings.add_lasso){
+          scatter.add_lasso();
+        }
+
     },
 
     renderValue: function(el, obj, scatter) {
@@ -1023,7 +1119,7 @@ HTMLWidgets.widget({
             scatter.add_controls_handlers();
             // draw chart
             d3.select(el)
-            .call(scatter);
+              .call(scatter);
         }
         // Update only
         else {
@@ -1047,6 +1143,11 @@ HTMLWidgets.widget({
             scatter = scatter.settings(obj.settings);
             // Update data only if needed
             if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
+        }
+
+        // add lasso if desired
+        if(obj.settings.lasso){
+          scatter.add_lasso();
         }
     }
 

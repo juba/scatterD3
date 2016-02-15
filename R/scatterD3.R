@@ -36,6 +36,7 @@
 #' @param dom_id_svg_export HTML DOM id of the element to bind the "svg export" control to.
 #' @param transitions if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.
 #' @param legend_width legend area width, in pixels. Set to 0 to disable legend completely.
+#' @param lasso logical value to add {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature
 #' @param width figure width, computed when displayed
 #' @param height figure height, computed when displayed
 #'
@@ -82,7 +83,8 @@ scatterD3 <- function(x, y, lab = NULL,
                       xlim = NULL, ylim = NULL,
                       dom_id_reset_zoom = "scatterD3-reset-zoom",
                       dom_id_svg_export = "scatterD3-svg-export",
-                      transitions = FALSE) {
+                      transitions = FALSE,
+                      lasso = FALSE) {
 
   ## Variable names as default labels
   if (is.null(xlab)) xlab <- deparse(substitute(x))
@@ -173,7 +175,8 @@ scatterD3 <- function(x, y, lab = NULL,
     dom_id_reset_zoom = dom_id_reset_zoom,
     dom_id_svg_export = dom_id_svg_export,
     transitions = transitions,
-    hashes = hashes
+    hashes = hashes,
+    lasso = lasso
   )
 
   data <- data.frame(x = x, y = y)
