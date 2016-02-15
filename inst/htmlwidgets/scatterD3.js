@@ -890,71 +890,65 @@ function scatterD3() {
         lasso.items()
           .each(function(d){
             d.lasso_old_fill = d.lasso_old_fill ? d.lasso_old_fill : d3.select(this).style("fill");
-            d.lasso_old_transform = d3.select(this).attr("transform").replace(/\s(scale)\(.*\)/,"");
+            d.lasso_old_opacity = d.lasso_old_opacity ? d.lasso_old_opacity : d3.select(this).style("opacity");
           })
-          .attr("transform", function(d){ return d.lasso_old_transform; }) // reset size
-          .style("fill",null) // clear all of the fills
-          .classed({"not-possible-lasso":true,"selected-lasso":false}); // style as not possible
+          .style("fill", null) // clear all of the fills
+          .style("opacity", null) // clear all of the opacity
+          .classed({"not-possible-lasso": true, "selected-lasso": false, "not-selected-lasso": false}); // style as not possible
       };
 
       var lasso_draw = function() {
         // Style the possible dots
-        lasso.items().filter(function(d) {return d.possible===true})
-          .classed({"not-possible-lasso":false,"possible-lasso":true});
+        lasso.items().filter(function(d) {return d.possible === true})
+          .classed({"not-possible-lasso": false, "possible-lasso": true});
 
         // Style the not possible dot
-        lasso.items().filter(function(d) {return d.possible===false})
-          .classed({"not-possible-lasso":true,"possible-lasso":false});
+        lasso.items().filter(function(d) {return d.possible === false})
+          .classed({"not-possible-lasso": true, "possible-lasso": false});
       };
 
       var lasso_end = function() {
         var some_selected = false;
 
-        // Reset the color of all dots
-        lasso.items()
-           .style("fill", function(d) { return d.lasso_old_fill; });
-
-        // Style the selected dots
-        lasso.items().filter(function(d) {return d.selected===true})
-          .classed({"not-possible-lasso":false,"possible-lasso":false})
-          .attr("transform", function(d) { return d.lasso_old_transform + " scale(1.5)"; });
-
         if(lasso.items().filter(function(d) {return d.selected===true})[0].length !== 0){
           some_selected = true;
         }
 
-        // Reset the style of the not selected dots
-        lasso.items().filter(function(d) {return d.selected===false})
-          .classed({"not_possible":false,"possible":false})
-          .attr("transform", function(d) {
-            var scale_to_apply = "";
-            if(some_selected){ scale_to_apply = " scale(0.5)" }
-            return d.lasso_old_transform + scale_to_apply ;
-          });
+        // Reset the color of all dots
+        lasso.items()
+           .style("fill", function(d) { return d.lasso_old_fill; })
+           .style("opacity", function(d) { return d.lasso_old_opacity; });
+        if (some_selected) {
+          // Style the selected dots
+          lasso.items().filter(function(d) {return d.selected===true})
+            .classed({"not-possible-lasso": false, "possible-lasso": false, "selected-lasso": true});
+
+          // Reset the style of the not selected dots
+          lasso.items().filter(function(d) {return d.selected===false})
+            .classed({"not-possible-lasso": false, "possible-lasso": false, "not-selected-lasso": true});
+        }
+        else {
+          lasso.items()
+            .classed({"not-possible-lasso": false, "possible-lasso": false,
+                      "not-selected-lasso": false, "selected-lasso": false});
+        }
 
       };
 
-      // Create the area where the lasso event can be triggered
-      //var lasso_area = svg.append("rect")
-      //                      .attr("width", dims.width)
-      //                      .attr("height", dims.height)
-      //                      .style("opacity",0)
-      //                      .style("fill","none");
-
       // Define the lasso
       lasso = d3.lasso()
-            .closePathDistance(75) // max distance for the lasso loop to be closed
-            .closePathSelect(true) // can items be selected by closing the path?
-            .hoverSelect(true) // can items by selected by hovering over them?
+            .closePathDistance(2000)   // max distance for the lasso loop to be closed
+            .closePathSelect(true)     // can items be selected by closing the path?
+            .hoverSelect(true)         // can items by selected by hovering over them?
             .area(svg.select(".pane")) // area where the lasso can be started
-            .on("start",lasso_start) // lasso start function
-            .on("draw",lasso_draw) // lasso draw function
-            .on("end",lasso_end); // lasso end function
+            .on("start",lasso_start)   // lasso start function
+            .on("draw",lasso_draw)     // lasso draw function
+            .on("end",lasso_end);      // lasso end function
 
       // Init the lasso on the svg:g that contains the dots
       svg.select(".chart-body").call(lasso);
 
-      lasso.items(svg.selectAll(".dot.symbol"));
+      lasso.items(svg.selectAll(".dot.symbol, .point-label"));
     }
 
     // Add controls handlers for shiny
