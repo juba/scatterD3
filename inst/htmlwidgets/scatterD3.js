@@ -935,24 +935,24 @@ function scatterD3() {
       };
 
       // Create the area where the lasso event can be triggered
-      var lasso_area = svg.append("rect")
-                            .attr("width",dims.width)
-                            .attr("height",dims.height)
-                            .style("opacity",0)
-                            .style("fill","none");
+      //var lasso_area = svg.append("rect")
+      //                      .attr("width", dims.width)
+      //                      .attr("height", dims.height)
+      //                      .style("opacity",0)
+      //                      .style("fill","none");
 
       // Define the lasso
       lasso = d3.lasso()
             .closePathDistance(75) // max distance for the lasso loop to be closed
             .closePathSelect(true) // can items be selected by closing the path?
             .hoverSelect(true) // can items by selected by hovering over them?
-            .area(svg) // area where the lasso can be started
+            .area(svg.select(".pane")) // area where the lasso can be started
             .on("start",lasso_start) // lasso start function
             .on("draw",lasso_draw) // lasso draw function
             .on("end",lasso_end); // lasso end function
 
       // Init the lasso on the svg:g that contains the dots
-      svg.call(lasso);
+      svg.select(".chart-body").call(lasso);
 
       lasso.items(svg.selectAll(".dot.symbol"));
     }
