@@ -65,8 +65,7 @@ d3.lasso = function() {
         area.call(drag);
 
         function dragstart() {
-            d3.event.sourceEvent.stopPropagation();
-            if (!d3.event.sourceEvent.shiftKey) { return }           // Initialize paths
+            // Initialize paths
             path="";
             tpath = "";
             dyn_path.attr("d", "M0 0");
@@ -102,8 +101,6 @@ d3.lasso = function() {
         }
 
         function dragmove() {
-            d3.event.sourceEvent.stopPropagation();
-            if (!d3.event.sourceEvent.shiftKey) { return }
             // Get mouse position within body, used for calculations
             var x = d3.event.sourceEvent.clientX;
             var y = d3.event.sourceEvent.clientY;
@@ -279,8 +276,6 @@ d3.lasso = function() {
         }
 
         function dragend() {
-            d3.event.sourceEvent.stopPropagation();
-            if (!d3.event.sourceEvent.shiftKey) { return }
             // Remove mouseover tagging function
             items.on("mouseover.lasso",null);
 

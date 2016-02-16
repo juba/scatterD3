@@ -104,12 +104,7 @@ function scatterD3() {
         .x(x)
         .y(y)
         .scaleExtent([0, 32])
-        .on("zoom", function() {
-            if(!d3.event.sourceEvent.shiftKey) {
-                d3.event.sourceEvent.stopPropagation(); // silence other listeners (lasso)
-                zoomed();
-            }
-         });
+        .on("zoom", zoomed);
 
         // x and y axis functions
         xAxis = d3.svg.axis()
@@ -395,7 +390,7 @@ function scatterD3() {
       }
     })
     .on('drag', function(d) {
-      if (dragging){
+      if (dragging) {
         cx = d3.event.x - x(d.x);
         cy = d3.event.y - y(d.y);
         d3.select(this)
@@ -740,14 +735,6 @@ function scatterD3() {
                 .call(drag);
             }
 
-            // Lasso
-            if (settings.lasso) {
-                lasso = lasso_base
-                .area(pane)
-                .items(chart_body.selectAll(lasso_classes));
-                chart_body.call(lasso);
-            }
-
             // Legends
             if (settings.has_legend && settings.legend_width > 0) {
                 var legend = svg.append("g").attr("class", "legend");
@@ -870,14 +857,6 @@ function scatterD3() {
           labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
       }
 
-      // Lasso
-      if (settings.lasso) {
-          lasso = lasso_base
-          .area(svg.select(".pane"))
-          .items(chart_body.selectAll(lasso_classes));
-          chart_body.call(lasso);
-      }
-
       if (settings.legend_changed) {
           var legend = svg.select(".legend");
           // Remove existing legends
@@ -930,13 +909,6 @@ function scatterD3() {
         if (settings.has_labels) {
             svg.selectAll(".point-label")
             .attr("transform", translation);
-        }
-        // Lasso
-        if (settings.lasso) {
-            lasso = lasso_base
-            .area(svg.select(".pane"))
-            .items(svg.select(".chart-body").selectAll(lasso_classes));
-            svg.select(".chart-body").call(lasso);
         }
         // Move zerolines
         var zeroline = d3.svg.line()
@@ -996,6 +968,34 @@ function scatterD3() {
             .attr("href", imageUrl);
         });
     };
+
+    chart.add_global_listeners = function() {
+      // Toogle zoom and lasso behaviors when shift is pressed
+      d3.select("body")
+      .on("keydown", function() {
+        if (d3.event.keyIdentifier == "Shift") {
+          var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+          pane.on(".zoom", null);
+          if (settings.lasso) {
+              var chart_body = d3.select("#scatterD3-svg-" + settings.html_id).select(".chart-body");
+              lasso = lasso_base
+              .area(pane)
+              .items(chart_body.selectAll(lasso_classes));
+              chart_body.call(lasso);
+          }
+        }
+      })
+      .on("keyup", function() {
+        if (d3.event.keyIdentifier == "Shift") {
+          var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+          pane.on(".dragstart", null);
+          pane.on(".drag", null);
+          pane.on(".dragend", null);
+          pane.call(zoom);
+        }
+      })
+
+    }
 
     // resize
     chart.resize = function() {
@@ -1119,8 +1119,9 @@ HTMLWidgets.widget({
         if (redraw) {
             scatter = scatter.data(data, redraw);
             scatter = scatter.settings(obj.settings);
-            // add controls handlers for shiny apps
+            // add controls handlers and global listeners for shiny apps
             scatter.add_controls_handlers();
+            scatter.add_global_listeners();
             // draw chart
             d3.select(el)
               .call(scatter);
