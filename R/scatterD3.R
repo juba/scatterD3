@@ -136,7 +136,7 @@ scatterD3 <- function(x, y, lab = NULL,
   ## to apply updates and transitions in shiny app.
   hashes <- list()
   if (transitions) {
-    for (var in c("x", "y", "lab", "col_var", "symbol_var", "size_var", "ellipses_data", "point_opacity")) {
+    for (var in c("x", "y", "lab", "key_var", "col_var", "symbol_var", "size_var", "ellipses_data", "point_opacity")) {
       hashes[[var]] <- digest::digest(get(var), algo = "sha256")
     }
   }

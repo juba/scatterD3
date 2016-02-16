@@ -36,10 +36,10 @@
   stroke: #EC888C;
 }
 
-.scatterD3 .selected-lasso {
+/*.scatterD3 .selected-lasso {
   opacity: 1 !important;
 }
 
 .scatterD3 .not-selected-lasso {
   opacity: 0.1 !important;
-}
+}*/

@@ -226,9 +226,8 @@ function scatterD3() {
 
     // Apply format to dot
     function dot_formatting(selection) {
-        selection
+        var sel = selection
         .attr("transform", translation)
-        .style("opacity", function(d) {return d.point_opacity})
         // fill color
         .style("fill", function(d) { return color_scale(d.col_var); })
         // symbol and size
@@ -242,6 +241,11 @@ function scatterD3() {
         .attr("class", function(d,i) {
           return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
         })
+        if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
+            sel = sel
+            .style("opacity", function(d) {return d.point_opacity});
+        }
+        return sel;
     }
 
     // Arrow drawing function
@@ -274,14 +278,17 @@ function scatterD3() {
 
     // Apply format to arrow
     function arrow_formatting(selection) {
-        selection
+        var sel = selection
         .call(draw_arrow)
         .style("stroke-width", "1px")
-        .style("opacity", function(d) {return d.point_opacity})
         // stroke color
         .style("stroke", function(d) { return color_scale(d.col_var); })
         .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
         .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var) });
+        if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
+            sel = sel.style("opacity", function(d) {return d.point_opacity});
+        }
+        return sel;
     }
 
     // Initial ellipse attributes
@@ -346,10 +353,9 @@ function scatterD3() {
 
     // Apply format to text label
     function label_formatting (selection) {
-        selection
+        var sel = selection
         .text(function(d) {return(d.lab)})
         .style("font-size", settings.labels_size + "px")
-        .style("opacity", 1)
         .attr("class", function(d,i) { return "point-label color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var); })
         .attr("transform", translation)
         .style("fill", function(d) { return color_scale(d.col_var); })
@@ -362,6 +368,10 @@ function scatterD3() {
             var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
             return default_label_dy(size, d.y, d.type_var) + "px";
         });
+        if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
+            sel = sel.style("opacity", 1);
+        }
+        return sel;
     }
 
     // Text labels dragging function
@@ -448,7 +458,7 @@ function scatterD3() {
     };
     lasso_end = function() {
         var some_selected = false;
-        if(lasso.items().filter(function(d) {return d.selected===true})[0].length !== 0){
+        if(lasso.items().filter(function(d) {return d.selected === true})[0].length !== 0){
             some_selected = true;
         }
         // Reset the color of all dots
@@ -470,17 +480,23 @@ function scatterD3() {
            });
         if (some_selected) {
           // Style the selected dots
-          lasso.items().filter(function(d) {return d.selected===true})
-            .classed({"not-possible-lasso": false, "possible-lasso": false, "selected-lasso": true});
+          lasso.items().filter(function(d) {return d.selected === true})
+            .classed({"not-possible-lasso": false, "possible-lasso": false, "selected-lasso": true})
+            .style("opacity", "1");
 
           // Reset the style of the not selected dots
-          lasso.items().filter(function(d) {return d.selected===false})
-            .classed({"not-possible-lasso": false, "possible-lasso": false, "not-selected-lasso": true});
+          lasso.items().filter(function(d) {return d.selected === false})
+            .classed({"not-possible-lasso": false, "possible-lasso": false, "not-selected-lasso": true})
+            .style("opacity", "0.1");
         }
         else {
           lasso.items()
             .classed({"not-possible-lasso": false, "possible-lasso": false,
-                      "not-selected-lasso": false, "selected-lasso": false});
+                      "not-selected-lasso": false, "selected-lasso": false})
+            .style("opacity", function(d) {
+                if (d3.select(this).classed('point-label')) {return 1};
+                return d.point_opacity;
+            })
         }
       };
       lasso_classes = ".dot, .arrow, .point-label";
@@ -547,8 +563,8 @@ function scatterD3() {
         .scale(legend_color_scale)
         .on("cellover", function(d) {
             d = css_clean(d);
-            var nsel = ".color:not(.color-c" + d + ")";
-            var sel = ".color-c" + d;
+            var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
+            var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(nsel)
             .transition()
             .style("opacity", 0.2);
@@ -557,11 +573,11 @@ function scatterD3() {
             .style("opacity", 1);
         })
         .on("cellout", function(d) {
-            var sel = ".color";
+            var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(sel)
             .transition()
             .style("opacity", function(d2) {return d2.point_opacity});
-            svg.selectAll(".point-label")
+            svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
             .transition()
             .style("opacity", 1);
         });
@@ -598,8 +614,8 @@ function scatterD3() {
         .scale(legend_symbol_scale)
         .on("cellover", function(d) {
             d = css_clean(d);
-            var nsel = ".symbol:not(.symbol-c" + d + ")";
-            var sel = ".symbol-c" + d;
+            var nsel = ".symbol:not(.symbol-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
+            var sel = ".symbol-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(nsel)
             .transition()
             .style("opacity", 0.2);
@@ -608,11 +624,11 @@ function scatterD3() {
             .style("opacity", 1);
         })
         .on("cellout", function(d) {
-            var sel = ".symbol";
+            var sel = ".symbol:not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(sel)
             .transition()
             .style("opacity", function(d2) {return d2.point_opacity});
-            svg.selectAll(".point-label")
+            svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
             .transition()
             .style("opacity", 1);
         });
@@ -1165,6 +1181,7 @@ HTMLWidgets.widget({
         // Complete draw
         if (redraw) {
             scatter = scatter.data(data, redraw);
+            obj.settings.redraw = true;
             scatter = scatter.settings(obj.settings);
             // add controls handlers and global listeners for shiny apps
             scatter.add_controls_handlers();
@@ -1191,7 +1208,9 @@ HTMLWidgets.widget({
             obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
                                         obj.settings.lab_changed || obj.settings.legend_changed ||
                                         obj.settings.has_labels_changed || changed("ellipses_data") ||
-                                        obj.settings.ellipses_changed || changed("point_opacity");
+                                        obj.settings.ellipses_changed;
+            obj.settings.opacity_changed = changed("point_opacity");
+            obj.settings.subset_changed = changed("key_var");
             scatter = scatter.settings(obj.settings);
             // Update data only if needed
             if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
