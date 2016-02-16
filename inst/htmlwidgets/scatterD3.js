@@ -487,7 +487,7 @@ function scatterD3() {
           // Reset the style of the not selected dots
           lasso.items().filter(function(d) {return d.selected === false})
             .classed({"not-possible-lasso": false, "possible-lasso": false, "not-selected-lasso": true})
-            .style("opacity", "0.1");
+            .style("opacity", function(d) { return d.point_opacity / 7 });
         }
         else {
           lasso.items()
