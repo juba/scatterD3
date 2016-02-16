@@ -17,6 +17,7 @@ library.
 - Points highlighting when hovering legend items
 - Option to draw confidence ellipses around group of points
 - Charts integrated inside a Shiny app are fully updatable with smooth transitions when settings or data change
+- Lasso selection tool integration via d3-lasso-plugin for points highlighting
 
 
 Here is a small preview of what you will get :
@@ -67,6 +68,7 @@ This package has been made possible by :
 - RStudio's [shiny](http://shiny.rstudio.com/) and [htmlwidgets](http://www.htmlwidgets.org/) packages
 - Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
 - Rob Moore's [article on reusable d3.js charts](http://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
+- Speros Kokenes' [d3 lasso plugin](https://github.com/skokenes/D3-Lasso-Plugin)
 
 
 

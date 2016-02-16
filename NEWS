@@ -1,6 +1,7 @@
 scatterD3 0.6
 ------------------------------------------------------
 
+* New feature : d3 lasso plugin integration, initial work by @timelyportfolio
 * New feature : allow to draw confidence ellipses for all points or for col_var groups
 * Bugfix : underscores appearing instead of spaces in legend text (thanks @TimBock)
 * Bugfix : xlim and ylim not taken ignored when fixed = TRUE (thanks @TimBock)
