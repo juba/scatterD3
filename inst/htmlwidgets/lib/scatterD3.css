@@ -23,3 +23,7 @@
 .scatterD3 .pane {
   cursor: move;
 }
+
+.scatterD3, .scatterD3:focus {
+  outline: 0px solid transparent
+}

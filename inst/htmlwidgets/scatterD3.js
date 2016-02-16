@@ -1043,7 +1043,9 @@ function scatterD3() {
 
     chart.add_global_listeners = function() {
       // Toogle zoom and lasso behaviors when shift is pressed
-      d3.select("body")
+      var parent = d3.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
+      d3.select(parent)
+      .attr("tabindex", 0)
       .on("keydown", function() {
         if (d3.event.keyIdentifier == "Shift") {
           if (settings.lasso) {
