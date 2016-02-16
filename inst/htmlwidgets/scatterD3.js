@@ -417,10 +417,10 @@ function scatterD3() {
     lasso_start = function() {
         lasso.items()
         .each(function(d){
-            d.lasso_old_fill = d.lasso_old_fill ? d.lasso_old_fill : d3.select(this).style("fill");
-            d.lasso_old_opacity = d.lasso_old_opacity ? d.lasso_old_opacity : d3.select(this).style("opacity");
+            d.scatterD3_lasso_old_fill = d.scatterD3_lasso_old_fill ? d.scatterD3_lasso_old_fill : d3.select(this).style("fill");
+            d.scatterD3_lasso_old_opacity = d.scatterD3_lasso_old_opacity ? d.scatterD3_lasso_old_opacity : d3.select(this).style("opacity");
             if (d3.select(this).classed('point-label')) {
-                d.lasso_old_text_opacity = d.lasso_old_text_opacity ? d.lasso_old_text_opacity : d3.select(this).style("opacity");
+                d.scatterD3_lasso_old_text_opacity = d.scatterD3_lasso_old_text_opacity ? d.scatterD3_lasso_old_text_opacity : d3.select(this).style("opacity");
             }
         })
         .style("fill", null) // clear all of the fills
@@ -442,12 +442,12 @@ function scatterD3() {
         }
         // Reset the color of all dots
         lasso.items()
-           .style("fill", function(d) { return d.lasso_old_fill; })
+           .style("fill", function(d) { return d.scatterD3_lasso_old_fill; })
            .style("opacity", function(d) {
                if (d3.select(this).classed('point-label')) {
-                   return d.lasso_old_text_opacity;
+                   return d.scatterD3_lasso_old_text_opacity;
                }
-               return d.lasso_old_opacity;
+               return d.scatterD3_lasso_old_opacity;
            });
         if (some_selected) {
           // Style the selected dots
