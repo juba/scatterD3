@@ -974,24 +974,28 @@ function scatterD3() {
       d3.select("body")
       .on("keydown", function() {
         if (d3.event.keyIdentifier == "Shift") {
-          var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
-          pane.on(".zoom", null);
           if (settings.lasso) {
+              var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+              pane.on(".zoom", null);
               var chart_body = d3.select("#scatterD3-svg-" + settings.html_id).select(".chart-body");
               lasso = lasso_base
               .area(pane)
               .items(chart_body.selectAll(lasso_classes));
               chart_body.call(lasso);
+              pane.style("cursor", "crosshair");
           }
         }
       })
       .on("keyup", function() {
         if (d3.event.keyIdentifier == "Shift") {
-          var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
-          pane.on(".dragstart", null);
-          pane.on(".drag", null);
-          pane.on(".dragend", null);
-          pane.call(zoom);
+          if (settings.lasso) {
+            var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+            pane.on(".dragstart", null);
+            pane.on(".drag", null);
+            pane.on(".dragend", null);
+            pane.call(zoom);
+            pane.style("cursor", "move");
+          }
         }
       })
 
