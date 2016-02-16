@@ -115,7 +115,15 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, ellipses = TRUE)
 
 Ellipses are computed by the  `ellipse.default()` function of the [ellipse package](https://cran.r-project.org/web/packages/ellipse/). The confidence level can be changed with the `ellipse_level` argument (`0.95` by default).
 
+## Lasso selection tool
 
+Thanks to the [d3-lasso-plugin](https://github.com/skokenes/D3-Lasso-Plugin) integration made by @[timelyportfolio](https://github.com/timelyportfolio), you can select and highlight points with a lasso selection tool. To activate it, just add a `lasso = TRUE` argument. The tool is used by shift-clicking and dragging on the plot area (if it doesn't activate, click on the chart first to give it focus).
+
+```{r lasso}
+scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), lasso = TRUE)
+```
+
+To undo the selection, just shift-click again.
 
 ## Other options
 
