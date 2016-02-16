@@ -7,7 +7,7 @@
 #' @param lab optional character vector of text labels
 #' @param point_size points size. Ignored if size_var is not NULL.
 #' @param labels_size text labels size
-#' @param point_opacity points opacity
+#' @param point_opacity points opacity, as an integer (same opacity for all points) or a vector of integers
 #' @param fixed force a 1:1 aspect ratio
 #' @param col_var optional vector for points color mapping
 #' @param colors vector of custom points colors. Colors must be
@@ -136,7 +136,7 @@ scatterD3 <- function(x, y, lab = NULL,
   ## to apply updates and transitions in shiny app.
   hashes <- list()
   if (transitions) {
-    for (var in c("x", "y", "lab", "col_var", "symbol_var", "size_var", "ellipses_data")) {
+    for (var in c("x", "y", "lab", "col_var", "symbol_var", "size_var", "ellipses_data", "point_opacity")) {
       hashes[[var]] <- digest::digest(get(var), algo = "sha256")
     }
   }
@@ -145,7 +145,6 @@ scatterD3 <- function(x, y, lab = NULL,
   settings <- list(
     labels_size = labels_size,
     point_size = point_size,
-    point_opacity = point_opacity,
     xlab = xlab,
     ylab = ylab,
     has_labels = !is.null(lab),
@@ -184,6 +183,7 @@ scatterD3 <- function(x, y, lab = NULL,
 
   data <- data.frame(x = x, y = y)
   if (!is.null(lab)) data <- cbind(data, lab = lab)
+  if (!is.null(point_opacity)) data <- cbind(data, point_opacity = point_opacity)
   if (!is.null(col_var)) data <- cbind(data, col_var = col_var)
   if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
   if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
