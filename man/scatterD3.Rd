@@ -31,7 +31,7 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
 
 \item{labels_size}{text labels size}
 
-\item{point_opacity}{points opacity}
+\item{point_opacity}{points opacity, as an integer (same opacity for all points) or a vector of integers}
 
 \item{fixed}{force a 1:1 aspect ratio}
 

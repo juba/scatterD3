@@ -228,7 +228,7 @@ function scatterD3() {
     function dot_formatting(selection) {
         selection
         .attr("transform", translation)
-        .style("opacity", settings.point_opacity)
+        .style("opacity", function(d) {return d.point_opacity})
         // fill color
         .style("fill", function(d) { return color_scale(d.col_var); })
         // symbol and size
@@ -277,7 +277,7 @@ function scatterD3() {
         selection
         .call(draw_arrow)
         .style("stroke-width", "1px")
-        .style("opacity", settings.point_opacity)
+        .style("opacity", function(d) {return d.point_opacity})
         // stroke color
         .style("stroke", function(d) { return color_scale(d.col_var); })
         .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
@@ -560,7 +560,7 @@ function scatterD3() {
             var sel = ".color";
             svg.selectAll(sel)
             .transition()
-            .style("opacity", settings.point_opacity);
+            .style("opacity", function(d2) {return d2.point_opacity});
             svg.selectAll(".point-label")
             .transition()
             .style("opacity", 1);
@@ -611,7 +611,7 @@ function scatterD3() {
             var sel = ".symbol";
             svg.selectAll(sel)
             .transition()
-            .style("opacity", settings.point_opacity);
+            .style("opacity", function(d2) {return d2.point_opacity});
             svg.selectAll(".point-label")
             .transition()
             .style("opacity", 1);
@@ -804,8 +804,6 @@ function scatterD3() {
 
     // Update chart with transitions
     function update_settings(old_settings) {
-        if (old_settings.point_opacity != settings.point_opacity)
-            svg.selectAll(".dot").transition().style("opacity", settings.point_opacity);
         if (old_settings.labels_size != settings.labels_size)
             svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
         if (old_settings.point_size != settings.point_size)
@@ -1193,7 +1191,7 @@ HTMLWidgets.widget({
             obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
                                         obj.settings.lab_changed || obj.settings.legend_changed ||
                                         obj.settings.has_labels_changed || changed("ellipses_data") ||
-                                        obj.settings.ellipses_changed;
+                                        obj.settings.ellipses_changed || changed("point_opacity");
             scatter = scatter.settings(obj.settings);
             // Update data only if needed
             if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
