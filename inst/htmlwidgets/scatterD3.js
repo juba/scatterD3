@@ -474,6 +474,33 @@ function scatterD3() {
       .on("draw", lasso_draw)     // lasso draw function
       .on("end", lasso_end);      // lasso end function
 
+    // Toggle lasso on / zoom off
+    function lasso_on() {
+        var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+        var chart_body = d3.select("#scatterD3-svg-" + settings.html_id).select(".chart-body");
+        // Disable zoom behavior
+        pane.on(".zoom", null);
+        // Enable lasso
+        lasso = lasso_base
+        .area(pane)
+        .items(chart_body.selectAll(lasso_classes));
+        chart_body.call(lasso);
+        // Change cursor style
+        pane.style("cursor", "crosshair");
+    }
+
+    // Toggle lasso off / zoom on
+    function lasso_off() {
+        var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+        // Disable lasso
+        pane.on(".dragstart", null);
+        pane.on(".drag", null);
+        pane.on(".dragend", null);
+        // Enable zoom
+        pane.call(zoom);
+        // Change cursor style
+        pane.style("cursor", "move");
+    }
 
     // Format legend label
     function legend_label_formatting (selection, margin_top) {
@@ -975,26 +1002,14 @@ function scatterD3() {
       .on("keydown", function() {
         if (d3.event.keyIdentifier == "Shift") {
           if (settings.lasso) {
-              var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
-              pane.on(".zoom", null);
-              var chart_body = d3.select("#scatterD3-svg-" + settings.html_id).select(".chart-body");
-              lasso = lasso_base
-              .area(pane)
-              .items(chart_body.selectAll(lasso_classes));
-              chart_body.call(lasso);
-              pane.style("cursor", "crosshair");
+            lasso_on();
           }
         }
       })
       .on("keyup", function() {
         if (d3.event.keyIdentifier == "Shift") {
           if (settings.lasso) {
-            var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
-            pane.on(".dragstart", null);
-            pane.on(".drag", null);
-            pane.on(".dragend", null);
-            pane.call(zoom);
-            pane.style("cursor", "move");
+            lasso_off();
           }
         }
       })
