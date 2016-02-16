@@ -994,6 +994,17 @@ function scatterD3() {
             .attr("download", "scatterD3.svg")
             .attr("href", imageUrl);
         });
+
+        // Lasso toggle
+        d3.select("#" + settings.dom_id_lasso_toggle)
+        .on("click", function(){
+          if (!d3.select(this).classed("active") && settings.lasso) {
+              lasso_on();
+          }
+          if (d3.select(this).classed("active") && settings.lasso) {
+              lasso_off();
+          }
+        })
     };
 
     chart.add_global_listeners = function() {

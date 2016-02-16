@@ -16,7 +16,8 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
   xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
   height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
   dom_id_reset_zoom = "scatterD3-reset-zoom",
-  dom_id_svg_export = "scatterD3-svg-export", transitions = FALSE,
+  dom_id_svg_export = "scatterD3-svg-export",
+  dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   lasso = FALSE)
 }
 \arguments{
@@ -86,6 +87,8 @@ be associated with their name within \code{col_var}.}
 \item{dom_id_reset_zoom}{HTML DOM id of the element to bind the "reset zoom" control to.}
 
 \item{dom_id_svg_export}{HTML DOM id of the element to bind the "svg export" control to.}
+
+\item{dom_id_lasso_toggle}{HTML DOM id of the element to bind the "toggle lasso" control to.}
 
 \item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
 
