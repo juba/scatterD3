@@ -417,14 +417,25 @@ function scatterD3() {
     lasso_start = function() {
         lasso.items()
         .each(function(d){
-            d.scatterD3_lasso_old_fill = d.scatterD3_lasso_old_fill ? d.scatterD3_lasso_old_fill : d3.select(this).style("fill");
-            d.scatterD3_lasso_old_opacity = d.scatterD3_lasso_old_opacity ? d.scatterD3_lasso_old_opacity : d3.select(this).style("opacity");
+            if (d3.select(this).classed('dot')) {
+                d.scatterD3_lasso_dot_stroke = d.scatterD3_lasso_dot_stroke ? d.scatterD3_lasso_dot_stroke : d3.select(this).style("stroke");
+                d.scatterD3_lasso_dot_fill = d.scatterD3_lasso_dot_fill ? d.scatterD3_lasso_dot_fill : d3.select(this).style("fill");
+                d.scatterD3_lasso_dot_opacity = d.scatterD3_lasso_dot_opacity ? d.scatterD3_lasso_dot_opacity : d3.select(this).style("opacity");
+            }
+            if (d3.select(this).classed('arrow')) {
+                d.scatterD3_lasso_arrow_stroke = d.scatterD3_lasso_arrow_stroke ? d.scatterD3_lasso_arrow_stroke : d3.select(this).style("stroke");
+                d.scatterD3_lasso_arrow_fill = d.scatterD3_lasso_arrow_fill ? d.scatterD3_lasso_arrow_fill : d3.select(this).style("fill");
+                d.scatterD3_lasso_arrow_opacity = d.scatterD3_lasso_arrow_opacity ? d.scatterD3_lasso_arrow_opacity : d3.select(this).style("opacity");
+            }
             if (d3.select(this).classed('point-label')) {
-                d.scatterD3_lasso_old_text_opacity = d.scatterD3_lasso_old_text_opacity ? d.scatterD3_lasso_old_text_opacity : d3.select(this).style("opacity");
+                d.scatterD3_lasso_text_stroke = d.scatterD3_lasso_text_stroke ? d.scatterD3_lasso_text_stroke : d3.select(this).style("stroke");
+                d.scatterD3_lasso_text_fill = d.scatterD3_lasso_text_fill ? d.scatterD3_lasso_text_fill : d3.select(this).style("fill");
+                d.scatterD3_lasso_text_opacity = d.scatterD3_lasso_text_opacity ? d.scatterD3_lasso_text_opacity : d3.select(this).style("opacity");
             }
         })
         .style("fill", null) // clear all of the fills
-        .style("opacity", null) // clear all of the opacity
+        .style("opacity", null) // clear all of the opacities
+        .style("stroke", null) // clear all of the strokes
         .classed({"not-possible-lasso": true, "selected-lasso": false, "not-selected-lasso": false}); // style as not possible
     };
     lasso_draw = function() {
@@ -442,12 +453,20 @@ function scatterD3() {
         }
         // Reset the color of all dots
         lasso.items()
-           .style("fill", function(d) { return d.scatterD3_lasso_old_fill; })
+           .style("fill", function(d) {
+               if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_fill; }
+               if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_fill; }
+               if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_fill; }
+           })
            .style("opacity", function(d) {
-               if (d3.select(this).classed('point-label')) {
-                   return d.scatterD3_lasso_old_text_opacity;
-               }
-               return d.scatterD3_lasso_old_opacity;
+               if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
+               if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_opacity; }
+               if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_opacity; }
+           })
+           .style("stroke", function(d) {
+               if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
+               if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_stroke; }
+               if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_stroke; }
            });
         if (some_selected) {
           // Style the selected dots
@@ -464,7 +483,7 @@ function scatterD3() {
                       "not-selected-lasso": false, "selected-lasso": false});
         }
       };
-      lasso_classes = ".dot, .point-label";
+      lasso_classes = ".dot, .arrow, .point-label";
       // Define the lasso
       lasso_base = d3.lasso()
       .closePathDistance(2000)   // max distance for the lasso loop to be closed
