@@ -510,9 +510,9 @@ function scatterD3() {
       .on("end", lasso_end);      // lasso end function
 
     // Toggle lasso on / zoom off
-    function lasso_on() {
-        var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
-        var chart_body = d3.select("#scatterD3-svg-" + settings.html_id).select(".chart-body");
+    function lasso_on(svg) {
+        var pane = svg.select(".pane");
+        var chart_body = svg.select(".chart-body");
         // Disable zoom behavior
         pane.on(".zoom", null);
         // Enable lasso
@@ -525,8 +525,8 @@ function scatterD3() {
     }
 
     // Toggle lasso off / zoom on
-    function lasso_off() {
-        var pane = d3.select("#scatterD3-svg-" + settings.html_id).select(".pane");
+    function lasso_off(svg) {
+        var pane = svg.select(".pane");
         // Disable lasso
         pane.on(".dragstart", null);
         pane.on(".drag", null);
@@ -1002,7 +1002,8 @@ function scatterD3() {
     chart.add_controls_handlers = function() {
 
         // Zoom reset
-        d3.select("#" + settings.dom_id_reset_zoom).on("click", function() {
+        d3.select("#" + settings.dom_id_reset_zoom)
+        .on("click", function() {
             d3.transition().duration(750).tween("zoom", function() {
                 var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
                 iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
@@ -1032,10 +1033,10 @@ function scatterD3() {
         d3.select("#" + settings.dom_id_lasso_toggle)
         .on("click", function(){
           if (!d3.select(this).classed("active") && settings.lasso) {
-              lasso_on();
+              lasso_on(svg);
           }
           if (d3.select(this).classed("active") && settings.lasso) {
-              lasso_off();
+              lasso_off(svg);
           }
         })
     };
@@ -1046,14 +1047,14 @@ function scatterD3() {
       .on("keydown", function() {
         if (d3.event.keyIdentifier == "Shift") {
           if (settings.lasso) {
-            lasso_on();
+            lasso_on(svg);
           }
         }
       })
       .on("keyup", function() {
         if (d3.event.keyIdentifier == "Shift") {
           if (settings.lasso) {
-            lasso_off();
+            lasso_off(svg);
           }
         }
       })
