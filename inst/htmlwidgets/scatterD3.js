@@ -457,6 +457,8 @@ function scatterD3() {
         .classed({"not-possible-lasso": true, "possible-lasso": false});
     };
     lasso_end = function() {
+        lasso_off(svg);
+        d3.select("#" + settings.dom_id_lasso_toggle).classed("active", false);
         var some_selected = false;
         if(lasso.items().filter(function(d) {return d.selected === true})[0].length !== 0){
             some_selected = true;
@@ -935,6 +937,9 @@ function scatterD3() {
               if (settings.has_size_var) add_size_legend(legend);
           }
       }
+
+      lasso_off(svg);
+      d3.select("#" + settings.dom_id_lasso_toggle).classed("active", false);
     };
 
     // Dynamically resize chart elements
