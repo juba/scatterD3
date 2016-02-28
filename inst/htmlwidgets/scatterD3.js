@@ -492,7 +492,7 @@ function scatterD3() {
             .style("opacity", function(d) { return d.point_opacity / 7 });
 
           // Call custom callback function
-          var callback_sel = svg.selectAll(".dot").filter(function(d) {return d.selected === true});
+          var callback_sel = svg.selectAll(".dot, .arrow").filter(function(d) {return d.selected === true});
           if (typeof settings.lasso_callback === 'function') settings.lasso_callback(callback_sel);
         }
         else {
