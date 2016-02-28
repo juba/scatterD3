@@ -125,6 +125,17 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), lasso = TRUE)
 
 To undo the selection, just shift-click again.
 
+You can specify a custom JavaScript callback function to be called by passing it to the `lasso_callback` argument as a character string. This function should accept a `sel` argument, which is a d3 selection of selected points.
+
+Here is an example which shows an alert with selected point labels :
+
+```{r lasso_callback}
+scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), 
+          lasso = TRUE,
+          lasso_callback = "function(sel) {alert(sel.data().map(function(d) {return d.lab}).join('\\n'));}")
+```
+
+
 ## Other options
 
 Finally, and for more specific use cases, you can represent some points as an arrow starting from the origin by using the `type_var` argument, and you can add a unit circle with `unit_circle = TRUE`.

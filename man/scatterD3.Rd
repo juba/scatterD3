@@ -18,7 +18,7 @@ scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
   dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
-  lasso = FALSE)
+  lasso = FALSE, lasso_callback = NULL)
 }
 \arguments{
 \item{x}{numerical vector of x values}
@@ -93,6 +93,8 @@ be associated with their name within \code{col_var}.}
 \item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
 
 \item{lasso}{logical value to add {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature}
+
+\item{lasso_callback}{the body of a JavaScript callback function with the argument \code{sel} to be applied to a lasso plugin selection}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.
