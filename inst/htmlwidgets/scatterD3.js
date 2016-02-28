@@ -920,17 +920,21 @@ function scatterD3() {
       }
 
       if (settings.legend_changed) {
-          var legend = svg.select(".legend");
+
           // Remove existing legends
-          legend.selectAll("*").remove();
+          svg.select(".legend").remove();
+          var legend = svg.append("g").attr("class", "legend");
+
           // Recreate them
           if (settings.has_legend && settings.legend_width > 0) {
               // Color legend
               if (settings.has_color_var) {
+                add_color_legend.svg = svg;
                 add_color_legend(legend);
               }
               // Symbol legend
               if (settings.has_symbol_var) {
+                add_symbol_legend.svg = svg;
                 add_symbol_legend(legend);
               }
               // Size legend
