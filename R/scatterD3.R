@@ -104,6 +104,24 @@ scatterD3 <- function(x, y, lab = NULL,
     if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
   }
 
+  ## data element
+  data <- data.frame(x = x, y = y)
+  if (!is.null(lab)) data <- cbind(data, lab = lab)
+  if (!is.null(point_opacity)) data <- cbind(data, point_opacity = point_opacity)
+  if (!is.null(col_var)) {
+    col_var[is.na(col_var)] <- "NA"
+    data <- cbind(data, col_var = col_var)
+  }
+  if (!is.null(symbol_var)) {
+    symbol_var[is.na(symbol_var)] <- "NA"
+    data <- cbind(data, symbol_var = symbol_var)
+  }
+  if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
+  if (!is.null(type_var)) data <- cbind(data, type_var = type_var)
+  if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
+  else data <- cbind(data, key_var = seq_along(x))
+  if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
+
   ## Compute confidence ellipses point positions with ellipse::ellipse.default()
   compute_ellipse <- function(x, y, level = ellipses_level, npoints = 50) {
     cx <- mean(x)
@@ -180,17 +198,6 @@ scatterD3 <- function(x, y, lab = NULL,
     transitions = transitions,
     hashes = hashes
   )
-
-  data <- data.frame(x = x, y = y)
-  if (!is.null(lab)) data <- cbind(data, lab = lab)
-  if (!is.null(point_opacity)) data <- cbind(data, point_opacity = point_opacity)
-  if (!is.null(col_var)) data <- cbind(data, col_var = col_var)
-  if (!is.null(symbol_var)) data <- cbind(data, symbol_var = symbol_var)
-  if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
-  if (!is.null(type_var)) data <- cbind(data, type_var = type_var)
-  if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
-  else data <- cbind(data, key_var = seq_along(x))
-  if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
   # pass the data and settings using 'x'
   x <- list(

@@ -7,6 +7,7 @@ scatterD3 0.6
 * Bugfix : xlim and ylim not taken ignored when fixed = TRUE (thanks @TimBock)
 * Bugfix : legend must not be displayed when legend_width = 0 and fixed = TRUE (thanks @TimBock)
 * Bugfix : wrong legend hover highlighting when the label is "0"
+* Bugfix : convert NA to "NA" in color and symbol mapping variables
 
 
 scatterD3 0.5.1
