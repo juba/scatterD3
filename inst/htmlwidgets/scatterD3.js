@@ -482,7 +482,7 @@ function scatterD3() {
            });
         if (some_selected) {
           // Style the selected dots
-          lasso.items().filter(function(d) {return d.selected === true})
+          var sel = lasso.items().filter(function(d) {return d.selected === true})
             .classed({"not-possible-lasso": false, "possible-lasso": false, "selected-lasso": true})
             .style("opacity", "1");
 
@@ -490,6 +490,10 @@ function scatterD3() {
           lasso.items().filter(function(d) {return d.selected === false})
             .classed({"not-possible-lasso": false, "possible-lasso": false, "not-selected-lasso": true})
             .style("opacity", function(d) { return d.point_opacity / 7 });
+
+          // Call custom callback function
+          var callback_sel = svg.selectAll(".dot").filter(function(d) {return d.selected === true});
+          if (typeof settings.lasso_callback === 'function') settings.lasso_callback(callback_sel);
         }
         else {
           lasso.items()
