@@ -59,6 +59,7 @@
 #'           symbol_lab = "Manual transmission", html_id = NULL)
 #'
 #' @importFrom ellipse ellipse
+#' @importFrom stats cov
 #' @importFrom htmlwidgets JS
 #' @export
 #'
@@ -129,7 +130,7 @@ scatterD3 <- function(x, y, lab = NULL,
   compute_ellipse <- function(x, y, level = ellipses_level, npoints = 50) {
     cx <- mean(x)
     cy <- mean(y)
-    data.frame(ellipse::ellipse(cov(cbind(x,y)), centre = c(cx, cy), level = level, npoints = npoints))
+    data.frame(ellipse::ellipse(stats::cov(cbind(x,y)), centre = c(cx, cy), level = level, npoints = npoints))
   }
 
   ## Compute ellipses points data
