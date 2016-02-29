@@ -2,9 +2,34 @@ Package: scatterD3
 Type: Package
 Title: D3 JavaScript Scatterplot from R
 Version: 0.6
-Date: 2016-01-19
-Authors@R: c(person("Julien", "Barnier", email = "julien.barnier@ens-lyon.fr",
-    role = c("aut", "cre")))
+Date: 2016-02-29
+Authors@R: c(
+    person(
+      "Julien", "Barnier",
+      email = "julien.barnier@ens-lyon.fr",
+      role = c("aut", "cre")
+    ),
+    person(
+        "Kent", "Russell"
+        , role = c("aut", "ctb")
+        , email = "kent.russell@timelyportfolio.com"
+    ),
+    person(
+        "Mike", "Bostock"
+        , role = c("aut", "cph")
+        , comment = "d3.js library, http://d3js.org"
+    ),
+    person(
+        "Susie", "Lu"
+        , role = c("aut", "cph")
+        , comment = "d3-legend library, http://d3-legend.susielu.com/"
+    ),
+    person(
+        "Speros", "Kokenes"
+        , role = c("aut", "cph")
+        , comment = "d3-lasso-plugin library, https://github.com/skokenes/D3-Lasso-Plugin"
+    )
+  )
 Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
 Description: Creates 'D3' 'JavaScript' scatterplots from 'R' with interactive
     features : panning, zooming, tooltips, etc.
