@@ -113,7 +113,7 @@ Or around the different groups of points defined by `col_var` :
 scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, ellipses = TRUE)
 ```
 
-Ellipses are computed by the  `ellipse.default()` function of the [ellipse package](https://cran.r-project.org/web/packages/ellipse/). The confidence level can be changed with the `ellipse_level` argument (`0.95` by default).
+Ellipses are computed by the  `ellipse.default()` function of the [ellipse package](https://cran.r-project.org/package=ellipse). The confidence level can be changed with the `ellipse_level` argument (`0.95` by default).
 
 ## Lasso selection tool
 
