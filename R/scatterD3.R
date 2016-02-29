@@ -113,10 +113,12 @@ scatterD3 <- function(x, y, lab = NULL,
   if (!is.null(lab)) data <- cbind(data, lab = lab)
   if (!is.null(point_opacity)) data <- cbind(data, point_opacity = point_opacity)
   if (!is.null(col_var)) {
+    col_var <- as.character(col_var)
     col_var[is.na(col_var)] <- "NA"
     data <- cbind(data, col_var = col_var)
   }
   if (!is.null(symbol_var)) {
+    symbol_var <- as.character(symbol_var)
     symbol_var[is.na(symbol_var)] <- "NA"
     data <- cbind(data, symbol_var = symbol_var)
   }
