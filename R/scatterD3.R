@@ -122,7 +122,11 @@ scatterD3 <- function(x, y, lab = NULL,
     symbol_var[is.na(symbol_var)] <- "NA"
     data <- cbind(data, symbol_var = symbol_var)
   }
-  if (!is.null(size_var)) data <- cbind(data, size_var = size_var)
+  if (!is.null(size_var)) {
+    warning("NA values in size_var. Values set to min(0, size_var)")
+    size_var[is.na(size_var)] <- min(0, size_var, na.rm = TRUE)
+    data <- cbind(data, size_var = size_var)
+  }
   if (!is.null(type_var)) data <- cbind(data, type_var = type_var)
   if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
   else data <- cbind(data, key_var = seq_along(x))
