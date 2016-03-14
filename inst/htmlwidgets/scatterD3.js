@@ -743,11 +743,13 @@ function scatterD3() {
             .call(zoom);
 
             // chart body
+            var clip_path_url = document.location.href.replace(/#[^?]+?(\?|$)/, "$1") +
+                                "#scatterclip-" + settings.html_id
             var chart_body = root.append("g")
             .attr("class", "chart-body")
             .attr("width", dims.width)
             .attr("height", dims.height)
-            .attr("clip-path", "url(" + document.location.href + "#scatterclip-" + settings.html_id + ")");
+            .attr("clip-path", "url(" + clip_path_url + ")");
 
              chart_body.append("path")
             .attr("class", "zeroline hline")

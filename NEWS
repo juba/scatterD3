@@ -1,6 +1,7 @@
 scatterD3 0.6.2
 ------------------------------------------------------
 
+* Bugfix : Remove any previous anchor from clip-path urls
 * Bugfix : deal with NA in size_var
 
 scatterD3 0.6.1
