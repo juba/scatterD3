@@ -19,8 +19,8 @@
 }
 
 .scatterD3 .not-possible-lasso {
-  fill: rgb(200,200,200);
-  opacity: 0.3;
+  fill: rgb(150,150,150);
+  opacity: 1;
 }
 
 .scatterD3 .arrow.not-possible-lasso {
