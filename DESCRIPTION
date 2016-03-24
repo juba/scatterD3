@@ -2,7 +2,7 @@ Package: scatterD3
 Type: Package
 Title: D3 JavaScript Scatterplot from R
 Version: 0.6.2
-Date: 2016-03-01
+Date: 2016-03-24
 Authors@R: c(
     person(
       "Julien", "Barnier",
