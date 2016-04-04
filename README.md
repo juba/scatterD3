@@ -44,7 +44,7 @@ Quick example of the `scatterD3`  function based on the `mtcars` dataset :
 ```R
 mtcars$names <- rownames(mtcars)
 scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
-          col_var=cyl, symbol_var = am,
+          col_var = cyl, symbol_var = am,
           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
           symbol_lab = "Manual transmission")
 ```
