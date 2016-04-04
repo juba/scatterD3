@@ -7,35 +7,37 @@
 D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 }
 \usage{
-scatterD3(x, y, lab = NULL, point_size = 64, labels_size = 10,
-  point_opacity = 1, fixed = FALSE, col_var = NULL, colors = NULL,
-  ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
-  size_var = NULL, size_range = c(10, 300), col_lab = NULL,
-  symbol_lab = NULL, size_lab = NULL, key_var = NULL, type_var = NULL,
-  unit_circle = FALSE, tooltips = TRUE, tooltip_text = NULL,
-  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
-  height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
-  dom_id_reset_zoom = "scatterD3-reset-zoom",
+scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
+  labels_size = 10, point_opacity = 1, fixed = FALSE, col_var = NULL,
+  colors = NULL, ellipses = FALSE, ellipses_level = 0.95,
+  symbol_var = NULL, size_var = NULL, size_range = c(10, 300),
+  col_lab = NULL, symbol_lab = NULL, size_lab = NULL, key_var = NULL,
+  type_var = NULL, unit_circle = FALSE, tooltips = TRUE,
+  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
+  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
+  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   lasso = FALSE, lasso_callback = NULL)
 }
 \arguments{
-\item{x}{numerical vector of x values}
+\item{x}{numerical vector of x values, or variable name if data is not NULL}
 
-\item{y}{numerical vector of y values}
+\item{y}{numerical vector of y values, or variable name if data is not NULL}
 
-\item{lab}{optional character vector of text labels}
+\item{data}{default dataset to use for plot.}
+
+\item{lab}{optional character vector of text labels, or variable name if data is not NULL}
 
 \item{point_size}{points size. Ignored if size_var is not NULL.}
 
 \item{labels_size}{text labels size}
 
-\item{point_opacity}{points opacity, as an integer (same opacity for all points) or a vector of integers}
+\item{point_opacity}{points opacity, as an integer (same opacity for all points) or a vector of integers, or variable name if data is not NULL}
 
 \item{fixed}{force a 1:1 aspect ratio}
 
-\item{col_var}{optional vector for points color mapping}
+\item{col_var}{optional vector for points color mapping, or variable name if data is not NULL}
 
 \item{colors}{vector of custom points colors. Colors must be
 defined as an hexadecimal string (eg "#FF0000").  If
@@ -46,9 +48,9 @@ be associated with their name within \code{col_var}.}
 
 \item{ellipses_level}{confidence level for ellipses (0.95 by default)}
 
-\item{symbol_var}{optional vector for points symbol mapping}
+\item{symbol_var}{optional vector for points symbol mapping, or variable name if data is not NULL}
 
-\item{size_var}{optional vector for points size mapping}
+\item{size_var}{optional vector for points size mapping, or variable name if data is not NULL}
 
 \item{size_range}{numeric vector of length 2, giving the minimum and maximum point sizes when mapping with size_var}
 
@@ -58,7 +60,7 @@ be associated with their name within \code{col_var}.}
 
 \item{size_lab}{size legend title}
 
-\item{key_var}{optional vector of rows ids. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.}
+\item{key_var}{optional vector of rows ids, or variable name if data is not NULL. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.}
 
 \item{type_var}{optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.}
 
@@ -106,7 +108,7 @@ size, point opacity or export the figure as an SVG file via HTML form controls.
 Interactive scatter plots based on htmlwidgets and d3.js
 }
 \examples{
-scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
+scatterD3(x = mtcars$wt, y = mtcars$mpg, data=NULL, lab = rownames(mtcars),
           col_var = mtcars$cyl, symbol_var = mtcars$am,
           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
           symbol_lab = "Manual transmission", html_id = NULL)

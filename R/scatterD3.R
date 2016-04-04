@@ -2,27 +2,28 @@
 #'
 #' Interactive scatter plots based on htmlwidgets and d3.js
 #'
-#' @param x numerical vector of x values
-#' @param y numerical vector of y values
-#' @param lab optional character vector of text labels
+#' @param data default dataset to use for plot.
+#' @param x numerical vector of x values, or variable name if data is not NULL
+#' @param y numerical vector of y values, or variable name if data is not NULL
+#' @param lab optional character vector of text labels, or variable name if data is not NULL
 #' @param point_size points size. Ignored if size_var is not NULL.
 #' @param labels_size text labels size
-#' @param point_opacity points opacity, as an integer (same opacity for all points) or a vector of integers
+#' @param point_opacity points opacity, as an integer (same opacity for all points) or a vector of integers, or variable name if data is not NULL
 #' @param fixed force a 1:1 aspect ratio
-#' @param col_var optional vector for points color mapping
+#' @param col_var optional vector for points color mapping, or variable name if data is not NULL
 #' @param colors vector of custom points colors. Colors must be
 #'          defined as an hexadecimal string (eg "#FF0000").  If
 #'          \code{colors} is a named list or vector, then the colors will
 #'          be associated with their name within \code{col_var}.
 #' @param ellipses draw confidence ellipses for points or the different color mapping groups
 #' @param ellipses_level confidence level for ellipses (0.95 by default)
-#' @param symbol_var optional vector for points symbol mapping
-#' @param size_var optional vector for points size mapping
+#' @param symbol_var optional vector for points symbol mapping, or variable name if data is not NULL
+#' @param size_var optional vector for points size mapping, or variable name if data is not NULL
 #' @param size_range numeric vector of length 2, giving the minimum and maximum point sizes when mapping with size_var
 #' @param col_lab color legend title
 #' @param symbol_lab symbols legend title
 #' @param size_lab size legend title
-#' @param key_var optional vector of rows ids. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.
+#' @param key_var optional vector of rows ids, or variable name if data is not NULL. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.
 #' @param type_var optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.
 #' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
@@ -53,7 +54,7 @@
 #' D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 #'
 #' @examples
-#' scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
+#' scatterD3(x = mtcars$wt, y = mtcars$mpg, data=NULL, lab = rownames(mtcars),
 #'           col_var = mtcars$cyl, symbol_var = mtcars$am,
 #'           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
 #'           symbol_lab = "Manual transmission", html_id = NULL)
@@ -63,7 +64,7 @@
 #' @importFrom htmlwidgets JS
 #' @export
 #'
-scatterD3 <- function(x, y, lab = NULL,
+scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       point_size = 64, labels_size = 10,
                       point_opacity = 1,
                       fixed = FALSE, col_var = NULL,
@@ -100,6 +101,33 @@ scatterD3 <- function(x, y, lab = NULL,
   if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
   if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
 
+  ## NSE
+  if (!is.null(data)) {
+    null_or_name <- function(x) {
+      if (x != "NULL") return(data[, x])
+      else return(NULL)
+    }
+    # Get variable names
+    x <- data[, deparse(substitute(x))]
+    y <- data[, deparse(substitute(y))]
+    lab <- deparse(substitute(lab))
+    col_var <- deparse(substitute(col_var))
+    size_var <- deparse(substitute(size_var))
+    symbol_var <- deparse(substitute(symbol_var))
+    key_var <- deparse(substitute(key_var))
+    point_opacity <- deparse(substitute(point_opacity))
+    # Get variable data if not "NULL"
+    lab <- null_or_name(lab)
+    col_var <- null_or_name(col_var)
+    size_var <- null_or_name(size_var)
+    symbol_var <- null_or_name(symbol_var)
+    key_var <- null_or_name(key_var)
+    # Check if point_opacity is a variable name
+    if(suppressWarnings(is.na(as.numeric(point_opacity)))) {
+      point_opacity <- data[, point_opacity]
+    }
+  }
+
   # colors can be named
   #  we'll need to convert named vector to a named list
   #  for the JSON conversion
@@ -123,7 +151,7 @@ scatterD3 <- function(x, y, lab = NULL,
     data <- cbind(data, symbol_var = symbol_var)
   }
   if (!is.null(size_var)) {
-    warning("NA values in size_var. Values set to min(0, size_var)")
+    if (any(is.na(size_var))) warning("NA values in size_var. Values set to min(0, size_var)")
     size_var[is.na(size_var)] <- min(0, size_var, na.rm = TRUE)
     data <- cbind(data, size_var = size_var)
   }

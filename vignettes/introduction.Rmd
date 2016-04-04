@@ -12,16 +12,28 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, include=FALSE}
+library(scatterD3)
+```
+
+
 The `scatterD3` package provides an HTML widget based on the `htmlwidgets` package and allows to produce interactive scatterplots by using the `d3.js` javascript visualization library.
 
 ## Basic scatterplot
 
 Starting with the sample `mtcars` dataset, we can produce a basic scatterplot with the following command :
 
-```{r basic}
+```{r basic, eval=FALSE}
 library(scatterD3)
 scatterD3(x = mtcars$wt, y = mtcars$mpg)
 ```
+
+You can pass data arguments as vectors, like above, but you can also give a data frame as `data` argument and then provide variable names which will be evaluated inside this data frame :
+
+```{r basic_nse}
+scatterD3(data = mtcars , x = wt, y = mpg)
+```
+
 
 This will display a simple visualization with the given variables as `x` and `y` axis. There are several interactive features directly available :
 
@@ -32,15 +44,17 @@ This will display a simple visualization with the given variables as `x` and `y`
 You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed = TRUE`.
 
 ```{r basic_cust}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, point_size = 15, point_opacity = 0.5, fixed = TRUE)
+scatterD3(data = mtcars, x = wt, y = mpg, point_size = 15, point_opacity = 0.5, fixed = TRUE)
 ```
+
 
 ## Point labels
 
 You can add text labels to the points by passing a character vector to the `lab` parameter. Labels size are controlled by the `labels_size` parameter.
 
 ```{r labels}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), labels_size = 9)
+mtcars$names <- rownames(mtcars)
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names, labels_size = 9)
 ```
 
 Note that text labels are fully movable : click and drag a label with your mouse to place it where you want. Custom positions are preserved while zooming/panning.
@@ -51,7 +65,7 @@ Note that text labels are fully movable : click and drag a label with your mouse
 By passing vectors to the `col_var` and/or `symbol_var` arguments, you can map points colors and symbols to other variables.
 
 ```{r mapping}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtcars$gear)
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear)
 ```
 
 A legend is then automatically added. You can manually specify its width with the `legend_width` argument. Use `legend_width = 0` to disable it entirely.
@@ -61,7 +75,7 @@ Note that when hovering over a legend item with your mouse, the corresponding po
 You can also map symbol sizes with a variable with the `size_var` argument. `size_range` allows to customize the sizes range :
 
 ```{r map_size}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, size_var = mtcars$hp, 
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, size_var = hp, 
           size_range = c(10,1000), point_opacity = 0.7)
 ```
 
@@ -70,7 +84,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, size_var = mtcars
 You can manually specify the `x` or `y` axis limits with the `xlim` and `ylim` arguments :
 
 ```{r axis_limits}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, xlim=c(0,10), ylim=c(10,35))
+scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
 ```
 
 
@@ -80,7 +94,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, xlim=c(0,10), ylim=c(10,35))
 You can customize the axis and legend labels with `xlab`, `ylab`, `col_lab`, `symbol_lab` and `size_lab` :
 
 ```{r cust_labels}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, symbol_var = mtcars$gear,
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear,
           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders", symbol_lab = "Gears")
 ```
 
@@ -94,7 +108,7 @@ If the default tooltips don't suit your needs, you can customize them by providi
 ```{r cust_tooltips}
 tooltips <- paste("This is an incredible <strong>", rownames(mtcars),"</strong><br />with ", 
                   mtcars$cyl, "cylinders !")
-scatterD3(x = mtcars$wt, y = mtcars$mpg, tooltip_text = tooltips)
+scatterD3(data = mtcars, x = wt, y = mpg, tooltip_text = tooltips)
 ```
 
 You can also disable tooltips entirely with `tooltips = FALSE`.
@@ -104,13 +118,13 @@ You can also disable tooltips entirely with `tooltips = FALSE`.
 You can draw a confidence ellipse around the points :
 
 ```{r ellipses}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, ellipses = TRUE)
+scatterD3(data = mtcars, x = wt, y = mpg, ellipses = TRUE)
 ```
 
 Or around the different groups of points defined by `col_var` :
 
 ```{r ellipses_col}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, ellipses = TRUE)
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, ellipses = TRUE)
 ```
 
 Ellipses are computed by the  `ellipse.default()` function of the [ellipse package](https://cran.r-project.org/package=ellipse). The confidence level can be changed with the `ellipse_level` argument (`0.95` by default).
@@ -120,7 +134,8 @@ Ellipses are computed by the  `ellipse.default()` function of the [ellipse packa
 Thanks to the [d3-lasso-plugin](https://github.com/skokenes/D3-Lasso-Plugin) integration made by @[timelyportfolio](https://github.com/timelyportfolio), you can select and highlight points with a lasso selection tool. To activate it, just add a `lasso = TRUE` argument. The tool is used by shift-clicking and dragging on the plot area (if it doesn't activate, click on the chart first to give it focus).
 
 ```{r lasso}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), lasso = TRUE)
+mtcars$names <- rownames(mtcars)
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names, lasso = TRUE)
 ```
 
 To undo the selection, just shift-click again.
@@ -130,7 +145,9 @@ You can specify a custom JavaScript callback function to be called by passing it
 Here is an example which shows an alert with selected point labels :
 
 ```{r lasso_callback}
-scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars), 
+mtcars$names <- rownames(mtcars)
+scatterD3(data = mtcars,
+          x = wt, y = mpg, lab = names, 
           lasso = TRUE,
           lasso_callback = "function(sel) {alert(sel.data().map(function(d) {return d.lab}).join('\\n'));}")
 ```
