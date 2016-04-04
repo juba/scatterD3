@@ -42,8 +42,9 @@ Or from Github for the latest, bleeding edge, full of bugs version :
 Quick example of the `scatterD3`  function based on the `mtcars` dataset :
 
 ```R
-scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames(mtcars),
-          col_var=mtcars$cyl, symbol_var = mtcars$am,
+mtcars$names <- rownames(mtcars)
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
+          col_var=cyl, symbol_var = am,
           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
           symbol_lab = "Manual transmission")
 ```
