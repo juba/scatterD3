@@ -88,6 +88,9 @@ function scatterD3() {
             color_scale = n <= 10 ? d3.scale.category10() : d3.scale.category20();
         } else if (Array.isArray(settings.colors)) {
             color_scale = d3.scale.ordinal().range(settings.colors);
+        } else if (typeof(settings.colors) === "string"){
+          // Single string given
+          color_scale = d3.scale.ordinal().range(Array(settings.colors));
         } else if (typeof(settings.colors) === "object"){
             color_scale = d3.scale.ordinal()
                           .range(d3.values(settings.colors))
