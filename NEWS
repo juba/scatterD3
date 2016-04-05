@@ -1,6 +1,8 @@
 scatterD3 0.6.3
 ------------------------------------------------------
 
+* Bugfix : blank plot when only one color passed to `colors` (thanks @chewth)
+* Add `data` argument to specify variables from a data frame with NSE
 
 scatterD3 0.6.2
 ------------------------------------------------------
