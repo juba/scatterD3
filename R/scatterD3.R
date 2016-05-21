@@ -29,7 +29,9 @@
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
 #' @param xlab x axis label
-#' @param ylab y axis label
+#' @param ylab y axis label.
+#' @param axes_font_size Font size for axes text (any CSS compatible value)
+#' @param legend_font_size Font size for legend text (any CSS compatible value)
 #' @param xlim numeric vector of length 2, manual x axis limits
 #' @param ylim numeric vector of length 2, manual y axis limits
 #' @param lasso logical value to add {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature
