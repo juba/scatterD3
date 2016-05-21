@@ -41,11 +41,16 @@ This will display a simple visualization with the given variables as `x` and `y`
 - you can pan the plot by dragging with your mouse
 - by hovering over a point, you can display a small tooltip window giving the `x` and `y` values
 
-You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed = TRUE`.
+You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed = TRUE`. You can also manually specify the points color with the `colors` argument
 
 ```{r basic_cust}
-scatterD3(data = mtcars, x = wt, y = mpg, point_size = 15, point_opacity = 0.5, fixed = TRUE)
+scatterD3(data = mtcars, x = wt, y = mpg, 
+          point_size = 15, point_opacity = 0.5, fixed = TRUE,
+          colors = "#A94175")
 ```
+
+
+
 
 
 ## Point labels
@@ -78,6 +83,15 @@ You can also map symbol sizes with a variable with the `size_var` argument. `siz
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, size_var = hp, 
           size_range = c(10,1000), point_opacity = 0.7)
 ```
+
+You can specify custom colors by passing a vector of hexadecimal strings to the `colors` argument. If the vector is named, then the colors will be associated with their names within `col_var`.
+
+```{r map_custom_colors}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
+          colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
+```
+
+
 
 ## Axis limits
 
