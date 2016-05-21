@@ -152,17 +152,20 @@ function scatterD3() {
         selection.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + dims.height + ")")
+        .style("font-size", settings.axes_font_size)
         .call(xAxis)
         .append("text")
         .attr("class", "axis-label")
         .attr("x", dims.width - 5)
         .attr("y", -6)
         .style("text-anchor", "end")
+        .style("font-size", settings.axes_font_size)
         .text(settings.xlab);
 
         // y axis
         selection.append("g")
         .attr("class", "y axis")
+        .style("font-size", settings.axes_font_size)
         .call(yAxis)
         .append("text")
         .attr("class", "axis-label")
@@ -554,7 +557,8 @@ function scatterD3() {
     // Create color legend
     function add_color_legend() {
 
-        var legend = svg.select(".legend");
+        var legend = svg.select(".legend")
+        .style("font-size", settings.legend_font_size);
 
         var legend_color_domain = color_scale.domain().sort();
         var legend_color_scale = d3.scale.category10();

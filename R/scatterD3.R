@@ -91,7 +91,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       dom_id_lasso_toggle = "scatterD3-lasso-toggle",
                       transitions = FALSE,
                       lasso = FALSE,
-                      lasso_callback = NULL) {
+                      lasso_callback = NULL,
+                      axes_font_size = "100%",
+                      legend_font_size = "100%") {
 
   ## Variable names as default labels
   if (is.null(xlab)) xlab <- deparse(substitute(x))
@@ -235,6 +237,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     dom_id_svg_export = dom_id_svg_export,
     dom_id_lasso_toggle = dom_id_lasso_toggle,
     transitions = transitions,
+    axes_font_size = axes_font_size,
+    legend_font_size = legend_font_size,
     hashes = hashes
   )
 

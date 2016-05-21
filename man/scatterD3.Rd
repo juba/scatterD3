@@ -18,7 +18,8 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
-  lasso = FALSE, lasso_callback = NULL)
+  lasso = FALSE, lasso_callback = NULL, axes_font_size = "100\%",
+  legend_font_size = "100\%")
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}

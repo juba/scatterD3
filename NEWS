@@ -1,6 +1,7 @@
 scatterD3 0.6.3
 ------------------------------------------------------
 
+* Axes and legend font size customization with `axes_font_size` and `legend_font_size` (thanks @fineswag)
 
 scatterD3 0.6.2
 ------------------------------------------------------
