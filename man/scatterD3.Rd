@@ -8,14 +8,15 @@ D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 }
 \usage{
 scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
-  labels_size = 10, point_opacity = 1, fixed = FALSE, col_var = NULL,
-  colors = NULL, ellipses = FALSE, ellipses_level = 0.95,
-  symbol_var = NULL, size_var = NULL, size_range = c(10, 300),
-  col_lab = NULL, symbol_lab = NULL, size_lab = NULL, key_var = NULL,
-  type_var = NULL, unit_circle = FALSE, tooltips = TRUE,
-  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
-  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
-  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
+  labels_size = 10, point_opacity = 1, hover_size = 1,
+  hover_opacity = NULL, fixed = FALSE, col_var = NULL, colors = NULL,
+  ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
+  size_var = NULL, size_range = c(10, 300), col_lab = NULL,
+  symbol_lab = NULL, size_lab = NULL, key_var = NULL, type_var = NULL,
+  unit_circle = FALSE, tooltips = TRUE, tooltip_text = NULL,
+  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
+  height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
+  dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   lasso = FALSE, lasso_callback = NULL, axes_font_size = "100\%",
@@ -35,6 +36,10 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
 \item{labels_size}{text labels size}
 
 \item{point_opacity}{points opacity, as an integer (same opacity for all points) or a vector of integers, or variable name if data is not NULL}
+
+\item{hover_size}{factor for changing size when hovering points}
+
+\item{hover_opacity}{points opacity when hovering}
 
 \item{fixed}{force a 1:1 aspect ratio}
 
@@ -99,9 +104,9 @@ be associated with their name within \code{col_var}.}
 
 \item{lasso_callback}{the body of a JavaScript callback function with the argument \code{sel} to be applied to a lasso plugin selection}
 
-\item{axes_font_size}{Font size for axes text (any CSS compatible value)}
+\item{axes_font_size}{font size for axes text (any CSS compatible value)}
 
-\item{legend_font_size}{Font size for legend text (any CSS compatible value)}
+\item{legend_font_size}{font size for legend text (any CSS compatible value)}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.

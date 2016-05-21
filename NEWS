@@ -1,6 +1,7 @@
 scatterD3 0.6.3
 ------------------------------------------------------
 
+* New settings `hover_size` and `hover_opacity` (thanks @nicolabo)
 * Axes and legend font size customization with `axes_font_size` and `legend_font_size` (thanks @fineswag)
 * Bugfix : blank plot when only one color passed to `colors` (thanks @chewth)
 * Add `data` argument to specify variables from a data frame with NSE
