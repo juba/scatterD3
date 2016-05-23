@@ -27,3 +27,7 @@
 .scatterD3, .scatterD3:focus {
   outline: 0px solid transparent
 }
+
+.scatterD3 .gear-toggle:hover path {
+    opacity: 1 !important;
+}
