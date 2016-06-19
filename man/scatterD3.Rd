@@ -20,7 +20,7 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   lasso = FALSE, lasso_callback = NULL, axes_font_size = "100\%",
-  legend_font_size = "100\%")
+  legend_font_size = "100\%", click_id = NULL, click_list = NULL)
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}
@@ -107,6 +107,10 @@ be associated with their name within \code{col_var}.}
 \item{axes_font_size}{font size for axes text (any CSS compatible value)}
 
 \item{legend_font_size}{font size for legend text (any CSS compatible value)}
+
+\item{click_id}{shiny variable to hold output data.}
+
+\item{click_list}{list of dataframe columns identifiers to be sent to click_id.}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.

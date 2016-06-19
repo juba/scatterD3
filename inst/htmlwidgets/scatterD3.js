@@ -251,6 +251,19 @@ function scatterD3() {
                 tooltip.style("visibility", "hidden");
             });
         }
+        if(settings.has_click_id) {
+          selection.on("click", function(d, i){
+            var click_out = {};
+            click_out.x = d.x;
+            click_out.y = d.y;
+            if (settings.click_list.length > 0) {
+              for (i = 0; i < settings.click_list.length; i++) {
+                click_out[settings.click_list[i]] = d[settings.click_list[i]];
+              }
+            Shiny.onInputChange(settings.click_id, click_out);
+            }
+          });
+        }
     }
 
     // Apply format to dot

@@ -44,6 +44,8 @@
 #' @param dom_id_lasso_toggle HTML DOM id of the element to bind the "toggle lasso" control to.
 #' @param transitions if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.
 #' @param legend_width legend area width, in pixels. Set to 0 to disable legend completely.
+#' @param click_id shiny variable to hold output data.
+#' @param click_list list of dataframe columns identifiers to be sent to click_id.
 #' @param width figure width, computed when displayed
 #' @param height figure height, computed when displayed
 #'
@@ -99,7 +101,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       lasso = FALSE,
                       lasso_callback = NULL,
                       axes_font_size = "100%",
-                      legend_font_size = "100%") {
+                      legend_font_size = "100%",
+                      click_id = NULL,
+                      click_list = NULL) {
 
   ## Variable names as default labels
   if (is.null(xlab)) xlab <- deparse(substitute(x))
@@ -167,6 +171,12 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
   if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
   else data <- cbind(data, key_var = seq_along(x))
   if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
+  if (length(click_list) > 0) {
+    for (i in 1:length(click_list)) {
+      data <- cbind(data, click_list[[i]])
+    }
+    names(data)[(length(names(data)) - length(click_list) + 1):length(names(data))] <- names(click_list)
+  }
 
   ## Compute confidence ellipses point positions with ellipse::ellipse.default()
   compute_ellipse <- function(x, y, level = ellipses_level, npoints = 50) {
@@ -247,7 +257,10 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     transitions = transitions,
     axes_font_size = axes_font_size,
     legend_font_size = legend_font_size,
-    hashes = hashes
+    hashes = hashes,
+    has_click_id = !is.null(click_id),
+    click_id = click_id,
+    click_list = as.list(names(click_list))
   )
 
   # pass the data and settings using 'x'
