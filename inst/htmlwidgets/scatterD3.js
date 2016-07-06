@@ -1193,7 +1193,7 @@ HTMLWidgets.widget({
         .attr("height", height)
         .attr("class", "scatterD3")
         .append("style")
-        .text(".scatterD3 {font: 10px sans-serif;}" +
+        .text(".scatterD3 {font: 11px Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;}" +
         ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
         ".scatterD3 .axis .tick line { stroke: #ddd;} " +
         ".scatterD3 .axis text { fill: #000; } " +
