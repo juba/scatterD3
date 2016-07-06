@@ -19,8 +19,8 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
-  lasso = FALSE, lasso_callback = NULL, axes_font_size = "100\%",
-  legend_font_size = "100\%")
+  menu = TRUE, lasso = FALSE, lasso_callback = NULL,
+  axes_font_size = "100\%", legend_font_size = "100\%")
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}
@@ -99,6 +99,8 @@ be associated with their name within \code{col_var}.}
 \item{dom_id_lasso_toggle}{HTML DOM id of the element to bind the "toggle lasso" control to.}
 
 \item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
+
+\item{menu}{wether to display the tools menu (gear icon)}
 
 \item{lasso}{logical value to add {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature}
 
