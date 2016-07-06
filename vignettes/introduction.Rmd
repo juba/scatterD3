@@ -45,10 +45,17 @@ You can customize the points size with the `point_size` parameter, their opacity
 
 ```{r basic_cust}
 scatterD3(data = mtcars, x = wt, y = mpg, 
-          point_size = 15, point_opacity = 0.5, fixed = TRUE,
+          point_size = 35, point_opacity = 0.5, fixed = TRUE,
           colors = "#A94175")
 ```
 
+You can change size and opacity of points when hovering with the `hover_size` and `hover_opacity` settings :
+
+```{r hover_cust}
+scatterD3(data = mtcars, x = wt, y = mpg, 
+          point_size = 100, point_opacity = 0.5,
+          hover_size = 4, hover_opacity = 1)
+```
 
 
 
@@ -103,9 +110,9 @@ scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
 
 
 
-## Custom axis and legend labels
+## Axes and legend customization
 
-You can customize the axis and legend labels with `xlab`, `ylab`, `col_lab`, `symbol_lab` and `size_lab` :
+You can customize the value of the axes and legend labels with `xlab`, `ylab`, `col_lab`, `symbol_lab` and `size_lab` :
 
 ```{r cust_labels}
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear,
@@ -113,6 +120,17 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear,
 ```
 
 Note that default tooltips are updated accordingly.
+
+You can also change the font size of axes and legend text with `axes_font_size` and `legend_font_size` :
+
+```{r cust_labels_size}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
+          xlab = "Weight", ylab = "Mpg", 
+          axes_font_size = "120%",
+          legend_font_size = "14px")
+```
+
+You can provide any CSS compatible value, wether a fixed size such as `2em` or a relative one like `95%`.
 
 
 ## Custom tooltips

@@ -29,7 +29,11 @@
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
 #' @param xlab x axis label
-#' @param ylab y axis label
+#' @param ylab y axis label.
+#' @param axes_font_size font size for axes text (any CSS compatible value)
+#' @param legend_font_size font size for legend text (any CSS compatible value)
+#' @param hover_size factor for changing size when hovering points
+#' @param hover_opacity points opacity when hovering
 #' @param xlim numeric vector of length 2, manual x axis limits
 #' @param ylim numeric vector of length 2, manual y axis limits
 #' @param lasso logical value to add {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature
@@ -67,6 +71,8 @@
 scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       point_size = 64, labels_size = 10,
                       point_opacity = 1,
+                      hover_size = 1,
+                      hover_opacity = NULL,
                       fixed = FALSE, col_var = NULL,
                       colors = NULL,
                       ellipses = FALSE,
@@ -91,7 +97,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       dom_id_lasso_toggle = "scatterD3-lasso-toggle",
                       transitions = FALSE,
                       lasso = FALSE,
-                      lasso_callback = NULL) {
+                      lasso_callback = NULL,
+                      axes_font_size = "100%",
+                      legend_font_size = "100%") {
 
   ## Variable names as default labels
   if (is.null(xlab)) xlab <- deparse(substitute(x))
@@ -201,6 +209,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
   settings <- list(
     labels_size = labels_size,
     point_size = point_size,
+    hover_size = hover_size,
+    hover_opacity = hover_opacity,
     xlab = xlab,
     ylab = ylab,
     has_labels = !is.null(lab),
@@ -235,6 +245,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     dom_id_svg_export = dom_id_svg_export,
     dom_id_lasso_toggle = dom_id_lasso_toggle,
     transitions = transitions,
+    axes_font_size = axes_font_size,
+    legend_font_size = legend_font_size,
     hashes = hashes
   )
 

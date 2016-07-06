@@ -155,17 +155,20 @@ function scatterD3() {
         selection.append("g")
         .attr("class", "x axis")
         .attr("transform", "translate(0," + dims.height + ")")
+        .style("font-size", settings.axes_font_size)
         .call(xAxis)
         .append("text")
         .attr("class", "axis-label")
         .attr("x", dims.width - 5)
         .attr("y", -6)
         .style("text-anchor", "end")
+        .style("font-size", settings.axes_font_size)
         .text(settings.xlab);
 
         // y axis
         selection.append("g")
         .attr("class", "y axis")
+        .style("font-size", settings.axes_font_size)
         .call(yAxis)
         .append("text")
         .attr("class", "axis-label")
@@ -209,12 +212,28 @@ function scatterD3() {
       return s.toString().replace(/[^\w-]/g, "_");
     }
 
+    // Returns dot size from associated data
+    function dot_size(data) {
+        var size = settings.point_size;
+        if (settings.has_size_var) { size = size_scale(data.size_var) };
+        return(size)
+    }
+
     // Initial dot attributes
     function dot_init (selection) {
          // tooltips when hovering points
         if (settings.has_tooltips) {
             var tooltip = d3.select(".scatterD3-tooltip");
             selection.on("mouseover", function(d, i){
+                d3.select(this)
+                .transition().duration(150)
+                .attr("d", d3.svg.symbol()
+                    .type(function(d) { return d3.svg.symbolTypes[symbol_scale(d.symbol_var)] })
+                    .size(function(d) { return (dot_size(d) * settings.hover_size) })
+                )
+                .style("opacity", function(d) {
+                    return (settings.hover_opacity === undefined ? d.point_opacity : settings.hover_opacity);
+                });
                 tooltip.style("visibility", "visible")
                 .html(tooltip_content(d));
             });
@@ -222,6 +241,13 @@ function scatterD3() {
                 tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
             });
             selection.on("mouseout", function(){
+                d3.select(this)
+                .transition().duration(150)
+                .attr("d", d3.svg.symbol()
+                    .type(function(d) { return d3.svg.symbolTypes[symbol_scale(d.symbol_var)] })
+                    .size(function(d) { return dot_size(d)})
+                )
+                .style("opacity", function(d) { return d.point_opacity })
                 tooltip.style("visibility", "hidden");
             });
         }
@@ -236,10 +262,7 @@ function scatterD3() {
         // symbol and size
         .attr("d", d3.svg.symbol()
             .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
-            .size(function(d) {
-                if (settings.has_size_var) { return size_scale(d.size_var)}
-                else { return settings.point_size }
-            })
+            .size(function(d) { return dot_size(d) })
         )
         .attr("class", function(d,i) {
           return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
@@ -557,7 +580,8 @@ function scatterD3() {
     // Create color legend
     function add_color_legend() {
 
-        var legend = svg.select(".legend");
+        var legend = svg.select(".legend")
+        .style("font-size", settings.legend_font_size);
 
         var legend_color_domain = color_scale.domain().sort();
         var legend_color_scale = d3.scale.category10();
