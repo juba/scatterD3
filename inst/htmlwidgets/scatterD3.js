@@ -984,7 +984,7 @@ function scatterD3() {
                 if (!menu.classed("open")) {
                   menu.transition().duration(300)
                   .style("opacity", "0.95")
-                  .style("width", "150px");
+                  .style("width", "165px");
                   gear.classed("selected", true);
                   menu.classed("open", true)
                 } else {
