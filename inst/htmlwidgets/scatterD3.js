@@ -975,7 +975,7 @@ function scatterD3() {
                 menu.append("li")
                 .append("a")
                 .on("click", export_labels_position)
-                .html("Export labels position");
+                .html("Export labels positions");
               }
 
               gear.on("click", function(d, i){
