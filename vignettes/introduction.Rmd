@@ -161,6 +161,17 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, ellipses = TRUE)
 
 Ellipses are computed by the  `ellipse.default()` function of the [ellipse package](https://cran.r-project.org/package=ellipse). The confidence level can be changed with the `ellipse_level` argument (`0.95` by default).
 
+## Gear menu
+
+The "gear menu" is a small menu which can be displayed by clocking on the "gear" icon on the top-right corner of the plot. It allows to reset the zoom, export the current graph to SVG, and toggle lasso selection.
+
+It is displayed by default, but you can hide it with the `menu = FALSE` argument.
+
+```{r nomenu}
+scatterD3(data = mtcars, x = wt, y = mpg, menu = FALSE)
+```
+
+
 ## Lasso selection tool
 
 Thanks to the [d3-lasso-plugin](https://github.com/skokenes/D3-Lasso-Plugin) integration made by @[timelyportfolio](https://github.com/timelyportfolio), you can select and highlight points with a lasso selection tool. To activate it, just add a `lasso = TRUE` argument. The tool is used by shift-clicking and dragging on the plot area (if it doesn't activate, click on the chart first to give it focus).
@@ -211,14 +222,15 @@ Enabling transitions in your shiny app is quite simple, you just have to add the
 
 ### Additional controls : Reset zoom and SVG export
 
-Furthermore, `scatterD3` provides some additional handlers for two interactive features : SVG export and zoom resetting.
+Furthermore, `scatterD3` provides some additional handlers for three interactive features : SVG export, zoom resetting and lasso selection. Those are already accessible via the "gear menu", but you may want to replace it with custom form controls.
 
 By default, you just have to give the following `id` to the corresponding form controls :
 
 - `#scatterD3-reset-zoom` : reset zoom to default on click
 - `#scatterD3-svg-export` : link to download the currently displayed figure as an SVG file
+- `#scatterD3-lasso-toggle` : toggle lasso selection
 
-If you are not happy with these ids, you can specify their names yourself with the arguments `dom_id_svg_export` and `dom_id_reset_zoom`.
+If you are not happy with these ids, you can specify their names yourself with the arguments `dom_id_svg_export`, `dom_id_reset_zoom` and `dom_id_toggle`.
 
 ### Sample app and source code
 
