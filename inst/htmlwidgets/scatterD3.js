@@ -1144,6 +1144,11 @@ function scatterD3() {
             svg.select(".size-legend")
             .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")");
         }
+        // Move menu
+        if (settings.menu) {
+            svg.select(".gear-menu")
+            .attr("transform", "translate(" + (dims.total_width - 40) + "," + 10 + ")");
+        }
 
     };
 
