@@ -176,6 +176,30 @@ function scatterD3() {
         .attr("href", image_data);
     }
 
+    // Function to export custom labels position to CSV file
+    function export_labels_position() {
+      var lines_data = ["scatterD3_label,scatterD3_label_x,scatterD3_label_y"];
+      data.forEach(function(d, index){
+        var labx = d.x;
+        if (d.lab_dx !== undefined) {
+          labx = d.x + x.invert(d.lab_dx) - x.domain()[0];
+        }
+        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+        var offset_y = (-Math.sqrt(size) / 2) - 6;
+        if (d.lab_dy !== undefined) {
+          offset_y = d.lab_dy;
+        }
+        var laby = d.y + y.invert(offset_y) - y.domain()[1];
+        var this_line = d.lab + "," + labx + "," + laby;
+        lines_data.push(this_line);
+      });
+      var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
+      console.log(csv_content);
+      d3.select(this)
+        .attr("download", settings.html_id + "_labels.csv")
+        .attr("href", encodeURI(csv_content));
+    }
+
     // Create and draw x and y axes
     function add_axes(selection) {
 
@@ -947,13 +971,20 @@ function scatterD3() {
                 .html("Toggle lasso on");
               }
 
+              if (settings.has_labels) {
+                menu.append("li")
+                .append("a")
+                .on("click", export_labels_position)
+                .html("Export labels position");
+              }
+
               gear.on("click", function(d, i){
                 var menu = d3.select("#scatterD3-menu-" + settings.html_id);
                 var gear = svg.select(".gear-menu");
                 if (!menu.classed("open")) {
                   menu.transition().duration(300)
                   .style("opacity", "0.95")
-                  .style("width", "130px");
+                  .style("width", "150px");
                   gear.classed("selected", true);
                   menu.classed("open", true)
                 } else {
