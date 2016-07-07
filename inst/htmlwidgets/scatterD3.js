@@ -1083,7 +1083,6 @@ function scatterD3() {
       }
 
       lasso_off(svg);
-      d3.select("#" + settings.dom_id_lasso_toggle).classed("active", false);
     };
 
     // Dynamically resize chart elements
