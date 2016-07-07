@@ -76,8 +76,8 @@
     opacity: 0.3;
 }
 
-.scatterD3 .gear-menu:hover path {
+.scatterD3 .gear-menu:hover path,
+.scatterD3 .gear-menu.selected path {
     opacity: 0.8;
     transition: opacity .2s;
 }
-
