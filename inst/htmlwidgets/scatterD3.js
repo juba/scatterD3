@@ -949,6 +949,7 @@ function scatterD3() {
 
               gear.on("click", function(d, i){
                 var menu = d3.select("#scatterD3-menu-" + settings.html_id);
+                var gear = svg.select(".gear-menu");
                 if (!menu.classed("open")) {
                   menu.transition().duration(300)
                   .style("opacity", "0.95")
