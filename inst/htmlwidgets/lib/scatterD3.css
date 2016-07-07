@@ -17,11 +17,11 @@
   opacity: 0;
   width: 0;
   overflow: hidden;
-  top: 35px;
+  top: 37px;
   right: 15px;
   z-index: 10;
   background: #F5F7F9;
-  box-shadow: 0px 0px 5px 1px #d6d6d6;
+  box-shadow: 0px 0px 2px 1px #d6d6d6;
   font-family: Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;
   font-size: 11px;
   text-align: right;
@@ -73,11 +73,12 @@
 }
 
 .scatterD3 .gear-menu path {
-    opacity: 0.3;
+    opacity: 0.2;
+    transition: opacity .3s;
 }
 
 .scatterD3 .gear-menu:hover path,
 .scatterD3 .gear-menu.selected path {
     opacity: 0.8;
-    transition: opacity .2s;
+    transition: opacity .3s;
 }
