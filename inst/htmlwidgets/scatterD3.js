@@ -953,7 +953,7 @@ function scatterD3() {
                 if (menu.style("width") == "0px") {
                   menu.transition().duration(300)
                   .style("opacity", "0.95")
-                  .style("width", "150px");
+                  .style("width", "130px");
                   gear.classed("selected", true);
                 } else {
                   menu.transition().duration(300)
