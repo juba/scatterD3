@@ -1,6 +1,8 @@
-scatterD3 0.6.3
+scatterD3 0.7
 ------------------------------------------------------
 
+* New menu accessible directly from the graph to allow zoom resetting, SVG export, etc.
+* More precise font-family specification for (hopefully) better rendering
 * New settings `hover_size` and `hover_opacity` (thanks @nicolabo)
 * Axes and legend font size customization with `axes_font_size` and `legend_font_size` (thanks @fineswag)
 * Bugfix : blank plot when only one color passed to `colors` (thanks @chewth)
