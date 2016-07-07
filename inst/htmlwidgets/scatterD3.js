@@ -949,18 +949,18 @@ function scatterD3() {
 
               gear.on("click", function(d, i){
                 var menu = d3.select("#scatterD3-menu-" + settings.html_id);
-                console.log("#scatterD3-menu-" + settings.html_id);
-                console.log(menu);
-                if (menu.style("width") == "0px") {
+                if (!menu.classed("open")) {
                   menu.transition().duration(300)
                   .style("opacity", "0.95")
                   .style("width", "130px");
                   gear.classed("selected", true);
+                  menu.classed("open", true)
                 } else {
                   menu.transition().duration(300)
                   .style("opacity", "0")
                   .style("width", "0px")
                   gear.classed("selected", false);
+                  menu.classed("open", false)
                 }
               });
             }
