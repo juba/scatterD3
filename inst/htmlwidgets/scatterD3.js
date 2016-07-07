@@ -168,7 +168,8 @@ function scatterD3() {
         .node().parentNode.innerHTML;
         svg_content = svg_content.replace(/clip-path="url\(.*?(#.*?)\)"/, 'clip-path="url($1)"');
         // Dirty dirty dirty...
-        svg_content = svg_content.replace(/<g class="gear-menu".*?<\/g>/, '');
+        svg_content = svg_content.replace(/<g +class="gear-menu".*?<\/g>/, '');
+        svg_content = svg_content.replace(/<ul +class="scatterD3-menu".*?<\/ul>/, '');
         var image_data = "data:image/octet-stream;base64,\n" + btoa(svg_content);
         d3.select(this)
         .attr("download", "scatterD3.svg")
