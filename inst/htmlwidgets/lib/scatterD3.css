@@ -39,7 +39,7 @@
 .scatterD3-menu li a {
   cursor: pointer;
   color: #727476;
-  font-weight: 600;
+  /* font-weight: 600; */
   text-decoration: none;
   text-transform: uppercase;
 }
