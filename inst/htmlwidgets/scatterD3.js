@@ -511,7 +511,6 @@ function scatterD3() {
     };
     lasso_end = function() {
         lasso_off(svg);
-        d3.select("#" + settings.dom_id_lasso_toggle).classed("active", false);
         var some_selected = false;
         if(lasso.items().filter(function(d) {return d.selected === true})[0].length !== 0){
             some_selected = true;
@@ -581,6 +580,14 @@ function scatterD3() {
         chart_body.call(lasso);
         // Change cursor style
         pane.style("cursor", "crosshair");
+        // Change togglers state
+        var menu_entry = d3.select(svg.node().parentNode).select(".scatterD3-menu .lasso-entry");
+        var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
+        if (!menu_entry.empty()) {
+            menu_entry.classed("active", true)
+            .html("Toggle lasso off");
+        }
+        if (!custom_entry.empty()) { custom_entry.classed("active", true) }
     }
 
     // Toggle lasso off / zoom on
@@ -594,19 +601,28 @@ function scatterD3() {
         pane.call(zoom);
         // Change cursor style
         pane.style("cursor", "move");
+        // Change togglers state
+        var menu_entry = d3.select(svg.node().parentNode).select(".scatterD3-menu .lasso-entry");
+        var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
+        if (!menu_entry.empty()) {
+            menu_entry.classed("active", false)
+            .html("Toggle lasso on");
+        }
+        if (!custom_entry.empty()) { custom_entry.classed("active", false) }
     }
 
     // Toggle lasso state when element clicked
     function lasso_toggle() {
-        var el = d3.select(this);
-        if (!el.classed("active") && settings.lasso) {
-            lasso_on(svg);
-        }
-        if (el.classed("active") && settings.lasso) {
+        var menu_entry = d3.select(svg.node().parentNode).select(".scatterD3-menu .lasso-entry");
+        var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
+        if (settings.lasso &&
+            ((!menu_entry.empty() && menu_entry.classed("active")) ||
+             (!custom_entry.empty() && custom_entry.classed("active")))) {
             lasso_off(svg);
         }
-        var new_state = !el.classed("active")
-        el.classed("active", new_state);
+        else {
+            lasso_on(svg);
+        }
     }
 
     // Format legend label
@@ -920,8 +936,9 @@ function scatterD3() {
               if (settings.lasso) {
                 menu.append("li")
                 .append("a")
+                .attr("class", "lasso-entry")
                 .on("click", lasso_toggle)
-                .html("Toggle lasso");
+                .html("Toggle lasso on");
               }
 
               gear.on("click", function(d, i){
@@ -929,10 +946,12 @@ function scatterD3() {
                   menu.transition().duration(300)
                   .style("opacity", "0.95")
                   .style("width", "150px");
+                  gear.classed("selected", true);
                 } else {
                   menu.transition().duration(300)
                   .style("opacity", "0")
                   .style("width", "0px")
+                  gear.classed("selected", false);
                 }
               });
             }
