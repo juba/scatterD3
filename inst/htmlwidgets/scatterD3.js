@@ -78,45 +78,39 @@ function scatterD3() {
         }
 
         // x, y, color, symbol and size scales
-        x = d3.scale.linear().range([0, dims.width]);
-        y = d3.scale.linear().range([dims.height, 0]);
+        x = d3.scaleLinear().range([0, dims.width]);
+        y = d3.scaleLinear().range([dims.height, 0]);
         x.domain([min_x - gap_x, max_x + gap_x]);
         y.domain([min_y - gap_y, max_y + gap_y]);
         if (settings.colors === null) {
             // Number of different levels. See https://github.com/mbostock/d3/issues/472
             var n = d3.map(data, function(d) { return d.col_var; }).size();
-            color_scale = n <= 10 ? d3.scale.category10() : d3.scale.category20();
+            color_scale = n <= 9 ? d3.scaleOrdinal(d3.schemeSet1) : d3.scaleOrdinal(d3.schemeCategory20);
         } else if (Array.isArray(settings.colors)) {
-            color_scale = d3.scale.ordinal().range(settings.colors);
+            color_scale = d3.scaleOrdinal().range(settings.colors);
         } else if (typeof(settings.colors) === "string"){
           // Single string given
-          color_scale = d3.scale.ordinal().range(Array(settings.colors));
+          color_scale = d3.scaleOrdinal().range(Array(settings.colors));
         } else if (typeof(settings.colors) === "object"){
-            color_scale = d3.scale.ordinal()
+            color_scale = d3.scaleOrdinal()
                           .range(d3.values(settings.colors))
                           .domain(d3.keys(settings.colors));
         }
-        symbol_scale = d3.scale.ordinal().range(d3.range(d3.svg.symbolTypes.length));
-        size_scale = d3.scale.linear()
+        symbol_scale = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
+        size_scale = d3.scaleLinear()
         .range(settings.size_range)
         .domain([d3.min(data, function(d) { return(d.size_var);} ),
                  d3.max(data, function(d) { return(d.size_var);} )]);
 
         // zoom behavior
-        zoom = d3.behavior.zoom()
-        .x(x)
-        .y(y)
+        zoom = d3.zoom()
         .scaleExtent([0, 32])
         .on("zoom", zoomed);
 
         // x and y axis functions
-        xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
+        xAxis = d3.axisBottom(x)
         .tickSize(-dims.height);
-        yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
+        yAxis = d3.axisLeft(y)
         .tickSize(-dims.width);
 
     }
@@ -139,7 +133,7 @@ function scatterD3() {
         .attr("transform", translation);
         svg.selectAll(".arrow").call(draw_arrow);
         svg.selectAll(".ellipse").call(ellipse_formatting);
-        var zeroline = d3.svg.line()
+        var zeroline = d3.line()
         .x(function(d) {return x(d.x)})
         .y(function(d) {return y(d.y)});
         svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
@@ -194,7 +188,6 @@ function scatterD3() {
         lines_data.push(this_line);
       });
       var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
-      console.log(csv_content);
       d3.select(this)
         .attr("download", settings.html_id + "_labels.csv")
         .attr("href", encodeURI(csv_content));
@@ -234,7 +227,7 @@ function scatterD3() {
     }
 
     // Zero horizontal and vertical lines
-    zeroline = d3.svg.line()
+    zeroline = d3.line()
     .x(function(d) {return x(d.x)})
     .y(function(d) {return y(d.y)});
 
@@ -279,8 +272,8 @@ function scatterD3() {
             selection.on("mouseover", function(d, i){
                 d3.select(this)
                 .transition().duration(150)
-                .attr("d", d3.svg.symbol()
-                    .type(function(d) { return d3.svg.symbolTypes[symbol_scale(d.symbol_var)] })
+                .attr("d", d3.symbol()
+                    .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)] })
                     .size(function(d) { return (dot_size(d) * settings.hover_size) })
                 )
                 .style("opacity", function(d) {
@@ -295,8 +288,8 @@ function scatterD3() {
             selection.on("mouseout", function(){
                 d3.select(this)
                 .transition().duration(150)
-                .attr("d", d3.svg.symbol()
-                    .type(function(d) { return d3.svg.symbolTypes[symbol_scale(d.symbol_var)] })
+                .attr("d", d3.symbol()
+                    .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)] })
                     .size(function(d) { return dot_size(d)})
                 )
                 .style("opacity", function(d) { return d.point_opacity })
@@ -312,8 +305,8 @@ function scatterD3() {
         // fill color
         .style("fill", function(d) { return color_scale(d.col_var); })
         // symbol and size
-        .attr("d", d3.svg.symbol()
-            .type(function(d) {return d3.svg.symbolTypes[symbol_scale(d.symbol_var)]})
+        .attr("d", d3.symbol()
+            .type(function(d) {return d3.symbols[symbol_scale(d.symbol_var)]})
             .size(function(d) { return dot_size(d) })
         )
         .attr("class", function(d,i) {
@@ -379,7 +372,7 @@ function scatterD3() {
     function ellipse_formatting(selection) {
 
         // Ellipses path function
-        var ellipseFunc = d3.svg.line()
+        var ellipseFunc = d3.line()
         .x(function(d) { return x(d.x); })
         .y(function(d) { return y(d.y); });
 
@@ -454,14 +447,14 @@ function scatterD3() {
 
     // Text labels dragging function
     var dragging = false;
-    drag = d3.behavior.drag()
-    .origin(function(d) {
+    drag = d3.drag()
+    .subject(function(d) {
         var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
         var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
         var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
         return {x:x(d.x)+dx, y:y(d.y)+dy};
     })
-    .on('dragstart', function(d) {
+    .on('start', function(d) {
       if (!d3.event.sourceEvent.shiftKey) {
         dragging = true;
         d3.select(this).style('fill', '#000');
@@ -491,7 +484,7 @@ function scatterD3() {
         d.lab_dy = cy;
       }
     })
-    .on('dragend', function(d) {
+    .on('end', function(d) {
       if (dragging){
         d3.select(this).style('fill', color_scale(d.col_var));
         d3.select("#scatterD3-drag-line").remove();
@@ -665,7 +658,7 @@ function scatterD3() {
         .style("font-size", settings.legend_font_size);
 
         var legend_color_domain = color_scale.domain().sort();
-        var legend_color_scale = d3.scale.category10();
+        var legend_color_scale = d3.scaleOrdinal(d3.schemeCategory10);
 
         legend_color_scale
         .domain(legend_color_domain)
@@ -719,9 +712,9 @@ function scatterD3() {
         margin.symbol_legend_top = color_legend_height + margin.legend_top;
 
         var legend_symbol_domain = symbol_scale.domain().sort();
-        var legend_symbol_scale = d3.scale.ordinal()
+        var legend_symbol_scale = d3.scaleOrdinal()
         .domain(legend_symbol_domain)
-        .range(legend_symbol_domain.map(function(d) {return d3.svg.symbol().type(d3.svg.symbolTypes[symbol_scale(d)])()}));
+        .range(legend_symbol_domain.map(function(d) {return d3.symbol().type(d3.symbols[symbol_scale(d)])()}));
 
         var symbol_legend = d3.legend.symbol()
         .shapePadding(5)
@@ -771,7 +764,7 @@ function scatterD3() {
         var symbol_legend_height = settings.has_symbol_var ? symbol_scale.domain().length * 20 + 30 : 0;
         margin.size_legend_top = color_legend_height + symbol_legend_height + margin.legend_top;
 
-        var legend_size_scale = d3.scale.linear()
+        var legend_size_scale = d3.scaleLinear()
         .domain(size_scale.domain())
         // FIXME : find exact formula
         .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8}));
@@ -1160,7 +1153,7 @@ function scatterD3() {
             .attr("transform", translation);
         }
         // Move zerolines
-        var zeroline = d3.svg.line()
+        var zeroline = d3.line()
         .x(function(d) {return x(d.x)})
         .y(function(d) {return y(d.y)});
         svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
