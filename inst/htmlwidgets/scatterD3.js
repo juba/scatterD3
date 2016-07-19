@@ -3,13 +3,13 @@ function scatterD3() {
     var width = 600, // default width
     height = 600, // default height
     dims = {},
-    margin = {top: 5, right: 10, bottom: 20, left: 50, legend_top: 50},
+    margin = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50},
     settings = {},
     data = [],
     x, y, color_scale, symbol_scale, size_scale,
     min_x, min_y, max_x, max_y, gap_x, gap_y,
     xAxis, yAxis,
-    svg,
+    svg, root, chart_body,
     zeroline, zoom, drag,
     lasso_base, lasso_classes;
 
@@ -127,12 +127,14 @@ function scatterD3() {
 
     // Zoom function
     function zoomed(reset) {
-        svg.select(".x.axis").call(xAxis);
-        svg.select(".y.axis").call(yAxis);
-        svg.selectAll(".dot, .point-label")
+        xAxis = xAxis.scale(d3.event.transform.rescaleX(x));
+        yAxis = yAxis.scale(d3.event.transform.rescaleY(y));
+        root.select(".x.axis").call(xAxis);
+        root.select(".y.axis").call(yAxis);
+        chart_body.selectAll(".dot, .point-label")
         .attr("transform", translation);
-        svg.selectAll(".arrow").call(draw_arrow);
-        svg.selectAll(".ellipse").call(ellipse_formatting);
+        chart_body.selectAll(".arrow").call(draw_arrow);
+        chart_body.selectAll(".ellipse").call(ellipse_formatting);
         var zeroline = d3.line()
         .x(function(d) {return x(d.x)})
         .y(function(d) {return y(d.y)});
@@ -160,7 +162,6 @@ function scatterD3() {
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr("version", 1.1)
         .node().parentNode.innerHTML;
-        svg_content = svg_content.replace(/clip-path="url\(.*?(#.*?)\)"/gm, 'clip-path="url($1)"');
         // Dirty dirty dirty...
         svg_content = svg_content.replace(/<g class="gear-menu[\s\S]*?<\/g>/gm, '');
         svg_content = svg_content.replace(/<\/svg>[\s\S]*$/gm, '</svg>');
@@ -587,17 +588,15 @@ function scatterD3() {
 
     // Toggle lasso on / zoom off
     function lasso_on(svg) {
-        var pane = svg.select(".pane");
-        var chart_body = svg.select(".chart-body");
         // Disable zoom behavior
-        pane.on(".zoom", null);
+        root.on(".zoom", null);
         // Enable lasso
         lasso = lasso_base
-        .area(pane)
+        .area(root)
         .items(chart_body.selectAll(lasso_classes));
-        chart_body.call(lasso);
+        root.call(lasso);
         // Change cursor style
-        pane.style("cursor", "crosshair");
+        root.style("cursor", "crosshair");
         // Change togglers state
         var menu_entry = d3.select("#scatterD3-menu-" + settings.html_id + " .lasso-entry");
         var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
@@ -610,15 +609,14 @@ function scatterD3() {
 
     // Toggle lasso off / zoom on
     function lasso_off(svg) {
-        var pane = svg.select(".pane");
         // Disable lasso
-        pane.on(".dragstart", null);
-        pane.on(".drag", null);
-        pane.on(".dragend", null);
+        root.on(".dragstart", null);
+        root.on(".drag", null);
+        root.on(".dragend", null);
         // Enable zoom
-        pane.call(zoom);
+        root.call(zoom);
         // Change cursor style
-        pane.style("cursor", "move");
+        root.style("cursor", "move");
         // Change togglers state
         var menu_entry = d3.select("#scatterD3-menu-" + settings.html_id + " .lasso-entry");
         var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
@@ -807,19 +805,18 @@ function scatterD3() {
             // Root chart element and axes
             root = svg.append("g")
             .attr("class", "root")
-            .style("fill", "#FFF")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(add_axes);
+            .call(zoom);
+
+            root.append("rect")
+            .style("fill", "#FFF")
+            .attr("width", dims.width)
+            .attr("height", dims.height);
+
+            root.call(add_axes);
 
             // <defs>
             var defs = svg.append("defs");
-            // clipping rectangle
-            defs.append("clipPath")
-            .attr('id', 'scatterclip-' + settings.html_id)
-            .append('rect')
-            .attr('class', 'cliprect')
-            .attr('width', dims.width)
-            .attr('height', dims.height);
             // arrow head markers
             color_scale.range().forEach(function(d) {
                 defs.append("marker")
@@ -834,25 +831,13 @@ function scatterD3() {
                 .style("fill", d);
             });
 
-            // zoom pane
-            var pane = root.append("rect")
-            .attr("class", "pane")
-            .attr("width", dims.width)
-            .attr("height", dims.height)
-            .style("fill", "none")
-            .style("pointer-events", "all")
-            .call(zoom);
-
             // chart body
-            var clip_path_url = document.location.href.replace(/#[^?]+?(\?|$)/, "$1") +
-                                "#scatterclip-" + settings.html_id
-            var chart_body = root.append("g")
+            chart_body = root.append("svg")
             .attr("class", "chart-body")
             .attr("width", dims.width)
-            .attr("height", dims.height)
-            .attr("clip-path", "url(" + clip_path_url + ")");
+            .attr("height", dims.height);
 
-             chart_body.append("path")
+            chart_body.append("path")
             .attr("class", "zeroline hline")
             .attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
             chart_body.append("path")
@@ -1005,7 +990,6 @@ function scatterD3() {
                 svg.selectAll(".point-label").remove();
             }
             if (settings.has_labels) {
-                var chart_body = svg.select(".chart-body");
                 var labels = chart_body.selectAll(".point-label")
                             .data(data, key);
                 labels.enter()
@@ -1022,7 +1006,6 @@ function scatterD3() {
                 .style("opacity", "0").remove();
             }
             if (settings.unit_circle) {
-                var chart_body = svg.select(".chart-body");
                 chart_body.append('svg:ellipse')
                 .attr('class', 'unit-circle')
                 .style("opacity", "0");
@@ -1046,24 +1029,20 @@ function scatterD3() {
       svg.select(".y.axis .axis-label").text(settings.ylab);
       t0.select(".y.axis").call(yAxis);
       t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-      svg.select(".pane").call(zoom);
+      root.call(zoom);
       zoom.x(x);
       zoom.y(y);
       // Unit circle
       if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
-      var chart_body = svg.select(".chart-body");
-
       // Add points
-      var dot = chart_body
-      .selectAll(".dot")
+      var dot = chart_body.selectAll(".dot")
       .data(data.filter(point_filter), key);
       dot.enter().append("path").call(dot_init);
       dot.transition().duration(1000).call(dot_formatting);
       dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
       // Add arrows
-      var arrow = chart_body
-      .selectAll(".arrow")
+      var arrow = chart_body.selectAll(".arrow")
       .data(data.filter(arrow_filter), key);
       arrow.enter().append("svg:line").call(arrow_init)
       .style("opacity", "0")
@@ -1074,8 +1053,7 @@ function scatterD3() {
 
       // Add ellipses
       if (settings.ellipses || settings.ellipses_changed) {
-          var ellipse = chart_body
-          .selectAll(".ellipse")
+          var ellipse = chart_body.selectAll(".ellipse")
           .data(settings.ellipses_data);
           ellipse.enter().append("path").call(ellipse_init)
           .style("opacity", "0")
@@ -1136,10 +1114,8 @@ function scatterD3() {
         zoom.translate(cache_translate);
         zoom.scale(cache_scale);
         // Change svg attributes
-        svg.select(".root").attr("width", dims.width).attr("height", dims.height);
-        svg.select(".cliprect").attr("width", dims.width).attr("height", dims.height);
-        svg.select(".pane").attr("width", dims.width).attr("height", dims.height).call(zoom);
-        svg.select(".chart-body").attr("width", dims.width).attr("height", dims.height);
+        root.attr("width", dims.width).attr("height", dims.height);
+        chart_body.attr("width", dims.width).attr("height", dims.height);
         svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
         svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
         svg.select(".y.axis").call(yAxis);

@@ -6,7 +6,7 @@
     text-shadow: #f5f5f5 0 1px 0;
     border-radius: 2px;
     box-shadow: 0px 0px 7px 1px #a6a6a6;
-    opacity: 0.9;
+    opacity: 0.95;
     font-family: Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;
     font-size: 10px;
     z-index: 10;
@@ -56,10 +56,6 @@
 
 .scatterD3 .point-label {
   cursor: pointer;
-}
-
-.scatterD3 .pane {
-  cursor: move;
 }
 
 .scatterD3, .scatterD3:focus {
