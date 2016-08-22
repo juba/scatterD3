@@ -662,7 +662,7 @@ function scatterD3() {
         .domain(legend_color_domain)
         .range(legend_color_domain.map(function(d) {return color_scale(d)}));
 
-        var color_legend = d3.legend.color()
+        var color_legend = d3.legendColor()
         .shapePadding(3)
         .shape("rect")
         .scale(legend_color_scale)
@@ -714,7 +714,7 @@ function scatterD3() {
         .domain(legend_symbol_domain)
         .range(legend_symbol_domain.map(function(d) {return d3.symbol().type(d3.symbols[symbol_scale(d)])()}));
 
-        var symbol_legend = d3.legend.symbol()
+        var symbol_legend = d3.legendSymbol()
         .shapePadding(5)
         .scale(legend_symbol_scale)
         .on("cellover", function(d) {
@@ -767,7 +767,7 @@ function scatterD3() {
         // FIXME : find exact formula
         .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8}));
 
-        var size_legend = d3.legend.size()
+        var size_legend = d3.legendSize()
         .shapePadding(3)
         .shape('circle')
         .scale(legend_size_scale);
