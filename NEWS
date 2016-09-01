@@ -1,3 +1,7 @@
+scatterD3 0.7.1
+------------------------------------------------------
+* Add on_click parameter, openning a hook for a click event listener, with a default implementation
+
 scatterD3 0.7
 ------------------------------------------------------
 

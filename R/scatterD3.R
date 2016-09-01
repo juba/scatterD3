@@ -28,6 +28,11 @@
 #' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
+#' @param on_click optional object of class "JS_EVAL".  Should be an expression
+#'          constructed using htmlwidgets::JS defining a function whose inputs are html_id,
+#'          and the index of the clicked element.  Default implementation checks whether
+#'          chart is being executed in the context of a Shiny application, and if so passes
+#'          the index argument down to the application via the input$html_id_selected element.
 #' @param xlab x axis label
 #' @param ylab y axis label.
 #' @param axes_font_size font size for axes text (any CSS compatible value)
@@ -88,6 +93,12 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       unit_circle = FALSE,
                       tooltips = TRUE,
                       tooltip_text = NULL,
+                      on_click = htmlwidgets::JS("
+                                        function(id, index) {
+                                          if(id && typeof(Shiny) != 'undefined') {
+                                            Shiny.onInputChange(id + '_selected', index);
+                                          }
+                                        }"),
                       xlab = NULL, ylab = NULL,
                       html_id = NULL,
                       width = NULL, height = NULL,
@@ -236,6 +247,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     has_tooltips = tooltips,
     tooltip_text = tooltip_text,
     has_custom_tooltips = !is.null(tooltip_text),
+    has_on_click = !is.null(on_click),
+    on_click = on_click,
     fixed = fixed,
     legend_width = legend_width,
     html_id = html_id,

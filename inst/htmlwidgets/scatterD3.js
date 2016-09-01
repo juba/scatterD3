@@ -273,6 +273,12 @@ function scatterD3() {
 
     // Initial dot attributes
     function dot_init (selection) {
+
+        if(settings.has_on_click) {
+          selection.on("click", function(d, i){
+              settings.on_click(settings.html_id, i);
+          });
+        }
          // tooltips when hovering points
         if (settings.has_tooltips) {
             var tooltip = d3.select(".scatterD3-tooltip");
