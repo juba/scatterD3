@@ -1259,7 +1259,7 @@ HTMLWidgets.widget({
 
     type: 'output',
 
-    initialize: function(el, width, height) {
+    factory: function(el, width, height) {
 
         if (width < 0) width = 0;
         if (height < 0) height = 0;
@@ -1293,74 +1293,77 @@ HTMLWidgets.widget({
         }
 
         // Create scatterD3 instance
-        return scatterD3().width(width).height(height).svg(svg);
-    },
+        var scatter = scatterD3().width(width).height(height).svg(svg);
 
-    resize: function(el, width, height, scatter) {
+    return({
+        resize: function(width, height) {
 
-        if (width < 0) width = 0;
-        if (height < 0) height = 0;
-        // resize root svg element
-        var svg = d3.select(el).select("svg");
-        svg
-        .attr("width", width)
-        .attr("height", height);
-        // resize chart
-        scatter.width(width).height(height).svg(svg).resize();
-    },
+            if (width < 0) width = 0;
+            if (height < 0) height = 0;
+            // resize root svg element
+            var svg = d3.select(el).select("svg");
+            svg
+            .attr("width", width)
+            .attr("height", height);
+            // resize chart
+            scatter.width(width).height(height).svg(svg).resize();
+        },
 
-    renderValue: function(el, obj, scatter) {
-        // Check if update or redraw
-        var first_draw = (Object.keys(scatter.settings()).length === 0);
-        var redraw = first_draw || !obj.settings.transitions;
-        var svg = d3.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
-        scatter = scatter.svg(svg);
+        renderValue: function(obj) {
+            // Check if update or redraw
+            var first_draw = (Object.keys(scatter.settings()).length === 0);
+            var redraw = first_draw || !obj.settings.transitions;
+            var svg = d3.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
+            scatter = scatter.svg(svg);
 
-        // convert data to d3 format
-        data = HTMLWidgets.dataframeToD3(obj.data);
+            // convert data to d3 format
+            data = HTMLWidgets.dataframeToD3(obj.data);
 
-        // If no transitions, remove chart and redraw it
-        if (!obj.settings.transitions) {
-            svg.selectAll("*:not(style)").remove();
-        }
+            // If no transitions, remove chart and redraw it
+            if (!obj.settings.transitions) {
+                svg.selectAll("*:not(style)").remove();
+            }
 
-        // Complete draw
-        if (redraw) {
-            scatter = scatter.data(data, redraw);
-            obj.settings.redraw = true;
-            scatter = scatter.settings(obj.settings);
-            // add controls handlers and global listeners for shiny apps
-            scatter.add_controls_handlers();
-            scatter.add_global_listeners();
-            // draw chart
-            d3.select(el)
-              .call(scatter);
-        }
-        // Update only
-        else {
-            // Check what did change
-            obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
-            obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
-            obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
-            obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
-            function changed(varname) {
-                return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
-            };
-            obj.settings.x_changed = changed("x");
-            obj.settings.y_changed = changed("y");
-            obj.settings.lab_changed = changed("lab");
-            obj.settings.legend_changed = changed("col_var") || changed("symbol_var") ||
-                                          changed("size_var") || obj.settings.size_range_changed;
-            obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
-                                        obj.settings.lab_changed || obj.settings.legend_changed ||
-                                        obj.settings.has_labels_changed || changed("ellipses_data") ||
-                                        obj.settings.ellipses_changed;
-            obj.settings.opacity_changed = changed("point_opacity");
-            obj.settings.subset_changed = changed("key_var");
-            scatter = scatter.settings(obj.settings);
-            // Update data only if needed
-            if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
-        }
-    }
+            // Complete draw
+            if (redraw) {
+                scatter = scatter.data(data, redraw);
+                obj.settings.redraw = true;
+                scatter = scatter.settings(obj.settings);
+                // add controls handlers and global listeners for shiny apps
+                scatter.add_controls_handlers();
+                scatter.add_global_listeners();
+                // draw chart
+                d3.select(el)
+                .call(scatter);
+            }
+            // Update only
+            else {
+                // Check what did change
+                obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
+                obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
+                obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
+                obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
+                function changed(varname) {
+                    return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
+                };
+                obj.settings.x_changed = changed("x");
+                obj.settings.y_changed = changed("y");
+                obj.settings.lab_changed = changed("lab");
+                obj.settings.legend_changed = changed("col_var") || changed("symbol_var") ||
+                changed("size_var") || obj.settings.size_range_changed;
+                obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
+                obj.settings.lab_changed || obj.settings.legend_changed ||
+                obj.settings.has_labels_changed || changed("ellipses_data") ||
+                obj.settings.ellipses_changed;
+                obj.settings.opacity_changed = changed("point_opacity");
+                obj.settings.subset_changed = changed("key_var");
+                scatter = scatter.settings(obj.settings);
+                // Update data only if needed
+                if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
+            }
+        },
 
+        s: scatter
+    })
+}
 });
