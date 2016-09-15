@@ -78,3 +78,7 @@
     opacity: 0.8;
     transition: opacity .3s;
 }
+
+.scatterD3 .root {
+    cursor: move;
+}
