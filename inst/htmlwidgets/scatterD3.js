@@ -205,7 +205,7 @@ function scatterD3() {
         .call(xAxis);
 
         selection.append("text")
-        .attr("class", "axis-label")
+        .attr("class", "x-axis-label")
         .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")")
         .style("text-anchor", "end")
         .style("font-size", settings.axes_font_size)
@@ -218,7 +218,7 @@ function scatterD3() {
         .call(yAxis);
 
         selection.append("text")
-        .attr("class", "axis-label")
+        .attr("class", "y-axis-label")
         .attr("transform", "translate(5,6) rotate(-90)")
         .attr("dy", ".71em")
         .style("text-anchor", "end")
@@ -1022,10 +1022,10 @@ function scatterD3() {
       setup_scales();
 
       var t0 = svg.transition().duration(1000);
-      svg.select(".x.axis .axis-label").text(settings.xlab);
+      svg.select(".x-axis-label").text(settings.xlab);
       t0.select(".x.axis").call(xAxis);
       t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
-      svg.select(".y.axis .axis-label").text(settings.ylab);
+      svg.select(".y-axis-label").text(settings.ylab);
       t0.select(".y.axis").call(yAxis);
       t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
       root.call(zoom);
@@ -1100,23 +1100,18 @@ function scatterD3() {
     function resize_chart () {
         // recompute sizes
         setup_sizes();
-        // recompute scales and zoom
-        var cache_translate = zoom.translate();
-        var cache_scale = zoom.scale();
-        zoom.scale(1).translate([0, 0]);
+        // recompute scales
         x.range([0, dims.width]);
+        x_orig.range([0, dims.width]);
         y.range([dims.height, 0]);
-        xAxis.scale(x).tickSize(-dims.height);
-        yAxis.scale(y).tickSize(-dims.width);
-        zoom.x(x);
-        zoom.y(y);
-        zoom.translate(cache_translate);
-        zoom.scale(cache_scale);
+        y_orig.range([dims.height, 0]);
+        xAxis = xAxis.scale(x).tickSize(-dims.height);
+        yAxis = yAxis.scale(y).tickSize(-dims.width);
         // Change svg attributes
-        root.attr("width", dims.width).attr("height", dims.height);
+        root.attr("width", dims.width).attr("height", dims.height).call(zoom);
         chart_body.attr("width", dims.width).attr("height", dims.height);
         svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
-        svg.select(".x.axis .axis-label").attr("x", dims.width - 5);
+        svg.select(".x-axis-label").attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
         svg.select(".y.axis").call(yAxis);
         svg.select(".unit-circle").call(unit_circle_init);
 
