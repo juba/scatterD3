@@ -202,11 +202,11 @@ function scatterD3() {
         .attr("class", "x axis")
         .attr("transform", "translate(0," + dims.height + ")")
         .style("font-size", settings.axes_font_size)
-        .call(xAxis)
-        .append("text")
+        .call(xAxis);
+
+        selection.append("text")
         .attr("class", "axis-label")
-        .attr("x", dims.width - 5)
-        .attr("y", -6)
+        .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")")
         .style("text-anchor", "end")
         .style("font-size", settings.axes_font_size)
         .text(settings.xlab);
@@ -215,12 +215,11 @@ function scatterD3() {
         selection.append("g")
         .attr("class", "y axis")
         .style("font-size", settings.axes_font_size)
-        .call(yAxis)
-        .append("text")
+        .call(yAxis);
+
+        selection.append("text")
         .attr("class", "axis-label")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -5)
-        .attr("y", 6)
+        .attr("transform", "translate(5,6) rotate(-90)")
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text(settings.ylab);
