@@ -6,7 +6,7 @@ function scatterD3() {
     margin = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50},
     settings = {},
     data = [],
-    x, y, color_scale, symbol_scale, size_scale,
+    x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale,
     min_x, min_y, max_x, max_y, gap_x, gap_y,
     xAxis, yAxis,
     svg, root, chart_body,
@@ -78,10 +78,15 @@ function scatterD3() {
         }
 
         // x, y, color, symbol and size scales
-        x = d3.scaleLinear().range([0, dims.width]);
-        y = d3.scaleLinear().range([dims.height, 0]);
-        x.domain([min_x - gap_x, max_x + gap_x]);
-        y.domain([min_y - gap_y, max_y + gap_y]);
+        x = d3.scaleLinear()
+        .range([0, dims.width])
+        .domain([min_x - gap_x, max_x + gap_x]);
+        y = d3.scaleLinear()
+        .range([dims.height, 0])
+        .domain([min_y - gap_y, max_y + gap_y]);
+        // Keep track of original scales
+        x_orig = x;
+        y_orig = y;
         if (settings.colors === null) {
             // Number of different levels. See https://github.com/mbostock/d3/issues/472
             var n = d3.map(data, function(d) { return d.col_var; }).size();
@@ -127,8 +132,10 @@ function scatterD3() {
 
     // Zoom function
     function zoomed(reset) {
-        xAxis = xAxis.scale(d3.event.transform.rescaleX(x));
-        yAxis = yAxis.scale(d3.event.transform.rescaleY(y));
+        x = d3.event.transform.rescaleX(x_orig);
+        y = d3.event.transform.rescaleY(y_orig);
+        xAxis = xAxis.scale(x);
+        yAxis = yAxis.scale(y);
         root.select(".x.axis").call(xAxis);
         root.select(".y.axis").call(yAxis);
         chart_body.selectAll(".dot, .point-label")
@@ -146,14 +153,7 @@ function scatterD3() {
 
     // Reset zoom function
     function reset_zoom() {
-        d3.transition().duration(750).tween("zoom", function() {
-            var ix = d3.interpolate(x.domain(), [min_x - gap_x, max_x + gap_x]),
-                iy = d3.interpolate(y.domain(), [min_y - gap_y, max_y + gap_y]);
-                return function(t) {
-                    zoom.x(x.domain(ix(t))).y(y.domain(iy(t)));
-                    zoomed(reset = true);
-                };
-            });
+        root.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
     }
 
     // Export to SVG function
