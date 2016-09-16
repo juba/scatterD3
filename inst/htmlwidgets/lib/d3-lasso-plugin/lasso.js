@@ -9,9 +9,10 @@ d3.lasso = function() {
         area = null,
         on = {start:function(){}, draw: function(){}, end: function(){}};
 
-    function lasso() {
+    function lasso(selection) {
+
         // the element where the lasso was called
-        var _this = d3.select(this[0][0]);
+        var _this = selection;
 
         // add a new group for the lasso
         var g = _this.append("g")
@@ -56,10 +57,10 @@ d3.lasso = function() {
         var path_length_start;
 
         // Apply drag behaviors
-        var drag = d3.behavior.drag()
-            .on("dragstart", dragstart)
+        var drag = d3.drag()
+            .on("start", dragstart)
             .on("drag", dragmove)
-            .on("dragend", dragend);
+            .on("end", dragend);
 
         // Call drag
         area.call(drag);
@@ -74,10 +75,10 @@ d3.lasso = function() {
             // Set path length start
             path_length_start = 0;
             // Set every item to have a false selection and reset their center point and counters
-            items[0].forEach(function(d) {
+            items.each(function(d) {
                 d.hoverSelected = false;
                 d.loopSelected = false;
-                var box = d.getBoundingClientRect();
+                var box = this.getBoundingClientRect();
                 d.lassoPoint = {
                     cx: Math.round(box.left + box.width/2),
                     cy: Math.round(box.top + box.height/2),
@@ -92,7 +93,7 @@ d3.lasso = function() {
             if(hoverSelect===true) {
                 items.on("mouseover.lasso",function() {
                     // if hovered, change lasso selection attribute to true
-                    d3.select(this)[0][0].hoverSelected = true;
+                    d3.select(this).hoverSelected = true;
                 });
             }
 
@@ -127,7 +128,7 @@ d3.lasso = function() {
             }
 
             // Reset closed edges counter
-            items[0].forEach(function(d) {
+            items.each(function(d) {
                 d.lassoPoint.close_edges = {left:0,right:0};
             });
 
@@ -182,7 +183,7 @@ d3.lasso = function() {
                 };
 
                 // Iterate through each item
-                items[0].filter(function(d) {
+                items.filter(function(d) {
                     var a;
                     // If we are on the same y position as the item and we weren't on this y before,
                     // mark as the last known point. Return false - we don't need to count an edge yet
@@ -214,7 +215,7 @@ d3.lasso = function() {
                         a = sign(d.lassoPoint.cy-cur_pos_obj.y)!=sign(d.lassoPoint.cy-prior_pos_obj.y);
                     }
                     return a;
-                }).forEach(function(d) {
+                }).each(function(d) {
                     // Iterate through each object and add an edge to the left or right
                     if(cur_pos_obj.x>d.lassoPoint.cx) {
                         d.lassoPoint.edges.right = d.lassoPoint.edges.right+1;
@@ -235,7 +236,7 @@ d3.lasso = function() {
                     var cur_pos = close_path_node.getPointAtLength(i);
                     var prior_pos = close_path_node.getPointAtLength(i-1);
 
-                    items[0].filter(function(d) {return d.lassoPoint.cy==Math.round(cur_pos.y);}).forEach(function(d) {
+                    items.filter(function(d) {return d.lassoPoint.cy==Math.round(cur_pos.y);}).each(function(d) {
                         if(Math.round(cur_pos.y)!=Math.round(prior_pos.y) && Math.round(cur_pos.x)>d.lassoPoint.cx) {
                             d.lassoPoint.close_edges.right = 1;
                         }
@@ -247,7 +248,7 @@ d3.lasso = function() {
                 }
 
                 // Check and see if the points have at least one edge to the left, and an odd # of edges to the right. If so, mark as selected.
-                items[0].forEach(function(a) {
+                items.each(function(a) {
                     if((a.lassoPoint.edges.left+a.lassoPoint.close_edges.left)>0 && (a.lassoPoint.edges.right + a.lassoPoint.close_edges.right)%2 ==1) {
                         a.loopSelected = true;
                     }
@@ -257,16 +258,15 @@ d3.lasso = function() {
                 });
             }
             else {
-                items[0].forEach(function(d) {
+                items.each(function(d) {
                     d.loopSelected = false;
                 });
             }
-
             // Tag possible items
-            d3.selectAll(items[0].filter(function(d) {return (d.loopSelected && isPathClosed) || d.hoverSelected;}))
+            items.filter(function(d) {return (d.loopSelected && isPathClosed) || d.hoverSelected;})
                 .each(function(d) { d.possible = true;});
 
-            d3.selectAll(items[0].filter(function(d) {return !((d.loopSelected && isPathClosed) || d.hoverSelected);}))
+            items.filter(function(d) {return !((d.loopSelected && isPathClosed) || d.hoverSelected);})
                 .each(function(d) {d.possible = false;});
 
             on.draw();
@@ -304,8 +304,8 @@ d3.lasso = function() {
 
         if (!arguments.length) return items;
         items = _;
-        items[0].forEach(function(d) {
-            var item = d3.select(d);
+        items.each(function(d) {
+            var item = d3.select(this);
             if(typeof item.datum() === 'undefined') {
                 item.datum({possible:false,selected:false});
             }
