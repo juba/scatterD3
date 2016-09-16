@@ -517,20 +517,24 @@ function scatterD3() {
         .style("fill", null) // clear all of the fills
         .style("opacity", null) // clear all of the opacities
         .style("stroke", null) // clear all of the strokes
-        .classed({"not-possible-lasso": true, "selected-lasso": false, "not-selected-lasso": false}); // style as not possible
+        .classed("not-possible-lasso", true)
+        .classed("selected-lasso not-selected-lasso", false); // style as not possible
     };
     lasso_draw = function() {
         // Style the possible dots
-        lasso.items().filter(function(d) {return d.possible === true})
-        .classed({"not-possible-lasso": false, "possible-lasso": true});
+        lasso.items()
+        .filter(function(d) {return d.possible === true})
+        .classed("not-possible-lasso", false)
+        .classed("possible-lasso", true);
         // Style the not possible dot
         lasso.items().filter(function(d) {return d.possible === false})
-        .classed({"not-possible-lasso": true, "possible-lasso": false});
+        .classed("not-possible-lasso", true)
+        .classed("possible-lasso", false);
     };
     lasso_end = function() {
         lasso_off(svg);
         var some_selected = false;
-        if(lasso.items().filter(function(d) {return d.selected === true})[0].length !== 0){
+        if(lasso.items().filter(function(d) {return d.selected === true}).size() !== 0){
             some_selected = true;
         }
         // Reset the color of all dots
@@ -553,12 +557,14 @@ function scatterD3() {
         if (some_selected) {
           // Style the selected dots
           var sel = lasso.items().filter(function(d) {return d.selected === true})
-            .classed({"not-possible-lasso": false, "possible-lasso": false, "selected-lasso": true})
+            .classed("not-possible-lasso possible-lasso", false)
+            .classed("selected-lasso", true)
             .style("opacity", "1");
 
           // Reset the style of the not selected dots
           lasso.items().filter(function(d) {return d.selected === false})
-            .classed({"not-possible-lasso": false, "possible-lasso": false, "not-selected-lasso": true})
+            .classed("not-possible-lasso possible-lasso", false)
+            .classed("not-selected-lasso", true)
             .style("opacity", function(d) { return d.point_opacity / 7 });
 
           // Call custom callback function
@@ -567,8 +573,7 @@ function scatterD3() {
         }
         else {
           lasso.items()
-            .classed({"not-possible-lasso": false, "possible-lasso": false,
-                      "not-selected-lasso": false, "selected-lasso": false})
+            .classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
             .style("opacity", function(d) {
                 if (d3.select(this).classed('point-label')) {return 1};
                 return d.point_opacity;
