@@ -1108,26 +1108,27 @@ function scatterD3() {
         xAxis = xAxis.scale(x).tickSize(-dims.height);
         yAxis = yAxis.scale(y).tickSize(-dims.width);
         // Change svg attributes
-        root.attr("width", dims.width).attr("height", dims.height).call(zoom);
-        chart_body.attr("width", dims.width).attr("height", dims.height);
-        svg.select(".x.axis").attr("transform", "translate(0," + dims.height + ")").call(xAxis);
-        svg.select(".x-axis-label").attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
-        svg.select(".y.axis").call(yAxis);
-        svg.select(".unit-circle").call(unit_circle_init);
+        root
+        .attr("width", dims.width)
+        .attr("height", dims.height);
+        root.select("rect")
+        .attr("width", dims.width)
+        .attr("height", dims.height);
+        chart_body
+        .attr("width", dims.width)
+        .attr("height", dims.height);
+        svg.select(".x.axis")
+        .attr("transform", "translate(0," + dims.height + ")")
+        .call(xAxis);
+        svg.select(".x-axis-label")
+        .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
+        svg.select(".y.axis")
+        .call(yAxis);
+        svg.select(".unit-circle")
+        .call(unit_circle_init);
+        root.transition().duration(500)
+        .call(zoom.transform, d3.zoomTransform(root.node()));
 
-        svg.selectAll(".dot").attr("transform", translation);
-        svg.selectAll(".arrow").call(draw_arrow);
-        svg.selectAll(".ellipse").call(ellipse_formatting);
-        if (settings.has_labels) {
-            svg.selectAll(".point-label")
-            .attr("transform", translation);
-        }
-        // Move zerolines
-        var zeroline = d3.line()
-        .x(function(d) {return x(d.x)})
-        .y(function(d) {return y(d.y)});
-        svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-        svg.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
         // Move legends
         if (settings.has_color_var) {
             svg.select(".color-legend-label")
