@@ -1,17 +1,23 @@
 function scatterD3() {
 
     var width = 600, // default width
-    height = 600, // default height
-    dims = {},
-    margin = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50},
-    settings = {},
-    data = [],
-    x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale,
-    min_x, min_y, max_x, max_y, gap_x, gap_y,
-    xAxis, yAxis,
-    svg, root, chart_body,
-    zeroline, zoom, drag,
-    lasso_base, lasso_classes;
+        height = 600, // default height
+        dims = {},
+        margin = {
+            top: 5,
+            right: 10,
+            bottom: 20,
+            left: 30,
+            legend_top: 50
+        },
+        settings = {},
+        data = [],
+        x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale,
+        min_x, min_y, max_x, max_y, gap_x, gap_y,
+        xAxis, yAxis,
+        svg, root, chart_body,
+        zeroline, zoom, drag,
+        lasso_base, lasso_classes;
 
     function setup_sizes() {
 
@@ -39,8 +45,12 @@ function scatterD3() {
 
         // x and y limits
         if (settings.xlim === null) {
-            min_x = d3.min(data, function(d) { return(d.x);} );
-            max_x = d3.max(data, function(d) { return(d.x);} );
+            min_x = d3.min(data, function(d) {
+                return (d.x);
+            });
+            max_x = d3.max(data, function(d) {
+                return (d.x);
+            });
             gap_x = (max_x - min_x) * 0.2;
         } else {
             min_x = settings.xlim[0];
@@ -48,8 +58,12 @@ function scatterD3() {
             gap_x = 0;
         }
         if (settings.ylim === null) {
-            min_y = d3.min(data, function(d) { return(d.y);} );
-            max_y = d3.max(data, function(d) { return(d.y);} );
+            min_y = d3.min(data, function(d) {
+                return (d.y);
+            });
+            max_y = d3.max(data, function(d) {
+                return (d.y);
+            });
             gap_y = (max_y - min_y) * 0.2;
         } else {
             min_y = settings.ylim[0];
@@ -59,64 +73,71 @@ function scatterD3() {
 
         // Fixed ratio
         if (settings.fixed) {
-          if (settings.xlim === null && settings.ylim === null) {
-            min_x = min_y = Math.min(min_x, min_y);
-            max_x = max_y = Math.max(max_x, max_y);
-            gap_x = gap_y = Math.max(gap_x, gap_y);
-          }
-          if (settings.xlim !== null) {
-            min_y = min_x;
-            max_y = max_x;
-            gap_y = gap_x;
-          }
-          if (settings.ylim !== null) {
-            min_x = min_y;
-            max_x = max_y;
-            gap_x = gap_y;
-          }
+            if (settings.xlim === null && settings.ylim === null) {
+                min_x = min_y = Math.min(min_x, min_y);
+                max_x = max_y = Math.max(max_x, max_y);
+                gap_x = gap_y = Math.max(gap_x, gap_y);
+            }
+            if (settings.xlim !== null) {
+                min_y = min_x;
+                max_y = max_x;
+                gap_y = gap_x;
+            }
+            if (settings.ylim !== null) {
+                min_x = min_y;
+                max_x = max_y;
+                gap_x = gap_y;
+            }
 
         }
 
         // x, y, color, symbol and size scales
         x = d3.scaleLinear()
-        .range([0, dims.width])
-        .domain([min_x - gap_x, max_x + gap_x]);
+            .range([0, dims.width])
+            .domain([min_x - gap_x, max_x + gap_x]);
         y = d3.scaleLinear()
-        .range([dims.height, 0])
-        .domain([min_y - gap_y, max_y + gap_y]);
+            .range([dims.height, 0])
+            .domain([min_y - gap_y, max_y + gap_y]);
         // Keep track of original scales
         x_orig = x;
         y_orig = y;
         if (settings.colors === null) {
             // Number of different levels. See https://github.com/mbostock/d3/issues/472
-            var n = d3.map(data, function(d) { return d.col_var; }).size();
+            var n = d3.map(data, function(d) {
+                return d.col_var;
+            }).size();
             color_scale = n <= 9 ? d3.scaleOrdinal(d3.schemeSet1) : d3.scaleOrdinal(d3.schemeCategory20);
         } else if (Array.isArray(settings.colors)) {
             color_scale = d3.scaleOrdinal().range(settings.colors);
-        } else if (typeof(settings.colors) === "string"){
-          // Single string given
-          color_scale = d3.scaleOrdinal().range(Array(settings.colors));
-        } else if (typeof(settings.colors) === "object"){
+        } else if (typeof(settings.colors) === "string") {
+            // Single string given
+            color_scale = d3.scaleOrdinal().range(Array(settings.colors));
+        } else if (typeof(settings.colors) === "object") {
             color_scale = d3.scaleOrdinal()
-                          .range(d3.values(settings.colors))
-                          .domain(d3.keys(settings.colors));
+                .range(d3.values(settings.colors))
+                .domain(d3.keys(settings.colors));
         }
         symbol_scale = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
         size_scale = d3.scaleLinear()
-        .range(settings.size_range)
-        .domain([d3.min(data, function(d) { return(d.size_var);} ),
-                 d3.max(data, function(d) { return(d.size_var);} )]);
+            .range(settings.size_range)
+            .domain([d3.min(data, function(d) {
+                    return (d.size_var);
+                }),
+                d3.max(data, function(d) {
+                    return (d.size_var);
+                })
+            ]);
 
         // zoom behavior
         zoom = d3.zoom()
-        .scaleExtent([0, 32])
-        .on("zoom", zoomed);
+            .scaleExtent([0, 32])
+            .on("zoom", zoomed);
 
         // x and y axis functions
         xAxis = d3.axisBottom(x)
-        .tickSize(-dims.height);
+            .tickSize(-dims.height);
         yAxis = d3.axisLeft(y)
-        .tickSize(-dims.width);
+            .tickSize(-dims.width);
 
     }
 
@@ -139,14 +160,30 @@ function scatterD3() {
         root.select(".x.axis").call(xAxis);
         root.select(".y.axis").call(yAxis);
         chart_body.selectAll(".dot, .point-label")
-        .attr("transform", translation);
+            .attr("transform", translation);
         chart_body.selectAll(".arrow").call(draw_arrow);
         chart_body.selectAll(".ellipse").call(ellipse_formatting);
         var zeroline = d3.line()
-        .x(function(d) {return x(d.x)})
-        .y(function(d) {return y(d.y)});
-        svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-        svg.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
+            .x(function(d) {
+                return x(d.x)
+            })
+            .y(function(d) {
+                return y(d.y)
+            });
+        svg.select(".zeroline.hline").attr("d", zeroline([{
+            x: x.domain()[0],
+            y: 0
+        }, {
+            x: x.domain()[1],
+            y: 0
+        }]));
+        svg.select(".zeroline.vline").attr("d", zeroline([{
+            x: 0,
+            y: y.domain()[0]
+        }, {
+            x: 0,
+            y: y.domain()[1]
+        }]));
         svg.select(".unit-circle").call(unit_circle_init);
 
     }
@@ -159,39 +196,39 @@ function scatterD3() {
     // Export to SVG function
     function export_svg() {
         var svg_content = svg
-        .attr("xmlns", "http://www.w3.org/2000/svg")
-        .attr("version", 1.1)
-        .node().parentNode.innerHTML;
+            .attr("xmlns", "http://www.w3.org/2000/svg")
+            .attr("version", 1.1)
+            .node().parentNode.innerHTML;
         // Dirty dirty dirty...
         svg_content = svg_content.replace(/<g class="gear-menu[\s\S]*?<\/g>/gm, '');
         svg_content = svg_content.replace(/<\/svg>[\s\S]*$/gm, '</svg>');
         var image_data = "data:image/octet-stream;base64,\n" + btoa(svg_content);
         d3.select(this)
-        .attr("download", settings.html_id + ".svg")
-        .attr("href", image_data);
+            .attr("download", settings.html_id + ".svg")
+            .attr("href", image_data);
     }
 
     // Function to export custom labels position to CSV file
     function export_labels_position() {
-      var lines_data = ["scatterD3_label,scatterD3_label_x,scatterD3_label_y"];
-      data.forEach(function(d, index){
-        var labx = d.x;
-        if (d.lab_dx !== undefined) {
-          labx = d.x + x.invert(d.lab_dx) - x.domain()[0];
-        }
-        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-        var offset_y = (-Math.sqrt(size) / 2) - 6;
-        if (d.lab_dy !== undefined) {
-          offset_y = d.lab_dy;
-        }
-        var laby = d.y + y.invert(offset_y) - y.domain()[1];
-        var this_line = d.lab + "," + labx + "," + laby;
-        lines_data.push(this_line);
-      });
-      var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
-      d3.select(this)
-        .attr("download", settings.html_id + "_labels.csv")
-        .attr("href", encodeURI(csv_content));
+        var lines_data = ["scatterD3_label,scatterD3_label_x,scatterD3_label_y"];
+        data.forEach(function(d, index) {
+            var labx = d.x;
+            if (d.lab_dx !== undefined) {
+                labx = d.x + x.invert(d.lab_dx) - x.domain()[0];
+            }
+            var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+            var offset_y = (-Math.sqrt(size) / 2) - 6;
+            if (d.lab_dy !== undefined) {
+                offset_y = d.lab_dy;
+            }
+            var laby = d.y + y.invert(offset_y) - y.domain()[1];
+            var this_line = d.lab + "," + labx + "," + laby;
+            lines_data.push(this_line);
+        });
+        var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
+        d3.select(this)
+            .attr("download", settings.html_id + "_labels.csv")
+            .attr("href", encodeURI(csv_content));
     }
 
     // Create and draw x and y axes
@@ -199,37 +236,41 @@ function scatterD3() {
 
         // x axis
         selection.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + dims.height + ")")
-        .style("font-size", settings.axes_font_size)
-        .call(xAxis);
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + dims.height + ")")
+            .style("font-size", settings.axes_font_size)
+            .call(xAxis);
 
         selection.append("text")
-        .attr("class", "x-axis-label")
-        .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")")
-        .style("text-anchor", "end")
-        .style("font-size", settings.axes_font_size)
-        .text(settings.xlab);
+            .attr("class", "x-axis-label")
+            .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")")
+            .style("text-anchor", "end")
+            .style("font-size", settings.axes_font_size)
+            .text(settings.xlab);
 
         // y axis
         selection.append("g")
-        .attr("class", "y axis")
-        .style("font-size", settings.axes_font_size)
-        .call(yAxis);
+            .attr("class", "y axis")
+            .style("font-size", settings.axes_font_size)
+            .call(yAxis);
 
         selection.append("text")
-        .attr("class", "y-axis-label")
-        .attr("transform", "translate(5,6) rotate(-90)")
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text(settings.ylab);
+            .attr("class", "y-axis-label")
+            .attr("transform", "translate(5,6) rotate(-90)")
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text(settings.ylab);
 
     }
 
     // Zero horizontal and vertical lines
     zeroline = d3.line()
-    .x(function(d) {return x(d.x)})
-    .y(function(d) {return y(d.y)});
+        .x(function(d) {
+            return x(d.x)
+        })
+        .y(function(d) {
+            return y(d.y)
+        });
 
     // Create tooltip content function
     function tooltip_content(d) {
@@ -241,58 +282,70 @@ function scatterD3() {
         } else {
             // default tooltips
             var text = Array();
-            if (settings.has_labels) text.push("<b>"+d.lab+"</b>");
-            text.push("<b>"+settings.xlab+":</b> "+d.x.toFixed(3));
-            text.push("<b>"+settings.ylab+":</b> "+d.y.toFixed(3));
-            if (settings.has_color_var) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
-            if (settings.has_symbol_var) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
-            if (settings.has_size_var) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
+            if (settings.has_labels) text.push("<b>" + d.lab + "</b>");
+            text.push("<b>" + settings.xlab + ":</b> " + d.x.toFixed(3));
+            text.push("<b>" + settings.ylab + ":</b> " + d.y.toFixed(3));
+            if (settings.has_color_var) text.push("<b>" + settings.col_lab + ":</b> " + d.col_var);
+            if (settings.has_symbol_var) text.push("<b>" + settings.symbol_lab + ":</b> " + d.symbol_var);
+            if (settings.has_size_var) text.push("<b>" + settings.size_lab + ":</b> " + d.size_var);
             return text.join("<br />");
         }
     }
 
     // Clean variables levels to be valid CSS classes
     function css_clean(s) {
-      if (s === undefined) return "";
-      return s.toString().replace(/[^\w-]/g, "_");
+        if (s === undefined) return "";
+        return s.toString().replace(/[^\w-]/g, "_");
     }
 
     // Returns dot size from associated data
     function dot_size(data) {
         var size = settings.point_size;
-        if (settings.has_size_var) { size = size_scale(data.size_var) }
-        return(size)
+        if (settings.has_size_var) {
+            size = size_scale(data.size_var)
+        }
+        return (size)
     }
 
     // Initial dot attributes
-    function dot_init (selection) {
-         // tooltips when hovering points
+    function dot_init(selection) {
+        // tooltips when hovering points
         if (settings.has_tooltips) {
             var tooltip = d3.select(".scatterD3-tooltip");
-            selection.on("mouseover", function(d, i){
+            selection.on("mouseover", function(d, i) {
                 d3.select(this)
-                .transition().duration(150)
-                .attr("d", d3.symbol()
-                    .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)] })
-                    .size(function(d) { return (dot_size(d) * settings.hover_size) })
-                )
-                .style("opacity", function(d) {
-                    return (settings.hover_opacity === undefined ? d.point_opacity : settings.hover_opacity);
-                });
+                    .transition().duration(150)
+                    .attr("d", d3.symbol()
+                        .type(function(d) {
+                            return d3.symbols[symbol_scale(d.symbol_var)]
+                        })
+                        .size(function(d) {
+                            return (dot_size(d) * settings.hover_size)
+                        })
+                    )
+                    .style("opacity", function(d) {
+                        return (settings.hover_opacity === undefined ? d.point_opacity : settings.hover_opacity);
+                    });
                 tooltip.style("visibility", "visible")
-                .html(tooltip_content(d));
+                    .html(tooltip_content(d));
             });
-            selection.on("mousemove", function(){
-                tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
+            selection.on("mousemove", function() {
+                tooltip.style("top", (d3.event.pageY + 15) + "px").style("left", (d3.event.pageX + 15) + "px");
             });
-            selection.on("mouseout", function(){
+            selection.on("mouseout", function() {
                 d3.select(this)
-                .transition().duration(150)
-                .attr("d", d3.symbol()
-                    .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)] })
-                    .size(function(d) { return dot_size(d)})
-                )
-                .style("opacity", function(d) { return d.point_opacity })
+                    .transition().duration(150)
+                    .attr("d", d3.symbol()
+                        .type(function(d) {
+                            return d3.symbols[symbol_scale(d.symbol_var)]
+                        })
+                        .size(function(d) {
+                            return dot_size(d)
+                        })
+                    )
+                    .style("opacity", function(d) {
+                        return d.point_opacity
+                    })
                 tooltip.style("visibility", "hidden");
             });
         }
@@ -301,20 +354,28 @@ function scatterD3() {
     // Apply format to dot
     function dot_formatting(selection) {
         var sel = selection
-        .attr("transform", translation)
-        // fill color
-        .style("fill", function(d) { return color_scale(d.col_var); })
-        // symbol and size
-        .attr("d", d3.symbol()
-            .type(function(d) {return d3.symbols[symbol_scale(d.symbol_var)]})
-            .size(function(d) { return dot_size(d) })
-        )
-        .attr("class", function(d,i) {
-          return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
-        })
+            .attr("transform", translation)
+            // fill color
+            .style("fill", function(d) {
+                return color_scale(d.col_var);
+            })
+            // symbol and size
+            .attr("d", d3.symbol()
+                .type(function(d) {
+                    return d3.symbols[symbol_scale(d.symbol_var)]
+                })
+                .size(function(d) {
+                    return dot_size(d)
+                })
+            )
+            .attr("class", function(d, i) {
+                return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
+            })
         if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
             sel = sel
-            .style("opacity", function(d) {return d.point_opacity});
+                .style("opacity", function(d) {
+                    return d.point_opacity
+                });
         }
         return sel;
     }
@@ -322,26 +383,34 @@ function scatterD3() {
     // Arrow drawing function
     function draw_arrow(selection) {
         selection
-        .attr("x1", function(d) { return x(0) })
-        .attr("y1", function(d) { return y(0) })
-        .attr("x2", function(d) { return x(d.x) })
-        .attr("y2", function(d) { return y(d.y) });
+            .attr("x1", function(d) {
+                return x(0)
+            })
+            .attr("y1", function(d) {
+                return y(0)
+            })
+            .attr("x2", function(d) {
+                return x(d.x)
+            })
+            .attr("y2", function(d) {
+                return y(d.y)
+            });
     }
 
     // Initial arrow attributes
-    function arrow_init (selection) {
+    function arrow_init(selection) {
         selection
-         // tooltips when hovering points
+        // tooltips when hovering points
         if (settings.has_tooltips) {
             var tooltip = d3.select(".scatterD3-tooltip");
-            selection.on("mouseover", function(d, i){
+            selection.on("mouseover", function(d, i) {
                 tooltip.style("visibility", "visible")
-                .html(tooltip_content(d));
+                    .html(tooltip_content(d));
             });
-            selection.on("mousemove", function(){
-                tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
+            selection.on("mousemove", function() {
+                tooltip.style("top", (d3.event.pageY + 15) + "px").style("left", (d3.event.pageX + 15) + "px");
             });
-            selection.on("mouseout", function(){
+            selection.on("mouseout", function() {
                 tooltip.style("visibility", "hidden");
             });
         }
@@ -350,14 +419,22 @@ function scatterD3() {
     // Apply format to arrow
     function arrow_formatting(selection) {
         var sel = selection
-        .call(draw_arrow)
-        .style("stroke-width", "1px")
-        // stroke color
-        .style("stroke", function(d) { return color_scale(d.col_var); })
-        .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")" })
-        .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var) });
+            .call(draw_arrow)
+            .style("stroke-width", "1px")
+            // stroke color
+            .style("stroke", function(d) {
+                return color_scale(d.col_var);
+            })
+            .attr("marker-end", function(d) {
+                return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")"
+            })
+            .attr("class", function(d, i) {
+                return "arrow color color-c" + css_clean(d.col_var)
+            });
         if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
-            sel = sel.style("opacity", function(d) {return d.point_opacity});
+            sel = sel.style("opacity", function(d) {
+                return d.point_opacity
+            });
         }
         return sel;
     }
@@ -365,7 +442,7 @@ function scatterD3() {
     // Initial ellipse attributes
     function ellipse_init(selection) {
         selection
-        .style("fill", "none");
+            .style("fill", "none");
     }
 
     // Apply format to ellipse
@@ -373,72 +450,81 @@ function scatterD3() {
 
         // Ellipses path function
         var ellipseFunc = d3.line()
-        .x(function(d) { return x(d.x); })
-        .y(function(d) { return y(d.y); });
+            .x(function(d) {
+                return x(d.x);
+            })
+            .y(function(d) {
+                return y(d.y);
+            });
 
         selection
-        .attr("d", function(d) {
-          var ell = HTMLWidgets.dataframeToD3(d.data);
-          return (ellipseFunc(ell))
-        })
-        .style("stroke", function(d) {
-            // Only one ellipse
-            if (d.level == "_scatterD3_all") {
-                return(color_scale.range()[0]);
-            }
-            return( color_scale(d.level))
-        })
-        .style("opacity", 1)
-        .attr("class", function(d) {
-            return "ellipse color color-c" + css_clean(d.level);
-        });
+            .attr("d", function(d) {
+                var ell = HTMLWidgets.dataframeToD3(d.data);
+                return (ellipseFunc(ell))
+            })
+            .style("stroke", function(d) {
+                // Only one ellipse
+                if (d.level == "_scatterD3_all") {
+                    return (color_scale.range()[0]);
+                }
+                return (color_scale(d.level))
+            })
+            .style("opacity", 1)
+            .attr("class", function(d) {
+                return "ellipse color color-c" + css_clean(d.level);
+            });
     }
 
     // Unit circle init
     function unit_circle_init(selection) {
         selection
-        .attr('cx', x(0))
-        .attr('cy', y(0))
-        .attr('rx', x(1)-x(0))
-        .attr('ry', y(0)-y(1))
-        .style("stroke", "#888")
-        .style("fill", "none")
-        .style("opacity", "1");
+            .attr('cx', x(0))
+            .attr('cy', y(0))
+            .attr('rx', x(1) - x(0))
+            .attr('ry', y(0) - y(1))
+            .style("stroke", "#888")
+            .style("fill", "none")
+            .style("opacity", "1");
     }
 
     // Initial text label attributes
-    function label_init (selection) {
+    function label_init(selection) {
         selection
-        .attr("text-anchor", "middle");
+            .attr("text-anchor", "middle");
     }
 
     // Compute default vertical offset for labels
     function default_label_dy(size, y, type_var) {
         if (y < 0 && type_var !== undefined && type_var == "arrow") {
-          return (Math.sqrt(size) / 2) + settings.labels_size + 2;
-        }
-        else {
-          return (-Math.sqrt(size) / 2) - 6;
+            return (Math.sqrt(size) / 2) + settings.labels_size + 2;
+        } else {
+            return (-Math.sqrt(size) / 2) - 6;
         }
     }
 
     // Apply format to text label
-    function label_formatting (selection) {
+    function label_formatting(selection) {
         var sel = selection
-        .text(function(d) {return(d.lab)})
-        .style("font-size", settings.labels_size + "px")
-        .attr("class", function(d,i) { return "point-label color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var); })
-        .attr("transform", translation)
-        .style("fill", function(d) { return color_scale(d.col_var); })
-        .attr("dx", function(d) {
-            if (d.lab_dx === undefined) return("0px");
-            else return(d.lab_dx + "px");
-        })
-        .attr("dy", function(d) {
-            if (d.lab_dy !== undefined) return(d.lab_dy + "px");
-            var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-            return default_label_dy(size, d.y, d.type_var) + "px";
-        });
+            .text(function(d) {
+                return (d.lab)
+            })
+            .style("font-size", settings.labels_size + "px")
+            .attr("class", function(d, i) {
+                return "point-label color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var);
+            })
+            .attr("transform", translation)
+            .style("fill", function(d) {
+                return color_scale(d.col_var);
+            })
+            .attr("dx", function(d) {
+                if (d.lab_dx === undefined) return ("0px");
+                else return (d.lab_dx + "px");
+            })
+            .attr("dy", function(d) {
+                if (d.lab_dy !== undefined) return (d.lab_dy + "px");
+                var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+                return default_label_dy(size, d.y, d.type_var) + "px";
+            });
         if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
             sel = sel.style("opacity", 1);
         }
@@ -448,147 +534,183 @@ function scatterD3() {
     // Text labels dragging function
     var dragging = false;
     drag = d3.drag()
-    .subject(function(d) {
-        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-        var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-        var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
-        return {x:x(d.x)+dx, y:y(d.y)+dy};
-    })
-    .on('start', function(d) {
-      if (!d3.event.sourceEvent.shiftKey) {
-        dragging = true;
-        d3.select(this).style('fill', '#000');
-        var chart = d3.select(this).node().parentNode;
-        var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
-        var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-        var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
-        d3.select(chart).append("svg:line")
-        .attr("id", "scatterD3-drag-line")
-        .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
-        .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
-        .style("stroke", "#000")
-        .style("opacity", 0.3);
-      }
-    })
-    .on('drag', function(d) {
-      if (dragging) {
-        cx = d3.event.x - x(d.x);
-        cy = d3.event.y - y(d.y);
-        d3.select(this)
-        .attr('dx', cx + "px")
-        .attr('dy', cy + "px");
-        d3.select("#scatterD3-drag-line")
-        .attr('x2', x(d.x) + cx)
-        .attr("y2", y(d.y) + cy);
-        d.lab_dx = cx;
-        d.lab_dy = cy;
-      }
-    })
-    .on('end', function(d) {
-      if (dragging){
-        d3.select(this).style('fill', color_scale(d.col_var));
-        d3.select("#scatterD3-drag-line").remove();
-        dragging = false;
-      }
-    });
+        .subject(function(d) {
+            var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+            var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+            var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
+            return {
+                x: x(d.x) + dx,
+                y: y(d.y) + dy
+            };
+        })
+        .on('start', function(d) {
+            if (!d3.event.sourceEvent.shiftKey) {
+                dragging = true;
+                d3.select(this).style('fill', '#000');
+                var chart = d3.select(this).node().parentNode;
+                var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+                var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
+                var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
+                d3.select(chart).append("svg:line")
+                    .attr("id", "scatterD3-drag-line")
+                    .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
+                    .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
+                    .style("stroke", "#000")
+                    .style("opacity", 0.3);
+            }
+        })
+        .on('drag', function(d) {
+            if (dragging) {
+                cx = d3.event.x - x(d.x);
+                cy = d3.event.y - y(d.y);
+                d3.select(this)
+                    .attr('dx', cx + "px")
+                    .attr('dy', cy + "px");
+                d3.select("#scatterD3-drag-line")
+                    .attr('x2', x(d.x) + cx)
+                    .attr("y2", y(d.y) + cy);
+                d.lab_dx = cx;
+                d.lab_dy = cy;
+            }
+        })
+        .on('end', function(d) {
+            if (dragging) {
+                d3.select(this).style('fill', color_scale(d.col_var));
+                d3.select("#scatterD3-drag-line").remove();
+                dragging = false;
+            }
+        });
 
 
 
     // Lasso functions to execute while lassoing
     lasso_start = function() {
         lasso.items()
-        .each(function(d){
-            if (d3.select(this).classed('dot')) {
-                d.scatterD3_lasso_dot_stroke = d.scatterD3_lasso_dot_stroke ? d.scatterD3_lasso_dot_stroke : d3.select(this).style("stroke");
-                d.scatterD3_lasso_dot_fill = d.scatterD3_lasso_dot_fill ? d.scatterD3_lasso_dot_fill : d3.select(this).style("fill");
-                d.scatterD3_lasso_dot_opacity = d.scatterD3_lasso_dot_opacity ? d.scatterD3_lasso_dot_opacity : d3.select(this).style("opacity");
-            }
-            if (d3.select(this).classed('arrow')) {
-                d.scatterD3_lasso_arrow_stroke = d.scatterD3_lasso_arrow_stroke ? d.scatterD3_lasso_arrow_stroke : d3.select(this).style("stroke");
-                d.scatterD3_lasso_arrow_fill = d.scatterD3_lasso_arrow_fill ? d.scatterD3_lasso_arrow_fill : d3.select(this).style("fill");
-                d.scatterD3_lasso_arrow_opacity = d.scatterD3_lasso_arrow_opacity ? d.scatterD3_lasso_arrow_opacity : d3.select(this).style("opacity");
-            }
-            if (d3.select(this).classed('point-label')) {
-                d.scatterD3_lasso_text_stroke = d.scatterD3_lasso_text_stroke ? d.scatterD3_lasso_text_stroke : d3.select(this).style("stroke");
-                d.scatterD3_lasso_text_fill = d.scatterD3_lasso_text_fill ? d.scatterD3_lasso_text_fill : d3.select(this).style("fill");
-                d.scatterD3_lasso_text_opacity = d.scatterD3_lasso_text_opacity ? d.scatterD3_lasso_text_opacity : d3.select(this).style("opacity");
-            }
-        })
-        .style("fill", null) // clear all of the fills
-        .style("opacity", null) // clear all of the opacities
-        .style("stroke", null) // clear all of the strokes
-        .classed("not-possible-lasso", true)
-        .classed("selected-lasso not-selected-lasso", false); // style as not possible
+            .each(function(d) {
+                if (d3.select(this).classed('dot')) {
+                    d.scatterD3_lasso_dot_stroke = d.scatterD3_lasso_dot_stroke ? d.scatterD3_lasso_dot_stroke : d3.select(this).style("stroke");
+                    d.scatterD3_lasso_dot_fill = d.scatterD3_lasso_dot_fill ? d.scatterD3_lasso_dot_fill : d3.select(this).style("fill");
+                    d.scatterD3_lasso_dot_opacity = d.scatterD3_lasso_dot_opacity ? d.scatterD3_lasso_dot_opacity : d3.select(this).style("opacity");
+                }
+                if (d3.select(this).classed('arrow')) {
+                    d.scatterD3_lasso_arrow_stroke = d.scatterD3_lasso_arrow_stroke ? d.scatterD3_lasso_arrow_stroke : d3.select(this).style("stroke");
+                    d.scatterD3_lasso_arrow_fill = d.scatterD3_lasso_arrow_fill ? d.scatterD3_lasso_arrow_fill : d3.select(this).style("fill");
+                    d.scatterD3_lasso_arrow_opacity = d.scatterD3_lasso_arrow_opacity ? d.scatterD3_lasso_arrow_opacity : d3.select(this).style("opacity");
+                }
+                if (d3.select(this).classed('point-label')) {
+                    d.scatterD3_lasso_text_stroke = d.scatterD3_lasso_text_stroke ? d.scatterD3_lasso_text_stroke : d3.select(this).style("stroke");
+                    d.scatterD3_lasso_text_fill = d.scatterD3_lasso_text_fill ? d.scatterD3_lasso_text_fill : d3.select(this).style("fill");
+                    d.scatterD3_lasso_text_opacity = d.scatterD3_lasso_text_opacity ? d.scatterD3_lasso_text_opacity : d3.select(this).style("opacity");
+                }
+            })
+            .style("fill", null) // clear all of the fills
+            .style("opacity", null) // clear all of the opacities
+            .style("stroke", null) // clear all of the strokes
+            .classed("not-possible-lasso", true)
+            .classed("selected-lasso not-selected-lasso", false); // style as not possible
     };
     lasso_draw = function() {
         // Style the possible dots
         lasso.items()
-        .filter(function(d) {return d.possible === true})
-        .classed("not-possible-lasso", false)
-        .classed("possible-lasso", true);
+            .filter(function(d) {
+                return d.possible === true
+            })
+            .classed("not-possible-lasso", false)
+            .classed("possible-lasso", true);
         // Style the not possible dot
-        lasso.items().filter(function(d) {return d.possible === false})
-        .classed("not-possible-lasso", true)
-        .classed("possible-lasso", false);
+        lasso.items().filter(function(d) {
+                return d.possible === false
+            })
+            .classed("not-possible-lasso", true)
+            .classed("possible-lasso", false);
     };
     lasso_end = function() {
         lasso_off(svg);
         var some_selected = false;
-        if(lasso.items().filter(function(d) {return d.selected === true}).size() !== 0){
+        if (lasso.items().filter(function(d) {
+                return d.selected === true
+            }).size() !== 0) {
             some_selected = true;
         }
         // Reset the color of all dots
         lasso.items()
-           .style("fill", function(d) {
-               if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_fill; }
-               if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_fill; }
-               if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_fill; }
-           })
-           .style("opacity", function(d) {
-               if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
-               if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_opacity; }
-               if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_opacity; }
-           })
-           .style("stroke", function(d) {
-               if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
-               if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_stroke; }
-               if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_stroke; }
-           });
-        if (some_selected) {
-          // Style the selected dots
-          var sel = lasso.items().filter(function(d) {return d.selected === true})
-            .classed("not-possible-lasso possible-lasso", false)
-            .classed("selected-lasso", true)
-            .style("opacity", "1");
-
-          // Reset the style of the not selected dots
-          lasso.items().filter(function(d) {return d.selected === false})
-            .classed("not-possible-lasso possible-lasso", false)
-            .classed("not-selected-lasso", true)
-            .style("opacity", function(d) { return d.point_opacity / 7 });
-
-          // Call custom callback function
-          var callback_sel = svg.selectAll(".dot, .arrow").filter(function(d) {return d.selected === true});
-          if (typeof settings.lasso_callback === 'function') settings.lasso_callback(callback_sel);
-        }
-        else {
-          lasso.items()
-            .classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
-            .style("opacity", function(d) {
-                if (d3.select(this).classed('point-label')) {return 1};
-                return d.point_opacity;
+            .style("fill", function(d) {
+                if (d3.select(this).classed('point-label')) {
+                    return d.scatterD3_lasso_text_fill;
+                }
+                if (d3.select(this).classed('dot')) {
+                    return d.scatterD3_lasso_dot_fill;
+                }
+                if (d3.select(this).classed('arrow')) {
+                    return d.scatterD3_lasso_arrow_fill;
+                }
             })
+            .style("opacity", function(d) {
+                if (d3.select(this).classed('point-label')) {
+                    return d.scatterD3_lasso_text_opacity;
+                }
+                if (d3.select(this).classed('dot')) {
+                    return d.scatterD3_lasso_dot_opacity;
+                }
+                if (d3.select(this).classed('arrow')) {
+                    return d.scatterD3_lasso_arrow_opacity;
+                }
+            })
+            .style("stroke", function(d) {
+                if (d3.select(this).classed('point-label')) {
+                    return d.scatterD3_lasso_text_stroke;
+                }
+                if (d3.select(this).classed('dot')) {
+                    return d.scatterD3_lasso_dot_stroke;
+                }
+                if (d3.select(this).classed('arrow')) {
+                    return d.scatterD3_lasso_arrow_stroke;
+                }
+            });
+        if (some_selected) {
+            // Style the selected dots
+            var sel = lasso.items().filter(function(d) {
+                    return d.selected === true
+                })
+                .classed("not-possible-lasso possible-lasso", false)
+                .classed("selected-lasso", true)
+                .style("opacity", "1");
+
+            // Reset the style of the not selected dots
+            lasso.items().filter(function(d) {
+                    return d.selected === false
+                })
+                .classed("not-possible-lasso possible-lasso", false)
+                .classed("not-selected-lasso", true)
+                .style("opacity", function(d) {
+                    return d.point_opacity / 7
+                });
+
+            // Call custom callback function
+            var callback_sel = svg.selectAll(".dot, .arrow").filter(function(d) {
+                return d.selected === true
+            });
+            if (typeof settings.lasso_callback === 'function') settings.lasso_callback(callback_sel);
+        } else {
+            lasso.items()
+                .classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
+                .style("opacity", function(d) {
+                    if (d3.select(this).classed('point-label')) {
+                        return 1
+                    };
+                    return d.point_opacity;
+                })
         }
-      };
-      lasso_classes = ".dot, .arrow, .point-label";
-      // Define the lasso
-      lasso_base = d3.lasso()
-      .closePathDistance(2000)   // max distance for the lasso loop to be closed
-      .closePathSelect(true)     // can items be selected by closing the path?
-      .hoverSelect(true)         // can items by selected by hovering over them?
-      .on("start", lasso_start)   // lasso start function
-      .on("draw", lasso_draw)     // lasso draw function
-      .on("end", lasso_end);      // lasso end function
+    };
+    lasso_classes = ".dot, .arrow, .point-label";
+    // Define the lasso
+    lasso_base = d3.lasso()
+        .closePathDistance(2000) // max distance for the lasso loop to be closed
+        .closePathSelect(true) // can items be selected by closing the path?
+        .hoverSelect(true) // can items by selected by hovering over them?
+        .on("start", lasso_start) // lasso start function
+        .on("draw", lasso_draw) // lasso draw function
+        .on("end", lasso_end); // lasso end function
 
     // Toggle lasso on / zoom off
     function lasso_on(svg) {
@@ -596,8 +718,8 @@ function scatterD3() {
         root.on(".zoom", null);
         // Enable lasso
         lasso = lasso_base
-        .area(root)
-        .items(chart_body.selectAll(lasso_classes));
+            .area(root)
+            .items(chart_body.selectAll(lasso_classes));
         root.call(lasso);
         // Change cursor style
         root.style("cursor", "crosshair");
@@ -606,9 +728,11 @@ function scatterD3() {
         var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
         if (!menu_entry.empty()) {
             menu_entry.classed("active", true)
-            .html("Toggle lasso off");
+                .html("Toggle lasso off");
         }
-        if (!custom_entry.empty()) { custom_entry.classed("active", true) }
+        if (!custom_entry.empty()) {
+            custom_entry.classed("active", true)
+        }
     }
 
     // Toggle lasso off / zoom on
@@ -626,9 +750,11 @@ function scatterD3() {
         var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
         if (!menu_entry.empty()) {
             menu_entry.classed("active", false)
-            .html("Toggle lasso on");
+                .html("Toggle lasso on");
         }
-        if (!custom_entry.empty()) { custom_entry.classed("active", false) }
+        if (!custom_entry.empty()) {
+            custom_entry.classed("active", false)
+        }
     }
 
     // Toggle lasso state when element clicked
@@ -637,71 +763,74 @@ function scatterD3() {
         var custom_entry = d3.select("#" + settings.dom_id_lasso_toggle);
         if (settings.lasso &&
             ((!menu_entry.empty() && menu_entry.classed("active")) ||
-             (!custom_entry.empty() && custom_entry.classed("active")))) {
+                (!custom_entry.empty() && custom_entry.classed("active")))) {
             lasso_off(svg);
-        }
-        else {
+        } else {
             lasso_on(svg);
         }
     }
 
     // Format legend label
-    function legend_label_formatting (selection, margin_top) {
+    function legend_label_formatting(selection, margin_top) {
         selection
-        .style("text-anchor", "beginning")
-        .style("fill", "#000")
-        .style("font-weight", "bold");
+            .style("text-anchor", "beginning")
+            .style("fill", "#000")
+            .style("font-weight", "bold");
     }
 
     // Create color legend
     function add_color_legend() {
 
         var legend = svg.select(".legend")
-        .style("font-size", settings.legend_font_size);
+            .style("font-size", settings.legend_font_size);
 
         var legend_color_domain = color_scale.domain().sort();
         var legend_color_scale = d3.scaleOrdinal(d3.schemeCategory10);
 
         legend_color_scale
-        .domain(legend_color_domain)
-        .range(legend_color_domain.map(function(d) {return color_scale(d)}));
+            .domain(legend_color_domain)
+            .range(legend_color_domain.map(function(d) {
+                return color_scale(d)
+            }));
 
         var color_legend = d3.legendColor()
-        .shapePadding(3)
-        .shape("rect")
-        .scale(legend_color_scale)
-        .on("cellover", function(d) {
-            d = css_clean(d);
-            var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
-            var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
-            svg.selectAll(nsel)
-            .transition()
-            .style("opacity", 0.2);
-            svg.selectAll(sel)
-            .transition()
-            .style("opacity", 1);
-        })
-        .on("cellout", function(d) {
-            var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
-            svg.selectAll(sel)
-            .transition()
-            .style("opacity", function(d2) {return d2.point_opacity});
-            svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
-            .transition()
-            .style("opacity", 1);
-        });
+            .shapePadding(3)
+            .shape("rect")
+            .scale(legend_color_scale)
+            .on("cellover", function(d) {
+                d = css_clean(d);
+                var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
+                var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
+                svg.selectAll(nsel)
+                    .transition()
+                    .style("opacity", 0.2);
+                svg.selectAll(sel)
+                    .transition()
+                    .style("opacity", 1);
+            })
+            .on("cellout", function(d) {
+                var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
+                svg.selectAll(sel)
+                    .transition()
+                    .style("opacity", function(d2) {
+                        return d2.point_opacity
+                    });
+                svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
+                    .transition()
+                    .style("opacity", 1);
+            });
 
         legend.append("g")
-        .append("text")
-        .attr("class", "color-legend-label")
-        .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")")
-        .text(settings.col_lab)
-        .call(legend_label_formatting);
+            .append("text")
+            .attr("class", "color-legend-label")
+            .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")")
+            .text(settings.col_lab)
+            .call(legend_label_formatting);
 
         legend.append("g")
-        .attr("class", "color-legend")
-        .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 8) + ")")
-        .call(color_legend);
+            .attr("class", "color-legend")
+            .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 8) + ")")
+            .call(color_legend);
     }
 
     // Create symbol legend
@@ -715,44 +844,48 @@ function scatterD3() {
 
         var legend_symbol_domain = symbol_scale.domain().sort();
         var legend_symbol_scale = d3.scaleOrdinal()
-        .domain(legend_symbol_domain)
-        .range(legend_symbol_domain.map(function(d) {return d3.symbol().type(d3.symbols[symbol_scale(d)])()}));
+            .domain(legend_symbol_domain)
+            .range(legend_symbol_domain.map(function(d) {
+                return d3.symbol().type(d3.symbols[symbol_scale(d)])()
+            }));
 
         var symbol_legend = d3.legendSymbol()
-        .shapePadding(5)
-        .scale(legend_symbol_scale)
-        .on("cellover", function(d) {
-            d = css_clean(d);
-            var nsel = ".symbol:not(.symbol-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
-            var sel = ".symbol-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
-            svg.selectAll(nsel)
-            .transition()
-            .style("opacity", 0.2);
-            svg.selectAll(sel)
-            .transition()
-            .style("opacity", 1);
-        })
-        .on("cellout", function(d) {
-            var sel = ".symbol:not(.selected-lasso):not(.not-selected-lasso)";
-            svg.selectAll(sel)
-            .transition()
-            .style("opacity", function(d2) {return d2.point_opacity});
-            svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
-            .transition()
-            .style("opacity", 1);
-        });
+            .shapePadding(5)
+            .scale(legend_symbol_scale)
+            .on("cellover", function(d) {
+                d = css_clean(d);
+                var nsel = ".symbol:not(.symbol-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
+                var sel = ".symbol-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
+                svg.selectAll(nsel)
+                    .transition()
+                    .style("opacity", 0.2);
+                svg.selectAll(sel)
+                    .transition()
+                    .style("opacity", 1);
+            })
+            .on("cellout", function(d) {
+                var sel = ".symbol:not(.selected-lasso):not(.not-selected-lasso)";
+                svg.selectAll(sel)
+                    .transition()
+                    .style("opacity", function(d2) {
+                        return d2.point_opacity
+                    });
+                svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
+                    .transition()
+                    .style("opacity", 1);
+            });
 
         legend.append("g")
-        .append("text")
-        .attr("class", "symbol-legend-label")
-        .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")")
-        .text(settings.symbol_lab)
-        .call(legend_label_formatting);
+            .append("text")
+            .attr("class", "symbol-legend-label")
+            .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")")
+            .text(settings.symbol_lab)
+            .call(legend_label_formatting);
 
         legend.append("g")
-        .attr("class", "symbol-legend")
-        .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")")
-        .call(symbol_legend);
+            .attr("class", "symbol-legend")
+            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")")
+            .call(symbol_legend);
 
     }
 
@@ -767,36 +900,39 @@ function scatterD3() {
         margin.size_legend_top = color_legend_height + symbol_legend_height + margin.legend_top;
 
         var legend_size_scale = d3.scaleLinear()
-        .domain(size_scale.domain())
-        // FIXME : find exact formula
-        .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8}));
+            .domain(size_scale.domain())
+            // FIXME : find exact formula
+            .range(size_scale.range().map(function(d) {
+                return Math.sqrt(d) / 1.8
+            }));
 
         var size_legend = d3.legendSize()
-        .shapePadding(3)
-        .shape('circle')
-        .scale(legend_size_scale);
+            .shapePadding(3)
+            .shape('circle')
+            .scale(legend_size_scale);
 
         legend.append("g")
-        .append("text")
-        .attr("class", "size-legend-label")
-        .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")")
-        .text(settings.size_lab)
-        .call(legend_label_formatting);
+            .append("text")
+            .attr("class", "size-legend-label")
+            .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")")
+            .text(settings.size_lab)
+            .call(legend_label_formatting);
 
         legend.append("g")
-        .attr("class", "size-legend")
-        .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")")
-        .call(size_legend);
+            .attr("class", "size-legend")
+            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")")
+            .call(size_legend);
 
     }
 
 
     // Filter points and arrows data
     function point_filter(d) {
-      return d.type_var === undefined || d.type_var == "point";
+        return d.type_var === undefined || d.type_var == "point";
     }
+
     function arrow_filter(d) {
-      return d.type_var !== undefined && d.type_var == "arrow";
+        return d.type_var !== undefined && d.type_var == "arrow";
     }
 
 
@@ -808,14 +944,14 @@ function scatterD3() {
 
             // Root chart element and axes
             root = svg.append("g")
-            .attr("class", "root")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-            .call(zoom);
+                .attr("class", "root")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .call(zoom);
 
             root.append("rect")
-            .style("fill", "#FFF")
-            .attr("width", dims.width)
-            .attr("height", dims.height);
+                .style("fill", "#FFF")
+                .attr("width", dims.width)
+                .attr("height", dims.height);
 
             root.call(add_axes);
 
@@ -824,75 +960,87 @@ function scatterD3() {
             // arrow head markers
             color_scale.range().forEach(function(d) {
                 defs.append("marker")
-                .attr("id", "arrow-head-" + settings.html_id + "-" + d)
-                .attr("markerWidth", "10")
-                .attr("markerHeight", "10")
-                .attr("refX", "10")
-                .attr("refY", "4")
-                .attr("orient", "auto")
-                .append("path")
-                .attr("d", "M0,0 L0,8 L10,4 L0,0")
-                .style("fill", d);
+                    .attr("id", "arrow-head-" + settings.html_id + "-" + d)
+                    .attr("markerWidth", "10")
+                    .attr("markerHeight", "10")
+                    .attr("refX", "10")
+                    .attr("refY", "4")
+                    .attr("orient", "auto")
+                    .append("path")
+                    .attr("d", "M0,0 L0,8 L10,4 L0,0")
+                    .style("fill", d);
             });
 
             // chart body
             chart_body = root.append("svg")
-            .attr("class", "chart-body")
-            .attr("width", dims.width)
-            .attr("height", dims.height);
+                .attr("class", "chart-body")
+                .attr("width", dims.width)
+                .attr("height", dims.height);
 
             chart_body.append("path")
-            .attr("class", "zeroline hline")
-            .attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
+                .attr("class", "zeroline hline")
+                .attr("d", zeroline([{
+                    x: x.domain()[0],
+                    y: 0
+                }, {
+                    x: x.domain()[1],
+                    y: 0
+                }]));
             chart_body.append("path")
-            .attr("class", "zeroline vline")
-            .attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
+                .attr("class", "zeroline vline")
+                .attr("d", zeroline([{
+                    x: 0,
+                    y: y.domain()[0]
+                }, {
+                    x: 0,
+                    y: y.domain()[1]
+                }]));
 
             // Unit circle
             if (settings.unit_circle) {
-              var unit_circle = chart_body.append('svg:ellipse')
-              .attr('class', 'unit-circle')
-              .call(unit_circle_init);
+                var unit_circle = chart_body.append('svg:ellipse')
+                    .attr('class', 'unit-circle')
+                    .call(unit_circle_init);
             }
 
             // Add points
             var dot = chart_body
-            .selectAll(".dot")
-            .data(data.filter(point_filter), key);
+                .selectAll(".dot")
+                .data(data.filter(point_filter), key);
             dot.enter()
-            .append("path")
-            .call(dot_init)
-            .call(dot_formatting);
+                .append("path")
+                .call(dot_init)
+                .call(dot_formatting);
             // Add arrows
             var arrow = chart_body
-            .selectAll(".arrow")
-            .data(data.filter(arrow_filter), key);
+                .selectAll(".arrow")
+                .data(data.filter(arrow_filter), key);
             arrow.enter()
-            .append("svg:line")
-            .call(arrow_init)
-            .call(arrow_formatting);
+                .append("svg:line")
+                .call(arrow_init)
+                .call(arrow_formatting);
 
             // Add ellipses
             if (settings.ellipses) {
-              var ellipse = chart_body
-              .selectAll(".ellipse")
-              .data(settings.ellipses_data);
-              ellipse.enter()
-              .append("svg:path")
-              .call(ellipse_init)
-              .call(ellipse_formatting);
+                var ellipse = chart_body
+                    .selectAll(".ellipse")
+                    .data(settings.ellipses_data);
+                ellipse.enter()
+                    .append("svg:path")
+                    .call(ellipse_init)
+                    .call(ellipse_formatting);
             }
 
             // Add text labels
             if (settings.has_labels) {
                 var labels = chart_body.selectAll(".point-label")
-                .data(data, key);
+                    .data(data, key);
 
                 labels.enter()
-                .append("text")
-                .call(label_init)
-                .call(label_formatting)
-                .call(drag);
+                    .append("text")
+                    .call(label_init)
+                    .call(label_formatting)
+                    .call(drag);
             }
 
             // Legends
@@ -913,70 +1061,70 @@ function scatterD3() {
             }
 
             // Tools menu
-            if(settings.menu) {
+            if (settings.menu) {
 
-              // Gear icon
-              gear = svg.append("g")
-              .attr("class", "gear-menu")
-              .attr("transform", "translate(" + (width - 36) + ", 6)");
-              gear.append("rect")
-              .attr("class", "gear-toggle")
-              .attr("width", "25")
-              .attr("height", "25")
-              .style("fill", "#FFFFFF")
-              gear.append("path")
-              .attr("d", "m 24.28,7.2087374 -1.307796,0 c -0.17052,-0.655338 -0.433486,-1.286349 -0.772208,-1.858846 l 0.927566,-0.929797 c 0.281273,-0.281188 0.281273,-0.738139 0,-1.019312 L 21.600185,1.8728727 C 21.319088,1.591685 20.863146,1.5914219 20.582048,1.8726096 L 19.650069,2.8001358 C 19.077606,2.4614173 18.446602,2.1982296 17.791262,2.0278389 l 0,-1.30783846 c 0,-0.39762 -0.313645,-0.72 -0.711262,-0.72 l -2.16,0 c -0.397618,0 -0.711262,0.32238 -0.711262,0.72 l 0,1.30783846 c -0.65534,0.1703907 -1.286345,0.43344 -1.858849,0.7722138 L 11.420092,1.8724435 c -0.281185,-0.2812846 -0.738131,-0.2812846 -1.019315,0 L 8.8728737,3.3998124 C 8.5916888,3.6809174 8.591427,4.1368574 8.872612,4.4179484 l 0.9275234,0.931984 c -0.3388099,0.572456 -0.6019076,1.203467 -0.7722956,1.858805 l -1.3078398,0 c -0.3976159,0 -0.72,0.313643 -0.72,0.711263 L 7,10.08 c 0,0.397661 0.3223841,0.711263 0.72,0.711263 l 1.3078398,0 c 0.170388,0.655338 0.4334414,1.286349 0.7722084,1.858846 L 8.872349,13.579906 c -0.2811836,0.281105 -0.2811836,0.738139 0,1.019188 l 1.527378,1.527951 c 0.281185,0.28127 0.737041,0.281533 1.018224,3.04e-4 l 0.931981,-0.927484 c 0.572461,0.338718 1.203466,0.601823 1.858806,0.772338 l 0,1.307797 c 0,0.397662 0.313644,0.72 0.711262,0.72 l 2.16,0 c 0.39766,0 0.711262,-0.32238 0.711262,-0.72 l 0,-1.307797 c 0.65534,-0.170515 1.286344,-0.433481 1.858849,-0.772214 l 0.929797,0.927568 c 0.281098,0.281271 0.738131,0.281271 1.019184,0 l 1.527947,-1.527369 c 0.281273,-0.281105 0.281534,-0.737045 3.06e-4,-1.018136 l -0.92748,-0.931984 c 0.338723,-0.572456 0.601819,-1.203467 0.772339,-1.858805 l 1.307796,0 c 0.39766,0 0.72,-0.313643 0.72,-0.711263 l 0,-2.1599996 c 0,-0.39762 -0.322384,-0.711263 -0.72,-0.711263 z M 16,12.6 c -1.988258,0 -3.6,-1.611789 -3.6,-3.5999996 0,-1.988252 1.611742,-3.6 3.6,-3.6 1.988258,0 3.6,1.611748 3.6,3.6 C 19.6,10.988252 17.988258,12.6 16,12.6 Z")
-              .attr("transform", "translate(-3,3)")
-              .style("fill", "#666666");
+                // Gear icon
+                gear = svg.append("g")
+                    .attr("class", "gear-menu")
+                    .attr("transform", "translate(" + (width - 36) + ", 6)");
+                gear.append("rect")
+                    .attr("class", "gear-toggle")
+                    .attr("width", "25")
+                    .attr("height", "25")
+                    .style("fill", "#FFFFFF")
+                gear.append("path")
+                    .attr("d", "m 24.28,7.2087374 -1.307796,0 c -0.17052,-0.655338 -0.433486,-1.286349 -0.772208,-1.858846 l 0.927566,-0.929797 c 0.281273,-0.281188 0.281273,-0.738139 0,-1.019312 L 21.600185,1.8728727 C 21.319088,1.591685 20.863146,1.5914219 20.582048,1.8726096 L 19.650069,2.8001358 C 19.077606,2.4614173 18.446602,2.1982296 17.791262,2.0278389 l 0,-1.30783846 c 0,-0.39762 -0.313645,-0.72 -0.711262,-0.72 l -2.16,0 c -0.397618,0 -0.711262,0.32238 -0.711262,0.72 l 0,1.30783846 c -0.65534,0.1703907 -1.286345,0.43344 -1.858849,0.7722138 L 11.420092,1.8724435 c -0.281185,-0.2812846 -0.738131,-0.2812846 -1.019315,0 L 8.8728737,3.3998124 C 8.5916888,3.6809174 8.591427,4.1368574 8.872612,4.4179484 l 0.9275234,0.931984 c -0.3388099,0.572456 -0.6019076,1.203467 -0.7722956,1.858805 l -1.3078398,0 c -0.3976159,0 -0.72,0.313643 -0.72,0.711263 L 7,10.08 c 0,0.397661 0.3223841,0.711263 0.72,0.711263 l 1.3078398,0 c 0.170388,0.655338 0.4334414,1.286349 0.7722084,1.858846 L 8.872349,13.579906 c -0.2811836,0.281105 -0.2811836,0.738139 0,1.019188 l 1.527378,1.527951 c 0.281185,0.28127 0.737041,0.281533 1.018224,3.04e-4 l 0.931981,-0.927484 c 0.572461,0.338718 1.203466,0.601823 1.858806,0.772338 l 0,1.307797 c 0,0.397662 0.313644,0.72 0.711262,0.72 l 2.16,0 c 0.39766,0 0.711262,-0.32238 0.711262,-0.72 l 0,-1.307797 c 0.65534,-0.170515 1.286344,-0.433481 1.858849,-0.772214 l 0.929797,0.927568 c 0.281098,0.281271 0.738131,0.281271 1.019184,0 l 1.527947,-1.527369 c 0.281273,-0.281105 0.281534,-0.737045 3.06e-4,-1.018136 l -0.92748,-0.931984 c 0.338723,-0.572456 0.601819,-1.203467 0.772339,-1.858805 l 1.307796,0 c 0.39766,0 0.72,-0.313643 0.72,-0.711263 l 0,-2.1599996 c 0,-0.39762 -0.322384,-0.711263 -0.72,-0.711263 z M 16,12.6 c -1.988258,0 -3.6,-1.611789 -3.6,-3.5999996 0,-1.988252 1.611742,-3.6 3.6,-3.6 1.988258,0 3.6,1.611748 3.6,3.6 C 19.6,10.988252 17.988258,12.6 16,12.6 Z")
+                    .attr("transform", "translate(-3,3)")
+                    .style("fill", "#666666");
 
-              var menu_parent = d3.select(svg.node().parentNode);
-              menu_parent.style("position", "relative");
-              var menu = menu_parent.select(".scatterD3-menu");
+                var menu_parent = d3.select(svg.node().parentNode);
+                menu_parent.style("position", "relative");
+                var menu = menu_parent.select(".scatterD3-menu");
 
-              menu.attr("id", "scatterD3-menu-" + settings.html_id);
+                menu.attr("id", "scatterD3-menu-" + settings.html_id);
 
-              menu.append("li")
-              .append("a")
-              .on("click", reset_zoom)
-              .html("Reset zoom");
-
-              menu.append("li")
-              .append("a")
-              .on("click", export_svg)
-              .html("Export to SVG");
-
-              if (settings.lasso) {
                 menu.append("li")
-                .append("a")
-                .attr("class", "lasso-entry")
-                .on("click", lasso_toggle)
-                .html("Toggle lasso on");
-              }
+                    .append("a")
+                    .on("click", reset_zoom)
+                    .html("Reset zoom");
 
-              if (settings.has_labels) {
                 menu.append("li")
-                .append("a")
-                .on("click", export_labels_position)
-                .html("Export labels positions");
-              }
+                    .append("a")
+                    .on("click", export_svg)
+                    .html("Export to SVG");
 
-              gear.on("click", function(d, i){
-                var menu = d3.select("#scatterD3-menu-" + settings.html_id);
-                var gear = svg.select(".gear-menu");
-                if (!menu.classed("open")) {
-                  menu.transition().duration(300)
-                  .style("opacity", "0.95")
-                  .style("width", "165px");
-                  gear.classed("selected", true);
-                  menu.classed("open", true)
-                } else {
-                  menu.transition().duration(300)
-                  .style("opacity", "0")
-                  .style("width", "0px")
-                  gear.classed("selected", false);
-                  menu.classed("open", false)
+                if (settings.lasso) {
+                    menu.append("li")
+                        .append("a")
+                        .attr("class", "lasso-entry")
+                        .on("click", lasso_toggle)
+                        .html("Toggle lasso on");
                 }
-              });
+
+                if (settings.has_labels) {
+                    menu.append("li")
+                        .append("a")
+                        .on("click", export_labels_position)
+                        .html("Export labels positions");
+                }
+
+                gear.on("click", function(d, i) {
+                    var menu = d3.select("#scatterD3-menu-" + settings.html_id);
+                    var gear = svg.select(".gear-menu");
+                    if (!menu.classed("open")) {
+                        menu.transition().duration(300)
+                            .style("opacity", "0.95")
+                            .style("width", "165px");
+                        gear.classed("selected", true);
+                        menu.classed("open", true)
+                    } else {
+                        menu.transition().duration(300)
+                            .style("opacity", "0")
+                            .style("width", "0px")
+                        gear.classed("selected", false);
+                        menu.classed("open", false)
+                    }
+                });
             }
 
         });
@@ -995,24 +1143,24 @@ function scatterD3() {
             }
             if (settings.has_labels) {
                 var labels = chart_body.selectAll(".point-label")
-                            .data(data, key);
+                    .data(data, key);
                 labels.enter()
-                .append("text")
-                .call(label_init)
-                .call(label_formatting)
-                .call(drag);
+                    .append("text")
+                    .call(label_init)
+                    .call(label_formatting)
+                    .call(drag);
             }
         }
         if (old_settings.unit_circle != settings.unit_circle) {
             if (!settings.unit_circle) {
                 var circle = svg.select(".unit-circle");
                 circle.transition().duration(1000).call(unit_circle_init)
-                .style("opacity", "0").remove();
+                    .style("opacity", "0").remove();
             }
             if (settings.unit_circle) {
                 chart_body.append('svg:ellipse')
-                .attr('class', 'unit-circle')
-                .style("opacity", "0");
+                    .attr('class', 'unit-circle')
+                    .style("opacity", "0");
             }
         }
     };
@@ -1020,89 +1168,101 @@ function scatterD3() {
     // Update data with transitions
     function update_data() {
 
-      if (settings.has_legend_changed && settings.legend_width > 0)
+        if (settings.has_legend_changed && settings.legend_width > 0)
             resize_chart();
 
-      setup_sizes();
-      setup_scales();
+        setup_sizes();
+        setup_scales();
 
-      var t0 = svg.transition().duration(1000);
-      svg.select(".x-axis-label").text(settings.xlab);
-      t0.select(".x.axis").call(xAxis);
-      t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
-      svg.select(".y-axis-label").text(settings.ylab);
-      t0.select(".y.axis").call(yAxis);
-      t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-      root.call(zoom);
-      zoom.x(x);
-      zoom.y(y);
-      // Unit circle
-      if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
+        var t0 = svg.transition().duration(1000);
+        svg.select(".x-axis-label").text(settings.xlab);
+        t0.select(".x.axis").call(xAxis);
+        t0.select(".zeroline.vline").attr("d", zeroline([{
+            x: 0,
+            y: y.domain()[0]
+        }, {
+            x: 0,
+            y: y.domain()[1]
+        }]));
+        svg.select(".y-axis-label").text(settings.ylab);
+        t0.select(".y.axis").call(yAxis);
+        t0.select(".zeroline.hline").attr("d", zeroline([{
+            x: x.domain()[0],
+            y: 0
+        }, {
+            x: x.domain()[1],
+            y: 0
+        }]));
+        root.call(zoom);
+        zoom.x(x);
+        zoom.y(y);
+        // Unit circle
+        if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
-      // Add points
-      var dot = chart_body.selectAll(".dot")
-      .data(data.filter(point_filter), key);
-      dot.enter().append("path").call(dot_init);
-      dot.transition().duration(1000).call(dot_formatting);
-      dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
-      // Add arrows
-      var arrow = chart_body.selectAll(".arrow")
-      .data(data.filter(arrow_filter), key);
-      arrow.enter().append("svg:line").call(arrow_init)
-      .style("opacity", "0")
-      .transition().duration(1000)
-      .style("opacity", "1");
-      arrow.transition().duration(1000).call(arrow_formatting);
-      arrow.exit().transition().duration(1000).style("opacity", "0").remove();
+        // Add points
+        var dot = chart_body.selectAll(".dot")
+            .data(data.filter(point_filter), key);
+        dot.enter().append("path").call(dot_init);
+        dot.transition().duration(1000).call(dot_formatting);
+        dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+        // Add arrows
+        var arrow = chart_body.selectAll(".arrow")
+            .data(data.filter(arrow_filter), key);
+        arrow.enter().append("svg:line").call(arrow_init)
+            .style("opacity", "0")
+            .transition().duration(1000)
+            .style("opacity", "1");
+        arrow.transition().duration(1000).call(arrow_formatting);
+        arrow.exit().transition().duration(1000).style("opacity", "0").remove();
 
-      // Add ellipses
-      if (settings.ellipses || settings.ellipses_changed) {
-          var ellipse = chart_body.selectAll(".ellipse")
-          .data(settings.ellipses_data);
-          ellipse.enter().append("path").call(ellipse_init)
-          .style("opacity", "0")
-          .transition().duration(1000)
-          .style("opacity", "1");
-          ellipse.transition().duration(1000).call(ellipse_formatting);
-          ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
-      }
+        // Add ellipses
+        if (settings.ellipses || settings.ellipses_changed) {
+            var ellipse = chart_body.selectAll(".ellipse")
+                .data(settings.ellipses_data);
+            ellipse.enter().append("path").call(ellipse_init)
+                .style("opacity", "0")
+                .transition().duration(1000)
+                .style("opacity", "1");
+            ellipse.transition().duration(1000).call(ellipse_formatting);
+            ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
+        }
 
-      if (settings.has_labels) {
-          var labels = chart_body.selectAll(".point-label")
-          .data(data, key);
-          labels.enter().append("text").call(label_init).call(drag);
-          labels.transition().duration(1000).call(label_formatting);
-          labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
-      }
+        if (settings.has_labels) {
+            var labels = chart_body.selectAll(".point-label")
+                .data(data, key);
+            labels.enter().append("text").call(label_init).call(drag);
+            labels.transition().duration(1000).call(label_formatting);
+            labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+        }
 
-      if (settings.legend_changed) {
+        if (settings.legend_changed) {
 
-          // Remove existing legends
-          svg.select(".legend").remove();
-          var legend = svg.append("g").attr("class", "legend");
+            // Remove existing legends
+            svg.select(".legend").remove();
+            var legend = svg.append("g").attr("class", "legend");
 
-          // Recreate them
-          if (settings.has_legend && settings.legend_width > 0) {
-              // Color legend
-              if (settings.has_color_var) {
-                add_color_legend.svg = svg;
-                add_color_legend(legend);
-              }
-              // Symbol legend
-              if (settings.has_symbol_var) {
-                add_symbol_legend.svg = svg;
-                add_symbol_legend(legend);
-              }
-              // Size legend
-              if (settings.has_size_var) add_size_legend(legend);
-          }
-      }
+            // Recreate them
+            if (settings.has_legend && settings.legend_width > 0) {
+                // Color legend
+                if (settings.has_color_var) {
+                    add_color_legend.svg = svg;
+                    add_color_legend(legend);
+                }
+                // Symbol legend
+                if (settings.has_symbol_var) {
+                    add_symbol_legend.svg = svg;
+                    add_symbol_legend(legend);
+                }
+                // Size legend
+                if (settings.has_size_var) add_size_legend(legend);
+            }
+        }
 
-      lasso_off(svg);
+        lasso_off(svg);
     };
 
     // Dynamically resize chart elements
-    function resize_chart () {
+    function resize_chart() {
         // recompute sizes
         setup_sizes();
         // recompute scales
@@ -1114,49 +1274,49 @@ function scatterD3() {
         yAxis = yAxis.scale(y).tickSize(-dims.width);
         // Change svg attributes
         root
-        .attr("width", dims.width)
-        .attr("height", dims.height);
+            .attr("width", dims.width)
+            .attr("height", dims.height);
         root.select("rect")
-        .attr("width", dims.width)
-        .attr("height", dims.height);
+            .attr("width", dims.width)
+            .attr("height", dims.height);
         chart_body
-        .attr("width", dims.width)
-        .attr("height", dims.height);
+            .attr("width", dims.width)
+            .attr("height", dims.height);
         svg.select(".x.axis")
-        .attr("transform", "translate(0," + dims.height + ")")
-        .call(xAxis);
+            .attr("transform", "translate(0," + dims.height + ")")
+            .call(xAxis);
         svg.select(".x-axis-label")
-        .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
+            .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
         svg.select(".y.axis")
-        .call(yAxis);
+            .call(yAxis);
         svg.select(".unit-circle")
-        .call(unit_circle_init);
+            .call(unit_circle_init);
         root.transition().duration(500)
-        .call(zoom.transform, d3.zoomTransform(root.node()));
+            .call(zoom.transform, d3.zoomTransform(root.node()));
 
         // Move legends
         if (settings.has_color_var) {
             svg.select(".color-legend-label")
-            .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")");
+                .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")");
             svg.select(".color-legend")
-            .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 12) + ")");
+                .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 12) + ")");
         }
         if (settings.has_symbol_var) {
             svg.select(".symbol-legend-label")
-            .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")");
+                .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")");
             svg.select(".symbol-legend")
-            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")");
+                .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")");
         }
         if (settings.has_size_var) {
             svg.select(".size-legend-label")
-            .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")");
+                .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")");
             svg.select(".size-legend")
-            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")");
+                .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")");
         }
         // Move menu
         if (settings.menu) {
             svg.select(".gear-menu")
-            .attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
+                .attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
         }
 
     };
@@ -1166,36 +1326,36 @@ function scatterD3() {
     chart.add_controls_handlers = function() {
         // Zoom reset
         d3.select("#" + settings.dom_id_reset_zoom)
-        .on("click", reset_zoom);
+            .on("click", reset_zoom);
 
         // SVG export
         d3.select("#" + settings.dom_id_svg_export)
-        .on("click", export_svg)
+            .on("click", export_svg)
 
         // Lasso toggle
         d3.select("#" + settings.dom_id_lasso_toggle)
-        .on("click", lasso_toggle)
+            .on("click", lasso_toggle)
     };
 
     chart.add_global_listeners = function() {
-      // Toogle zoom and lasso behaviors when shift is pressed
-      var parent = d3.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
-      d3.select(parent)
-      .attr("tabindex", 0)
-      .on("keydown", function() {
-        if (d3.event.key == "Shift") {
-          if (settings.lasso) {
-            lasso_on(svg);
-          }
-        }
-      })
-      .on("keyup", function() {
-        if (d3.event.key == "Shift") {
-          if (settings.lasso) {
-            lasso_off(svg);
-          }
-        }
-      })
+        // Toogle zoom and lasso behaviors when shift is pressed
+        var parent = d3.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
+        d3.select(parent)
+            .attr("tabindex", 0)
+            .on("keydown", function() {
+                if (d3.event.key == "Shift") {
+                    if (settings.lasso) {
+                        lasso_on(svg);
+                    }
+                }
+            })
+            .on("keyup", function() {
+                if (d3.event.key == "Shift") {
+                    if (settings.lasso) {
+                        lasso_off(svg);
+                    }
+                }
+            })
 
     }
 
@@ -1266,104 +1426,105 @@ HTMLWidgets.widget({
         // Create root svg element
         var svg = d3.select(el).append("svg");
         svg
-        .attr("width", width)
-        .attr("height", height)
-        .attr("class", "scatterD3")
-        .append("style")
-        .text(".scatterD3 {font: 11px Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;}" +
-        ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
-        ".scatterD3 .axis .tick line { stroke: #ddd;} " +
-        ".scatterD3 .axis text { fill: #000; } " +
-        ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} ");
+            .attr("width", width)
+            .attr("height", height)
+            .attr("class", "scatterD3")
+            .append("style")
+            .text(".scatterD3 {font: 11px Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;}" +
+                ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
+                ".scatterD3 .axis .tick line { stroke: #ddd;} " +
+                ".scatterD3 .axis text { fill: #000; } " +
+                ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} ");
 
         // Create tooltip content div
         var tooltip = d3.select(".scatterD3-tooltip");
         if (tooltip.empty()) {
             tooltip = d3.select("body")
-            .append("div")
-            .style("visibility", "hidden")
-            .attr("class", "scatterD3-tooltip");
+                .append("div")
+                .style("visibility", "hidden")
+                .attr("class", "scatterD3-tooltip");
         }
 
         // Create menu div
         var menu = d3.select(el).select(".scatterD3-menu");
         if (menu.empty()) {
             menu = d3.select(el).append("ul")
-            .attr("class", "scatterD3-menu");
+                .attr("class", "scatterD3-menu");
         }
 
         // Create scatterD3 instance
         var scatter = scatterD3().width(width).height(height).svg(svg);
 
-    return({
-        resize: function(width, height) {
+        return ({
+            resize: function(width, height) {
 
-            if (width < 0) width = 0;
-            if (height < 0) height = 0;
-            // resize root svg element
-            var svg = d3.select(el).select("svg");
-            svg
-            .attr("width", width)
-            .attr("height", height);
-            // resize chart
-            scatter.width(width).height(height).svg(svg).resize();
-        },
+                if (width < 0) width = 0;
+                if (height < 0) height = 0;
+                // resize root svg element
+                var svg = d3.select(el).select("svg");
+                svg
+                    .attr("width", width)
+                    .attr("height", height);
+                // resize chart
+                scatter.width(width).height(height).svg(svg).resize();
+            },
 
-        renderValue: function(obj) {
-            // Check if update or redraw
-            var first_draw = (Object.keys(scatter.settings()).length === 0);
-            var redraw = first_draw || !obj.settings.transitions;
-            var svg = d3.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
-            scatter = scatter.svg(svg);
+            renderValue: function(obj) {
+                // Check if update or redraw
+                var first_draw = (Object.keys(scatter.settings()).length === 0);
+                var redraw = first_draw || !obj.settings.transitions;
+                var svg = d3.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
+                scatter = scatter.svg(svg);
 
-            // convert data to d3 format
-            data = HTMLWidgets.dataframeToD3(obj.data);
+                // convert data to d3 format
+                data = HTMLWidgets.dataframeToD3(obj.data);
 
-            // If no transitions, remove chart and redraw it
-            if (!obj.settings.transitions) {
-                svg.selectAll("*:not(style)").remove();
-            }
+                // If no transitions, remove chart and redraw it
+                if (!obj.settings.transitions) {
+                    svg.selectAll("*:not(style)").remove();
+                }
 
-            // Complete draw
-            if (redraw) {
-                scatter = scatter.data(data, redraw);
-                obj.settings.redraw = true;
-                scatter = scatter.settings(obj.settings);
-                // add controls handlers and global listeners for shiny apps
-                scatter.add_controls_handlers();
-                scatter.add_global_listeners();
-                // draw chart
-                d3.select(el)
-                .call(scatter);
-            }
-            // Update only
-            else {
-                // Check what did change
-                obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
-                obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
-                obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
-                obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
-                function changed(varname) {
-                    return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
-                };
-                obj.settings.x_changed = changed("x");
-                obj.settings.y_changed = changed("y");
-                obj.settings.lab_changed = changed("lab");
-                obj.settings.legend_changed = changed("col_var") || changed("symbol_var") ||
-                changed("size_var") || obj.settings.size_range_changed;
-                obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
-                obj.settings.lab_changed || obj.settings.legend_changed ||
-                obj.settings.has_labels_changed || changed("ellipses_data") ||
-                obj.settings.ellipses_changed;
-                obj.settings.opacity_changed = changed("point_opacity");
-                obj.settings.subset_changed = changed("key_var");
-                scatter = scatter.settings(obj.settings);
-                // Update data only if needed
-                if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
-            }
-        },
+                // Complete draw
+                if (redraw) {
+                    scatter = scatter.data(data, redraw);
+                    obj.settings.redraw = true;
+                    scatter = scatter.settings(obj.settings);
+                    // add controls handlers and global listeners for shiny apps
+                    scatter.add_controls_handlers();
+                    scatter.add_global_listeners();
+                    // draw chart
+                    d3.select(el)
+                        .call(scatter);
+                }
+                // Update only
+                else {
+                    // Check what did change
+                    obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
+                    obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
+                    obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
+                    obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
 
-        s: scatter
-    })
-}
+                    function changed(varname) {
+                        return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
+                    };
+                    obj.settings.x_changed = changed("x");
+                    obj.settings.y_changed = changed("y");
+                    obj.settings.lab_changed = changed("lab");
+                    obj.settings.legend_changed = changed("col_var") || changed("symbol_var") ||
+                        changed("size_var") || obj.settings.size_range_changed;
+                    obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
+                        obj.settings.lab_changed || obj.settings.legend_changed ||
+                        obj.settings.has_labels_changed || changed("ellipses_data") ||
+                        obj.settings.ellipses_changed;
+                    obj.settings.opacity_changed = changed("point_opacity");
+                    obj.settings.subset_changed = changed("key_var");
+                    scatter = scatter.settings(obj.settings);
+                    // Update data only if needed
+                    if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
+                }
+            },
+
+            s: scatter
+        })
+    }
 });
