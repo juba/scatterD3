@@ -12,3 +12,4 @@ vignettes/rsconnect/*
 .Rproj.user
 example.R
 *~
+revdep/
