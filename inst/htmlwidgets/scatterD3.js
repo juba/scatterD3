@@ -1186,14 +1186,16 @@ function scatterD3() {
 	d3.select(parent)
 	    .attr("tabindex", 0)
 	    .on("keydown", function() {
-		if (d3.event.key == "Shift") {
+		var key = d3.event.key !== undefined ? d3.event.key : d3.event.keyIdentifier;
+		if (key == "Shift") {
 		    if (settings.lasso) {
 			lasso_on(svg);
 		    }
 		}
 	    })
 	    .on("keyup", function() {
-		if (d3.event.key == "Shift") {
+		var key = d3.event.key !== undefined ? d3.event.key : d3.event.keyIdentifier;
+		if (key == "Shift") {
 		    if (settings.lasso) {
 			lasso_off(svg);
 		    }
