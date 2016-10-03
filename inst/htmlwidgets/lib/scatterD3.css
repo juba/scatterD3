@@ -54,6 +54,10 @@
     display: none;
 }
 
+.scatterD3 .dot {
+    cursor: default;
+}
+
 .scatterD3 .point-label {
   cursor: pointer;
 }
