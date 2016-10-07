@@ -971,13 +971,13 @@ function scatterD3() {
 			    .style("opacity", "0.95")
 			    .style("width", "165px");
 			gear.classed("selected", true);
-			menu.classed("open", true)
+			menu.classed("open", true);
                     } else {
 			menu.transition().duration(300)
 			    .style("opacity", "0")
 			    .style("width", "0px");
 			gear.classed("selected", false);
-			menu.classed("open", false)
+			menu.classed("open", false);
                     }
 		});
             }
