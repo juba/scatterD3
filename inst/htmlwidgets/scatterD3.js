@@ -1357,10 +1357,15 @@ HTMLWidgets.widget({
 		}
 		// Update only
 		else {
+		    // Array equality test
+		    function array_equal (a1, a2) {
+			return a1.length == a2.length && a1.every(function(v,i) { return v === a2[i]});
+		    }
+		    
                     // Check what did change
                     obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
                     obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
-                    obj.settings.size_range_changed = scatter.settings().size_range != obj.settings.size_range;
+                    obj.settings.size_range_changed = !array_equal(scatter.settings().size_range, obj.settings.size_range);
                     obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
                     function changed(varname) {
 			return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
