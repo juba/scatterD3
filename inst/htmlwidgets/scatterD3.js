@@ -1029,6 +1029,9 @@ function scatterD3() {
 	setup_sizes();
 	setup_scales();
 
+        xAxis = xAxis.scale(x).tickSize(-dims.height);
+        yAxis = yAxis.scale(y).tickSize(-dims.width);
+	
 	var t0 = svg.transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
 	t0.select(".x.axis").call(xAxis);
@@ -1037,8 +1040,7 @@ function scatterD3() {
 	t0.select(".y.axis").call(yAxis);
 	t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
 	root.call(zoom);
-	zoom.x(x);
-	zoom.y(y);
+        t0.call(zoom.transform, d3.zoomTransform(root.node()));
 	// Unit circle
 	if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
