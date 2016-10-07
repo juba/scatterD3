@@ -1336,6 +1336,7 @@ HTMLWidgets.widget({
 		// If no transitions, remove chart and redraw it
 		if (!obj.settings.transitions) {
                     svg.selectAll("*:not(style)").remove();
+		    menu.selectAll("li").remove();
 		}
 
 		// Complete draw
