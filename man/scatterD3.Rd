@@ -13,10 +13,10 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
   size_var = NULL, size_range = c(10, 300), col_lab = NULL,
   symbol_lab = NULL, size_lab = NULL, key_var = NULL, type_var = NULL,
-  unit_circle = FALSE, tooltips = TRUE, tooltip_text = NULL,
-  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
-  height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
-  dom_id_reset_zoom = "scatterD3-reset-zoom",
+  opacity_var = NULL, unit_circle = FALSE, tooltips = TRUE,
+  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
+  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
+  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
@@ -69,6 +69,8 @@ be associated with their name within \code{col_var}.}
 \item{key_var}{optional vector of rows ids, or variable name if data is not NULL. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.}
 
 \item{type_var}{optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.}
+
+\item{opacity_var}{optional vector of points opacity (values between 0 and 1)}
 
 \item{unit_circle}{set tot TRUE to draw a unit circle}
 
