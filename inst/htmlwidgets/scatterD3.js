@@ -1,3 +1,8 @@
+var custom_scheme10 = d3.schemeCategory10,
+    tmp = custom_scheme10[3];
+custom_scheme10[3] = custom_scheme10[1];
+custom_scheme10[1] = tmp;
+
 function scatterD3() {
 
     var width = 600, // default width
@@ -13,11 +18,6 @@ function scatterD3() {
 	zeroline, zoom, drag,
 	lasso_base, lasso_classes;
 
-    var custom_scheme10 = d3.schemeCategory10,
-	tmp = custom_scheme10[3];
-    custom_scheme10[3] = custom_scheme10[1];
-    custom_scheme10[1] = tmp;
-    
     function setup_sizes() {
 
         dims.legend_width = 0;
@@ -78,7 +78,6 @@ function scatterD3() {
 		max_x = max_y;
 		gap_x = gap_y;
             }
-
         }
 
         // x, y, color, symbol and size scales
