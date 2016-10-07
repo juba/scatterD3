@@ -41,7 +41,6 @@ function scatterD3() {
     }
 
     function setup_scales() {
-	console.log("scales");
         // x and y limits
         if (settings.xlim === null) {
             min_x = d3.min(data, function(d) { return(d.x);} );
@@ -673,7 +672,6 @@ function scatterD3() {
         var legend_color_domain = color_scale.domain().sort();
         var n = d3.map(data, function(d) { return d.col_var; }).size();
         var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
-
 	
         legend_color_scale
             .domain(legend_color_domain)
@@ -1058,17 +1056,17 @@ function scatterD3() {
 	// Add points
 	var dot = chart_body.selectAll(".dot")
 	    .data(data.filter(point_filter), key);
-	dot.enter().append("path").call(dot_init);
-	dot.transition().duration(1000).call(dot_formatting);
+	dot.enter().append("path").call(dot_init)
+	    .merge(dot).transition().duration(1000).call(dot_formatting);
 	dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
 	// Add arrows
 	var arrow = chart_body.selectAll(".arrow")
 	    .data(data.filter(arrow_filter), key);
 	arrow.enter().append("svg:line").call(arrow_init)
 	    .style("opacity", "0")
+	    .merge(arrow)
 	    .transition().duration(1000)
-	    .style("opacity", "1");
-	arrow.transition().duration(1000).call(arrow_formatting);
+	    .call(arrow_formatting).style("opacity", "1");
 	arrow.exit().transition().duration(1000).style("opacity", "0").remove();
 
 	// Add ellipses
@@ -1077,17 +1075,17 @@ function scatterD3() {
 		.data(settings.ellipses_data);
             ellipse.enter().append("path").call(ellipse_init)
 		.style("opacity", "0")
+		.merge(ellipse)
 		.transition().duration(1000)
-		.style("opacity", "1");
-            ellipse.transition().duration(1000).call(ellipse_formatting);
+		.call(ellipse_formatting).style("opacity", "1");
             ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
 	}
 
 	if (settings.has_labels) {
             var labels = chart_body.selectAll(".point-label")
 		.data(data, key);
-            labels.enter().append("text").call(label_init).call(drag);
-            labels.transition().duration(1000).call(label_formatting);
+            labels.enter().append("text").call(label_init).call(drag)
+		.merge(labels).transition().duration(1000).call(label_formatting);
             labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
 	}
 
