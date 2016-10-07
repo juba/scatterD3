@@ -4,7 +4,6 @@ dependencies:
     src: htmlwidgets/lib
     script:
       - d3-4.2.6.min.js
-      - d3-scale-chromatic.v1.min.js
       - d3-legend.min.js
     stylesheet: scatterD3.css
   - name: d3.lasso-plugin

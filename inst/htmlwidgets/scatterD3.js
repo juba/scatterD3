@@ -13,6 +13,11 @@ function scatterD3() {
 	zeroline, zoom, drag,
 	lasso_base, lasso_classes;
 
+    var custom_scheme10 = d3.schemeCategory10,
+	tmp = custom_scheme10[3];
+    custom_scheme10[3] = custom_scheme10[1];
+    custom_scheme10[1] = tmp;
+    
     function setup_sizes() {
 
         dims.legend_width = 0;
@@ -36,7 +41,7 @@ function scatterD3() {
     }
 
     function setup_scales() {
-
+	console.log("scales");
         // x and y limits
         if (settings.xlim === null) {
             min_x = d3.min(data, function(d) { return(d.x);} );
@@ -90,7 +95,7 @@ function scatterD3() {
         if (settings.colors === null) {
             // Number of different levels. See https://github.com/mbostock/d3/issues/472
             var n = d3.map(data, function(d) { return d.col_var; }).size();
-            color_scale = n <= 9 ? d3.scaleOrdinal(d3.schemeSet1) : d3.scaleOrdinal(d3.schemeCategory20);
+            color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
         } else if (Array.isArray(settings.colors)) {
             color_scale = d3.scaleOrdinal().range(settings.colors);
         } else if (typeof(settings.colors) === "string"){
@@ -666,8 +671,10 @@ function scatterD3() {
             .style("font-size", settings.legend_font_size);
 
         var legend_color_domain = color_scale.domain().sort();
-        var legend_color_scale = d3.scaleOrdinal(d3.schemeCategory10);
+        var n = d3.map(data, function(d) { return d.col_var; }).size();
+        var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
 
+	
         legend_color_scale
             .domain(legend_color_domain)
             .range(legend_color_domain.map(function(d) {return color_scale(d);}));
@@ -1235,9 +1242,6 @@ function scatterD3() {
         if (!arguments.length) return settings;
         if (Object.keys(settings).length === 0) {
             settings = value;
-            // update dims and scales
-            setup_sizes();
-            setup_scales();
         } else {
             var old_settings = settings;
             settings = value;
