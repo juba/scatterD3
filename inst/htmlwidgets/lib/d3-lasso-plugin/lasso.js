@@ -62,6 +62,12 @@ d3.lasso = function() {
             .on("drag", dragmove)
             .on("end", dragend);
 
+	// Init DOM-local data
+	var right_edges = d3.local();
+	var left_edges = d3.local();
+	var close_right_edges = d3.local();
+	var close_left_edges = d3.local();
+	
         // Call drag
         area.call(drag);
 
@@ -71,22 +77,25 @@ d3.lasso = function() {
             tpath = "";
             dyn_path.attr("d", "M0 0");
             close_path.attr("d", "M0 0");
-
+	    
             // Set path length start
             path_length_start = 0;
             // Set every item to have a false selection and reset their center point and counters
             items.each(function(d) {
                 d.hoverSelected = false;
                 d.loopSelected = false;
-                var box = this.getBoundingClientRect();
-                d.lassoPoint = {
-                    cx: Math.round(box.left + box.width/2),
-                    cy: Math.round(box.top + box.height/2),
-                    edges: {top:0,right:0,bottom:0,left:0},
-                    close_edges: {left: 0, right: 0}
-                };
-
-
+		// Ignore text labels for center coordinates
+		if (this.tagName != "text") {
+                    var box = this.getBoundingClientRect();
+                    d.lassoPoint = {
+			cx: Math.round(box.left + box.width/2),
+			cy: Math.round(box.top + box.height/2)
+                    };
+		}
+		right_edges.set(this, 0);
+		left_edges.set(this, 0);
+		close_right_edges.set(this, 0);
+		close_left_edges.set(this, 0);
             });
 
             // if hover is on, add hover function
@@ -129,7 +138,8 @@ d3.lasso = function() {
 
             // Reset closed edges counter
             items.each(function(d) {
-                d.lassoPoint.close_edges = {left:0,right:0};
+		close_left_edges.set(this, 0);
+		close_right_edges.set(this, 0);
             });
 
             // Calculate the current distance from the lasso origin
@@ -173,15 +183,14 @@ d3.lasso = function() {
                 var cur_pos = path_node.getPointAtLength(i);
                 var cur_pos_obj = {
                     x:Math.round(cur_pos.x*100)/100,
-                    y:Math.round(cur_pos.y*100)/100,
+                    y:Math.round(cur_pos.y*100)/100
                 };
                 // Get the prior coordinates on the path
                 var prior_pos = path_node.getPointAtLength(i-1);
                 var prior_pos_obj = {
                     x:Math.round(prior_pos.x*100)/100,
-                    y:Math.round(prior_pos.y*100)/100,
+                    y:Math.round(prior_pos.y*100)/100
                 };
-
                 // Iterate through each item
                 items.filter(function(d) {
                     var a;
@@ -218,43 +227,42 @@ d3.lasso = function() {
                 }).each(function(d) {
                     // Iterate through each object and add an edge to the left or right
                     if(cur_pos_obj.x>d.lassoPoint.cx) {
-                        d.lassoPoint.edges.right = d.lassoPoint.edges.right+1;
+			right_edges.set(this, right_edges.get(this) + 1);
                     }
                     if(cur_pos_obj.x<d.lassoPoint.cx) {
-                        d.lassoPoint.edges.left = d.lassoPoint.edges.left+1;
+			left_edges.set(this, left_edges.get(this) + 1);
                     }
-                });
+                 });
             }
 
             // If the path is closed and close select is set to true, draw the closed paths and count edges
              if(isPathClosed === true && closePathSelect === true) {
                 close_path.attr("d",close_draw_path);
-                close_path_node =calc_close_path.node();
+                var close_path_node = calc_close_path.node();
                 var close_path_length = close_path_node.getTotalLength();
-                var close_path_edges = {left:0,right:0};
                 for (var i = 0; i<=close_path_length; i++) {
                     var cur_pos = close_path_node.getPointAtLength(i);
                     var prior_pos = close_path_node.getPointAtLength(i-1);
 
                     items.filter(function(d) {return d.lassoPoint.cy==Math.round(cur_pos.y);}).each(function(d) {
                         if(Math.round(cur_pos.y)!=Math.round(prior_pos.y) && Math.round(cur_pos.x)>d.lassoPoint.cx) {
-                            d.lassoPoint.close_edges.right = 1;
+			    close_right_edges.set(this, 1);
                         }
                         if(Math.round(cur_pos.y)!=Math.round(prior_pos.y) && Math.round(cur_pos.x)<d.lassoPoint.cx) {
-                            d.lassoPoint.close_edges.left = 1;
+			    close_left_edges.set(this, 1);  
                         }
                     });
 
                 }
 
                 // Check and see if the points have at least one edge to the left, and an odd # of edges to the right. If so, mark as selected.
-                items.each(function(a) {
-                    if((a.lassoPoint.edges.left+a.lassoPoint.close_edges.left)>0 && (a.lassoPoint.edges.right + a.lassoPoint.close_edges.right)%2 ==1) {
+                 items.each(function(a) {
+                     if((left_edges.get(this) + close_left_edges.get(this))>0 && (right_edges.get(this) + close_right_edges.get(this)) % 2 == 1) {
                         a.loopSelected = true;
                     }
-                    else {
+                     else {
                         a.loopSelected = false;
-                    }
+                     }
                 });
             }
             else {
