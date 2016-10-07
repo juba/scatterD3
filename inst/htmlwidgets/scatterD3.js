@@ -1040,7 +1040,7 @@ function scatterD3() {
 	t0.select(".y.axis").call(yAxis);
 	t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
 	root.call(zoom);
-        t0.call(zoom.transform, d3.zoomTransform(root.node()));
+        //t0.call(zoom.transform, d3.zoomTransform(root.node()));
 	// Unit circle
 	if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
@@ -1103,6 +1103,13 @@ function scatterD3() {
             }
 	}
 
+	if (settings.menu) {
+	    var menu_parent = d3.select(svg.node().parentNode);
+	    menu_parent.style("position", "relative");
+	    var menu = menu_parent.select(".scatterD3-menu");
+	    menu.attr("id", "scatterD3-menu-" + settings.html_id);
+	}
+	
 	lasso_off(svg);
     };
 
