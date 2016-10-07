@@ -305,6 +305,13 @@ function scatterD3() {
             .attr("transform", translation)
         // fill color
             .style("fill", function(d) { return color_scale(d.col_var); })
+	    .style("opacity", function(d) {
+		if (settings.point_opacity === null) {
+		    return d.opacity_var;
+		} else {
+		    return settings.point_opacity;
+		}
+	    })
         // symbol and size
             .attr("d", d3.symbol()
 		  .type(function(d) {return d3.symbols[symbol_scale(d.symbol_var)];})
@@ -313,10 +320,6 @@ function scatterD3() {
             .attr("class", function(d,i) {
 		return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
             });
-        if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
-            sel = sel
-		.style("opacity", function(d) {return d.point_opacity;});
-        }
         return sel;
     }
 
@@ -990,7 +993,8 @@ function scatterD3() {
     function update_settings(old_settings) {
         if (old_settings.labels_size != settings.labels_size)
             svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
-        if (old_settings.point_size != settings.point_size)
+        if (old_settings.point_size != settings.point_size ||
+	    old_settings.point_opacity != settings.point_opacity)
             svg.selectAll(".dot").transition().call(dot_formatting);
         if (old_settings.has_labels != settings.has_labels) {
             if (!settings.has_labels) {
@@ -1369,8 +1373,7 @@ HTMLWidgets.widget({
                     obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
 			obj.settings.lab_changed || obj.settings.legend_changed ||
 			obj.settings.has_labels_changed || changed("ellipses_data") ||
-			obj.settings.ellipses_changed;
-                    obj.settings.opacity_changed = changed("point_opacity");
+			obj.settings.ellipses_changed || changed("opacity_var");
                     obj.settings.subset_changed = changed("key_var");
                     scatter = scatter.settings(obj.settings);
                     // Update data only if needed

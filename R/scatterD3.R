@@ -25,6 +25,7 @@
 #' @param size_lab size legend title
 #' @param key_var optional vector of rows ids, or variable name if data is not NULL. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.
 #' @param type_var optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.
+#' @param opacity_var optional vector of points opacity (values between 0 and 1)
 #' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
@@ -85,6 +86,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       size_lab = NULL,
                       key_var = NULL,
                       type_var = NULL,
+                      opacity_var = NULL,
                       unit_circle = FALSE,
                       tooltips = TRUE,
                       tooltip_text = NULL,
@@ -124,20 +126,19 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     col_var <- deparse(substitute(col_var))
     size_var <- deparse(substitute(size_var))
     symbol_var <- deparse(substitute(symbol_var))
+    opacity_var <- deparse(substitute(opacity_var))
     key_var <- deparse(substitute(key_var))
-    point_opacity <- deparse(substitute(point_opacity))
     # Get variable data if not "NULL"
     lab <- null_or_name(lab)
     col_var <- null_or_name(col_var)
     size_var <- null_or_name(size_var)
     symbol_var <- null_or_name(symbol_var)
+    opacity_var <- null_or_name(opacity_var)
     key_var <- null_or_name(key_var)
-    # Check if point_opacity is a variable name
-    if(suppressWarnings(is.na(as.numeric(point_opacity)))) {
-      point_opacity <- data[, point_opacity]
-    }
   }
 
+  if (!is.null(opacity_var)) point_opacity <- NULL
+    
   # colors can be named
   #  we'll need to convert named vector to a named list
   #  for the JSON conversion
@@ -149,7 +150,6 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
   ## data element
   data <- data.frame(x = x, y = y)
   if (!is.null(lab)) data <- cbind(data, lab = lab)
-  if (!is.null(point_opacity)) data <- cbind(data, point_opacity = point_opacity)
   if (!is.null(col_var)) {
     col_var <- as.character(col_var)
     col_var[is.na(col_var)] <- "NA"
@@ -160,14 +160,18 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     symbol_var[is.na(symbol_var)] <- "NA"
     data <- cbind(data, symbol_var = symbol_var)
   }
-  if (!is.null(size_var)) {
-    if (any(is.na(size_var))) warning("NA values in size_var. Values set to min(0, size_var)")
-    size_var[is.na(size_var)] <- min(0, size_var, na.rm = TRUE)
-    data <- cbind(data, size_var = size_var)
-  }
-  if (!is.null(type_var)) data <- cbind(data, type_var = type_var)
-  if (!is.null(key_var)) data <- cbind(data, key_var = key_var)
-  else data <- cbind(data, key_var = seq_along(x))
+    if (!is.null(size_var)) {
+        if (any(is.na(size_var))) warning("NA values in size_var. Values set to min(0, size_var)")
+        size_var[is.na(size_var)] <- min(0, size_var, na.rm = TRUE)
+        data <- cbind(data, size_var = size_var)
+    }
+    if (!is.null(type_var)) data <- cbind(data, type_var = type_var)
+    if (!is.null(opacity_var)) data <- cbind(data, opacity_var = opacity_var)
+    if (!is.null(key_var)) {
+        data <- cbind(data, key_var = key_var)
+    }  else {
+        data <- cbind(data, key_var = seq_along(x))
+    }
   if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
   ## Compute confidence ellipses point positions with ellipse::ellipse.default()
@@ -211,6 +215,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
   settings <- list(
     labels_size = labels_size,
     point_size = point_size,
+    point_opacity = point_opacity,
     hover_size = hover_size,
     hover_opacity = hover_opacity,
     xlab = xlab,
