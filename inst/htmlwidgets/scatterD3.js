@@ -1041,15 +1041,14 @@ function scatterD3() {
         xAxis = xAxis.scale(x).tickSize(-dims.height);
         yAxis = yAxis.scale(y).tickSize(-dims.width);
 	
-	var t0 = svg.transition().duration(1000);
+	var t0 = root.transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
 	t0.select(".x.axis").call(xAxis);
 	t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 	svg.select(".y-axis-label").text(settings.ylab);
 	t0.select(".y.axis").call(yAxis);
 	t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-	root.call(zoom);
-        //t0.call(zoom.transform, d3.zoomTransform(root.node()));
+	t0.call(zoom.transform, d3.zoomIdentity);
 	// Unit circle
 	if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
