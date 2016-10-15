@@ -12,9 +12,10 @@ library.
 -   Display points and text labels
 -   Possibility to map color, symbol and size with other variables (automatic legend)
 -   Zoom with mouse wheel, pan with mouse while zoomed in
--   Ability to drag and move text labels
+-   Ability to drag and move text labels, ad export their position as a CSV file
 -   Customizable tooltips when hovering points
 -   Points highlighting when hovering legend items
+-   Attribute URLs to each point, to be opened when the point is clicked
 -   Option to draw confidence ellipses around group of points
 -   Charts integrated inside a Shiny app are fully updatable with smooth transitions when settings or data change
 -   Lasso selection tool integration via d3-lasso-plugin for points highlighting
@@ -24,7 +25,7 @@ Here is a small preview of what you will get :
 
 ![example](https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif)
 
-You can also test it live with the [sample shiny app](http://data.nozav.org/app/scatterD3/).
+Take a look at the [visual guide](https://rawgit.com/juba/scatterD3/master/vignettes%2Fintroduction.html#open-urls-when-clicking-points) for a list of features and examples. You can also test it live with the [sample shiny app](http://data.nozav.org/app/scatterD3/).
 
 
 ## Installation
