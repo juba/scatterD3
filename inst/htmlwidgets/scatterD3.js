@@ -693,10 +693,22 @@ function scatterD3() {
         var legend = svg.select(".legend")
             .style("font-size", settings.legend_font_size);
 
+	if (!settings.col_continuous) {
+	    var legend_color_domain = color_scale.domain().sort();		
+            var n = d3.map(data, function(d) { return d.col_var; }).size();		
+            var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
+	    legend_color_scale		
+		.domain(legend_color_domain)		
+		.range(legend_color_domain.map(function(d) {return color_scale(d);}));
+	} else {
+	    legend_color_scale = color_scale;
+	}
+		
+	
         var color_legend = d3.legendColor()
             .shapePadding(3)
             .shape("rect")
-            .scale(color_scale)
+            .scale(legend_color_scale)
             .on("cellover", function(d) {
 		d = css_clean(d);
 		var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
