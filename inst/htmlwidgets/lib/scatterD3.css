@@ -86,3 +86,14 @@
 .scatterD3 .root {
     cursor: move;
 }
+
+/* Specific styles for shiny apps */
+
+.shiny-bound-output .label {
+  font-size: 100%;
+  font-weight: normal;
+  text-align: left;
+}
+
+
+
