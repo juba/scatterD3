@@ -555,13 +555,13 @@ function scatterD3() {
 		if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
 		if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_opacity; }
 		if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_opacity; }
-		return null;		
+		return null;
             })
             .style("stroke", function(d) {
 		if (d3.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
 		if (d3.select(this).classed('dot')) { return d.scatterD3_lasso_dot_stroke; }
 		if (d3.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_stroke; }
-		return null;		
+		return null;
             });
         if (some_selected) {
             // Style the selected dots
@@ -671,7 +671,7 @@ function scatterD3() {
         var legend_color_domain = color_scale.domain().sort();
         var n = d3.map(data, function(d) { return d.col_var; }).size();
         var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
-	
+
         legend_color_scale
             .domain(legend_color_domain)
             .range(legend_color_domain.map(function(d) {return color_scale(d);}));
@@ -1026,6 +1026,12 @@ function scatterD3() {
                     .style("opacity", "0");
             }
         }
+      	if (settings.menu) {
+	          var menu_parent = d3.select(svg.node().parentNode);
+	          menu_parent.style("position", "relative");
+	          var menu = menu_parent.select(".scatterD3-menu");
+	          menu.attr("id", "scatterD3-menu-" + settings.html_id);
+      	}
     };
 
     // Update data with transitions
@@ -1039,7 +1045,7 @@ function scatterD3() {
 
         xAxis = xAxis.scale(x).tickSize(-dims.height);
         yAxis = yAxis.scale(y).tickSize(-dims.width);
-	
+
 	var t0 = root.transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
 	t0.select(".x.axis").call(xAxis);
@@ -1110,13 +1116,6 @@ function scatterD3() {
             }
 	}
 
-	if (settings.menu) {
-	    var menu_parent = d3.select(svg.node().parentNode);
-	    menu_parent.style("position", "relative");
-	    var menu = menu_parent.select(".scatterD3-menu");
-	    menu.attr("id", "scatterD3-menu-" + settings.html_id);
-	}
-	
 	lasso_off(svg);
     };
 
@@ -1361,7 +1360,7 @@ HTMLWidgets.widget({
 		    function array_equal (a1, a2) {
 			return a1.length == a2.length && a1.every(function(v,i) { return v === a2[i]});
 		    }
-		    
+
                     // Check what did change
                     obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
                     obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
