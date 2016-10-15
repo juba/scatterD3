@@ -1,5 +1,5 @@
 ---
-title: "Interactive scatterplots with scatterD3"
+title: "A visual guide to scatterD3"
 author: "Julien Barnier"
 date: "`r Sys.Date()`"
 output: 
@@ -7,7 +7,7 @@ output:
     fig_width: 5
     toc: true
 vignette: >
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteIndexEntry{Visual guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
