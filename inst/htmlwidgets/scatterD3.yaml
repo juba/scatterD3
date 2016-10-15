@@ -3,9 +3,32 @@ dependencies:
     version: 4.2.6
     src: htmlwidgets/lib
     script:
-      - d3-4.2.6.min.js
+#      - d3-4.2.6.min.js
+      - d3-color.v1.min.js
+      - d3-array.v1.min.js
+      - d3-collection.v1.min.js
+      - d3-format.v1.min.js      
+      - d3-dispatch.v1.min.js
+      - d3-ease.v1.min.js
+      - d3-interpolate.v1.min.js
+      - d3-selection.v1.min.js
+      - d3-scale.v1.min.js
+      - d3-timer.v1.min.js
+      - d3-transition.v1.min.js
+      - d3-drag.v1.min.js
+      - d3-path.v1.min.js      
+      - d3-shape.v1.min.js
+      - d3-axis.v1.min.js            
       - d3-legend.min.js
-    stylesheet: scatterD3.css
+  - name: d3-zoom-patched
+    version: 0.0
+    src: htmlwidgets/lib/
+    script:
+      - d3-zoom-patched.min.js
+  - name: misc
+    version: 0.1
+    src: htmlwidgets/lib    
+    stylesheet: scatterD3.css    
   - name: d3.lasso-plugin
     version: 1.0.0
     src: htmlwidgets/lib/d3-lasso-plugin
