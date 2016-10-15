@@ -14,10 +14,10 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   ellipses_level = 0.95, symbol_var = NULL, size_var = NULL,
   size_range = c(10, 300), col_lab = NULL, symbol_lab = NULL,
   size_lab = NULL, key_var = NULL, type_var = NULL, opacity_var = NULL,
-  unit_circle = FALSE, tooltips = TRUE, tooltip_text = NULL,
-  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
-  height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
-  dom_id_reset_zoom = "scatterD3-reset-zoom",
+  unit_circle = FALSE, url_var = NULL, tooltips = TRUE,
+  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
+  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
+  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
@@ -89,6 +89,8 @@ where displayed rows are filtered interactively.}
 1)}
 
 \item{unit_circle}{set tot TRUE to draw a unit circle}
+
+\item{url_var}{optional vector of URLs to be opened when a point is clicked}
 
 \item{tooltips}{logical value to display tooltips when hovering points}
 

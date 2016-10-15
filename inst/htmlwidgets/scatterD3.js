@@ -95,7 +95,6 @@ function scatterD3() {
 	    color_scale = d3.scaleSequential(d3.interpolateViridis)
 		.domain([d3.min(data, function(d) { return(d.col_var);} ),
 			 d3.max(data, function(d) { return(d.col_var);} )]);
-	    console.log(color_scale.domain());
 	}
 	// Ordinal color scale
 	else {
@@ -292,6 +291,12 @@ function scatterD3() {
                     .style("opacity", function(d) {
 			return (settings.hover_opacity === undefined ? d.point_opacity : settings.hover_opacity);
                     });
+		if (settings.has_url_var) {
+                    d3.select(this)
+		    	.style("cursor", function(d) {
+			    return (d.url_var != "" ? "pointer" : "default")
+			});
+		}
                 tooltip.style("visibility", "visible")
                     .html(tooltip_content(d));
             });
@@ -308,6 +313,13 @@ function scatterD3() {
                     .style("opacity", function(d) { return d.point_opacity; });
                 tooltip.style("visibility", "hidden");
             });
+	    selection.on("click", function(d){
+		if (settings.has_url_var && d.url_var != "") {
+		    var win = window.open(d.url_var, '_blank');
+		    win.focus();		    
+		}
+            });
+
         }
     }
 

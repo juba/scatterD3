@@ -40,6 +40,7 @@
 #'     (default), "arrow" for an arrow starting from the origin.
 #' @param opacity_var optional vector of points opacity (values between 0 and
 #'     1)
+#' @param url_var optional vector of URLs to be opened when a point is clicked
 #' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
@@ -114,6 +115,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       type_var = NULL,
                       opacity_var = NULL,
                       unit_circle = FALSE,
+                      url_var = NULL,
                       tooltips = TRUE,
                       tooltip_text = NULL,
                       xlab = NULL, ylab = NULL,
@@ -153,6 +155,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     size_var <- deparse(substitute(size_var))
     symbol_var <- deparse(substitute(symbol_var))
     opacity_var <- deparse(substitute(opacity_var))
+    url_var <- deparse(substitute(url_var))
     key_var <- deparse(substitute(key_var))
     # Get variable data if not "NULL"
     lab <- null_or_name(lab)
@@ -160,6 +163,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     size_var <- null_or_name(size_var)
     symbol_var <- null_or_name(symbol_var)
     opacity_var <- null_or_name(opacity_var)
+    url_var <- null_or_name(url_var)    
     key_var <- null_or_name(key_var)
   }
 
@@ -205,6 +209,10 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         data <- cbind(data, size_var = size_var)
     }
     if (!is.null(type_var)) data <- cbind(data, type_var = type_var)
+    if (!is.null(url_var)) {
+        url_var[is.na(url_var)] <- ""
+        data <- cbind(data, url_var = url_var)   
+    }
     if (!is.null(opacity_var)) data <- cbind(data, opacity_var = opacity_var)
     if (!is.null(key_var)) {
         data <- cbind(data, key_var = key_var)
@@ -277,6 +285,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     has_color_var = !is.null(col_var),
     has_symbol_var = !is.null(symbol_var),
     has_size_var = !is.null(size_var),
+    has_url_var = !is.null(url_var),    
     has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
     has_tooltips = tooltips,
     tooltip_text = tooltip_text,

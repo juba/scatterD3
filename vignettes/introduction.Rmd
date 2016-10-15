@@ -153,6 +153,17 @@ scatterD3(data = mtcars, x = wt, y = mpg, tooltip_text = tooltips)
 
 You can also disable tooltips entirely with `tooltips = FALSE`.
 
+## Open URLs when clicking points
+
+With the `url_var` argument, you can specify a character vectors of URLs, associated to each point, and which will be opened when the point is clicked.
+
+```{r urls}
+mtcars$urls <- paste0("https://www.duckduckgo.com/?q=", rownames(mtcars))
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names, url_var = urls)
+```
+
+Note that this won't work inside RStudio's internal browser.
+
 ## Confidence ellipses
 
 You can draw a confidence ellipse around the points :
