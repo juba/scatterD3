@@ -749,7 +749,11 @@ function scatterD3() {
         var legend = svg.select(".legend");
 
         // Height of color legend
-        var color_legend_height = settings.has_color_var ? color_scale.domain().length * 20 + 30 : 0;
+	var color_legend_height = 0;
+	if (settings.has_color_var) {
+	    var n = settings.col_continuous ? 5 : color_scale.domain().length;
+	    color_legend_height = n * 20 + 30;
+	}
         margin.symbol_legend_top = color_legend_height + margin.legend_top;
 
         var legend_symbol_domain = symbol_scale.domain().sort();
@@ -801,7 +805,12 @@ function scatterD3() {
         var legend = svg.select(".legend");
 
         // Height of color and symbol legends
-        var color_legend_height = settings.has_color_var ? color_scale.domain().length * 20 + 30 : 0;
+	        // Height of color legend
+	var color_legend_height = 0;
+	if (settings.has_color_var) {
+	    var n = settings.col_continuous ? 5 : color_scale.domain().length;
+	    color_legend_height = n * 20 + 30;
+	}
         var symbol_legend_height = settings.has_symbol_var ? symbol_scale.domain().length * 20 + 30 : 0;
         margin.size_legend_top = color_legend_height + symbol_legend_height + margin.legend_top;
 
