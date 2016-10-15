@@ -97,6 +97,15 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
+If `col_var` is numeric, not a factor, and has more than 6 unique values, it
+is considered as continuous, and drawn accordingly using the Veridis d3
+interpolator.
+
+```{r map_continuous_color}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp)
+```
+
+In this case, any `colors` argument is ignored. You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
 
 
 ## Axis limits
