@@ -169,7 +169,6 @@ function scatterD3() {
         var tmp = svg_content.replace(/<g class="gear-menu[\s\S]*?<\/g>/, '');
         var svg_content2 = tmp.replace(/<ul class="scatterD3-menu[\s\S]*?<\/ul>/, '');
         var image_data = "data:image/octet-stream;base64," + window.btoa(svg_content2);
-	console.log(image_data);
         d3.select(this)
             .attr("download", settings.html_id + ".svg")
             .attr("href", image_data);
