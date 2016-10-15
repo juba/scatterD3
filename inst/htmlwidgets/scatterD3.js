@@ -90,20 +90,30 @@ function scatterD3() {
         // Keep track of original scales
         x_orig = x;
         y_orig = y;
-        if (settings.colors === null) {
-            // Number of different levels. See https://github.com/mbostock/d3/issues/472
-            var n = d3.map(data, function(d) { return d.col_var; }).size();
-            color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
-        } else if (Array.isArray(settings.colors)) {
-            color_scale = d3.scaleOrdinal().range(settings.colors);
-        } else if (typeof(settings.colors) === "string"){
-            // Single string given
-            color_scale = d3.scaleOrdinal().range(Array(settings.colors));
-        } else if (typeof(settings.colors) === "object"){
-            color_scale = d3.scaleOrdinal()
-                .range(d3.values(settings.colors))
-                .domain(d3.keys(settings.colors));
-        }
+	// Continuous color scale
+	if (settings.col_continuous) {
+	    color_scale = d3.scaleSequential(d3.interpolateViridis)
+		.domain([d3.min(data, function(d) { return(d.col_var);} ),
+			 d3.max(data, function(d) { return(d.col_var);} )]);
+	    console.log(color_scale.domain());
+	}
+	// Ordinal color scale
+	else {
+            if (settings.colors === null) {
+		// Number of different levels. See https://github.com/mbostock/d3/issues/472
+		var n = d3.map(data, function(d) { return d.col_var; }).size();
+		color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
+            } else if (Array.isArray(settings.colors)) {
+		color_scale = d3.scaleOrdinal().range(settings.colors);
+            } else if (typeof(settings.colors) === "string"){
+		// Single string given
+		color_scale = d3.scaleOrdinal().range(Array(settings.colors));
+            } else if (typeof(settings.colors) === "object"){
+		color_scale = d3.scaleOrdinal()
+                    .range(d3.values(settings.colors))
+                    .domain(d3.keys(settings.colors));
+            }
+	}
         symbol_scale = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
         size_scale = d3.scaleLinear()
             .range(settings.size_range)
@@ -389,7 +399,11 @@ function scatterD3() {
             .style("stroke", function(d) {
 		// Only one ellipse
 		if (d.level == "_scatterD3_all") {
-                    return(color_scale.range()[0]);
+		    if (settings.col_continuous) {
+			return(d3.interpolateViridis(0));
+		    } else {
+			return(color_scale.range()[0]);
+		    }
 		}
 		return( color_scale(d.level));
             })
@@ -667,18 +681,10 @@ function scatterD3() {
         var legend = svg.select(".legend")
             .style("font-size", settings.legend_font_size);
 
-        var legend_color_domain = color_scale.domain().sort();
-        var n = d3.map(data, function(d) { return d.col_var; }).size();
-        var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
-
-        legend_color_scale
-            .domain(legend_color_domain)
-            .range(legend_color_domain.map(function(d) {return color_scale(d);}));
-
         var color_legend = d3.legendColor()
             .shapePadding(3)
             .shape("rect")
-            .scale(legend_color_scale)
+            .scale(color_scale)
             .on("cellover", function(d) {
 		d = css_clean(d);
 		var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
@@ -831,18 +837,20 @@ function scatterD3() {
             // <defs>
             var defs = svg.append("defs");
             // arrow head markers
-            color_scale.range().forEach(function(d) {
-                defs.append("marker")
-                    .attr("id", "arrow-head-" + settings.html_id + "-" + d)
-                    .attr("markerWidth", "10")
-                    .attr("markerHeight", "10")
-                    .attr("refX", "10")
-                    .attr("refY", "4")
-                    .attr("orient", "auto")
-                    .append("path")
-                    .attr("d", "M0,0 L0,8 L10,4 L0,0")
-                    .style("fill", d);
-            });
+	    if (!settings.col_continuous) {
+		color_scale.range().forEach(function(d) {
+                    defs.append("marker")
+			.attr("id", "arrow-head-" + settings.html_id + "-" + d)
+			.attr("markerWidth", "10")
+			.attr("markerHeight", "10")
+			.attr("refX", "10")
+			.attr("refY", "4")
+			.attr("orient", "auto")
+			.append("path")
+			.attr("d", "M0,0 L0,8 L10,4 L0,0")
+			.style("fill", d);
+		});
+            }
 
             // chart body
             chart_body = root.append("svg")

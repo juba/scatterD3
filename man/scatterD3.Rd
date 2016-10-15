@@ -9,14 +9,15 @@ D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 \usage{
 scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   labels_size = 10, point_opacity = 1, hover_size = 1,
-  hover_opacity = NULL, fixed = FALSE, col_var = NULL, colors = NULL,
-  ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
-  size_var = NULL, size_range = c(10, 300), col_lab = NULL,
-  symbol_lab = NULL, size_lab = NULL, key_var = NULL, type_var = NULL,
-  opacity_var = NULL, unit_circle = FALSE, tooltips = TRUE,
-  tooltip_text = NULL, xlab = NULL, ylab = NULL, html_id = NULL,
-  width = NULL, height = NULL, legend_width = 150, xlim = NULL,
-  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
+  hover_opacity = NULL, fixed = FALSE, col_var = NULL,
+  col_continuous = NULL, colors = NULL, ellipses = FALSE,
+  ellipses_level = 0.95, symbol_var = NULL, size_var = NULL,
+  size_range = c(10, 300), col_lab = NULL, symbol_lab = NULL,
+  size_lab = NULL, key_var = NULL, type_var = NULL, opacity_var = NULL,
+  unit_circle = FALSE, tooltips = TRUE, tooltip_text = NULL,
+  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
+  height = NULL, legend_width = 150, xlim = NULL, ylim = NULL,
+  dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
@@ -29,13 +30,15 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
 
 \item{data}{default dataset to use for plot.}
 
-\item{lab}{optional character vector of text labels, or variable name if data is not NULL}
+\item{lab}{optional character vector of text labels, or variable name if
+data is not NULL}
 
 \item{point_size}{points size. Ignored if size_var is not NULL.}
 
 \item{labels_size}{text labels size}
 
-\item{point_opacity}{points opacity, as an integer (same opacity for all points) or a vector of integers, or variable name if data is not NULL}
+\item{point_opacity}{points opacity, as an integer (same opacity for all
+points) or a vector of integers, or variable name if data is not NULL}
 
 \item{hover_size}{factor for changing size when hovering points}
 
@@ -43,22 +46,31 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
 
 \item{fixed}{force a 1:1 aspect ratio}
 
-\item{col_var}{optional vector for points color mapping, or variable name if data is not NULL}
+\item{col_var}{optional vector for points color mapping, or variable name
+if data is not NULL}
 
-\item{colors}{vector of custom points colors. Colors must be
-defined as an hexadecimal string (eg "#FF0000").  If
-\code{colors} is a named list or vector, then the colors will
-be associated with their name within \code{col_var}.}
+\item{col_continuous}{specify if the color scale must be continuous. By
+default, if \code{col_var} is numeric, not a factor, and has more than
+6 unique values, it is considered as continuous.}
 
-\item{ellipses}{draw confidence ellipses for points or the different color mapping groups}
+\item{colors}{vector of custom points colors. Colors must be defined as an
+hexadecimal string (eg "#FF0000"). If \code{colors} is a named list or
+a named vector, then the colors will be associated with their name
+within \code{col_var}. Ignored for a continuous color scale.}
+
+\item{ellipses}{draw confidence ellipses for points or the different color
+mapping groups}
 
 \item{ellipses_level}{confidence level for ellipses (0.95 by default)}
 
-\item{symbol_var}{optional vector for points symbol mapping, or variable name if data is not NULL}
+\item{symbol_var}{optional vector for points symbol mapping, or variable
+name if data is not NULL}
 
-\item{size_var}{optional vector for points size mapping, or variable name if data is not NULL}
+\item{size_var}{optional vector for points size mapping, or variable name
+if data is not NULL}
 
-\item{size_range}{numeric vector of length 2, giving the minimum and maximum point sizes when mapping with size_var}
+\item{size_range}{numeric vector of length 2, giving the minimum and
+maximum point sizes when mapping with size_var}
 
 \item{col_lab}{color legend title}
 
@@ -66,11 +78,15 @@ be associated with their name within \code{col_var}.}
 
 \item{size_lab}{size legend title}
 
-\item{key_var}{optional vector of rows ids, or variable name if data is not NULL. This is passed as a key to d3, and is only added in shiny apps where displayed rows are filtered interactively.}
+\item{key_var}{optional vector of rows ids, or variable name if data is not
+NULL. This is passed as a key to d3, and is only added in shiny apps
+where displayed rows are filtered interactively.}
 
-\item{type_var}{optional vector of points type : "point" for adot (default), "arrow" for an arrow starting from the origin.}
+\item{type_var}{optional vector of points type : "point" for adot
+(default), "arrow" for an arrow starting from the origin.}
 
-\item{opacity_var}{optional vector of points opacity (values between 0 and 1)}
+\item{opacity_var}{optional vector of points opacity (values between 0 and
+1)}
 
 \item{unit_circle}{set tot TRUE to draw a unit circle}
 
@@ -82,35 +98,45 @@ be associated with their name within \code{col_var}.}
 
 \item{ylab}{y axis label.}
 
-\item{html_id}{manually specify an HTML id for the svg root node. A random one is generated by default.}
+\item{html_id}{manually specify an HTML id for the svg root node. A random
+one is generated by default.}
 
 \item{width}{figure width, computed when displayed}
 
 \item{height}{figure height, computed when displayed}
 
-\item{legend_width}{legend area width, in pixels. Set to 0 to disable legend completely.}
+\item{legend_width}{legend area width, in pixels. Set to 0 to disable
+legend completely.}
 
 \item{xlim}{numeric vector of length 2, manual x axis limits}
 
 \item{ylim}{numeric vector of length 2, manual y axis limits}
 
-\item{dom_id_reset_zoom}{HTML DOM id of the element to bind the "reset zoom" control to.}
+\item{dom_id_reset_zoom}{HTML DOM id of the element to bind the
+"reset zoom" control to.}
 
-\item{dom_id_svg_export}{HTML DOM id of the element to bind the "svg export" control to.}
+\item{dom_id_svg_export}{HTML DOM id of the element to bind the
+"svg export" control to.}
 
-\item{dom_id_lasso_toggle}{HTML DOM id of the element to bind the "toggle lasso" control to.}
+\item{dom_id_lasso_toggle}{HTML DOM id of the element to bind the
+"toggle lasso" control to.}
 
-\item{transitions}{if TRUE, data updates are displayed with smooth transitions, if FALSE the whole chart is redrawn. Only used within shiny apps.}
+\item{transitions}{if TRUE, data updates are displayed with smooth
+transitions, if FALSE the whole chart is redrawn. Only used within
+shiny apps.}
 
 \item{menu}{wether to display the tools menu (gear icon)}
 
-\item{lasso}{logical value to add {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature}
+\item{lasso}{logical value to add
+{https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature}
 
-\item{lasso_callback}{the body of a JavaScript callback function with the argument \code{sel} to be applied to a lasso plugin selection}
+\item{lasso_callback}{the body of a JavaScript callback function with the
+argument \code{sel} to be applied to a lasso plugin selection}
 
 \item{axes_font_size}{font size for axes text (any CSS compatible value)}
 
-\item{legend_font_size}{font size for legend text (any CSS compatible value)}
+\item{legend_font_size}{font size for legend text (any CSS compatible
+value)}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.

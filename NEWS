@@ -2,6 +2,7 @@ scatterD3 0.7
 ------------------------------------------------------
 
 * Upgrade to d3v4
+* Continuous color scales are now supported. They are automatically guessed from `col_var` characteristics, but can be forced with the `col_continuous` argument.
 * New argument : `opacity_var` to specify points opacity individually with a vector. Use `point_opacity` to specify a constant opacity.
 * New menu accessible directly from the graph to allow zoom resetting, SVG export, etc.
 * New "export labels position" feature
