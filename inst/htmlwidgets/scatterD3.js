@@ -294,7 +294,7 @@ function scatterD3() {
 		if (settings.has_url_var) {
                     d3.select(this)
 		    	.style("cursor", function(d) {
-			    return (d.url_var != "" ? "pointer" : "default")
+			    return (d.url_var != "" ? "pointer" : "default");
 			});
 		}
                 tooltip.style("visibility", "visible")
@@ -313,7 +313,10 @@ function scatterD3() {
                     .style("opacity", function(d) { return d.point_opacity; });
                 tooltip.style("visibility", "hidden");
             });
-	    selection.on("click", function(d){
+	    selection.on("click", function(d, i) {
+		if (typeof settings.click_callback === 'function') {
+		    settings.click_callback(settings.html_id, i);
+		}
 		if (settings.has_url_var && d.url_var != "") {
 		    var win = window.open(d.url_var, '_blank');
 		    win.focus();		    
