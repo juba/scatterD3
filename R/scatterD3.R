@@ -142,6 +142,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
   if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
   if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
   if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
+  opacity_lab <- deparse(substitute(opacity_var))
   if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
 
   ## NSE
@@ -170,8 +171,6 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     key_var <- null_or_name(key_var)
   }
 
-  if (!is.null(opacity_var)) point_opacity <- NULL
-    
   # colors can be named
   #  we'll need to convert named vector to a named list
   #  for the JSON conversion
@@ -286,12 +285,14 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     size_var = size_var,
     size_range = size_range,
     size_lab = size_lab,
+    opacity_lab = opacity_lab,
     key_var = key_var,
     type_var = type_var,
     unit_circle = unit_circle,
     has_color_var = !is.null(col_var),
     has_symbol_var = !is.null(symbol_var),
     has_size_var = !is.null(size_var),
+    has_opacity_var = !is.null(opacity_var),    
     has_url_var = !is.null(url_var),    
     has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
     has_tooltips = tooltips,

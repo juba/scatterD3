@@ -11,7 +11,7 @@ function scatterD3() {
 	margin = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50},
 	settings = {},
 	data = [],
-	x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale,
+	x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale, opacity_scale,
 	min_x, min_y, max_x, max_y, gap_x, gap_y,
 	xAxis, yAxis,
 	svg, root, chart_body,
@@ -118,6 +118,10 @@ function scatterD3() {
             .range(settings.size_range)
             .domain([d3.min(data, function(d) { return(d.size_var);} ),
                      d3.max(data, function(d) { return(d.size_var);} )]);
+        opacity_scale = d3.scaleLinear()
+            .range([0.1, 1])
+            .domain([d3.min(data, function(d) { return(d.opacity_var);} ),
+                     d3.max(data, function(d) { return(d.opacity_var);} )]);
 
         // zoom behavior
         zoom = d3.zoom()
@@ -259,6 +263,7 @@ function scatterD3() {
             if (settings.has_color_var) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
             if (settings.has_symbol_var) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
             if (settings.has_size_var) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
+            if (settings.has_opacity_var) text.push("<b>"+settings.opacity_lab+":</b> "+d.opacity_var);	    
             return text.join("<br />");
         }
     }
@@ -289,10 +294,10 @@ function scatterD3() {
 			  .size(function(d) { return (dot_size(d) * settings.hover_size); })
 			 )
                     .style("opacity", function(d) {
-			if (settings.hover_opacity !== undefined) {
+			if (settings.hover_opacity !== null) {
 			    return settings.hover_opacity;
 			} else {
-			    return(d.opacity_var === undefined ? settings.point_opacity : d.opactiy_var);
+			    return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
 			}
                     });
 		if (settings.has_url_var) {
@@ -315,7 +320,7 @@ function scatterD3() {
 			  .size(function(d) { return dot_size(d);})
 			 )
                     .style("opacity", function(d) {
-			    return(d.opacity_var === undefined ? settings.point_opacity : d.opacity_var);
+			return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
 		    });
                 tooltip.style("visibility", "hidden");
             });
@@ -339,11 +344,7 @@ function scatterD3() {
         // fill color
             .style("fill", function(d) { return color_scale(d.col_var); })
 	    .style("opacity", function(d) {
-		if (settings.point_opacity === null) {
-		    return d.opacity_var;
-		} else {
-		    return settings.point_opacity;
-		}
+		return d.opacity_var !== undefined ? opacity_scale(d.opacity_var) : settings.point_opacity;
 	    })
         // symbol and size
             .attr("d", d3.symbol()

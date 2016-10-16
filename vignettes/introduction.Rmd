@@ -110,13 +110,11 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp)
 
 In this case, any `colors` argument is ignored. You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
 
-You can also use the `opacity_var` argument to specify each point opacity.
-Values must be numbers between 0 and 1, and note that no legend for opacity is
-drawn, though, as it is not a real variable-opacity mapping.
+You can also use the `opacity_var` argument to map point opacity to a variable.
+Note that for now no legend for opacity is added, though.
 
 ```{r opacity_var}
-mtcars$opacity <- runif(nrow(mtcars))
-scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = opacity)
+scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = drat)
 ```
 
 ## Axis limits
