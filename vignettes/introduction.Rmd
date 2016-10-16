@@ -164,6 +164,34 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names, url_var = urls)
 
 Note that this won't work inside RStudio's internal browser.
 
+## JavaScript callback on clicking point
+
+The optional `click_callback` argument is a character string defining a JavaScript function to be called when a dot is clicked. It must accept two arguments : `html_id` (the unique `id` of the current scatterplot), and `i` (the index of the clicked point).
+
+```{r click_callback}
+scatterD3(data = mtcars, x = wt, y = mpg,
+   click_callback = "function(id, index) {
+   alert('scatterplot ID: ' + id + ' - Point index: ' + index) 
+   }")
+```
+
+
+One usage can be to pass the index of the clicked point back to Shiny when `scatterD3` is run inside a Shiny app. The following implementation can do it by using `Shiny.onInputChange()` :
+
+```{r, click_callback_shiny, eval=FALSE}
+scatterD3(data = mtcars, x = wt, y = mpg,
+  click_callback = "function(id, index) {
+  if(id && typeof(Shiny) != 'undefined') {
+      Shiny.onInputChange(id + '_selected', index);
+  }
+}")
+```
+
+Thanks to [detule](https://github.com/detule) and [harveyl888](https://github.com/harveyl888) for the code.
+
+Note that `url_var` and `click_callback` cannot be used at the same time.
+
+
 ## Confidence ellipses
 
 You can draw a confidence ellipse around the points :
