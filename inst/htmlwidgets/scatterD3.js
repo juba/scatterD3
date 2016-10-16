@@ -15,7 +15,7 @@ function scatterD3() {
 	min_x, min_y, max_x, max_y, gap_x, gap_y,
 	xAxis, yAxis,
 	svg, root, chart_body,
-	zeroline, zoom, drag,
+	draw_line, zoom, drag,
 	lasso_base, lasso_classes;
 
     function setup_sizes() {
@@ -156,13 +156,9 @@ function scatterD3() {
         root.select(".y.axis").call(yAxis);
         chart_body.selectAll(".dot, .point-label")
             .attr("transform", translation);
+	chart_body.selectAll(".line").call(line_formatting);
         chart_body.selectAll(".arrow").call(draw_arrow);
         chart_body.selectAll(".ellipse").call(ellipse_formatting);
-        var zeroline = d3.line()
-            .x(function(d) {return x(d.x);})
-            .y(function(d) {return y(d.y);});
-        svg.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-        svg.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
         svg.select(".unit-circle").call(unit_circle_init);
 
     }
@@ -243,7 +239,7 @@ function scatterD3() {
     }
 
     // Zero horizontal and vertical lines
-    zeroline = d3.line()
+    draw_line = d3.line()
 	.x(function(d) {return x(d.x);})
 	.y(function(d) {return y(d.y);});
 
@@ -274,6 +270,38 @@ function scatterD3() {
 	return s.toString().replace(/[^\w-]/g, "_");
     }
 
+
+    function line_init(selection) {
+	selection
+	    .attr("class", "line");
+    }
+
+    function line_formatting(selection) {
+	selection
+	    .attr("d", function(d) {
+		// Vertical line
+		if (d.slope === null) {
+		    return draw_line([{x:d.intercept, y:y.domain()[0]},
+				      {x:d.intercept, y:y.domain()[1]}]);
+		}
+		// All other lines
+		else {
+		    return draw_line([{x:x.domain()[0], y:d.slope * x.domain()[0] + d.intercept},
+				      {x:x.domain()[1], y:d.slope * x.domain()[1] + d.intercept}]);
+		}
+	    })
+	    .style("stroke-width", function(d) {
+		return d.stroke_width !== undefined && d.stroke_width !== null ? d.stroke_width : "1px";
+	    })
+	    .style("stroke", function(d) {
+		return d.stroke !== undefined && d.stroke !== null ? d.stroke : "#000000";
+	    })
+	    .style("stroke-dasharray", function(d) {
+		return d.stroke_dasharray !== undefined && d.stroke_dasharray !== null ? d.stroke_dasharray : null;
+	    });
+
+    }
+    
     // Returns dot size from associated data
     function dot_size(data) {
         var size = settings.point_size;
@@ -536,7 +564,7 @@ function scatterD3() {
 
 
     // Lasso functions to execute while lassoing
-    lasso_start = function() {
+    var lasso_start = function() {
         lasso.items()
             .each(function(d){
 		if (d3.select(this).classed('dot')) {
@@ -561,7 +589,7 @@ function scatterD3() {
             .classed("not-possible-lasso", true)
             .classed("selected-lasso not-selected-lasso", false); // style as not possible
     };
-    lasso_draw = function() {
+    var lasso_draw = function() {
         // Style the possible dots
         lasso.items()
             .filter(function(d) {return d.possible === true;})
@@ -572,7 +600,7 @@ function scatterD3() {
             .classed("not-possible-lasso", true)
             .classed("possible-lasso", false);
     };
-    lasso_end = function() {
+    var lasso_end = function() {
         lasso_off(svg);
         var some_selected = false;
         if(lasso.items().filter(function(d) {return d.selected === true;}).size() !== 0){
@@ -907,13 +935,18 @@ function scatterD3() {
 		.attr("width", dims.width)
 		.attr("height", dims.height);
 
-            chart_body.append("path")
-		.attr("class", "zeroline hline")
-		.attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
-            chart_body.append("path")
-		.attr("class", "zeroline vline")
-		.attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
+	    // lines
+	    if (settings.lines !== null) {
+		var lines = chart_body
+		    .selectAll(".lines")
+		    .data(HTMLWidgets.dataframeToD3(settings.lines));
+		lines.enter()
+		    .append("path")
+		    .call(line_init)
+		    .call(line_formatting);
+	    }
 
+	    
             // Unit circle
             if (settings.unit_circle) {
 		var unit_circle = chart_body.append('svg:ellipse')
@@ -1105,11 +1138,23 @@ function scatterD3() {
 	var t0 = root.transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
 	t0.select(".x.axis").call(xAxis);
-	t0.select(".zeroline.vline").attr("d", zeroline([{x:0, y:y.domain()[0]}, {x:0, y:y.domain()[1]}]));
 	svg.select(".y-axis-label").text(settings.ylab);
 	t0.select(".y.axis").call(yAxis);
-	t0.select(".zeroline.hline").attr("d", zeroline([{x:x.domain()[0], y:0}, {x:x.domain()[1], y:0}]));
+	t0.selectAll(".line").call(line_formatting);
 	t0.call(zoom.transform, d3.zoomIdentity);
+
+	// Add lines
+	if (settings.lines !== null) {
+	    var line = chart_body.selectAll(".line")
+		.data(HTMLWidgets.dataframeToD3(settings.lines));
+	    line.enter().append("path").call(line_init)
+		.style("opacity", "0")
+		.merge(line)
+		.transition().duration(1000)
+		.call(line_formatting).style("opacity", "1");
+	    line.exit().transition().duration(1000).style("opacity", "0").remove();
+	}
+	
 	// Unit circle
 	if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
@@ -1346,8 +1391,7 @@ HTMLWidgets.widget({
             .text(".scatterD3 {font: 11px Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;}" +
 		  ".scatterD3 .axis line, .axis path { stroke: #000; fill: none; shape-rendering: CrispEdges;} " +
 		  ".scatterD3 .axis .tick line { stroke: #ddd;} " +
-		  ".scatterD3 .axis text { fill: #000; } " +
-		  ".scatterD3 .zeroline { stroke-width: 1; stroke: #444; stroke-dasharray: 5,5;} ");
+		  ".scatterD3 .axis text { fill: #000; }");
 
         // Create tooltip content div
         var tooltip = d3.select(".scatterD3-tooltip");
@@ -1433,7 +1477,8 @@ HTMLWidgets.widget({
                     obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
 			obj.settings.lab_changed || obj.settings.legend_changed ||
 			obj.settings.has_labels_changed || changed("ellipses_data") ||
-			obj.settings.ellipses_changed || changed("opacity_var");
+			obj.settings.ellipses_changed || changed("opacity_var") ||
+			changed("lines");
                     obj.settings.subset_changed = changed("key_var");
                     scatter = scatter.settings(obj.settings);
                     // Update data only if needed

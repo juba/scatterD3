@@ -21,7 +21,8 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
-  click_callback = NULL, axes_font_size = "100\%",
+  click_callback = NULL, lines = data.frame(slope = c(0, Inf), intercept =
+  c(0, 0), stroke_dasharray = c(5, 5)), axes_font_size = "100\%",
   legend_font_size = "100\%")
 }
 \arguments{
