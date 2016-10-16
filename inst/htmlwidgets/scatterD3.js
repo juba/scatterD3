@@ -708,27 +708,33 @@ function scatterD3() {
         var color_legend = d3.legendColor()
             .shapePadding(3)
             .shape("rect")
-            .scale(legend_color_scale)
-            .on("cellover", function(d) {
-		d = css_clean(d);
-		var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
-		var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
-		svg.selectAll(nsel)
-		    .transition()
-		    .style("opacity", 0.2);
-		svg.selectAll(sel)
-		    .transition()
-		    .style("opacity", 1);
-            })
-            .on("cellout", function(d) {
-		var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
-		svg.selectAll(sel)
-		    .transition()
-		    .style("opacity", function(d2) {return d2.point_opacity;});
-		svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
-		    .transition()
-		    .style("opacity", 1);
-            });
+            .scale(legend_color_scale);
+
+	if (!settings.col_continuous) {
+	    color_legend
+		.on("cellover", function(d) {
+		    d = css_clean(d);
+		    var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
+		    var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
+		    svg.selectAll(nsel)
+			.transition()
+			.style("opacity", 0.2);
+		    svg.selectAll(sel)
+			.transition()
+			.style("opacity", 1);
+		})
+		.on("cellout", function(d) {
+		    var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
+		    svg.selectAll(sel)
+			.transition()
+			.style("opacity", function(d2) {return d2.point_opacity;});
+		    svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
+			.transition()
+			.style("opacity", 1);
+		});
+	} else {
+	    color_legend.cells(6);
+	}
 
         legend.append("g")
             .append("text")
@@ -751,7 +757,7 @@ function scatterD3() {
         // Height of color legend
 	var color_legend_height = 0;
 	if (settings.has_color_var) {
-	    var n = settings.col_continuous ? 5 : color_scale.domain().length;
+	    var n = settings.col_continuous ? 6 : color_scale.domain().length;
 	    color_legend_height = n * 20 + 30;
 	}
         margin.symbol_legend_top = color_legend_height + margin.legend_top;
@@ -808,7 +814,7 @@ function scatterD3() {
 	        // Height of color legend
 	var color_legend_height = 0;
 	if (settings.has_color_var) {
-	    var n = settings.col_continuous ? 5 : color_scale.domain().length;
+	    var n = settings.col_continuous ? 6 : color_scale.domain().length;
 	    color_legend_height = n * 20 + 30;
 	}
         var symbol_legend_height = settings.has_symbol_var ? symbol_scale.domain().length * 20 + 30 : 0;
