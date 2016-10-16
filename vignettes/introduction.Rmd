@@ -41,7 +41,10 @@ This will display a simple visualization with the given variables as `x` and `y`
 - you can pan the plot by dragging with your mouse
 - by hovering over a point, you can display a small tooltip window giving the `x` and `y` values
 
-You can customize the points size with the `point_size` parameter, their opacity with `point_opacity`, and you can force the plot to have a 1:1 fixed aspect ratio with `fixed = TRUE`. You can also manually specify the points color with the `colors` argument
+You can customize the points size with the `point_size` parameter, their
+global opacity with `point_opacity`, and you can force the plot to have a 1:1
+fixed aspect ratio with `fixed = TRUE`. You can also manually specify the
+points color with the `colors` argument
 
 ```{r basic_cust}
 scatterD3(data = mtcars, x = wt, y = mpg, 
@@ -71,7 +74,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names, labels_size = 9)
 
 Note that text labels are fully movable : click and drag a label with your mouse to place it where you want. Custom positions are preserved while zooming/panning.
 
-## Mapping colors, symbols and size to variables
+## Mapping colors, symbols, size and opacity to variables
 
 By passing vectors to the `col_var` and/or `symbol_var` arguments, you can map points colors and symbols to other variables.
 
@@ -107,6 +110,14 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp)
 
 In this case, any `colors` argument is ignored. You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
 
+You can also use the `opacity_var` argument to specify each point opacity.
+Values must be numbers between 0 and 1, and note that no legend for opacity is
+drawn, though, as it is not a real variable-opacity mapping.
+
+```{r opacity_var}
+mtcars$opacity <- runif(nrow(mtcars))
+scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = opacity)
+```
 
 ## Axis limits
 
