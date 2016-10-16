@@ -5,6 +5,7 @@ scatterD3 0.7
 * Continuous color scales are now supported. They are automatically guessed from `col_var` characteristics, but can be forced with the `col_continuous` argument.
 * New argument : `opacity_var` to specify points opacity individually with a vector. Use `point_opacity` to specify a constant opacity.
 * New argument : `url_var` to specify URLs to be opened when a point is clicked.
+* Add `click_callback` parameter, opening a hook for a click event listener (thanks @detule and @harveyl888)
 * New menu accessible directly from the graph to allow zoom resetting, SVG export, etc.
 * New "export labels position" feature
 * More precise font-family specification for (hopefully) better rendering

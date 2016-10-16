@@ -21,7 +21,8 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
-  axes_font_size = "100\%", legend_font_size = "100\%")
+  click_callback = NULL, axes_font_size = "100\%",
+  legend_font_size = "100\%")
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}
@@ -134,6 +135,9 @@ shiny apps.}
 
 \item{lasso_callback}{the body of a JavaScript callback function with the
 argument \code{sel} to be applied to a lasso plugin selection}
+
+\item{click_callback}{the body of a JavaScript callback function
+whose inputs are html_id, and the index of the clicked element.}
 
 \item{axes_font_size}{font size for axes text (any CSS compatible value)}
 
