@@ -137,8 +137,14 @@ shiny apps.}
 \item{lasso_callback}{the body of a JavaScript callback function with the
 argument \code{sel} to be applied to a lasso plugin selection}
 
-\item{click_callback}{the body of a JavaScript callback function
-whose inputs are html_id, and the index of the clicked element.}
+\item{click_callback}{the body of a JavaScript callback function whose
+inputs are html_id, and the index of the clicked element.}
+
+\item{lines}{a data frame with at least the \code{slope} and
+\code{intercept} columns, and as many rows as lines to add to
+scatterplot. Style can be added with \code{stroke}, \code{stroke_width}
+and \code{stroke_dasharray} columns. To draw a vertical line, pass
+\code{Inf} as \code{slope} value.}
 
 \item{axes_font_size}{font size for axes text (any CSS compatible value)}
 
