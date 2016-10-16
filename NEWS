@@ -2,17 +2,18 @@ scatterD3 0.7
 ------------------------------------------------------
 
 * Upgrade to d3v4
+* Add `data` argument to specify variables from a data frame with NSE
+* New menu accessible directly from the graph to allow zoom resetting, SVG export, etc.
 * Continuous color scales are now supported. They are automatically guessed from `col_var` characteristics, but can be forced with the `col_continuous` argument.
+* New `lines` argument to add custom lines to the plot
 * New argument : `opacity_var` to specify points opacity individually with a vector. Use `point_opacity` to specify a constant opacity.
 * New argument : `url_var` to specify URLs to be opened when a point is clicked.
 * Add `click_callback` parameter, opening a hook for a click event listener (thanks @detule and @harveyl888)
-* New menu accessible directly from the graph to allow zoom resetting, SVG export, etc.
 * New "export labels position" feature
-* More precise font-family specification for (hopefully) better rendering
 * New settings `hover_size` and `hover_opacity` (thanks @nicolabo)
 * Axes and legend font size customization with `axes_font_size` and `legend_font_size` (thanks @fineswag)
+* More precise font-family specification for (hopefully) better rendering
 * Bugfix : blank plot when only one color passed to `colors` (thanks @chewth)
-* Add `data` argument to specify variables from a data frame with NSE
 
 
 scatterD3 0.6.2
