@@ -119,6 +119,42 @@ mtcars$opacity <- runif(nrow(mtcars))
 scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = opacity)
 ```
 
+## Adding lines
+
+In addition to your data points, you can add to your scatterplot. This is done vy passing a *data frame* to the `lines` argument. This *data frame* must have at least two columns called `slope` and `intercept`, and as many rows as lines you want to draw.
+
+For example, if you want to add a 1:1 line :
+
+```{r lines}
+scatterD3(data = mtcars, x = wt, y = mpg, fixed = TRUE, 
+          lines = data.frame(slope = 1, intercept = 0))
+```
+
+You can style your lines by adding `stroke`, `stroke_width` and `stroke_dasharray` columns. These columns values will be added as [corresponding styles](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Fills_and_Strokes) to the generated SVG line. So if you want a wide dashed red horizontal line :
+
+```{r lines_style}
+scatterD3(data = mtcars, x = wt, y = mpg, 
+          lines = data.frame(slope = 0, 
+                             intercept = 30,
+                             stroke = "red",
+                             stroke_width = 5,
+                             stroke_dasharray = "10,5"))
+```
+
+If you want to draw a vertical line, pass the `Inf` value to `slope`. The value of `intercept` is then interpreted as the intercept along the x axis.
+
+By default, if no `lines` argument is provided two dashed horizontal and vertical lines are drawn through the origin, which is equivalent to :
+
+```{r lines_default}
+scatterD3(data = mtcars, x = wt, y = mpg, fixed = TRUE, 
+          lines = data.frame(slope = c(0, Inf), 
+                             intercept = c(0, 0),
+                             stroke = "#000",
+                             stroke_width = 1,
+                             stroke_dasharray = 5))
+```
+
+
 ## Axis limits
 
 You can manually specify the `x` or `y` axis limits with the `xlim` and `ylim` arguments :
@@ -126,7 +162,6 @@ You can manually specify the `x` or `y` axis limits with the `xlim` and `ylim` a
 ```{r axis_limits}
 scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
 ```
-
 
 
 ## Axes and legend customization

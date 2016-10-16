@@ -133,6 +133,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       lasso = FALSE,
                       lasso_callback = NULL,
                       click_callback = NULL,
+                      lines = data.frame(slope = c(0, Inf),
+                                         intercept = c(0, 0),
+                                         stroke_dasharray = c(5,5)),
                       axes_font_size = "100%",
                       legend_font_size = "100%") {
 
@@ -260,7 +263,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
   ## to apply updates and transitions in shiny app.
   hashes <- list()
   if (transitions) {
-    for (var in c("x", "y", "lab", "key_var", "col_var", "symbol_var", "size_var", "ellipses_data", "point_opacity")) {
+    for (var in c("x", "y", "lab", "key_var", "col_var", "symbol_var", "size_var", "ellipses_data", "opacity_var", "lines")) {
       hashes[[var]] <- digest::digest(get(var), algo = "sha256")
     }
   }
@@ -312,6 +315,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     transitions = transitions,
     axes_font_size = axes_font_size,
     legend_font_size = legend_font_size,
+    lines = lines,
     hashes = hashes
   )
 
