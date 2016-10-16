@@ -289,7 +289,11 @@ function scatterD3() {
 			  .size(function(d) { return (dot_size(d) * settings.hover_size); })
 			 )
                     .style("opacity", function(d) {
-			return (settings.hover_opacity === undefined ? d.point_opacity : settings.hover_opacity);
+			if (settings.hover_opacity !== undefined) {
+			    return settings.hover_opacity;
+			} else {
+			    return(d.opacity_var === undefined ? settings.point_opacity : d.opactiy_var);
+			}
                     });
 		if (settings.has_url_var) {
                     d3.select(this)
@@ -310,7 +314,9 @@ function scatterD3() {
 			  .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
 			  .size(function(d) { return dot_size(d);})
 			 )
-                    .style("opacity", function(d) { return d.point_opacity; });
+                    .style("opacity", function(d) {
+			    return(d.opacity_var === undefined ? settings.point_opacity : d.opacity_var);
+		    });
                 tooltip.style("visibility", "hidden");
             });
 	    selection.on("click", function(d, i) {
