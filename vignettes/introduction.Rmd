@@ -71,6 +71,14 @@ mtcars$cyl_fac <- paste(mtcars$cyl, "cylinders")
 scatterD3(data = mtcars, x = cyl_fac, y = mpg)
 ```
 
+You can use the `left_margin` argument when using a categorical `y` variable
+if the axis labels are not entirely visible :
+
+```{r categorical_left_margin}
+scatterD3(data = mtcars, x = wt, y = cyl_fac, left_margin = 80)
+```
+
+
 ## Point labels
 
 You can add text labels to the points by passing a character vector to the `lab` parameter. Labels size are controlled by the `labels_size` parameter.

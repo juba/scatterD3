@@ -78,6 +78,7 @@
 #'     shiny apps.
 #' @param legend_width legend area width, in pixels. Set to 0 to disable
 #'     legend completely.
+#' @param left_margin margin on the left of the plot, in pixels
 #' @param width figure width, computed when displayed
 #' @param height figure height, computed when displayed
 #'
@@ -129,6 +130,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       html_id = NULL,
                       width = NULL, height = NULL,
                       legend_width = 150,
+                      left_margin = 30,
                       xlim = NULL, ylim = NULL,
                       dom_id_reset_zoom = "scatterD3-reset-zoom",
                       dom_id_svg_export = "scatterD3-svg-export",
@@ -312,6 +314,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         click_callback = htmlwidgets::JS(click_callback),
         fixed = fixed,
         legend_width = legend_width,
+        left_margin = left_margin,
         html_id = html_id,
         xlim = xlim,
         ylim = ylim,

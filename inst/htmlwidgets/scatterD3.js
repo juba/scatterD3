@@ -22,6 +22,10 @@ function scatterD3() {
 
     function setup_sizes() {
 
+	if (settings.left_margin !== null) {
+	    margin.left = settings.left_margin;
+	}
+	
         dims.legend_width = 0;
         if (settings.has_legend) dims.legend_width = settings.legend_width;
 
