@@ -1140,7 +1140,6 @@ function scatterD3() {
 	t0.select(".x.axis").call(xAxis);
 	svg.select(".y-axis-label").text(settings.ylab);
 	t0.select(".y.axis").call(yAxis);
-	t0.selectAll(".line").call(line_formatting);
 	t0.call(zoom.transform, d3.zoomIdentity);
 
 	// Add lines
@@ -1150,8 +1149,9 @@ function scatterD3() {
 	    line.enter().append("path").call(line_init)
 		.style("opacity", "0")
 		.merge(line)
+		.call(line_formatting)
 		.transition().duration(1000)
-		.call(line_formatting).style("opacity", "1");
+		.style("opacity", "1");
 	    line.exit().transition().duration(1000).style("opacity", "0").remove();
 	}
 	
