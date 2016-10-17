@@ -179,6 +179,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         key_var <- null_or_name(key_var)
     }
 
+    x_categorical <- is.factor(x) || !is.numeric(x)
+    y_categorical <- is.factor(y) || !is.numeric(y)
+    
     ## colors can be named
     ##  we'll need to convert named vector to a named list
     ##  for the JSON conversion
@@ -312,6 +315,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         html_id = html_id,
         xlim = xlim,
         ylim = ylim,
+        x_categorical = x_categorical,
+        y_categorical = y_categorical,
         menu = menu,
         lasso = lasso,
         lasso_callback = htmlwidgets::JS(lasso_callback),

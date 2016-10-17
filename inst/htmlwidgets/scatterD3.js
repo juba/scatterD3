@@ -15,7 +15,6 @@ function scatterD3() {
 	settings = {},
 	data = [],
 	x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale, opacity_scale,
-	min_x, min_y, max_x, max_y, gap_x, gap_y,
 	xAxis, yAxis,
 	svg, root, chart_body,
 	draw_line, zoom, drag,
@@ -44,6 +43,9 @@ function scatterD3() {
     }
 
     function setup_scales() {
+
+	var min_x, min_y, max_x, max_y, gap_x, gap_y;
+
         // x and y limits
         if (settings.xlim === null) {
             min_x = d3.min(data, function(d) { return(d.x);} );
@@ -83,13 +85,27 @@ function scatterD3() {
             }
         }
 
-        // x, y, color, symbol and size scales
-        x = d3.scaleLinear()
-            .range([0, dims.width])
-            .domain([min_x - gap_x, max_x + gap_x]);
-        y = d3.scaleLinear()
-            .range([dims.height, 0])
-            .domain([min_y - gap_y, max_y + gap_y]);
+        // x, y scales
+	if (!settings.x_categorical) {
+            x = d3.scaleLinear()
+		.range([0, dims.width])
+		.domain([min_x - gap_x, max_x + gap_x]);
+	} else {
+	    x = d3.scalePoint()
+	    	.range([0, dims.width])
+		.padding(0.9)
+		.domain(d3.map(data, function(d){ return d.x; }).keys().sort());
+	}
+	if (!settings.y_categorical) {
+            y = d3.scaleLinear()
+		.range([dims.height, 0])
+		.domain([min_y - gap_y, max_y + gap_y]);
+	} else {
+	    y = d3.scalePoint()
+	    	.range([dims.height, 0])
+		.padding(0.9)
+		.domain(d3.map(data, function(d){ return d.y; }).keys().sort());
+	}
         // Keep track of original scales
         x_orig = x;
         y_orig = y;
@@ -116,8 +132,10 @@ function scatterD3() {
                     .domain(d3.keys(settings.colors));
             }
 	}
+	// Symbol scale
         symbol_scale = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
-        size_scale = d3.scaleLinear()
+	    // Size scale
+	size_scale = d3.scaleLinear()
             .range(settings.size_range)
             .domain([d3.min(data, function(d) { return(d.size_var);} ),
                      d3.max(data, function(d) { return(d.size_var);} )]);
@@ -151,12 +169,16 @@ function scatterD3() {
 
     // Zoom function
     function zoomed(reset) {
-        x = d3.event.transform.rescaleX(x_orig);
-        y = d3.event.transform.rescaleY(y_orig);
-        xAxis = xAxis.scale(x);
-        yAxis = yAxis.scale(y);
-        root.select(".x.axis").call(xAxis);
-        root.select(".y.axis").call(yAxis);
+	if (!settings.x_categorical) {
+            x = d3.event.transform.rescaleX(x_orig);
+            xAxis = xAxis.scale(x);
+            root.select(".x.axis").call(xAxis);
+	}
+	if (!settings.y_categorical) {
+            y = d3.event.transform.rescaleY(y_orig);
+            yAxis = yAxis.scale(y);
+            root.select(".y.axis").call(yAxis);
+	}
         chart_body.selectAll(".dot, .point-label")
             .attr("transform", translation);
 	chart_body.selectAll(".line").call(line_formatting);
@@ -243,8 +265,8 @@ function scatterD3() {
 
     // Zero horizontal and vertical lines
     draw_line = d3.line()
-	.x(function(d) {return x(d.x);})
-	.y(function(d) {return y(d.y);});
+	.x(function(d) {return d.x;})
+	.y(function(d) {return d.y;});
 
     // Create tooltip content function
     function tooltip_content(d) {
@@ -282,15 +304,27 @@ function scatterD3() {
     function line_formatting(selection) {
 	selection
 	    .attr("d", function(d) {
+		// Categorical variables
+		if (settings.x_categorical && settings.y_categorical) { return null; };
+		if (settings.x_categorical) {
+		    if (d.slope != 0) { return null; }
+		    else {
+			return draw_line([{x:0, y: y(d.intercept)},
+					  {x:dims.width, y: y(d.intercept)}]);
+		    }
+		}
+		if (settings.y_categorical) {
+		    if (d.slope !== null) { return null; }
+		}
 		// Vertical line
 		if (d.slope === null) {
-		    return draw_line([{x:d.intercept, y:y.domain()[0]},
-				      {x:d.intercept, y:y.domain()[1]}]);
+		    return draw_line([{x:x(d.intercept), y: 0},
+				      {x:x(d.intercept), y: dims.height}]);
 		}
 		// All other lines
 		else {
-		    return draw_line([{x:x.domain()[0], y:d.slope * x.domain()[0] + d.intercept},
-				      {x:x.domain()[1], y:d.slope * x.domain()[1] + d.intercept}]);
+		    return draw_line([{x:0, y: y(d.slope * x.domain()[0] + d.intercept)},
+				      {x:dims.width, y: y(d.slope * x.domain()[1] + d.intercept)}]);
 		}
 	    })
 	    .style("stroke-width", function(d) {

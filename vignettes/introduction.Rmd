@@ -60,8 +60,16 @@ scatterD3(data = mtcars, x = wt, y = mpg,
           hover_size = 4, hover_opacity = 1)
 ```
 
+## Categorical `x` and `y`
 
+If the `x` or `y` variable is not numeric or is a factor, then an ordinal
+scale is used for the corresponding axis. Note that zooming is then not
+possible along this axis.
 
+```{r categorical}
+mtcars$cyl_fac <- paste(mtcars$cyl, "cylinders")
+scatterD3(data = mtcars, x = cyl_fac, y = mpg)
+```
 
 ## Point labels
 
