@@ -463,7 +463,9 @@ function scatterD3() {
             .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")"; })
             .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var); });
         if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
-            sel = sel.style("opacity", function(d) {return d.point_opacity;});
+            sel = sel.style("opacity", function(d) {
+		return d.opacity_var !== undefined ? opacity_scale(d.opacity_var) : settings.point_opacity;
+	    });
         }
         return sel;
     }
@@ -678,7 +680,7 @@ function scatterD3() {
             lasso.items().filter(function(d) {return d.selected === false;})
 		.classed("not-possible-lasso possible-lasso", false)
 		.classed("not-selected-lasso", true)
-		.style("opacity", function(d) { return d.point_opacity / 7; });
+		.style("opacity", function(d) { return settings.point_opacity / 7; });
 
             // Call custom callback function
             var callback_sel = svg.selectAll(".dot, .arrow").filter(function(d) {return d.selected === true;});
@@ -689,7 +691,7 @@ function scatterD3() {
 		.classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
 		.style("opacity", function(d) {
                     if (d3.select(this).classed('point-label')) {return 1;};
-                    return d.point_opacity;
+		    return d.opacity_var !== undefined ? opacity_scale(d.opacity_var) : settings.point_opacity;
 		});
         }
     };
