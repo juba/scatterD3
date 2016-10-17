@@ -101,7 +101,7 @@
 #' @importFrom stats cov
 #' @importFrom htmlwidgets JS
 #' @export
-#'
+
 scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       point_size = 64, labels_size = 10,
                       point_opacity = 1,
@@ -144,50 +144,50 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       axes_font_size = "100%",
                       legend_font_size = "100%") {
 
-  ## Variable names as default labels
-  if (is.null(xlab)) xlab <- deparse(substitute(x))
-  if (is.null(ylab)) ylab <- deparse(substitute(y))
-  if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
-  if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
-  if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
-  opacity_lab <- deparse(substitute(opacity_var))
-  if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
+    ## Variable names as default labels
+    if (is.null(xlab)) xlab <- deparse(substitute(x))
+    if (is.null(ylab)) ylab <- deparse(substitute(y))
+    if (is.null(col_lab)) col_lab <- deparse(substitute(col_var))
+    if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
+    if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
+    opacity_lab <- deparse(substitute(opacity_var))
+    if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
 
-  ## NSE
-  if (!is.null(data)) {
-    null_or_name <- function(x) {
-      if (x != "NULL") return(data[, x])
-      else return(NULL)
+    ## NSE
+    if (!is.null(data)) {
+        null_or_name <- function(x) {
+            if (x != "NULL") return(data[, x])
+            else return(NULL)
+        }
+                                        # Get variable names
+        x <- data[, deparse(substitute(x))]
+        y <- data[, deparse(substitute(y))]
+        lab <- deparse(substitute(lab))
+        col_var <- deparse(substitute(col_var))
+        size_var <- deparse(substitute(size_var))
+        symbol_var <- deparse(substitute(symbol_var))
+        opacity_var <- deparse(substitute(opacity_var))
+        url_var <- deparse(substitute(url_var))
+        key_var <- deparse(substitute(key_var))
+                                        # Get variable data if not "NULL"
+        lab <- null_or_name(lab)
+        col_var <- null_or_name(col_var)
+        size_var <- null_or_name(size_var)
+        symbol_var <- null_or_name(symbol_var)
+        opacity_var <- null_or_name(opacity_var)
+        url_var <- null_or_name(url_var)    
+        key_var <- null_or_name(key_var)
     }
-    # Get variable names
-    x <- data[, deparse(substitute(x))]
-    y <- data[, deparse(substitute(y))]
-    lab <- deparse(substitute(lab))
-    col_var <- deparse(substitute(col_var))
-    size_var <- deparse(substitute(size_var))
-    symbol_var <- deparse(substitute(symbol_var))
-    opacity_var <- deparse(substitute(opacity_var))
-    url_var <- deparse(substitute(url_var))
-    key_var <- deparse(substitute(key_var))
-    # Get variable data if not "NULL"
-    lab <- null_or_name(lab)
-    col_var <- null_or_name(col_var)
-    size_var <- null_or_name(size_var)
-    symbol_var <- null_or_name(symbol_var)
-    opacity_var <- null_or_name(opacity_var)
-    url_var <- null_or_name(url_var)    
-    key_var <- null_or_name(key_var)
-  }
 
-  # colors can be named
-  #  we'll need to convert named vector to a named list
-  #  for the JSON conversion
-  if (!is.null(colors) && !is.null(names(colors))) {
-    colors <- as.list(colors)
-    if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
-  }
+                                        # colors can be named
+                                        #  we'll need to convert named vector to a named list
+                                        #  for the JSON conversion
+    if (!is.null(colors) && !is.null(names(colors))) {
+        colors <- as.list(colors)
+        if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
+    }
 
-    # Determine from the data if we have a continuous or ordinal color scale
+                                        # Determine from the data if we have a continuous or ordinal color scale
     if (is.null(col_continuous)) {
         col_continuous <- FALSE
         if (!is.factor(col_var) && is.numeric(col_var) && length(unique(col_var)) > 6) {
@@ -195,24 +195,24 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         }
     }
     
-  ## data element
-  data <- data.frame(x = x, y = y)
-  if (!is.null(lab)) data <- cbind(data, lab = lab)
-  if (!is.null(col_var) && !col_continuous) {
-    col_var <- as.character(col_var)
-    col_var[is.na(col_var)] <- "NA"
-    data <- cbind(data, col_var = col_var)
-  }
+    ## data element
+    data <- data.frame(x = x, y = y)
+    if (!is.null(lab)) data <- cbind(data, lab = lab)
+    if (!is.null(col_var) && !col_continuous) {
+        col_var <- as.character(col_var)
+        col_var[is.na(col_var)] <- "NA"
+        data <- cbind(data, col_var = col_var)
+    }
     if (!is.null(col_var) && col_continuous) {
         if (any(is.na(col_var))) warning("NA values in continuous col_var. Values set to min(0, col_var)")
         col_var[is.na(col_var)] <- min(0, col_var, na.rm = TRUE)
         data <- cbind(data, col_var = col_var)
     }
-  if (!is.null(symbol_var)) {
-    symbol_var <- as.character(symbol_var)
-    symbol_var[is.na(symbol_var)] <- "NA"
-    data <- cbind(data, symbol_var = symbol_var)
-  }
+    if (!is.null(symbol_var)) {
+        symbol_var <- as.character(symbol_var)
+        symbol_var[is.na(symbol_var)] <- "NA"
+        data <- cbind(data, symbol_var = symbol_var)
+    }
     if (!is.null(size_var)) {
         if (any(is.na(size_var))) warning("NA values in size_var. Values set to min(0, size_var)")
         size_var[is.na(size_var)] <- min(0, size_var, na.rm = TRUE)
@@ -233,129 +233,129 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     }  else {
         data <- cbind(data, key_var = seq_along(x))
     }
-  if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
+    if (!is.null(tooltip_text)) data <- cbind(data, tooltip_text = tooltip_text)
 
-  ## Compute confidence ellipses point positions with ellipse::ellipse.default()
-  compute_ellipse <- function(x, y, level = ellipses_level, npoints = 50) {
-    cx <- mean(x)
-    cy <- mean(y)
-    data.frame(ellipse::ellipse(stats::cov(cbind(x,y)), centre = c(cx, cy), level = level, npoints = npoints))
-  }
+    ## Compute confidence ellipses point positions with ellipse::ellipse.default()
+    compute_ellipse <- function(x, y, level = ellipses_level, npoints = 50) {
+        cx <- mean(x)
+        cy <- mean(y)
+        data.frame(ellipse::ellipse(stats::cov(cbind(x,y)), centre = c(cx, cy), level = level, npoints = npoints))
+    }
 
-  ## Compute ellipses points data
-  ellipses_data <- list()
-  if (ellipses) {
-    ## Only one ellipse
-    if (is.null(col_var)) {
-      ell <- compute_ellipse(x, y)
-      ellipses_data <- append(ellipses_data, list(list(level = "_scatterD3_all", data = ell)))
-    } else {
-      ## One ellipse per col_var level
-      for (l in unique(col_var)) {
-        sel <- col_var == l & !is.na(col_var)
-        if (sum(sel) > 2) {
-          tmpx <- x[sel]
-          tmpy <- y[sel]
-          ell <- compute_ellipse(tmpx, tmpy)
-          ellipses_data <- append(ellipses_data, list(list(level = l, data = ell)))
+    ## Compute ellipses points data
+    ellipses_data <- list()
+    if (ellipses) {
+        ## Only one ellipse
+        if (is.null(col_var)) {
+            ell <- compute_ellipse(x, y)
+            ellipses_data <- append(ellipses_data, list(list(level = "_scatterD3_all", data = ell)))
+        } else {
+            ## One ellipse per col_var level
+            for (l in unique(col_var)) {
+                sel <- col_var == l & !is.na(col_var)
+                if (sum(sel) > 2) {
+                    tmpx <- x[sel]
+                    tmpy <- y[sel]
+                    ell <- compute_ellipse(tmpx, tmpy)
+                    ellipses_data <- append(ellipses_data, list(list(level = l, data = ell)))
+                }
+            }
         }
-      }
     }
-  }
 
-  ## List of hashes for each data variable, to track which data elements changed
-  ## to apply updates and transitions in shiny app.
-  hashes <- list()
-  if (transitions) {
-    for (var in c("x", "y", "lab", "key_var", "col_var", "symbol_var", "size_var", "ellipses_data", "opacity_var", "lines")) {
-      hashes[[var]] <- digest::digest(get(var), algo = "sha256")
+    ## List of hashes for each data variable, to track which data elements changed
+    ## to apply updates and transitions in shiny app.
+    hashes <- list()
+    if (transitions) {
+        for (var in c("x", "y", "lab", "key_var", "col_var", "symbol_var", "size_var", "ellipses_data", "opacity_var", "lines")) {
+            hashes[[var]] <- digest::digest(get(var), algo = "sha256")
+        }
     }
-  }
 
-  # create a list that contains the settings
-  settings <- list(
-    labels_size = labels_size,
-    point_size = point_size,
-    point_opacity = point_opacity,
-    hover_size = hover_size,
-    hover_opacity = hover_opacity,
-    xlab = xlab,
-    ylab = ylab,
-    has_labels = !is.null(lab),
-    col_var = col_var,
-    col_lab = col_lab,
-    col_continuous = col_continuous,
-    colors = colors,
-    ellipses = ellipses,
-    ellipses_data = ellipses_data,
-    symbol_var = symbol_var,
-    symbol_lab = symbol_lab,
-    size_var = size_var,
-    size_range = size_range,
-    size_lab = size_lab,
-    opacity_lab = opacity_lab,
-    key_var = key_var,
-    type_var = type_var,
-    unit_circle = unit_circle,
-    has_color_var = !is.null(col_var),
-    has_symbol_var = !is.null(symbol_var),
-    has_size_var = !is.null(size_var),
-    has_opacity_var = !is.null(opacity_var),    
-    has_url_var = !is.null(url_var),    
-    has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
-    has_tooltips = tooltips,
-    tooltip_text = tooltip_text,
-    has_custom_tooltips = !is.null(tooltip_text),
-    click_callback = htmlwidgets::JS(click_callback),
-    fixed = fixed,
-    legend_width = legend_width,
-    html_id = html_id,
-    xlim = xlim,
-    ylim = ylim,
-    menu = menu,
-    lasso = lasso,
-    lasso_callback = htmlwidgets::JS(lasso_callback),
-    dom_id_reset_zoom = dom_id_reset_zoom,
-    dom_id_svg_export = dom_id_svg_export,
-    dom_id_lasso_toggle = dom_id_lasso_toggle,
-    transitions = transitions,
-    axes_font_size = axes_font_size,
-    legend_font_size = legend_font_size,
-    lines = lines,
-    hashes = hashes
-  )
+                                        # create a list that contains the settings
+    settings <- list(
+        labels_size = labels_size,
+        point_size = point_size,
+        point_opacity = point_opacity,
+        hover_size = hover_size,
+        hover_opacity = hover_opacity,
+        xlab = xlab,
+        ylab = ylab,
+        has_labels = !is.null(lab),
+        col_var = col_var,
+        col_lab = col_lab,
+        col_continuous = col_continuous,
+        colors = colors,
+        ellipses = ellipses,
+        ellipses_data = ellipses_data,
+        symbol_var = symbol_var,
+        symbol_lab = symbol_lab,
+        size_var = size_var,
+        size_range = size_range,
+        size_lab = size_lab,
+        opacity_lab = opacity_lab,
+        key_var = key_var,
+        type_var = type_var,
+        unit_circle = unit_circle,
+        has_color_var = !is.null(col_var),
+        has_symbol_var = !is.null(symbol_var),
+        has_size_var = !is.null(size_var),
+        has_opacity_var = !is.null(opacity_var),    
+        has_url_var = !is.null(url_var),    
+        has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
+        has_tooltips = tooltips,
+        tooltip_text = tooltip_text,
+        has_custom_tooltips = !is.null(tooltip_text),
+        click_callback = htmlwidgets::JS(click_callback),
+        fixed = fixed,
+        legend_width = legend_width,
+        html_id = html_id,
+        xlim = xlim,
+        ylim = ylim,
+        menu = menu,
+        lasso = lasso,
+        lasso_callback = htmlwidgets::JS(lasso_callback),
+        dom_id_reset_zoom = dom_id_reset_zoom,
+        dom_id_svg_export = dom_id_svg_export,
+        dom_id_lasso_toggle = dom_id_lasso_toggle,
+        transitions = transitions,
+        axes_font_size = axes_font_size,
+        legend_font_size = legend_font_size,
+        lines = lines,
+        hashes = hashes
+    )
 
-  # pass the data and settings using 'x'
-  x <- list(
-    data = data,
-    settings = settings
-  )
+                                        # pass the data and settings using 'x'
+    x <- list(
+        data = data,
+        settings = settings
+    )
 
-  # create widget
-  htmlwidgets::createWidget(
-      name = 'scatterD3',
-      x,
-      width = width,
-      height = height,
-      package = 'scatterD3',
-      sizingPolicy = htmlwidgets::sizingPolicy(
-          browser.fill = TRUE,
-          viewer.fill = TRUE
-      )
-  )
+                                        # create widget
+    htmlwidgets::createWidget(
+                     name = 'scatterD3',
+                     x,
+                     width = width,
+                     height = height,
+                     package = 'scatterD3',
+                     sizingPolicy = htmlwidgets::sizingPolicy(
+                                                     browser.fill = TRUE,
+                                                     viewer.fill = TRUE
+                                                 )
+                 )
 }
 
 #' @rdname scatterD3-shiny
 #' @export
 scatterD3Output <- function(outputId, width = '100%', height = '600px'){
-  htmlwidgets::shinyWidgetOutput(outputId, 'scatterD3', width, height, package = 'scatterD3')
+    htmlwidgets::shinyWidgetOutput(outputId, 'scatterD3', width, height, package = 'scatterD3')
 }
 
 #' @rdname scatterD3-shiny
 #' @export
 renderScatterD3 <- function(expr, env = parent.frame(), quoted = FALSE) {
-  if (!quoted) { expr <- substitute(expr) } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, scatterD3Output, env, quoted = TRUE)
+    if (!quoted) { expr <- substitute(expr) } # force quoted
+    htmlwidgets::shinyRenderWidget(expr, scatterD3Output, env, quoted = TRUE)
 }
 
 
