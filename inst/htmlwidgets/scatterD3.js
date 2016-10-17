@@ -806,7 +806,9 @@ function scatterD3() {
 		    var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
 		    svg.selectAll(sel)
 			.transition()
-			.style("opacity", function(d2) {return d2.point_opacity;});
+			.style("opacity", function(d2) {
+			    return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));			    
+			});
 		    svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
 			.transition()
 			.style("opacity", 1);
@@ -864,7 +866,9 @@ function scatterD3() {
 		var sel = ".symbol:not(.selected-lasso):not(.not-selected-lasso)";
 		svg.selectAll(sel)
 		    .transition()
-		    .style("opacity", function(d2) {return d2.point_opacity;});
+		    .style("opacity", function(d2) {
+			return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));			    
+		    });
 		svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
 		    .transition()
 		    .style("opacity", 1);
