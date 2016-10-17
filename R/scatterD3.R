@@ -159,7 +159,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
             if (x != "NULL") return(data[, x])
             else return(NULL)
         }
-                                        # Get variable names
+        ## Get variable names
         x <- data[, deparse(substitute(x))]
         y <- data[, deparse(substitute(y))]
         lab <- deparse(substitute(lab))
@@ -169,7 +169,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         opacity_var <- deparse(substitute(opacity_var))
         url_var <- deparse(substitute(url_var))
         key_var <- deparse(substitute(key_var))
-                                        # Get variable data if not "NULL"
+        ## Get variable data if not "NULL"
         lab <- null_or_name(lab)
         col_var <- null_or_name(col_var)
         size_var <- null_or_name(size_var)
@@ -179,15 +179,15 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         key_var <- null_or_name(key_var)
     }
 
-                                        # colors can be named
-                                        #  we'll need to convert named vector to a named list
-                                        #  for the JSON conversion
+    ## colors can be named
+    ##  we'll need to convert named vector to a named list
+    ##  for the JSON conversion
     if (!is.null(colors) && !is.null(names(colors))) {
         colors <- as.list(colors)
         if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
     }
 
-                                        # Determine from the data if we have a continuous or ordinal color scale
+    ## Determine from the data if we have a continuous or ordinal color scale
     if (is.null(col_continuous)) {
         col_continuous <- FALSE
         if (!is.factor(col_var) && is.numeric(col_var) && length(unique(col_var)) > 6) {
@@ -272,7 +272,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         }
     }
 
-                                        # create a list that contains the settings
+    ## create a list that contains the settings
     settings <- list(
         labels_size = labels_size,
         point_size = point_size,
@@ -325,13 +325,13 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         hashes = hashes
     )
 
-                                        # pass the data and settings using 'x'
+    ## pass the data and settings using 'x'
     x <- list(
         data = data,
         settings = settings
     )
 
-                                        # create widget
+    ## create widget
     htmlwidgets::createWidget(
                      name = 'scatterD3',
                      x,
