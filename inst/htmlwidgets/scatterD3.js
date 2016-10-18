@@ -283,8 +283,10 @@ function scatterD3() {
             // default tooltips
             var text = Array();
             if (settings.has_labels) text.push("<b>"+d.lab+"</b>");
-            text.push("<b>"+settings.xlab+":</b> "+d.x.toFixed(3));
-            text.push("<b>"+settings.ylab+":</b> "+d.y.toFixed(3));
+	    var x_value = settings.x_categorical ? d.x : d.x.toFixed(3);
+	    var y_value = settings.y_categorical ? d.y : d.y.toFixed(3);
+            text.push("<b>"+settings.xlab+":</b> "+ x_value);
+            text.push("<b>"+settings.ylab+":</b> "+ y_value);
             if (settings.has_color_var) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
             if (settings.has_symbol_var) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
             if (settings.has_size_var) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
