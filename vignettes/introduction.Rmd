@@ -1,5 +1,5 @@
 ---
-title: "A visual guide to scatterD3"
+title: "scatterD3 : a Visual Guide"
 author: "Julien Barnier"
 date: "`r Sys.Date()`"
 output: 
@@ -7,7 +7,7 @@ output:
     fig_width: 5
     toc: true
 vignette: >
-  %\VignetteIndexEntry{Visual guide}
+  %\VignetteIndexEntry{scatterD3 : A Visual Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
