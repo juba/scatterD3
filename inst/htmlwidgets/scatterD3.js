@@ -25,7 +25,7 @@ function scatterD3() {
 	if (settings.left_margin !== null) {
 	    margin.left = settings.left_margin;
 	}
-	
+
         dims.legend_width = 0;
         if (settings.has_legend) dims.legend_width = settings.legend_width;
 
@@ -290,7 +290,7 @@ function scatterD3() {
             if (settings.has_color_var) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
             if (settings.has_symbol_var) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
             if (settings.has_size_var) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
-            if (settings.has_opacity_var) text.push("<b>"+settings.opacity_lab+":</b> "+d.opacity_var);	    
+            if (settings.has_opacity_var) text.push("<b>"+settings.opacity_lab+":</b> "+d.opacity_var);
             return text.join("<br />");
         }
     }
@@ -344,7 +344,7 @@ function scatterD3() {
 	    });
 
     }
-    
+
     // Returns dot size from associated data
     function dot_size(data) {
         var size = settings.point_size;
@@ -401,7 +401,7 @@ function scatterD3() {
 		}
 		if (settings.has_url_var && d.url_var != "") {
 		    var win = window.open(d.url_var, '_blank');
-		    win.focus();		    
+		    win.focus();
 		}
             });
 
@@ -777,17 +777,17 @@ function scatterD3() {
             .style("font-size", settings.legend_font_size);
 
 	if (!settings.col_continuous) {
-	    var legend_color_domain = color_scale.domain().sort();		
-            var n = d3.map(data, function(d) { return d.col_var; }).size();		
+	    var legend_color_domain = color_scale.domain().sort();
+            var n = d3.map(data, function(d) { return d.col_var; }).size();
             var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
-	    legend_color_scale		
-		.domain(legend_color_domain)		
+	    legend_color_scale
+		.domain(legend_color_domain)
 		.range(legend_color_domain.map(function(d) {return color_scale(d);}));
 	} else {
 	    legend_color_scale = color_scale;
 	}
-		
-	
+
+
         var color_legend = d3.legendColor()
             .shapePadding(3)
             .shape("rect")
@@ -811,7 +811,7 @@ function scatterD3() {
 		    svg.selectAll(sel)
 			.transition()
 			.style("opacity", function(d2) {
-			    return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));			    
+			    return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));
 			});
 		    svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
 			.transition()
@@ -871,7 +871,7 @@ function scatterD3() {
 		svg.selectAll(sel)
 		    .transition()
 		    .style("opacity", function(d2) {
-			return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));			    
+			return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));
 		    });
 		svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
 		    .transition()
@@ -995,7 +995,7 @@ function scatterD3() {
 		    .call(line_formatting);
 	    }
 
-	    
+
             // Unit circle
             if (settings.unit_circle) {
 		var unit_circle = chart_body.append('svg:ellipse')
@@ -1198,12 +1198,12 @@ function scatterD3() {
 	    line.enter().append("path").call(line_init)
 		.style("opacity", "0")
 		.merge(line)
-		.call(line_formatting)
 		.transition().duration(1000)
+		.call(line_formatting)
 		.style("opacity", "1");
 	    line.exit().transition().duration(1000).style("opacity", "0").remove();
 	}
-	
+
 	// Unit circle
 	if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
 
