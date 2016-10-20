@@ -357,57 +357,60 @@ function scatterD3() {
     // Initial dot attributes
     function dot_init (selection) {
         // tooltips when hovering points
-        if (settings.has_tooltips) {
-            var tooltip = d3.select(".scatterD3-tooltip");
-            selection.on("mouseover", function(d, i){
-                d3.select(this)
-                    .transition().duration(150)
-                    .attr("d", d3.symbol()
-			  .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
-			  .size(function(d) { return (dot_size(d) * settings.hover_size); })
-			 )
-                    .style("opacity", function(d) {
-			if (settings.hover_opacity !== null) {
-			    return settings.hover_opacity;
-			} else {
-			    return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
-			}
-                    });
-		if (settings.has_url_var) {
-                    d3.select(this)
-		    	.style("cursor", function(d) {
-			    return (d.url_var != "" ? "pointer" : "default");
-			});
-		}
-                tooltip.style("visibility", "visible")
-                    .html(tooltip_content(d));
-            });
-            selection.on("mousemove", function(){
-                tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
-            });
-            selection.on("mouseout", function(){
-                d3.select(this)
-                    .transition().duration(150)
-                    .attr("d", d3.symbol()
-			  .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
-			  .size(function(d) { return dot_size(d);})
-			 )
-                    .style("opacity", function(d) {
+        var tooltip = d3.select(".scatterD3-tooltip");
+        selection.on("mouseover", function(d, i){
+            d3.select(this)
+                .transition().duration(150)
+                .attr("d", d3.symbol()
+		      .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
+		      .size(function(d) { return (dot_size(d) * settings.hover_size); })
+		     )
+                .style("opacity", function(d) {
+		    if (settings.hover_opacity !== null) {
+			return settings.hover_opacity;
+		    } else {
 			return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
+		    }
+                });
+	    if (settings.has_url_var) {
+                d3.select(this)
+		    .style("cursor", function(d) {
+			return (d.url_var != "" ? "pointer" : "default");
 		    });
-                tooltip.style("visibility", "hidden");
-            });
-	    selection.on("click", function(d, i) {
-		if (typeof settings.click_callback === 'function') {
-		    settings.click_callback(settings.html_id, i + 1);
-		}
-		if (settings.has_url_var && d.url_var != "") {
-		    var win = window.open(d.url_var, '_blank');
-		    win.focus();
-		}
-            });
-
-        }
+	    }
+	    if (settings.has_tooltips) {
+                tooltip.style("visibility", "visible")
+		    .html(tooltip_content(d));
+	    }
+        });
+        selection.on("mousemove", function(){
+	    if (settings.has_tooltips) {
+		tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
+	    }
+        });
+        selection.on("mouseout", function(){
+            d3.select(this)
+                .transition().duration(150)
+                .attr("d", d3.symbol()
+		      .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
+		      .size(function(d) { return dot_size(d);})
+		     )
+                .style("opacity", function(d) {
+			return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
+		});
+	    if (settings.has_tooltips) {
+                    tooltip.style("visibility", "hidden");
+	    }
+        });
+	selection.on("click", function(d, i) {
+	    if (typeof settings.click_callback === 'function') {
+		settings.click_callback(settings.html_id, i + 1);
+	    }
+	    if (settings.has_url_var && d.url_var != "") {
+		var win = window.open(d.url_var, '_blank');
+		win.focus();
+	    }
+        });
     }
 
     // Apply format to dot
