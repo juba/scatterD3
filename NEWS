@@ -10,6 +10,7 @@ scatterD3 0.7
 * New argument : `opacity_var` to specify points opacity individually with a vector. Use `point_opacity` to specify a constant opacity.
 * New argument : `url_var` to specify URLs to be opened when a point is clicked.
 * Add `click_callback` parameter, opening a hook for a click event listener (thanks @detule and @harveyl888)
+* Add `zoom_callback` parameter, opening a hook for a zoom event listener
 * New "export labels position" feature
 * New settings `hover_size` and `hover_opacity` (thanks @nicolabo)
 * Axes and legend font size customization with `axes_font_size` and `legend_font_size` (thanks @fineswag)

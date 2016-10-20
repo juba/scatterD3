@@ -252,6 +252,22 @@ Thanks to [detule](https://github.com/detule) and [harveyl888](https://github.co
 Note that `url_var` and `click_callback` cannot be used at the same time.
 
 
+## JavaScript zoom callback
+
+The optional `zoom_callback` argument is a character string defining a JavaScript function to be called when a zoom event is triggered. It must accept two arguments `xmin`, `xmax`, `ymin` and `ymax` (in this order), which give the new `x` and `y` domains after zooming.
+
+```{r zoom_callback}
+scatterD3(data = mtcars, x = wt, y = mpg,
+   zoom_callback = "function(xmin, xmax, ymin, ymax) {
+    var zoom = '<strong>Zoom</strong><br />xmin = ' + xmin + '<br />xmax = ' + xmax + '<br />ymin = ' + ymin + '<br />ymax = ' + ymax;
+    document.getElementById('zoomExample').innerHTML = zoom;
+   }")
+```
+
+<div id="zoomExample" style="font-size: 80%; background-color: #F9F9F9; padding: 5px; margin-left: 5em; width: 15em;"><strong>Zoom</strong><br /> None yet !</div>
+
+
+
 ## Confidence ellipses
 
 You can draw a confidence ellipse around the points :

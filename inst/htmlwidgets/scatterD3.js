@@ -189,7 +189,9 @@ function scatterD3() {
         chart_body.selectAll(".arrow").call(draw_arrow);
         chart_body.selectAll(".ellipse").call(ellipse_formatting);
         svg.select(".unit-circle").call(unit_circle_init);
-
+        if (typeof settings.zoom_callback === 'function') {
+		      settings.zoom_callback(x.domain()[0], x.domain()[1], y.domain()[0], y.domain()[1]);
+		    }
     }
 
     // Reset zoom function

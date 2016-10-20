@@ -60,6 +60,9 @@
 #'     argument \code{sel} to be applied to a lasso plugin selection
 #' @param click_callback the body of a JavaScript callback function whose
 #'     inputs are html_id, and the index of the clicked element.
+#' @param zoom_callback the body of a JavaScript callback function whose
+#'     inputs are the new xmin, xmax, ymin and ymax after a zoom action is
+#'     triggered.
 #' @param lines a data frame with at least the \code{slope} and
 #'     \code{intercept} columns, and as many rows as lines to add to
 #'     scatterplot. Style can be added with \code{stroke}, \code{stroke_width}
@@ -140,6 +143,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       lasso = FALSE,
                       lasso_callback = NULL,
                       click_callback = NULL,
+                      zoom_callback = NULL,
                       lines = data.frame(slope = c(0, Inf),
                                          intercept = c(0, 0),
                                          stroke_dasharray = c(5,5)),
@@ -177,13 +181,13 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         size_var <- null_or_name(size_var)
         symbol_var <- null_or_name(symbol_var)
         opacity_var <- null_or_name(opacity_var)
-        url_var <- null_or_name(url_var)    
+        url_var <- null_or_name(url_var)
         key_var <- null_or_name(key_var)
     }
 
     x_categorical <- is.factor(x) || !is.numeric(x)
     y_categorical <- is.factor(y) || !is.numeric(y)
-    
+
     ## colors can be named
     ##  we'll need to convert named vector to a named list
     ##  for the JSON conversion
@@ -199,7 +203,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
             col_continuous <- TRUE
         }
     }
-    
+
     ## data element
     data <- data.frame(x = x, y = y)
     if (!is.null(lab)) data <- cbind(data, lab = lab)
@@ -305,13 +309,14 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         has_color_var = !is.null(col_var),
         has_symbol_var = !is.null(symbol_var),
         has_size_var = !is.null(size_var),
-        has_opacity_var = !is.null(opacity_var),    
-        has_url_var = !is.null(url_var),    
+        has_opacity_var = !is.null(opacity_var),
+        has_url_var = !is.null(url_var),
         has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
         has_tooltips = tooltips,
         tooltip_text = tooltip_text,
         has_custom_tooltips = !is.null(tooltip_text),
         click_callback = htmlwidgets::JS(click_callback),
+        zoom_callback = htmlwidgets::JS(zoom_callback),
         fixed = fixed,
         legend_width = legend_width,
         left_margin = left_margin,

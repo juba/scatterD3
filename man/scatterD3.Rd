@@ -21,9 +21,9 @@ scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
-  click_callback = NULL, lines = data.frame(slope = c(0, Inf), intercept =
-  c(0, 0), stroke_dasharray = c(5, 5)), axes_font_size = "100\%",
-  legend_font_size = "100\%")
+  click_callback = NULL, zoom_callback = NULL, lines = data.frame(slope =
+  c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5, 5)),
+  axes_font_size = "100\%", legend_font_size = "100\%")
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}
@@ -141,6 +141,10 @@ argument \code{sel} to be applied to a lasso plugin selection}
 
 \item{click_callback}{the body of a JavaScript callback function whose
 inputs are html_id, and the index of the clicked element.}
+
+\item{zoom_callback}{the body of a JavaScript callback function whose
+inputs are the new xmin, xmax, ymin and ymax after a zoom action is
+triggered.}
 
 \item{lines}{a data frame with at least the \code{slope} and
 \code{intercept} columns, and as many rows as lines to add to
