@@ -71,7 +71,7 @@ function scatterD3() {
         }
 
         // Fixed ratio
-        if (settings.fixed) {
+        if (settings.fixed && !(settings.xlim !== null && settings.ylim !== null)) {
             if (settings.xlim === null && settings.ylim === null) {
 		min_x = min_y = Math.min(min_x, min_y);
 		max_x = max_y = Math.max(max_x, max_y);
