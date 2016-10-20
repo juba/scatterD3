@@ -399,7 +399,7 @@ function scatterD3() {
             });
 	    selection.on("click", function(d, i) {
 		if (typeof settings.click_callback === 'function') {
-		    settings.click_callback(settings.html_id, i);
+		    settings.click_callback(settings.html_id, i + 1);
 		}
 		if (settings.has_url_var && d.url_var != "") {
 		    var win = window.open(d.url_var, '_blank');
