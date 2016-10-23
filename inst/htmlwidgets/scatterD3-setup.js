@@ -1,6 +1,7 @@
 // Custom color scheme
 function custom_scheme10 () {
-    var scheme = d3.schemeCategory10;
+    var scheme = d3.schemeCategory10.slice();
+    console.log(scheme);
     // Switch orange and red
     var	tmp = scheme[3];
     scheme[3] = scheme[1];
@@ -9,12 +10,11 @@ function custom_scheme10 () {
 }
 
 // Setup dimensions
-function setup_sizes(width, height, settings) {
+function setup_sizes (width, height, settings) {
 
     var dims = {},
 	margins = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50};
 
-    
     if (settings.left_margin !== null) {
 	margins.left = settings.left_margin;
     }
@@ -39,6 +39,32 @@ function setup_sizes(width, height, settings) {
     dims.legend_x = dims.total_width - margins.right - dims.legend_width + 24;
 
     dims.margins = margins;
+    
+    return dims;
+}
+
+// Compute and setup legend positions
+function setup_legend_sizes (dims, scales, settings) {
+
+    dims.margins.legend_top = 50;
+
+    // Height of color legend
+    var color_legend_height = 0;
+    if (settings.has_color_var) {
+	var n = settings.col_continuous ? 6 : scales.color.domain().length;
+	color_legend_height = n * 20 + 30;
+    }
+    dims.margins.symbol_legend_top = color_legend_height + dims.margins.legend_top;
+
+    // Height of color and symbol legends
+    // Height of color legend
+    var color_legend_height = 0;
+    if (settings.has_color_var) {
+	var n = settings.col_continuous ? 6 : scales.color.domain().length;
+	color_legend_height = n * 20 + 30;
+    }
+    var symbol_legend_height = settings.has_symbol_var ? scales.symbol.domain().length * 20 + 30 : 0;
+    dims.margins.size_legend_top = color_legend_height + symbol_legend_height + dims.margins.legend_top;
     
     return dims;
 }

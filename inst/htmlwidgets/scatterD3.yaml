@@ -35,5 +35,7 @@ dependencies:
     src: htmlwidgets/
     stylesheet: scatterD3.css
     script:
+      - scatterD3-utils.js
       - scatterD3-setup.js
+      - scatterD3-legend.js
 
