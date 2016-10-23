@@ -6,7 +6,7 @@ function scatterD3() {
 	settings = {},
 	scales = {},
 	data = [],
-	svg, root, chart_body,
+	svg,
 	draw_line, zoom, drag;
     
     // Key function to identify rows when interactively filtering
@@ -26,6 +26,7 @@ function scatterD3() {
     
     // Zoom function
     function zoomed(reset) {
+	var root = svg.select(".root");
 	if (!settings.x_categorical) {
             scales.x = d3.event.transform.rescaleX(scales.x_orig);
             scales.xAxis = scales.xAxis.scale(scales.x);
@@ -36,6 +37,7 @@ function scatterD3() {
             scales.yAxis = scales.yAxis.scale(scales.y);
             root.select(".y.axis").call(scales.yAxis);
 	}
+	var chart_body = svg.select(".chart-body");
         chart_body.selectAll(".dot, .point-label")
             .attr("transform", translation);
 	chart_body.selectAll(".line").call(line_formatting);
@@ -49,6 +51,7 @@ function scatterD3() {
 
     // Reset zoom function
     function reset_zoom() {
+	var root = svg.select(".root");
         root.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
     }
 
@@ -474,7 +477,7 @@ function scatterD3() {
             scales = setup_scales(dims, settings, data);
 
             // Root chart element and axes
-            root = svg.append("g")
+            var root = svg.append("g")
 		.attr("class", "root")
 		.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")")
 		.call(zoom);
@@ -505,7 +508,7 @@ function scatterD3() {
             }
 
             // chart body
-            chart_body = root.append("svg")
+            var chart_body = root.append("svg")
 		.attr("class", "chart-body")
 		.attr("width", dims.width)
 		.attr("height", dims.height);
@@ -657,6 +660,7 @@ function scatterD3() {
 
     // Update chart with transitions
     function update_settings(old_settings) {
+	var chart_body = svg.select(".chart-body");
         if (old_settings.labels_size != settings.labels_size)
             svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
         if (old_settings.point_size != settings.point_size ||
@@ -709,7 +713,7 @@ function scatterD3() {
         scales.xAxis = scales.xAxis.scale(scales.x).tickSize(-dims.height);
         scales.yAxis = scales.yAxis.scale(scales.y).tickSize(-dims.width);
 
-	var t0 = root.transition().duration(1000);
+	var t0 = svg.select(".root").transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
 	t0.select(".x.axis").call(scales.xAxis);
 	svg.select(".y-axis-label").text(settings.ylab);
@@ -717,6 +721,7 @@ function scatterD3() {
 	
 	t0.call(zoom.transform, d3.zoomIdentity);
 
+	var chart_body = svg.select(".chart-body");
 	// Add lines
 	if (settings.lines !== null) {
 	    var line = chart_body.selectAll(".line")
