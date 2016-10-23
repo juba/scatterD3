@@ -1,7 +1,7 @@
 dependencies:
   - name: d3
     version: 4.2.6
-    src: htmlwidgets/lib
+    src: htmlwidgets/lib/d3
     script:
 #      - d3-4.2.6.min.js
       - d3-color.v1.min.js
@@ -22,15 +22,16 @@ dependencies:
       - d3-legend.min.js
   - name: d3-zoom-patched
     version: 0.0
-    src: htmlwidgets/lib/
+    src: htmlwidgets/lib/d3
     script:
       - d3-zoom-patched.min.js
-  - name: misc
-    version: 0.1
-    src: htmlwidgets/lib    
-    stylesheet: scatterD3.css    
   - name: d3.lasso-plugin
     version: 1.0.0
     src: htmlwidgets/lib/d3-lasso-plugin
     script: lasso.js
     stylesheet: lasso.css
+  - name: scatterD3
+    version: 0.7
+    src: htmlwidgets/
+    stylesheet: scatterD3.css
+
