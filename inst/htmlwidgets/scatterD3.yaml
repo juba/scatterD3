@@ -34,4 +34,6 @@ dependencies:
     version: 0.7
     src: htmlwidgets/
     stylesheet: scatterD3.css
+    script:
+      - scatterD3-setup.js
 

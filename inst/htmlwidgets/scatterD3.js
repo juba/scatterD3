@@ -1,167 +1,16 @@
-var custom_scheme10 = d3.schemeCategory10,
-    tmp = custom_scheme10[3];
-custom_scheme10[3] = custom_scheme10[1];
-custom_scheme10[1] = tmp;
-
-var gear_path = "m 24.28,7.2087374 -1.307796,0 c -0.17052,-0.655338 -0.433486,-1.286349 -0.772208,-1.858846 l 0.927566,-0.929797 c 0.281273,-0.281188 0.281273,-0.738139 0,-1.019312 L 21.600185,1.8728727 C 21.319088,1.591685 20.863146,1.5914219 20.582048,1.8726096 L 19.650069,2.8001358 C 19.077606,2.4614173 18.446602,2.1982296 17.791262,2.0278389 l 0,-1.30783846 c 0,-0.39762 -0.313645,-0.72 -0.711262,-0.72 l -2.16,0 c -0.397618,0 -0.711262,0.32238 -0.711262,0.72 l 0,1.30783846 c -0.65534,0.1703907 -1.286345,0.43344 -1.858849,0.7722138 L 11.420092,1.8724435 c -0.281185,-0.2812846 -0.738131,-0.2812846 -1.019315,0 L 8.8728737,3.3998124 C 8.5916888,3.6809174 8.591427,4.1368574 8.872612,4.4179484 l 0.9275234,0.931984 c -0.3388099,0.572456 -0.6019076,1.203467 -0.7722956,1.858805 l -1.3078398,0 c -0.3976159,0 -0.72,0.313643 -0.72,0.711263 L 7,10.08 c 0,0.397661 0.3223841,0.711263 0.72,0.711263 l 1.3078398,0 c 0.170388,0.655338 0.4334414,1.286349 0.7722084,1.858846 L 8.872349,13.579906 c -0.2811836,0.281105 -0.2811836,0.738139 0,1.019188 l 1.527378,1.527951 c 0.281185,0.28127 0.737041,0.281533 1.018224,3.04e-4 l 0.931981,-0.927484 c 0.572461,0.338718 1.203466,0.601823 1.858806,0.772338 l 0,1.307797 c 0,0.397662 0.313644,0.72 0.711262,0.72 l 2.16,0 c 0.39766,0 0.711262,-0.32238 0.711262,-0.72 l 0,-1.307797 c 0.65534,-0.170515 1.286344,-0.433481 1.858849,-0.772214 l 0.929797,0.927568 c 0.281098,0.281271 0.738131,0.281271 1.019184,0 l 1.527947,-1.527369 c 0.281273,-0.281105 0.281534,-0.737045 3.06e-4,-1.018136 l -0.92748,-0.931984 c 0.338723,-0.572456 0.601819,-1.203467 0.772339,-1.858805 l 1.307796,0 c 0.39766,0 0.72,-0.313643 0.72,-0.711263 l 0,-2.1599996 c 0,-0.39762 -0.322384,-0.711263 -0.72,-0.711263 z M 16,12.6 c -1.988258,0 -3.6,-1.611789 -3.6,-3.5999996 0,-1.988252 1.611742,-3.6 3.6,-3.6 1.988258,0 3.6,1.611748 3.6,3.6 C 19.6,10.988252 17.988258,12.6 16,12.6 Z";
-
-
 function scatterD3() {
 
     var width = 600, // default width
 	height = 600, // default height
 	dims = {},
-	margin = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50},
 	settings = {},
+	scales = {},
 	data = [],
-	x, y, x_orig, y_orig, color_scale, symbol_scale, size_scale, opacity_scale,
-	xAxis, yAxis,
 	svg, root, chart_body,
 	draw_line, zoom, drag,
 	lasso_base, lasso_classes;
 
-    function setup_sizes() {
-
-	if (settings.left_margin !== null) {
-	    margin.left = settings.left_margin;
-	}
-
-        dims.legend_width = 0;
-        if (settings.has_legend) dims.legend_width = settings.legend_width;
-
-        dims.width = width - dims.legend_width;
-        dims.height = height;
-        dims.height = dims.height - margin.top - margin.bottom;
-        dims.width = dims.width - margin.left - margin.right;
-
-        // Fixed ratio
-        if (settings.fixed) {
-            dims.height = Math.min(dims.height, dims.width);
-            dims.width = dims.height;
-        }
-
-        dims.total_width = dims.width + margin.left + margin.right + dims.legend_width;
-        dims.total_height = dims.height + margin.top + margin.bottom;
-
-        dims.legend_x = dims.total_width - margin.right - dims.legend_width + 24;
-    }
-
-    function setup_scales() {
-
-	var min_x, min_y, max_x, max_y, gap_x, gap_y;
-
-        // x and y limits
-        if (settings.xlim === null) {
-            min_x = d3.min(data, function(d) { return(d.x);} );
-            max_x = d3.max(data, function(d) { return(d.x);} );
-            gap_x = (max_x - min_x) * 0.2;
-        } else {
-            min_x = settings.xlim[0];
-            max_x = settings.xlim[1];
-            gap_x = 0;
-        }
-        if (settings.ylim === null) {
-            min_y = d3.min(data, function(d) { return(d.y);} );
-            max_y = d3.max(data, function(d) { return(d.y);} );
-            gap_y = (max_y - min_y) * 0.2;
-        } else {
-            min_y = settings.ylim[0];
-            max_y = settings.ylim[1];
-            gap_y = 0;
-        }
-
-        // Fixed ratio
-        if (settings.fixed && !(settings.xlim !== null && settings.ylim !== null)) {
-            if (settings.xlim === null && settings.ylim === null) {
-		min_x = min_y = Math.min(min_x, min_y);
-		max_x = max_y = Math.max(max_x, max_y);
-		gap_x = gap_y = Math.max(gap_x, gap_y);
-            }
-            if (settings.xlim !== null) {
-		min_y = min_x;
-		max_y = max_x;
-		gap_y = gap_x;
-            }
-            if (settings.ylim !== null) {
-		min_x = min_y;
-		max_x = max_y;
-		gap_x = gap_y;
-            }
-        }
-
-        // x, y scales
-	if (!settings.x_categorical) {
-            x = d3.scaleLinear()
-		.range([0, dims.width])
-		.domain([min_x - gap_x, max_x + gap_x]);
-	} else {
-	    x = d3.scalePoint()
-	    	.range([0, dims.width])
-		.padding(0.9)
-		.domain(d3.map(data, function(d){ return d.x; }).keys().sort());
-	}
-	if (!settings.y_categorical) {
-            y = d3.scaleLinear()
-		.range([dims.height, 0])
-		.domain([min_y - gap_y, max_y + gap_y]);
-	} else {
-	    y = d3.scalePoint()
-	    	.range([dims.height, 0])
-		.padding(0.9)
-		.domain(d3.map(data, function(d){ return d.y; }).keys().sort());
-	}
-        // Keep track of original scales
-        x_orig = x;
-        y_orig = y;
-	// x and y axis functions
-        xAxis = d3.axisBottom(x)
-            .tickSize(-dims.height);
-        yAxis = d3.axisLeft(y)
-            .tickSize(-dims.width);
-
-	// Continuous color scale
-	if (settings.col_continuous) {
-	    color_scale = d3.scaleSequential(d3.interpolateViridis)
-		.domain([d3.min(data, function(d) { return(d.col_var);} ),
-			 d3.max(data, function(d) { return(d.col_var);} )]);
-	}
-	// Ordinal color scale
-	else {
-            if (settings.colors === null) {
-		// Number of different levels. See https://github.com/mbostock/d3/issues/472
-		var n = d3.map(data, function(d) { return d.col_var; }).size();
-		color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
-            } else if (Array.isArray(settings.colors)) {
-		color_scale = d3.scaleOrdinal().range(settings.colors);
-            } else if (typeof(settings.colors) === "string"){
-		// Single string given
-		color_scale = d3.scaleOrdinal().range(Array(settings.colors));
-            } else if (typeof(settings.colors) === "object"){
-		color_scale = d3.scaleOrdinal()
-                    .range(d3.values(settings.colors))
-                    .domain(d3.keys(settings.colors));
-            }
-	}
-	// Symbol scale
-        symbol_scale = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
-	// Size scale
-	size_scale = d3.scaleLinear()
-            .range(settings.size_range)
-            .domain([d3.min(data, function(d) { return(d.size_var);} ),
-                     d3.max(data, function(d) { return(d.size_var);} )]);
-	// Opacity scale
-        opacity_scale = d3.scaleLinear()
-            .range([0.1, 1])
-            .domain([d3.min(data, function(d) { return(d.opacity_var);} ),
-                     d3.max(data, function(d) { return(d.opacity_var);} )]);
-
-        // Zoom behavior
-        zoom = d3.zoom()
-            .scaleExtent([0, 32])
-            .on("zoom", zoomed);
-
-    }
-
+    
     // Key function to identify rows when interactively filtering
     function key(d) {
         return d.key_var;
@@ -169,20 +18,25 @@ function scatterD3() {
 
     // Default translation function for points and labels
     function translation(d) {
-        return "translate(" + x(d.x) + "," + y(d.y) + ")";
+        return "translate(" + scales.x(d.x) + "," + scales.y(d.y) + ")";
     }
 
+    // Zoom behavior
+    zoom = d3.zoom()
+        .scaleExtent([0, 32])
+        .on("zoom", zoomed);
+    
     // Zoom function
     function zoomed(reset) {
 	if (!settings.x_categorical) {
-            x = d3.event.transform.rescaleX(x_orig);
-            xAxis = xAxis.scale(x);
-            root.select(".x.axis").call(xAxis);
+            scales.x = d3.event.transform.rescaleX(scales.x_orig);
+            scales.xAxis = scales.xAxis.scale(scales.x);
+            root.select(".x.axis").call(scales.xAxis);
 	}
 	if (!settings.y_categorical) {
-            y = d3.event.transform.rescaleY(y_orig);
-            yAxis = yAxis.scale(y);
-            root.select(".y.axis").call(yAxis);
+            scales.y = d3.event.transform.rescaleY(scales.y_orig);
+            scales.yAxis = scales.yAxis.scale(scales.y);
+            root.select(".y.axis").call(scales.yAxis);
 	}
         chart_body.selectAll(".dot, .point-label")
             .attr("transform", translation);
@@ -221,14 +75,14 @@ function scatterD3() {
 	data.forEach(function(d, index){
             var labx = d.x;
             if (d.lab_dx !== undefined) {
-		labx = d.x + x.invert(d.lab_dx) - x.domain()[0];
+		labx = d.x + scales.x.invert(d.lab_dx) - scales.x.domain()[0];
             }
-            var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+            var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
             var offset_y = (-Math.sqrt(size) / 2) - 6;
             if (d.lab_dy !== undefined) {
 		offset_y = d.lab_dy;
             }
-            var laby = d.y + y.invert(offset_y) - y.domain()[1];
+            var laby = d.y + scales.y.invert(offset_y) - scales.y.domain()[1];
             var this_line = d.lab + "," + labx + "," + laby;
             lines_data.push(this_line);
 	});
@@ -246,7 +100,7 @@ function scatterD3() {
             .attr("class", "x axis")
             .attr("transform", "translate(0," + dims.height + ")")
             .style("font-size", settings.axes_font_size)
-            .call(xAxis);
+            .call(scales.xAxis);
 
         selection.append("text")
             .attr("class", "x-axis-label")
@@ -259,7 +113,7 @@ function scatterD3() {
         selection.append("g")
             .attr("class", "y axis")
             .style("font-size", settings.axes_font_size)
-            .call(yAxis);
+            .call(scales.yAxis);
 
         selection.append("text")
             .attr("class", "y-axis-label")
@@ -318,8 +172,8 @@ function scatterD3() {
 		if (settings.x_categorical) {
 		    if (d.slope != 0) { return null; }
 		    else {
-			return draw_line([{x:0, y: y(d.intercept)},
-					  {x:dims.width, y: y(d.intercept)}]);
+			return draw_line([{x:0, y: scales.y(d.intercept)},
+					  {x:dims.width, y: scales.y(d.intercept)}]);
 		    }
 		}
 		if (settings.y_categorical) {
@@ -327,13 +181,13 @@ function scatterD3() {
 		}
 		// Vertical line
 		if (d.slope === null) {
-		    return draw_line([{x:x(d.intercept), y: 0},
-				      {x:x(d.intercept), y: dims.height}]);
+		    return draw_line([{x:scales.x(d.intercept), y: 0},
+				      {x:scales.x(d.intercept), y: dims.height}]);
 		}
 		// All other lines
 		else {
-		    return draw_line([{x:0, y: y(d.slope * x.domain()[0] + d.intercept)},
-				      {x:dims.width, y: y(d.slope * x.domain()[1] + d.intercept)}]);
+		    return draw_line([{x:0, y: scales.y(d.slope * scales.x.domain()[0] + d.intercept)},
+				      {x:dims.width, y: scales.y(d.slope * scales.x.domain()[1] + d.intercept)}]);
 		}
 	    })
 	    .style("stroke-width", function(d) {
@@ -351,7 +205,7 @@ function scatterD3() {
     // Returns dot size from associated data
     function dot_size(data) {
         var size = settings.point_size;
-        if (settings.has_size_var) { size = size_scale(data.size_var); }
+        if (settings.has_size_var) { size = scales.size(data.size_var); }
         return(size);
     }
 
@@ -363,14 +217,14 @@ function scatterD3() {
             d3.select(this)
                 .transition().duration(150)
                 .attr("d", d3.symbol()
-		      .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
+		      .type(function(d) { return d3.symbols[scales.symbol(d.symbol_var)]; })
 		      .size(function(d) { return (dot_size(d) * settings.hover_size); })
 		     )
                 .style("opacity", function(d) {
 		    if (settings.hover_opacity !== null) {
 			return settings.hover_opacity;
 		    } else {
-			return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
+			return(d.opacity_var === undefined ? settings.point_opacity : scales.opacity(d.opacity_var));
 		    }
                 });
 	    if (settings.has_url_var) {
@@ -393,11 +247,11 @@ function scatterD3() {
             d3.select(this)
                 .transition().duration(150)
                 .attr("d", d3.symbol()
-		      .type(function(d) { return d3.symbols[symbol_scale(d.symbol_var)]; })
+		      .type(function(d) { return d3.symbols[scales.symbol(d.symbol_var)]; })
 		      .size(function(d) { return dot_size(d);})
 		     )
                 .style("opacity", function(d) {
-			return(d.opacity_var === undefined ? settings.point_opacity : opacity_scale(d.opacity_var));
+			return(d.opacity_var === undefined ? settings.point_opacity : scales.opacity(d.opacity_var));
 		});
 	    if (settings.has_tooltips) {
                     tooltip.style("visibility", "hidden");
@@ -419,13 +273,13 @@ function scatterD3() {
         var sel = selection
             .attr("transform", translation)
         // fill color
-            .style("fill", function(d) { return color_scale(d.col_var); })
+            .style("fill", function(d) { return scales.color(d.col_var); })
 	    .style("opacity", function(d) {
-		return d.opacity_var !== undefined ? opacity_scale(d.opacity_var) : settings.point_opacity;
+		return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
 	    })
         // symbol and size
             .attr("d", d3.symbol()
-		  .type(function(d) {return d3.symbols[symbol_scale(d.symbol_var)];})
+		  .type(function(d) {return d3.symbols[scales.symbol(d.symbol_var)];})
 		  .size(function(d) { return dot_size(d); })
 		 )
             .attr("class", function(d,i) {
@@ -437,10 +291,10 @@ function scatterD3() {
     // Arrow drawing function
     function draw_arrow(selection) {
         selection
-            .attr("x1", function(d) { return x(0); })
-            .attr("y1", function(d) { return y(0); })
-            .attr("x2", function(d) { return x(d.x); })
-            .attr("y2", function(d) { return y(d.y); });
+            .attr("x1", function(d) { return scales.x(0); })
+            .attr("y1", function(d) { return scales.y(0); })
+            .attr("x2", function(d) { return scales.x(d.x); })
+            .attr("y2", function(d) { return scales.y(d.y); });
     }
 
     // Initial arrow attributes
@@ -467,12 +321,12 @@ function scatterD3() {
             .call(draw_arrow)
             .style("stroke-width", "1px")
         // stroke color
-            .style("stroke", function(d) { return color_scale(d.col_var); })
-            .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + color_scale(d.col_var) + ")"; })
+            .style("stroke", function(d) { return scales.color(d.col_var); })
+            .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + scales.color(d.col_var) + ")"; })
             .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var); });
         if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
             sel = sel.style("opacity", function(d) {
-		return d.opacity_var !== undefined ? opacity_scale(d.opacity_var) : settings.point_opacity;
+		return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
 	    });
         }
         return sel;
@@ -489,8 +343,8 @@ function scatterD3() {
 
         // Ellipses path function
         var ellipseFunc = d3.line()
-            .x(function(d) { return x(d.x); })
-            .y(function(d) { return y(d.y); });
+            .x(function(d) { return scales.x(d.x); })
+            .y(function(d) { return scales.y(d.y); });
 
         selection
             .attr("d", function(d) {
@@ -503,10 +357,10 @@ function scatterD3() {
 		    if (settings.col_continuous) {
 			return(d3.interpolateViridis(0));
 		    } else {
-			return(color_scale.range()[0]);
+			return(scales.color.range()[0]);
 		    }
 		}
-		return( color_scale(d.level));
+		return( scales.color(d.level));
             })
             .style("opacity", 1)
             .attr("class", function(d) {
@@ -517,10 +371,10 @@ function scatterD3() {
     // Unit circle init
     function unit_circle_init(selection) {
         selection
-            .attr('cx', x(0))
-            .attr('cy', y(0))
-            .attr('rx', x(1)-x(0))
-            .attr('ry', y(0)-y(1))
+            .attr('cx', scales.x(0))
+            .attr('cy', scales.y(0))
+            .attr('rx', scales.x(1)-scales.x(0))
+            .attr('ry', scales.y(0)-scales.y(1))
             .style("stroke", "#888")
             .style("fill", "none")
             .style("opacity", "1");
@@ -549,14 +403,14 @@ function scatterD3() {
             .style("font-size", settings.labels_size + "px")
             .attr("class", function(d,i) { return "point-label color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var); })
             .attr("transform", translation)
-            .style("fill", function(d) { return color_scale(d.col_var); })
+            .style("fill", function(d) { return scales.color(d.col_var); })
             .attr("dx", function(d) {
 		if (d.lab_dx === undefined) return("0px");
 		else return(d.lab_dx + "px");
             })
             .attr("dy", function(d) {
 		if (d.lab_dy !== undefined) return(d.lab_dy + "px");
-		var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+		var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
 		return default_label_dy(size, d.y, d.type_var) + "px";
             });
         if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
@@ -569,44 +423,44 @@ function scatterD3() {
     var dragging = false;
     drag = d3.drag()
 	.subject(function(d) {
-            var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+            var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
             var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
             var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
-            return {x:x(d.x)+dx, y:y(d.y)+dy};
+            return {x:scales.x(d.x)+dx, y:scales.y(d.y)+dy};
 	})
 	.on('start', function(d) {
 	    if (!d3.event.sourceEvent.shiftKey) {
 		dragging = true;
 		d3.select(this).style('fill', '#000');
 		var chart = d3.select(this).node().parentNode;
-		var size = (d.size_var === undefined) ? settings.point_size : size_scale(d.size_var);
+		var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
 		var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
 		var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
 		d3.select(chart).append("svg:line")
 		    .attr("id", "scatterD3-drag-line")
-		    .attr("x1", x(d.x)).attr("x2", x(d.x) + dx)
-		    .attr("y1", y(d.y)).attr("y2", y(d.y) + dy)
+		    .attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
+		    .attr("y1", scales.y(d.y)).attr("y2", scales.y(d.y) + dy)
 		    .style("stroke", "#000")
 		    .style("opacity", 0.3);
 	    }
 	})
 	.on('drag', function(d) {
 	    if (dragging) {
-		cx = d3.event.x - x(d.x);
-		cy = d3.event.y - y(d.y);
+		var cx = d3.event.x - scales.x(d.x);
+		var cy = d3.event.y - scales.y(d.y);
 		d3.select(this)
 		    .attr('dx', cx + "px")
 		    .attr('dy', cy + "px");
 		d3.select("#scatterD3-drag-line")
-		    .attr('x2', x(d.x) + cx)
-		    .attr("y2", y(d.y) + cy);
+		    .attr('x2', scales.x(d.x) + cx)
+		    .attr("y2", scales.y(d.y) + cy);
 		d.lab_dx = cx;
 		d.lab_dy = cy;
 	    }
 	})
 	.on('end', function(d) {
 	    if (dragging){
-		d3.select(this).style('fill', color_scale(d.col_var));
+		d3.select(this).style('fill', scales.color(d.col_var));
 		d3.select("#scatterD3-drag-line").remove();
 		dragging = false;
 	    }
@@ -699,7 +553,7 @@ function scatterD3() {
 		.classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
 		.style("opacity", function(d) {
                     if (d3.select(this).classed('point-label')) {return 1;};
-		    return d.opacity_var !== undefined ? opacity_scale(d.opacity_var) : settings.point_opacity;
+		    return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
 		});
         }
     };
@@ -783,14 +637,14 @@ function scatterD3() {
             .style("font-size", settings.legend_font_size);
 
 	if (!settings.col_continuous) {
-	    var legend_color_domain = color_scale.domain().sort();
+	    var legend_color_domain = scales.color.domain().sort();
             var n = d3.map(data, function(d) { return d.col_var; }).size();
-            var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10) : d3.scaleOrdinal(d3.schemeCategory20);
+            var legend_color_scale = n <= 9 ? d3.scaleOrdinal(custom_scheme10()) : d3.scaleOrdinal(d3.schemeCategory20);
 	    legend_color_scale
 		.domain(legend_color_domain)
-		.range(legend_color_domain.map(function(d) {return color_scale(d);}));
+		.range(legend_color_domain.map(function(d) {return scales.color(d);}));
 	} else {
-	    legend_color_scale = color_scale;
+	    legend_color_scale = scales.color;
 	}
 
 
@@ -817,7 +671,7 @@ function scatterD3() {
 		    svg.selectAll(sel)
 			.transition()
 			.style("opacity", function(d2) {
-			    return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));
+			    return(d2.opacity_var === undefined ? settings.point_opacity : scales.opacity(d2.opacity_var));
 			});
 		    svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
 			.transition()
@@ -830,13 +684,13 @@ function scatterD3() {
         legend.append("g")
             .append("text")
             .attr("class", "color-legend-label")
-            .attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")")
+            .attr("transform", "translate(" + dims.legend_x + "," + dims.margins.legend_top + ")")
             .text(settings.col_lab)
             .call(legend_label_formatting);
 
         legend.append("g")
             .attr("class", "color-legend")
-            .attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 8) + ")")
+            .attr("transform", "translate(" + dims.legend_x + "," + (dims.margins.legend_top + 8) + ")")
             .call(color_legend);
     }
 
@@ -848,15 +702,15 @@ function scatterD3() {
         // Height of color legend
 	var color_legend_height = 0;
 	if (settings.has_color_var) {
-	    var n = settings.col_continuous ? 6 : color_scale.domain().length;
+	    var n = settings.col_continuous ? 6 : scales.color.domain().length;
 	    color_legend_height = n * 20 + 30;
 	}
-        margin.symbol_legend_top = color_legend_height + margin.legend_top;
+        dims.margins.symbol_legend_top = color_legend_height + dims.margins.legend_top;
 
-        var legend_symbol_domain = symbol_scale.domain().sort();
+        var legend_symbol_domain = scales.symbol.domain().sort();
         var legend_symbol_scale = d3.scaleOrdinal()
             .domain(legend_symbol_domain)
-            .range(legend_symbol_domain.map(function(d) {return d3.symbol().type(d3.symbols[symbol_scale(d)])();}));
+            .range(legend_symbol_domain.map(function(d) {return d3.symbol().type(d3.symbols[scales.symbol(d)])();}));
 
         var symbol_legend = d3.legendSymbol()
             .shapePadding(5)
@@ -877,7 +731,7 @@ function scatterD3() {
 		svg.selectAll(sel)
 		    .transition()
 		    .style("opacity", function(d2) {
-			return(d2.opacity_var === undefined ? settings.point_opacity : opacity_scale(d2.opacity_var));
+			return(d2.opacity_var === undefined ? settings.point_opacity : scales.opacity(d2.opacity_var));
 		    });
 		svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
 		    .transition()
@@ -887,13 +741,13 @@ function scatterD3() {
         legend.append("g")
             .append("text")
             .attr("class", "symbol-legend-label")
-            .attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")")
+            .attr("transform", "translate(" + dims.legend_x + "," + dims.margins.symbol_legend_top + ")")
             .text(settings.symbol_lab)
             .call(legend_label_formatting);
 
         legend.append("g")
             .attr("class", "symbol-legend")
-            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")")
+            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.symbol_legend_top + 14) + ")")
             .call(symbol_legend);
 
     }
@@ -907,16 +761,16 @@ function scatterD3() {
 	        // Height of color legend
 	var color_legend_height = 0;
 	if (settings.has_color_var) {
-	    var n = settings.col_continuous ? 6 : color_scale.domain().length;
+	    var n = settings.col_continuous ? 6 : scales.color.domain().length;
 	    color_legend_height = n * 20 + 30;
 	}
-        var symbol_legend_height = settings.has_symbol_var ? symbol_scale.domain().length * 20 + 30 : 0;
-        margin.size_legend_top = color_legend_height + symbol_legend_height + margin.legend_top;
+        var symbol_legend_height = settings.has_symbol_var ? scales.symbol.domain().length * 20 + 30 : 0;
+        dims.margins.size_legend_top = color_legend_height + symbol_legend_height + dims.margins.legend_top;
 
         var legend_size_scale = d3.scaleLinear()
-            .domain(size_scale.domain())
+            .domain(scales.size.domain())
         // FIXME : find exact formula
-            .range(size_scale.range().map(function(d) {return Math.sqrt(d)/1.8;}));
+            .range(scales.size.range().map(function(d) {return Math.sqrt(d)/1.8;}));
 
         var size_legend = d3.legendSize()
             .shapePadding(3)
@@ -926,13 +780,13 @@ function scatterD3() {
         legend.append("g")
             .append("text")
             .attr("class", "size-legend-label")
-            .attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")")
+            .attr("transform", "translate(" + dims.legend_x + "," + dims.margins.size_legend_top + ")")
             .text(settings.size_lab)
             .call(legend_label_formatting);
 
         legend.append("g")
             .attr("class", "size-legend")
-            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")")
+            .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.size_legend_top + 14) + ")")
             .call(size_legend);
 
     }
@@ -950,13 +804,13 @@ function scatterD3() {
     function chart(selection) {
         selection.each(function() {
 
-            setup_sizes();
-            setup_scales();
+            dims = setup_sizes(width, height, settings);
+            scales = setup_scales(dims, settings, data);
 
             // Root chart element and axes
             root = svg.append("g")
 		.attr("class", "root")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+		.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")")
 		.call(zoom);
 
             root.append("rect")
@@ -970,7 +824,7 @@ function scatterD3() {
             var defs = svg.append("defs");
             // arrow head markers
 	    if (!settings.col_continuous) {
-		color_scale.range().forEach(function(d) {
+		scales.color.range().forEach(function(d) {
                     defs.append("marker")
 			.attr("id", "arrow-head-" + settings.html_id + "-" + d)
 			.attr("markerWidth", "10")
@@ -1079,7 +933,7 @@ function scatterD3() {
 		    .attr("height", "25")
 		    .style("fill", "#FFFFFF");
 		gear.append("path")
-		    .attr("d", gear_path)
+		    .attr("d", gear_path())
 		    .attr("transform", "translate(-3,3)")
 		    .style("fill", "#666666");
 
@@ -1181,21 +1035,21 @@ function scatterD3() {
     // Update data with transitions
     function update_data() {
 
-	setup_scales();
+	scales = setup_scales(dims, settings, data);
 
 	if (settings.has_legend_changed && settings.legend_width > 0) 
             resize_chart(1000);
 	
 	//setup_sizes();
 
-        xAxis = xAxis.scale(x).tickSize(-dims.height);
-        yAxis = yAxis.scale(y).tickSize(-dims.width);
+        scales.xAxis = scales.xAxis.scale(scales.x).tickSize(-dims.height);
+        scales.yAxis = scales.yAxis.scale(scales.y).tickSize(-dims.width);
 
 	var t0 = root.transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
-	t0.select(".x.axis").call(xAxis);
+	t0.select(".x.axis").call(scales.xAxis);
 	svg.select(".y-axis-label").text(settings.ylab);
-	    t0.select(".y.axis").call(yAxis);
+	    t0.select(".y.axis").call(scales.yAxis);
 	
 	t0.call(zoom.transform, d3.zoomIdentity);
 
@@ -1280,14 +1134,14 @@ function scatterD3() {
     // Dynamically resize chart elements
     function resize_chart (transition) {
         // recompute sizes
-        setup_sizes();
+        dims = setup_sizes(width, height, settings);
         // recompute scales
-        x.range([0, dims.width]);
-        x_orig.range([0, dims.width]);
-        y.range([dims.height, 0]);
-        y_orig.range([dims.height, 0]);
-        xAxis = xAxis.scale(x).tickSize(-dims.height);
-        yAxis = yAxis.scale(y).tickSize(-dims.width);
+        scales.x.range([0, dims.width]);
+        scales.x_orig.range([0, dims.width]);
+        scales.y.range([dims.height, 0]);
+        scales.y_orig.range([dims.height, 0]);
+        scales.xAxis = scales.xAxis.scale(scales.x).tickSize(-dims.height);
+        scales.yAxis = scales.yAxis.scale(scales.y).tickSize(-dims.width);
 	var t;
 	if (transition) {
 	    t = svg.transition().duration(1000);
@@ -1307,11 +1161,11 @@ function scatterD3() {
             .attr("height", dims.height);
 	t.select(".x.axis")
 	    .attr("transform", "translate(0," + dims.height + ")")
-	    .call(xAxis);
+	    .call(scales.xAxis);
         t.select(".x-axis-label")
 	    .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
 	t.select(".y.axis")
-		.call(yAxis);
+		.call(scales.yAxis);
 	if (settings.unit_circle) {
             t.select(".unit-circle")
 		.call(unit_circle_init);
@@ -1324,21 +1178,21 @@ function scatterD3() {
         // Move legends
         if (settings.has_color_var) {
             t.select(".color-legend-label")
-		.attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")");
+		.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.legend_top + ")");
             t.select(".color-legend")
-		.attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 12) + ")");
+		.attr("transform", "translate(" + dims.legend_x + "," + (dims.margins.legend_top + 12) + ")");
         }
         if (settings.has_symbol_var) {
             t.select(".symbol-legend-label")
-		.attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")");
+		.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.symbol_legend_top + ")");
             t.select(".symbol-legend")
-		.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")");
+		.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.symbol_legend_top + 14) + ")");
         }
         if (settings.has_size_var) {
             t.select(".size-legend-label")
-		.attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")");
+		.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.size_legend_top + ")");
             t.select(".size-legend")
-		.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")");
+		.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.size_legend_top + 14) + ")");
         }
         // Move menu
         if (settings.menu) {
