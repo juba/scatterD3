@@ -1181,11 +1181,12 @@ function scatterD3() {
     // Update data with transitions
     function update_data() {
 
-	if (settings.has_legend_changed && settings.legend_width > 0)
-            resize_chart();
-
-	setup_sizes();
 	setup_scales();
+
+	if (settings.has_legend_changed && settings.legend_width > 0) 
+            resize_chart(1000);
+	
+	//setup_sizes();
 
         xAxis = xAxis.scale(x).tickSize(-dims.height);
         yAxis = yAxis.scale(y).tickSize(-dims.width);
@@ -1194,7 +1195,8 @@ function scatterD3() {
 	svg.select(".x-axis-label").text(settings.xlab);
 	t0.select(".x.axis").call(xAxis);
 	svg.select(".y-axis-label").text(settings.ylab);
-	t0.select(".y.axis").call(yAxis);
+	    t0.select(".y.axis").call(yAxis);
+	
 	t0.call(zoom.transform, d3.zoomIdentity);
 
 	// Add lines
@@ -1276,7 +1278,7 @@ function scatterD3() {
     };
 
     // Dynamically resize chart elements
-    function resize_chart () {
+    function resize_chart (transition) {
         // recompute sizes
         setup_sizes();
         // recompute scales
@@ -1286,50 +1288,61 @@ function scatterD3() {
         y_orig.range([dims.height, 0]);
         xAxis = xAxis.scale(x).tickSize(-dims.height);
         yAxis = yAxis.scale(y).tickSize(-dims.width);
-        // Change svg attributes
-        root
+	var t;
+	if (transition) {
+	    t = svg.transition().duration(1000);
+	} else {
+	    t = svg;
+	}
+	// Change svg attributes
+        t.select(".root")
             .attr("width", dims.width)
             .attr("height", dims.height);
-        root.select("rect")
+        t.select(".root")
+	    .select("rect")
             .attr("width", dims.width)
             .attr("height", dims.height);
-        chart_body
+        t.select(".chart-body")
             .attr("width", dims.width)
             .attr("height", dims.height);
-        svg.select(".x.axis")
-            .attr("transform", "translate(0," + dims.height + ")")
-            .call(xAxis);
-        svg.select(".x-axis-label")
-            .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
-        svg.select(".y.axis")
-            .call(yAxis);
-        svg.select(".unit-circle")
-            .call(unit_circle_init);
-        root.transition().duration(500)
-            .call(zoom.transform, d3.zoomTransform(root.node()));
+	t.select(".x.axis")
+	    .attr("transform", "translate(0," + dims.height + ")")
+	    .call(xAxis);
+        t.select(".x-axis-label")
+	    .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
+	t.select(".y.axis")
+		.call(yAxis);
+	if (settings.unit_circle) {
+            t.select(".unit-circle")
+		.call(unit_circle_init);
+	}
+	if (!transition) {
+	    t.select(".root").call(zoom.transform,
+		      d3.zoomTransform(svg.select(".root").node()));
+	}
 
         // Move legends
         if (settings.has_color_var) {
-            svg.select(".color-legend-label")
+            t.select(".color-legend-label")
 		.attr("transform", "translate(" + dims.legend_x + "," + margin.legend_top + ")");
-            svg.select(".color-legend")
+            t.select(".color-legend")
 		.attr("transform", "translate(" + dims.legend_x + "," + (margin.legend_top + 12) + ")");
         }
         if (settings.has_symbol_var) {
-            svg.select(".symbol-legend-label")
+            t.select(".symbol-legend-label")
 		.attr("transform", "translate(" + dims.legend_x + "," + margin.symbol_legend_top + ")");
-            svg.select(".symbol-legend")
+            t.select(".symbol-legend")
 		.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.symbol_legend_top + 14) + ")");
         }
         if (settings.has_size_var) {
-            svg.select(".size-legend-label")
+            t.select(".size-legend-label")
 		.attr("transform", "translate(" + dims.legend_x + "," + margin.size_legend_top + ")");
-            svg.select(".size-legend")
+            t.select(".size-legend")
 		.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (margin.size_legend_top + 14) + ")");
         }
         // Move menu
         if (settings.menu) {
-            svg.select(".gear-menu")
+            t.select(".gear-menu")
 		.attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
         }
 
