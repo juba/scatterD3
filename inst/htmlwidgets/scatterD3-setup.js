@@ -1,7 +1,7 @@
 // Custom color scheme
 function custom_scheme10 () {
+    // slice() to create a copy
     var scheme = d3.schemeCategory10.slice();
-    console.log(scheme);
     // Switch orange and red
     var	tmp = scheme[3];
     scheme[3] = scheme[1];

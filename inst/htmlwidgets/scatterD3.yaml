@@ -37,7 +37,9 @@ dependencies:
     script:
       - scatterD3-utils.js
       - scatterD3-setup.js
-      - scatterD3-legend.js
+      - scatterD3-dots.js
+      - scatterD3-arrows.js
       - scatterD3-lines.js
+      - scatterD3-legend.js
       - scatterD3-lasso.js
 

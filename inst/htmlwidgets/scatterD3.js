@@ -14,11 +14,6 @@ function scatterD3() {
         return d.key_var;
     }
 
-    // Default translation function for points and labels
-    function translation(d) {
-        return "translate(" + scales.x(d.x) + "," + scales.y(d.y) + ")";
-    }
-
     // Zoom behavior
     zoom = d3.zoom()
         .scaleExtent([0, 32])
@@ -39,7 +34,7 @@ function scatterD3() {
 	}
 	var chart_body = svg.select(".chart-body");
         chart_body.selectAll(".dot, .point-label")
-            .attr("transform", translation);
+            .attr("transform", function(d) { return translation(d, scales); });
 	chart_body.selectAll(".line").call(function(sel) {
 	    line_formatting(sel, dims, settings, scales);
 	});
@@ -127,161 +122,7 @@ function scatterD3() {
 
     }
 
-
-    // Create tooltip content function
-    function tooltip_content(d) {
-        // no tooltips
-        if (!settings.has_tooltips) return null;
-        if (settings.has_custom_tooltips) {
-            // custom tooltipsl
-            return d.tooltip_text;
-        } else {
-            // default tooltips
-            var text = Array();
-            if (settings.has_labels) text.push("<b>"+d.lab+"</b>");
-	    var x_value = settings.x_categorical ? d.x : d.x.toFixed(3);
-	    var y_value = settings.y_categorical ? d.y : d.y.toFixed(3);
-            text.push("<b>"+settings.xlab+":</b> "+ x_value);
-            text.push("<b>"+settings.ylab+":</b> "+ y_value);
-            if (settings.has_color_var) text.push("<b>"+settings.col_lab+":</b> "+d.col_var);
-            if (settings.has_symbol_var) text.push("<b>"+settings.symbol_lab+":</b> "+d.symbol_var);
-            if (settings.has_size_var) text.push("<b>"+settings.size_lab+":</b> "+d.size_var);
-            if (settings.has_opacity_var) text.push("<b>"+settings.opacity_lab+":</b> "+d.opacity_var);
-            return text.join("<br />");
-        }
-    }
-
-
-    // Returns dot size from associated data
-    function dot_size(data) {
-        var size = settings.point_size;
-        if (settings.has_size_var) { size = scales.size(data.size_var); }
-        return(size);
-    }
-
-    // Initial dot attributes
-    function dot_init (selection) {
-        // tooltips when hovering points
-        var tooltip = d3.select(".scatterD3-tooltip");
-        selection.on("mouseover", function(d, i){
-            d3.select(this)
-                .transition().duration(150)
-                .attr("d", d3.symbol()
-		      .type(function(d) { return d3.symbols[scales.symbol(d.symbol_var)]; })
-		      .size(function(d) { return (dot_size(d) * settings.hover_size); })
-		     )
-                .style("opacity", function(d) {
-		    if (settings.hover_opacity !== null) {
-			return settings.hover_opacity;
-		    } else {
-			return(d.opacity_var === undefined ? settings.point_opacity : scales.opacity(d.opacity_var));
-		    }
-                });
-	    if (settings.has_url_var) {
-                d3.select(this)
-		    .style("cursor", function(d) {
-			return (d.url_var != "" ? "pointer" : "default");
-		    });
-	    }
-	    if (settings.has_tooltips) {
-                tooltip.style("visibility", "visible")
-		    .html(tooltip_content(d));
-	    }
-        });
-        selection.on("mousemove", function(){
-	    if (settings.has_tooltips) {
-		tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
-	    }
-        });
-        selection.on("mouseout", function(){
-            d3.select(this)
-                .transition().duration(150)
-                .attr("d", d3.symbol()
-		      .type(function(d) { return d3.symbols[scales.symbol(d.symbol_var)]; })
-		      .size(function(d) { return dot_size(d);})
-		     )
-                .style("opacity", function(d) {
-			return(d.opacity_var === undefined ? settings.point_opacity : scales.opacity(d.opacity_var));
-		});
-	    if (settings.has_tooltips) {
-                    tooltip.style("visibility", "hidden");
-	    }
-        });
-	selection.on("click", function(d, i) {
-	    if (typeof settings.click_callback === 'function') {
-		settings.click_callback(settings.html_id, i + 1);
-	    }
-	    if (settings.has_url_var && d.url_var != "") {
-		var win = window.open(d.url_var, '_blank');
-		win.focus();
-	    }
-        });
-    }
-
-    // Apply format to dot
-    function dot_formatting(selection) {
-        var sel = selection
-            .attr("transform", translation)
-        // fill color
-            .style("fill", function(d) { return scales.color(d.col_var); })
-	    .style("opacity", function(d) {
-		return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
-	    })
-        // symbol and size
-            .attr("d", d3.symbol()
-		  .type(function(d) {return d3.symbols[scales.symbol(d.symbol_var)];})
-		  .size(function(d) { return dot_size(d); })
-		 )
-            .attr("class", function(d,i) {
-		return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
-            });
-        return sel;
-    }
-
-    // Arrow drawing function
-    function draw_arrow(selection) {
-        selection
-            .attr("x1", function(d) { return scales.x(0); })
-            .attr("y1", function(d) { return scales.y(0); })
-            .attr("x2", function(d) { return scales.x(d.x); })
-            .attr("y2", function(d) { return scales.y(d.y); });
-    }
-
-    // Initial arrow attributes
-    function arrow_init (selection) {
-        // tooltips when hovering points
-        if (settings.has_tooltips) {
-            var tooltip = d3.select(".scatterD3-tooltip");
-            selection.on("mouseover", function(d, i){
-                tooltip.style("visibility", "visible")
-                    .html(tooltip_content(d));
-            });
-            selection.on("mousemove", function(){
-                tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
-            });
-            selection.on("mouseout", function(){
-                tooltip.style("visibility", "hidden");
-            });
-        }
-    }
-
-    // Apply format to arrow
-    function arrow_formatting(selection) {
-        var sel = selection
-            .call(draw_arrow)
-            .style("stroke-width", "1px")
-        // stroke color
-            .style("stroke", function(d) { return scales.color(d.col_var); })
-            .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + scales.color(d.col_var) + ")"; })
-            .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var); });
-        if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
-            sel = sel.style("opacity", function(d) {
-		return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
-	    });
-        }
-        return sel;
-    }
-
+    
     // Initial ellipse attributes
     function ellipse_init(selection) {
         selection
@@ -352,7 +193,7 @@ function scatterD3() {
             .text(function(d) {return(d.lab);})
             .style("font-size", settings.labels_size + "px")
             .attr("class", function(d,i) { return "point-label color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var); })
-            .attr("transform", translation)
+            .attr("transform", function(d) { return translation(d, scales); })
             .style("fill", function(d) { return scales.color(d.col_var); })
             .attr("dx", function(d) {
 		if (d.lab_dx === undefined) return("0px");
@@ -445,24 +286,6 @@ function scatterD3() {
 
             root.call(add_axes);
 
-            // <defs>
-            var defs = svg.append("defs");
-            // arrow head markers
-	    if (!settings.col_continuous) {
-		scales.color.range().forEach(function(d) {
-                    defs.append("marker")
-			.attr("id", "arrow-head-" + settings.html_id + "-" + d)
-			.attr("markerWidth", "10")
-			.attr("markerHeight", "10")
-			.attr("refX", "10")
-			.attr("refY", "4")
-			.attr("orient", "auto")
-			.append("path")
-			.attr("d", "M0,0 L0,8 L10,4 L0,0")
-			.style("fill", d);
-		});
-            }
-
             // chart body
             var chart_body = root.append("svg")
 		.attr("class", "chart-body")
@@ -496,16 +319,17 @@ function scatterD3() {
 		.data(data.filter(point_filter), key);
             dot.enter()
 		.append("path")
-		.call(dot_init)
-		.call(dot_formatting);
+		.call(function(sel) { dot_init(sel, settings, scales); })
+		.call(function(sel) { dot_formatting(sel, settings, scales); });
             // Add arrows
+	    if (!settings.col_continuous) add_arrows_defs(svg, settings, scales);
             var arrow = chart_body
 		.selectAll(".arrow")
 		.data(data.filter(arrow_filter), key);
             arrow.enter()
 		.append("svg:line")
-		.call(arrow_init)
-		.call(arrow_formatting);
+		.call(function(sel) { arrow_init(sel, settings); })
+		.call(function(sel) { arrow_formatting(sel, settings, scales); });
 
             // Add ellipses
             if (settings.ellipses) {
@@ -622,8 +446,10 @@ function scatterD3() {
         if (old_settings.labels_size != settings.labels_size)
             svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
         if (old_settings.point_size != settings.point_size ||
-	    old_settings.point_opacity != settings.point_opacity)
-            svg.selectAll(".dot").transition().call(dot_formatting);
+	    old_settings.point_opacity != settings.point_opacity) {
+            svg.selectAll(".dot").transition()
+		.call(function(sel) { dot_formatting(sel, settings, scales); });
+	}
         if (old_settings.has_labels != settings.has_labels) {
             if (!settings.has_labels) {
                 svg.selectAll(".point-label").remove();
@@ -701,17 +527,18 @@ function scatterD3() {
 	// Add points
 	var dot = chart_body.selectAll(".dot")
 	    .data(data.filter(point_filter), key);
-	dot.enter().append("path").call(dot_init)
-	    .merge(dot).transition().duration(1000).call(dot_formatting);
+	dot.enter().append("path").call(function(sel) {dot_init(sel, settings, scales);})
+	    .merge(dot).transition().duration(1000).call(function(sel) {dot_formatting(sel, settings, scales);});
 	dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
 	// Add arrows
 	var arrow = chart_body.selectAll(".arrow")
 	    .data(data.filter(arrow_filter), key);
-	arrow.enter().append("svg:line").call(arrow_init)
+	arrow.enter().append("svg:line").call(function(sel) {arrow_init(sel, settings);})
 	    .style("opacity", "0")
 	    .merge(arrow)
 	    .transition().duration(1000)
-	    .call(arrow_formatting).style("opacity", "1");
+	    .call(function(sel) { arrow_formatting(sel, settings, scales); })
+	    .style("opacity", "1");
 	arrow.exit().transition().duration(1000).style("opacity", "0").remove();
 
 	// Add ellipses
