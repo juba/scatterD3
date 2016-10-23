@@ -40,7 +40,7 @@ function scatterD3() {
 	});
         chart_body.selectAll(".arrow").call(function(sel) { draw_arrow(sel, scales);});
         chart_body.selectAll(".ellipse").call(function(sel) { ellipse_formatting(sel, settings, scales);});
-        svg.select(".unit-circle").call(unit_circle_init);
+        svg.select(".unit-circle").call(function(sel) { add_unit_circle(sel, scales); });
         if (typeof settings.zoom_callback === 'function') {
 		      settings.zoom_callback(x.domain()[0], x.domain()[1], y.domain()[0], y.domain()[1]);
 		    }
@@ -52,51 +52,6 @@ function scatterD3() {
         root.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
     }
 
-
-    // Create and draw x and y axes
-    function add_axes(selection) {
-
-        // x axis
-        selection.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + dims.height + ")")
-            .style("font-size", settings.axes_font_size)
-            .call(scales.xAxis);
-
-        selection.append("text")
-            .attr("class", "x-axis-label")
-            .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")")
-            .style("text-anchor", "end")
-            .style("font-size", settings.axes_font_size)
-            .text(settings.xlab);
-
-        // y axis
-        selection.append("g")
-            .attr("class", "y axis")
-            .style("font-size", settings.axes_font_size)
-            .call(scales.yAxis);
-
-        selection.append("text")
-            .attr("class", "y-axis-label")
-            .attr("transform", "translate(5,6) rotate(-90)")
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text(settings.ylab);
-
-    }
-
-
-    // Unit circle init
-    function unit_circle_init(selection) {
-        selection
-            .attr('cx', scales.x(0))
-            .attr('cy', scales.y(0))
-            .attr('rx', scales.x(1)-scales.x(0))
-            .attr('ry', scales.y(0)-scales.y(1))
-            .style("stroke", "#888")
-            .style("fill", "none")
-            .style("opacity", "1");
-    }
 
     // Initial text label attributes
     function label_init (selection) {
@@ -211,7 +166,7 @@ function scatterD3() {
 		.attr("width", dims.width)
 		.attr("height", dims.height);
 
-            root.call(add_axes);
+            root.call(function(sel) { add_axes(sel, dims, settings, scales); });
 
             // chart body
             var chart_body = root.append("svg")
@@ -237,7 +192,7 @@ function scatterD3() {
             if (settings.unit_circle) {
 		var unit_circle = chart_body.append('svg:ellipse')
 		    .attr('class', 'unit-circle')
-		    .call(unit_circle_init);
+		    .call(function(sel) { add_unit_circle(sel, scales); });
             }
 
             // Add points
@@ -394,7 +349,8 @@ function scatterD3() {
         if (old_settings.unit_circle != settings.unit_circle) {
             if (!settings.unit_circle) {
                 var circle = svg.select(".unit-circle");
-                circle.transition().duration(1000).call(unit_circle_init)
+                circle.transition().duration(1000)
+		    .call(function(sel) { add_unit_circle(sel, scales); })
                     .style("opacity", "0").remove();
             }
             if (settings.unit_circle) {
@@ -449,7 +405,10 @@ function scatterD3() {
 	}
 
 	// Unit circle
-	if (settings.unit_circle) t0.select(".unit-circle").call(unit_circle_init);
+	if (settings.unit_circle) {
+	    t0.select(".unit-circle")
+		.call(function(sel) { add_unit_circle(sel, scales); });
+	}
 
 	// Add points
 	var dot = chart_body.selectAll(".dot")
@@ -549,7 +508,7 @@ function scatterD3() {
 		.call(scales.yAxis);
 	if (settings.unit_circle) {
             t.select(".unit-circle")
-		.call(unit_circle_init);
+		.call(function(sel) { add_unit_circle(sel, scales); });
 	}
 	if (!transition) {
 	    t.select(".root").call(zoom.transform,
