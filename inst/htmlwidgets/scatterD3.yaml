@@ -38,5 +38,6 @@ dependencies:
       - scatterD3-utils.js
       - scatterD3-setup.js
       - scatterD3-legend.js
+      - scatterD3-lines.js
       - scatterD3-lasso.js
 

@@ -7,7 +7,7 @@ function scatterD3() {
 	scales = {},
 	data = [],
 	svg,
-	draw_line, zoom, drag;
+	zoom, drag;
     
     // Key function to identify rows when interactively filtering
     function key(d) {
@@ -40,7 +40,9 @@ function scatterD3() {
 	var chart_body = svg.select(".chart-body");
         chart_body.selectAll(".dot, .point-label")
             .attr("transform", translation);
-	chart_body.selectAll(".line").call(line_formatting);
+	chart_body.selectAll(".line").call(function(sel) {
+	    line_formatting(sel, dims, settings, scales);
+	});
         chart_body.selectAll(".arrow").call(draw_arrow);
         chart_body.selectAll(".ellipse").call(ellipse_formatting);
         svg.select(".unit-circle").call(unit_circle_init);
@@ -125,10 +127,6 @@ function scatterD3() {
 
     }
 
-    // Zero horizontal and vertical lines
-    draw_line = d3.line()
-	.x(function(d) {return d.x;})
-	.y(function(d) {return d.y;});
 
     // Create tooltip content function
     function tooltip_content(d) {
@@ -153,48 +151,6 @@ function scatterD3() {
         }
     }
 
-    function line_init(selection) {
-	selection
-	    .attr("class", "line");
-    }
-
-    function line_formatting(selection) {
-	selection
-	    .attr("d", function(d) {
-		// Categorical variables
-		if (settings.x_categorical && settings.y_categorical) { return null; };
-		if (settings.x_categorical) {
-		    if (d.slope != 0) { return null; }
-		    else {
-			return draw_line([{x:0, y: scales.y(d.intercept)},
-					  {x:dims.width, y: scales.y(d.intercept)}]);
-		    }
-		}
-		if (settings.y_categorical) {
-		    if (d.slope !== null) { return null; }
-		}
-		// Vertical line
-		if (d.slope === null) {
-		    return draw_line([{x:scales.x(d.intercept), y: 0},
-				      {x:scales.x(d.intercept), y: dims.height}]);
-		}
-		// All other lines
-		else {
-		    return draw_line([{x:0, y: scales.y(d.slope * scales.x.domain()[0] + d.intercept)},
-				      {x:dims.width, y: scales.y(d.slope * scales.x.domain()[1] + d.intercept)}]);
-		}
-	    })
-	    .style("stroke-width", function(d) {
-		return d.stroke_width !== undefined && d.stroke_width !== null ? d.stroke_width : "1px";
-	    })
-	    .style("stroke", function(d) {
-		return d.stroke !== undefined && d.stroke !== null ? d.stroke : "#000000";
-	    })
-	    .style("stroke-dasharray", function(d) {
-		return d.stroke_dasharray !== undefined && d.stroke_dasharray !== null ? d.stroke_dasharray : null;
-	    });
-
-    }
 
     // Returns dot size from associated data
     function dot_size(data) {
@@ -521,7 +477,9 @@ function scatterD3() {
 		lines.enter()
 		    .append("path")
 		    .call(line_init)
-		    .call(line_formatting);
+		    .call(function(sel) {
+			line_formatting(sel, dims, settings, scales);
+		    });
 	    }
 
 
@@ -730,7 +688,9 @@ function scatterD3() {
 		.style("opacity", "0")
 		.merge(line)
 		.transition().duration(1000)
-		.call(line_formatting)
+		.call(function(sel) {
+		    line_formatting(sel, dims, settings, scales);
+		})
 		.style("opacity", "1");
 	    line.exit().transition().duration(1000).style("opacity", "0").remove();
 	}
