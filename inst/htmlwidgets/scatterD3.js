@@ -38,8 +38,8 @@ function scatterD3() {
 	chart_body.selectAll(".line").call(function(sel) {
 	    line_formatting(sel, dims, settings, scales);
 	});
-        chart_body.selectAll(".arrow").call(draw_arrow);
-        chart_body.selectAll(".ellipse").call(ellipse_formatting);
+        chart_body.selectAll(".arrow").call(function(sel) { draw_arrow(sel, scales);});
+        chart_body.selectAll(".ellipse").call(function(sel) { ellipse_formatting(sel, settings, scales);});
         svg.select(".unit-circle").call(unit_circle_init);
         if (typeof settings.zoom_callback === 'function') {
 		      settings.zoom_callback(x.domain()[0], x.domain()[1], y.domain()[0], y.domain()[1]);
@@ -122,42 +122,6 @@ function scatterD3() {
 
     }
 
-    
-    // Initial ellipse attributes
-    function ellipse_init(selection) {
-        selection
-            .style("fill", "none");
-    }
-
-    // Apply format to ellipse
-    function ellipse_formatting(selection) {
-
-        // Ellipses path function
-        var ellipseFunc = d3.line()
-            .x(function(d) { return scales.x(d.x); })
-            .y(function(d) { return scales.y(d.y); });
-
-        selection
-            .attr("d", function(d) {
-		var ell = HTMLWidgets.dataframeToD3(d.data);
-		return (ellipseFunc(ell));
-            })
-            .style("stroke", function(d) {
-		// Only one ellipse
-		if (d.level == "_scatterD3_all") {
-		    if (settings.col_continuous) {
-			return(d3.interpolateViridis(0));
-		    } else {
-			return(scales.color.range()[0]);
-		    }
-		}
-		return( scales.color(d.level));
-            })
-            .style("opacity", 1)
-            .attr("class", function(d) {
-		return "ellipse color color-c" + css_clean(d.level);
-            });
-    }
 
     // Unit circle init
     function unit_circle_init(selection) {
@@ -339,7 +303,7 @@ function scatterD3() {
 		ellipse.enter()
 		    .append("svg:path")
 		    .call(ellipse_init)
-		    .call(ellipse_formatting);
+		    .call(function(sel) { ellipse_formatting(sel, settings, scales); });
             }
 
             // Add text labels
@@ -549,7 +513,8 @@ function scatterD3() {
 		.style("opacity", "0")
 		.merge(ellipse)
 		.transition().duration(1000)
-		.call(ellipse_formatting).style("opacity", "1");
+		.call(function(sel) { ellipse_formatting(sel, settings, scales);})
+		.style("opacity", "1");
             ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
 	}
 
