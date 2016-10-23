@@ -113,6 +113,12 @@ function scatterD3() {
         // Keep track of original scales
         x_orig = x;
         y_orig = y;
+	// x and y axis functions
+        xAxis = d3.axisBottom(x)
+            .tickSize(-dims.height);
+        yAxis = d3.axisLeft(y)
+            .tickSize(-dims.width);
+
 	// Continuous color scale
 	if (settings.col_continuous) {
 	    color_scale = d3.scaleSequential(d3.interpolateViridis)
@@ -138,26 +144,21 @@ function scatterD3() {
 	}
 	// Symbol scale
         symbol_scale = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
-	    // Size scale
+	// Size scale
 	size_scale = d3.scaleLinear()
             .range(settings.size_range)
             .domain([d3.min(data, function(d) { return(d.size_var);} ),
                      d3.max(data, function(d) { return(d.size_var);} )]);
+	// Opacity scale
         opacity_scale = d3.scaleLinear()
             .range([0.1, 1])
             .domain([d3.min(data, function(d) { return(d.opacity_var);} ),
                      d3.max(data, function(d) { return(d.opacity_var);} )]);
 
-        // zoom behavior
+        // Zoom behavior
         zoom = d3.zoom()
             .scaleExtent([0, 32])
             .on("zoom", zoomed);
-
-        // x and y axis functions
-        xAxis = d3.axisBottom(x)
-            .tickSize(-dims.height);
-        yAxis = d3.axisLeft(y)
-            .tickSize(-dims.width);
 
     }
 
