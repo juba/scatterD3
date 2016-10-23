@@ -43,4 +43,5 @@ dependencies:
       - scatterD3-ellipses.js
       - scatterD3-legend.js
       - scatterD3-lasso.js
+      - scatterD3-exports.js
 
