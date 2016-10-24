@@ -6,6 +6,8 @@ var draw_line = d3.line()
 function line_init(selection) {
     selection
 	.attr("class", "line");
+
+    return selection;
 }
 
 function line_formatting(selection, dims, settings, scales) {
@@ -44,4 +46,5 @@ function line_formatting(selection, dims, settings, scales) {
 	    return d.stroke_dasharray !== undefined && d.stroke_dasharray !== null ? d.stroke_dasharray : null;
 	});
 
+    return selection;
 }

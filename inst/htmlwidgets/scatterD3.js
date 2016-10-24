@@ -332,18 +332,19 @@ function scatterD3() {
     // Update data with transitions
     function update_data() {
 
+	dims = setup_sizes(width, height, settings);
 	scales = setup_scales(dims, settings, data);
 
-        scales.xAxis = scales.xAxis.scale(scales.x).tickSize(-dims.height);
-        scales.yAxis = scales.yAxis.scale(scales.y).tickSize(-dims.width);
-
-	var t0 = svg.select(".root").transition().duration(1000);
 	svg.select(".x-axis-label").text(settings.xlab);
-	t0.select(".x.axis").call(scales.xAxis);
 	svg.select(".y-axis-label").text(settings.ylab);
-	    t0.select(".y.axis").call(scales.yAxis);
-	
-	t0.call(zoom.transform, d3.zoomIdentity);
+
+	var t0 = svg.transition().duration(1000);
+	svg.select(".root")
+	    .transition().duration(1000)
+	    .call(zoom.transform, d3.zoomIdentity)
+	    .on("end", function() {
+		svg.transition().duration(1000).call(resize_plot);
+	    });
 
 	var chart_body = svg.select(".chart-body");
 	// Add lines
@@ -477,63 +478,63 @@ function scatterD3() {
 	lasso_off(svg, settings, zoom);
     };
 
+    // Dynamically resize plot area
+    function resize_plot(selection) {
+	// Change svg attributes
+        selection.selectAll(".root")
+            .attr("width", dims.width)
+            .attr("height", dims.height);
+	selection.selectAll(".root")
+	    .select("rect")
+            .attr("width", dims.width)
+            .attr("height", dims.height);
+        selection.selectAll(".chart-body")
+            .attr("width", dims.width)
+            .attr("height", dims.height);
+	selection.select(".x.axis")
+	    .attr("transform", "translate(0," + dims.height + ")");
+        selection.select(".x-axis-label")
+	    .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
+	selection.select(".x.axis").call(scales.xAxis);
+	selection.select(".y.axis").call(scales.yAxis);
+
+	if (settings.unit_circle) {
+            selection.select(".unit-circle")
+		.call(function(sel) { add_unit_circle(sel, scales); });
+	}
+	selection.select(".root")
+	    .call(zoom.transform,
+		  d3.zoomTransform(selection.select(".root").node()));
+    }
+    
     // Dynamically resize chart elements
-    function resize_chart (transition) {
+    function resize_chart () {
         // recompute sizes
         dims = setup_sizes(width, height, settings);
-        // recompute scales
+	dims = setup_legend_sizes(dims, scales, settings);
+        // recompute x and y scales
         scales.x.range([0, dims.width]);
         scales.x_orig.range([0, dims.width]);
         scales.y.range([dims.height, 0]);
         scales.y_orig.range([dims.height, 0]);
-        scales.xAxis = scales.xAxis.scale(scales.x).tickSize(-dims.height);
-        scales.yAxis = scales.yAxis.scale(scales.y).tickSize(-dims.width);
-	var t;
-	if (transition) {
-	    t = svg.transition().duration(1000);
-	} else {
-	    t = svg;
-	}
-	// Change svg attributes
-        t.select(".root")
-            .attr("width", dims.width)
-            .attr("height", dims.height);
-        t.select(".root")
-	    .select("rect")
-            .attr("width", dims.width)
-            .attr("height", dims.height);
-        t.select(".chart-body")
-            .attr("width", dims.width)
-            .attr("height", dims.height);
-	t.select(".x.axis")
-	    .attr("transform", "translate(0," + dims.height + ")")
-	    .call(scales.xAxis);
-        t.select(".x-axis-label")
-	    .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
-	t.select(".y.axis")
-		.call(scales.yAxis);
-	if (settings.unit_circle) {
-            t.select(".unit-circle")
-		.call(function(sel) { add_unit_circle(sel, scales); });
-	}
-	if (!transition) {
-	    t.select(".root").call(zoom.transform,
-		      d3.zoomTransform(svg.select(".root").node()));
-	}
+	scales.xAxis = d3.axisBottom(scales.x).tickSize(-dims.height);
+	scales.yAxis = d3.axisLeft(scales.y).tickSize(-dims.width);
+
+	svg.call(resize_plot);
 
         // Move legends
 	if (settings.has_legend && settings.legend_width > 0) {
-	    dims = setup_legend_sizes(dims, scales, settings);
+	    var legend = svg.select(".legend");
             if (settings.has_color_var) 
-		move_color_legend(t, dims);
+		move_color_legend(legend, dims, 0);
             if (settings.has_symbol_var)
-		move_symbol_legend(t, dims);
+		move_symbol_legend(legend, dims, 0);
             if (settings.has_size_var)
-		move_size_legend(t, dims);
+		move_size_legend(legend, dims, 0);
 	}
         // Move menu
         if (settings.menu) {
-            t.select(".gear-menu")
+            svg.select(".gear-menu")
 		.attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
         }
 
