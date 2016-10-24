@@ -680,20 +680,32 @@ HTMLWidgets.widget({
                     obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
                     obj.settings.size_range_changed = !array_equal(scatter.settings().size_range, obj.settings.size_range);
                     obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
+		    obj.settings.colors_changed = scatter.settings().colors != obj.settings.colors;
                     function changed(varname) {
 			return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
                     };
                     obj.settings.x_changed = changed("x");
                     obj.settings.y_changed = changed("y");
                     obj.settings.lab_changed = changed("lab");
-                    obj.settings.legend_changed = changed("col_var") || changed("symbol_var") ||
-			changed("size_var") || obj.settings.size_range_changed;
-                    obj.settings.data_changed = obj.settings.x_changed || obj.settings.y_changed ||
-			obj.settings.lab_changed || obj.settings.legend_changed ||
-			obj.settings.has_labels_changed || changed("ellipses_data") ||
-			obj.settings.ellipses_changed || changed("opacity_var") ||
+		    obj.settings.col_changed = changed("col_var") ||
+			obj.settings.colors_changed;
+		    obj.settings.size_changed = changed("size_var") ||
+			obj.settings.size_range_changed;
+		    obj.settings.symbol_changed = changed("symbol_var");
+                    obj.settings.legend_changed = obj.settings.col_changed ||
+			obj.settings.symbol_changed ||
+			obj.settings.size_changed;
+                    obj.settings.data_changed = obj.settings.x_changed ||
+			obj.settings.y_changed ||
+			obj.settings.lab_changed ||
+			obj.settings.legend_changed ||
+			obj.settings.has_labels_changed ||
+			changed("ellipses_data") ||
+			obj.settings.ellipses_changed ||
+			changed("opacity_var") ||
 			changed("lines");
-                    obj.settings.subset_changed = changed("key_var");
+
+		    // Update settings
                     scatter = scatter.settings(obj.settings);
                     // Update data only if needed
                     if (obj.settings.data_changed) scatter = scatter.data(data, redraw);

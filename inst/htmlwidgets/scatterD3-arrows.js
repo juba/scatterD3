@@ -53,12 +53,10 @@ function arrow_formatting(selection, settings, scales) {
     // stroke color
         .style("stroke", function(d) { return scales.color(d.col_var); })
         .attr("marker-end", function(d) { return "url(#arrow-head-" + settings.html_id + "-" + scales.color(d.col_var) + ")"; })
-        .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var); });
-    if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
-        sel = sel.style("opacity", function(d) {
+        .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var); })
+        .style("opacity", function(d) {
 	    return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
 	});
-    }
     return sel;
 }
 

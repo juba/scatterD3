@@ -32,8 +32,5 @@ function label_formatting (selection, settings, scales) {
 	    var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
 	    return default_label_dy(size, d.y, d.type_var) + "px";
         });
-    if (settings.opacity_changed || settings.subset_changed || settings.redraw) {
-        sel = sel.style("opacity", 1);
-    }
     return sel;
 }
