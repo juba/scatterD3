@@ -7,11 +7,12 @@ function legend_label_formatting (selection) {
 }
 
 // Create color legend
-function add_color_legend(svg, dims, settings, scales) {
+function add_color_legend(svg, dims, settings, scales, duration) {
 
-    var legend = svg.select(".legend")
-        .style("font-size", settings.legend_font_size);
+    // Default transition duration to 0
+    duration = typeof duration !== 'undefined' ? duration : 0;
 
+    var legend = svg.select(".legend");
     var legend_color_scale = scales.color.copy();
     if (!settings.col_continuous) {
 	// Sort legend
@@ -54,25 +55,33 @@ function add_color_legend(svg, dims, settings, scales) {
     }
 
     legend.append("g")
-        .append("text")
         .attr("class", "color-legend-label")
-        .attr("transform", "translate(" + dims.legend_x + "," + dims.margins.legend_top + ")")
+        .append("text")
         .text(settings.col_lab)
         .call(legend_label_formatting);
 
     legend.append("g")
         .attr("class", "color-legend")
-        .attr("transform", "translate(" + dims.legend_x + "," + (dims.margins.legend_top + 8) + ")")
         .call(color_legend);
 
-    return dims;
+    legend.call(function(legend) { move_color_legend(legend, dims, 0);});
+
+    if (duration != 0) {
+	legend.selectAll(".color-legend-label, .color-legend")
+	    .style("opacity", 0)
+	    .transition().duration(duration)
+	    .style("opacity", 1);
+    }
+    
 }
 
 // Create symbol legend
-function add_symbol_legend(svg, dims, settings, scales) {
+function add_symbol_legend(svg, dims, settings, scales, duration) {
+
+    // Default transition duration to 0
+    duration = typeof duration !== 'undefined' ? duration : 0;
 
     var legend = svg.select(".legend");
-
     // Sort legend
     var legend_symbol_scale = scales.symbol.copy();
     legend_symbol_scale
@@ -108,23 +117,31 @@ function add_symbol_legend(svg, dims, settings, scales) {
     legend.append("g")
         .append("text")
         .attr("class", "symbol-legend-label")
-        .attr("transform", "translate(" + dims.legend_x + "," + dims.margins.symbol_legend_top + ")")
         .text(settings.symbol_lab)
         .call(legend_label_formatting);
 
     legend.append("g")
         .attr("class", "symbol-legend")
-        .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.symbol_legend_top + 14) + ")")
         .call(symbol_legend);
 
-    return dims;
+    legend.call(function(sel) { move_symbol_legend(sel, dims, 0);});
+
+    if (duration != 0) {
+	legend.selectAll(".symbol-legend-label, .symbol-legend")
+	    .style("opacity", 0)
+	    .transition().duration(duration)
+	    .style("opacity", 1);
+    }
+
 }
 
 // Create size legend
-function add_size_legend(svg, dims, settings, scales) {
+function add_size_legend(svg, dims, settings, scales, duration) {
+
+    // Default transition duration to 0
+    duration = typeof duration !== 'undefined' ? duration : 0;
 
     var legend = svg.select(".legend");
-
     var legend_size_scale = scales.size.copy();
     // FIXME : find exact formula
     legend_size_scale.range(scales.size.range().map(function(d) {return Math.sqrt(d)/1.8;}));
@@ -137,39 +154,74 @@ function add_size_legend(svg, dims, settings, scales) {
     legend.append("g")
         .append("text")
         .attr("class", "size-legend-label")
-        .attr("transform", "translate(" + dims.legend_x + "," + dims.margins.size_legend_top + ")")
         .text(settings.size_lab)
         .call(legend_label_formatting);
 
     legend.append("g")
         .attr("class", "size-legend")
-        .attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.size_legend_top + 14) + ")")
         .call(size_legend);
 
-    return dims;
+    legend.call(function(sel) { move_size_legend(sel, dims, 0);});
+
+    if (duration != 0) {
+	legend.selectAll(".size-legend-label, .size-legend")
+	    .style("opacity", 0)
+	    .transition().duration(duration)
+	    .style("opacity", 1);
+    }
+
+    
 }
 
 
 // Move color legend on resize
-function move_color_legend (sel, dims) {
-    sel.select(".color-legend-label")
+function move_color_legend (legend, dims, duration) {
+    legend.select(".color-legend-label")
+    	.transition().duration(duration)
 	.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.legend_top + ")");
-    sel.select(".color-legend")
+    legend.select(".color-legend")
+    	.transition().duration(duration)
 	.attr("transform", "translate(" + dims.legend_x + "," + (dims.margins.legend_top + 12) + ")");
 }
 
 // Move symbol legend on resize
-function move_symbol_legend (sel, dims) {
-    sel.select(".symbol-legend-label")
+function move_symbol_legend (legend, dims, duration) {
+    legend.select(".symbol-legend-label")
+    	.transition().duration(duration)
 	.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.symbol_legend_top + ")");
-    sel.select(".symbol-legend")
+    legend.select(".symbol-legend")
+    	.transition().duration(duration)
 	.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.symbol_legend_top + 14) + ")");
 }
 
 // Move size legend on resize
-function move_size_legend (sel, dims) {
-    sel.select(".size-legend-label")
+function move_size_legend (legend, dims, duration) {
+    legend.select(".size-legend-label")
+    	.transition().duration(duration)
 	.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.size_legend_top + ")");
-    sel.select(".size-legend")
+    legend.select(".size-legend")
+    	.transition().duration(duration)
 	.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.size_legend_top + 14) + ")");
+}
+
+
+// Remove color legend
+function remove_color_legend (legend) {
+    legend.selectAll(".color-legend-label, .color-legend")
+    	.style("opacity", "0")
+	.remove();
+}
+
+// Remove symbol legend
+function remove_symbol_legend (legend) {
+    legend.selectAll(".symbol-legend-label, .symbol-legend")
+	.style("opacity", "0")
+	.remove();
+}
+
+// Remove size legend
+function remove_size_legend (legend) {
+    legend.selectAll(".size-legend-label, .size-legend")
+    	.style("opacity", "0")
+	.remove();
 }

@@ -13,11 +13,14 @@ function custom_scheme10 () {
 function setup_sizes (width, height, settings) {
 
     var dims = {},
-	margins = {top: 5, right: 10, bottom: 20, left: 30, legend_top: 50};
+	margins = {top: 5, right: 10, bottom: 20, left: 30};
 
     if (settings.left_margin !== null) {
 	margins.left = settings.left_margin;
     }
+
+    dims.svg_width = width;
+    dims.svg_height = height;
     
     dims.legend_width = 0;
     if (settings.has_legend) dims.legend_width = settings.legend_width;
@@ -56,13 +59,7 @@ function setup_legend_sizes (dims, scales, settings) {
     }
     dims.margins.symbol_legend_top = color_legend_height + dims.margins.legend_top;
 
-    // Height of color and symbol legends
-    // Height of color legend
-    var color_legend_height = 0;
-    if (settings.has_color_var) {
-	var n = settings.col_continuous ? 6 : scales.color.domain().length;
-	color_legend_height = n * 20 + 30;
-    }
+    // Height of symbol legend
     var symbol_legend_height = settings.has_symbol_var ? scales.symbol.domain().length * 20 + 30 : 0;
     dims.margins.size_legend_top = color_legend_height + symbol_legend_height + dims.margins.legend_top;
     
