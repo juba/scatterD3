@@ -253,7 +253,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
 
     ## Compute ellipses points data
     ellipses_data <- list()
-    if (ellipses) {
+    if (ellipses && !col_continuous && !x_categorical && !y_categorical) {
         ## Only one ellipse
         if (is.null(col_var)) {
             ell <- compute_ellipse(x, y)
@@ -270,6 +270,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                 }
             }
         }
+    } else {
+        ## Force no ellipses if continuous color or categorical variable
+        ellipses <- FALSE
     }
 
     ## List of hashes for each data variable, to track which data elements changed
