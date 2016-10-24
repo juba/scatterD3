@@ -40,6 +40,7 @@ dependencies:
       - scatterD3-axes.js
       - scatterD3-dots.js
       - scatterD3-arrows.js
+      - scatterD3-labels.js
       - scatterD3-lines.js
       - scatterD3-ellipses.js
       - scatterD3-legend.js
