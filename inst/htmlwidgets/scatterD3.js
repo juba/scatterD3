@@ -9,11 +9,6 @@ function scatterD3() {
 	svg,
 	zoom, drag;
     
-    // Key function to identify rows when interactively filtering
-    function key(d) {
-        return d.key_var;
-    }
-
     // Zoom behavior
     zoom = d3.zoom()
         .scaleExtent([0, 32])
@@ -100,6 +95,11 @@ function scatterD3() {
 	    }
 	});
 
+
+    // Key function to identify rows when interactively filtering
+    function key(d) {
+        return d.key_var;
+    }
 
     // Filter points and arrows data
     function point_filter(d) {
