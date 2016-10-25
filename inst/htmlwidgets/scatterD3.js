@@ -335,16 +335,12 @@ function scatterD3() {
 	dims = setup_sizes(width, height, settings);
 	scales = setup_scales(dims, settings, data);
 
+	// Change axes labels
 	svg.select(".x-axis-label").text(settings.xlab);
 	svg.select(".y-axis-label").text(settings.ylab);
 
 	var t0 = svg.transition().duration(1000);
-	svg.select(".root")
-	    .transition().duration(1000)
-	    .call(zoom.transform, d3.zoomIdentity)
-	    .on("end", function() {
-		svg.transition().duration(1000).call(resize_plot);
-	    });
+	t0.call(resize_plot);
 
 	var chart_body = svg.select(".chart-body");
 	// Add lines
@@ -474,6 +470,13 @@ function scatterD3() {
 	    }
 
 	}
+	// Reset zoom
+	svg.select(".root")
+	    .transition().delay(1000).duration(0)
+	    .call(zoom.transform, d3.zoomIdentity);
+	    
+	
+	
 
 	lasso_off(svg, settings, zoom);
     };
@@ -502,9 +505,6 @@ function scatterD3() {
             selection.select(".unit-circle")
 		.call(function(sel) { add_unit_circle(sel, scales); });
 	}
-	selection.select(".root")
-	    .call(zoom.transform,
-		  d3.zoomTransform(selection.select(".root").node()));
     }
     
     // Dynamically resize chart elements
@@ -521,6 +521,10 @@ function scatterD3() {
 	scales.yAxis = d3.axisLeft(scales.y).tickSize(-dims.width);
 
 	svg.call(resize_plot);
+
+	svg.select(".root")
+	    .call(zoom.transform,
+		  d3.zoomTransform(selection.select(".root").node()));
 
         // Move legends
 	if (settings.has_legend && settings.legend_width > 0) {
