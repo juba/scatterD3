@@ -6,7 +6,7 @@ function label_init (selection) {
 }
 
 // Compute default vertical offset for labels
-function default_label_dy(size, y, type_var) {
+function default_label_dy(size, y, type_var,settings) {
     if (y < 0 && type_var !== undefined && type_var == "arrow") {
         return (Math.sqrt(size) / 2) + settings.labels_size + 2;
     }
@@ -30,7 +30,7 @@ function label_formatting (selection, settings, scales) {
         .attr("dy", function(d) {
 	    if (d.lab_dy !== undefined) return(d.lab_dy + "px");
 	    var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
-	    return default_label_dy(size, d.y, d.type_var) + "px";
+	    return default_label_dy(size, d.y, d.type_var, settings) + "px";
         });
     return sel;
 }

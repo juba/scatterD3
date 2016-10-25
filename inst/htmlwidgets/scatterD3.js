@@ -54,7 +54,7 @@ function scatterD3() {
 	.subject(function(d) {
             var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
             var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-            var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
+            var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var, settings) : d.lab_dy;
             return {x:scales.x(d.x)+dx, y:scales.y(d.y)+dy};
 	})
 	.on('start', function(d) {
@@ -64,7 +64,7 @@ function scatterD3() {
 		var chart = d3.select(this).node().parentNode;
 		var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
 		var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-		var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var) : d.lab_dy;
+		var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var, settings) : d.lab_dy;
 		d3.select(chart).append("svg:line")
 		    .attr("id", "scatterD3-drag-line")
 		    .attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
