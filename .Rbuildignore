@@ -5,3 +5,4 @@ resources
 rsconnect/
 vignettes/*.html
 ^\.travis\.yml$
+revdep/
