@@ -191,7 +191,7 @@ function move_symbol_legend (legend, dims, duration) {
 	.attr("transform", "translate(" + dims.legend_x + "," + dims.margins.symbol_legend_top + ")");
     legend.select(".symbol-legend")
     	.transition().duration(duration)
-	.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.symbol_legend_top + 14) + ")");
+	.attr("transform", "translate(" + (dims.legend_x + 8) + "," + (dims.margins.symbol_legend_top + 16) + ")");
 }
 
 // Move size legend on resize
