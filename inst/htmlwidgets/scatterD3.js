@@ -525,7 +525,7 @@ function scatterD3() {
 
 	svg.select(".root")
 	    .call(zoom.transform,
-		  d3.zoomTransform(selection.select(".root").node()));
+		  d3.zoomTransform(svg.select(".root").node()));
 
         // Move legends
 	if (settings.has_legend && settings.legend_width > 0) {
