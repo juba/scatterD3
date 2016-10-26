@@ -37,7 +37,7 @@ function scatterD3() {
         chart_body.selectAll(".ellipse").call(function(sel) { ellipse_formatting(sel, settings, scales);});
         svg.select(".unit-circle").call(function(sel) { add_unit_circle(sel, scales); });
         if (typeof settings.zoom_callback === 'function') {
-		      settings.zoom_callback(x.domain()[0], x.domain()[1], y.domain()[0], y.domain()[1]);
+		      settings.zoom_callback(scales.x.domain()[0], scales.x.domain()[1], scales.y.domain()[0], scales.y.domain()[1]);
 		    }
     }
 
