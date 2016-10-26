@@ -14,6 +14,8 @@ scatterD3 0.7
 * New "export labels position" feature
 * New settings `hover_size` and `hover_opacity` (thanks @nicolabo)
 * Axes and legend font size customization with `axes_font_size` and `legend_font_size` (thanks @fineswag)
+* Better legend transitions when updating
+* JavaScript code split into several subfiles
 * Left margin customization with the `left_margin` argument
 * More precise font-family specification for (hopefully) better rendering
 * Bugfix : blank plot when only one color passed to `colors` (thanks @chewth)
