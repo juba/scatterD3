@@ -198,9 +198,10 @@ function scatterD3() {
             }
 
             // Legends
+	    var legend = svg.append("g").attr("class", "legend")
+		.style("font-size", settings.legend_font_size);
+
             if (settings.has_legend && settings.legend_width > 0) {
-                var legend = svg.append("g").attr("class", "legend")
-		        .style("font-size", settings.legend_font_size);
 		dims = setup_legend_sizes(dims, scales, settings);
                 // Color legend
                 if (settings.has_color_var)
