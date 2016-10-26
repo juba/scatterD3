@@ -4,7 +4,7 @@ the [d3.js](http://d3js.org/) javascript library.
 
 ![CRAN Downloads](http://cranlogs.r-pkg.org/badges/last-month/scatterD3)
 [![Travis-CI Build Status](https://travis-ci.org/juba/scatterD3.svg?branch=master)](https://travis-ci.org/juba/scatterD3)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/scatterD3)](http://cran.r-project.org/package=scatterD3)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/scatterD3)](https://cran.r-project.org/package=scatterD3)
 
 ## Features
 
