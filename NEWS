@@ -1,6 +1,7 @@
 scatterD3 0.7.1
 ------------------------------------------------------
 
+* Bugfix : unable to export SVG when text contains non-Latin1 characters
 
 
 scatterD3 0.7

@@ -7,7 +7,8 @@ function export_svg(sel, svg, settings) {
     // Dirty dirty dirty...
     var tmp = svg_content.replace(/<g class="gear-menu[\s\S]*?<\/g>/, '');
     var svg_content2 = tmp.replace(/<ul class="scatterD3-menu[\s\S]*?<\/ul>/, '');
-    var image_data = "data:image/octet-stream;base64," + window.btoa(svg_content2);
+    //var image_data = "data:image/octet-stream;base64," + window.btoa(svg_content2);
+    var image_data = "data:image/octet-stream;base64," + window.btoa(unescape(encodeURIComponent(svg_content2)));
     d3.select(sel)
         .attr("download", settings.html_id + ".svg")
         .attr("href", image_data);
