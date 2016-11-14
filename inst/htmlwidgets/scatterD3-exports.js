@@ -29,7 +29,6 @@ function export_labels_position(sel, data, settings, scales) {
         }
         var laby = d.y + scales.y.invert(offset_y) - scales.y.domain()[1];
         var this_line = d.lab + "," + labx + "," + laby;
-	console.log(this_line);
         lines_data.push(this_line);
     });
     var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
