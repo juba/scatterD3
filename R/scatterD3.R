@@ -9,6 +9,9 @@
 #'     data is not NULL
 #' @param point_size points size. Ignored if size_var is not NULL.
 #' @param labels_size text labels size
+#' @param labels_positions A data frame, as created by the
+#'     "Export labels positions" menu entry, giving each label x and y
+#'     position.
 #' @param point_opacity points opacity, as an integer (same opacity for all
 #'     points) or a vector of integers, or variable name if data is not NULL
 #' @param fixed force a 1:1 aspect ratio
@@ -108,6 +111,7 @@
 
 scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       point_size = 64, labels_size = 10,
+                      labels_positions = NULL,
                       point_opacity = 1,
                       hover_size = 1,
                       hover_opacity = NULL,
@@ -287,6 +291,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     ## create a list that contains the settings
     settings <- list(
         labels_size = labels_size,
+        labels_positions = labels_positions,
         point_size = point_size,
         point_opacity = point_opacity,
         hover_size = hover_size,

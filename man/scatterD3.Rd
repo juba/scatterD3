@@ -8,8 +8,8 @@ D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 }
 \usage{
 scatterD3(x, y, data = NULL, lab = NULL, point_size = 64,
-  labels_size = 10, point_opacity = 1, hover_size = 1,
-  hover_opacity = NULL, fixed = FALSE, col_var = NULL,
+  labels_size = 10, labels_positions = NULL, point_opacity = 1,
+  hover_size = 1, hover_opacity = NULL, fixed = FALSE, col_var = NULL,
   col_continuous = NULL, colors = NULL, ellipses = FALSE,
   ellipses_level = 0.95, symbol_var = NULL, size_var = NULL,
   size_range = c(10, 300), col_lab = NULL, symbol_lab = NULL,
@@ -38,6 +38,10 @@ data is not NULL}
 \item{point_size}{points size. Ignored if size_var is not NULL.}
 
 \item{labels_size}{text labels size}
+
+\item{labels_positions}{A data frame, as created by the
+"Export labels positions" menu entry, giving each label x and y
+position.}
 
 \item{point_opacity}{points opacity, as an integer (same opacity for all
 points) or a vector of integers, or variable name if data is not NULL}

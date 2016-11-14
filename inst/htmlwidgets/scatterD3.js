@@ -51,20 +51,20 @@ function scatterD3() {
     // Text labels dragging function
     var dragging = false;
     drag = d3.drag()
-	.subject(function(d) {
+	.subject(function(d, i) {
             var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
-            var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-            var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var, settings) : d.lab_dy;
+            var dx = get_label_dx(d, i, settings, scales);
+            var dy = get_label_dy(d, i, settings, scales);
             return {x:scales.x(d.x)+dx, y:scales.y(d.y)+dy};
 	})
-	.on('start', function(d) {
+	.on('start', function(d, i) {
 	    if (!d3.event.sourceEvent.shiftKey) {
 		dragging = true;
 		d3.select(this).style('fill', '#000');
 		var chart = d3.select(this).node().parentNode;
 		var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
-		var dx = (d.lab_dx === undefined) ? 0 : d.lab_dx;
-		var dy = (d.lab_dx === undefined) ? default_label_dy(size, d.y, d.type_var, settings) : d.lab_dy;
+		var dx = get_label_dx(d, i, settings, scales);
+		var dy = get_label_dy(d, i, settings, scales);
 		d3.select(chart).append("svg:line")
 		    .attr("id", "scatterD3-drag-line")
 		    .attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
@@ -708,6 +708,9 @@ HTMLWidgets.widget({
 
 		// convert data to d3 format
 		var data = HTMLWidgets.dataframeToD3(obj.data);
+		if (obj.settings.labels_positions) {
+		    obj.settings.labels_positions = HTMLWidgets.dataframeToD3(obj.settings.labels_positions);
+		}
 
 		// If no transitions, remove chart and redraw it
 		if (!obj.settings.transitions) {

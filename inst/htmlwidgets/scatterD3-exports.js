@@ -16,7 +16,7 @@ function export_svg(sel, svg, settings) {
 
 // Function to export custom labels position to CSV file
 function export_labels_position(sel, data, settings, scales) {
-    var lines_data = ["scatterD3_label,scatterD3_label_x,scatterD3_label_y"];
+    var lines_data = ["lab,lab_x,lab_y"];
     data.forEach(function(d, index){
         var labx = d.x;
         if (d.lab_dx !== undefined) {
@@ -29,6 +29,7 @@ function export_labels_position(sel, data, settings, scales) {
         }
         var laby = d.y + scales.y.invert(offset_y) - scales.y.domain()[1];
         var this_line = d.lab + "," + labx + "," + laby;
+	console.log(this_line);
         lines_data.push(this_line);
     });
     var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));

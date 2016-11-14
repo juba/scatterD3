@@ -286,7 +286,7 @@ Ellipses are computed by the  `ellipse.default()` function of the [ellipse packa
 
 ## Gear menu
 
-The "gear menu" is a small menu which can be displayed by clocking on the "gear" icon on the top-right corner of the plot. It allows to reset the zoom, export the current graph to SVG, and toggle lasso selection.
+The "gear menu" is a small menu which can be displayed by clicking on the "gear" icon on the top-right corner of the plot. It allows to reset the zoom, export the current graph to SVG, and toggle lasso selection.
 
 It is displayed by default, but you can hide it with the `menu = FALSE` argument.
 
@@ -329,7 +329,17 @@ mtcars$names <- rownames(mtcars)
 scatterD3(data = mtcars, x = wt, y = mpg, lab = names)
 ```
 
-You can then open the menu and select *Export labels positions* to save them into a CSV file. If you want to use these positions in another plot, you can do something like that :
+You can then open the menu and select *Export labels positions* to save them
+into a CSV file. If you want to reuse these positions, you can use the
+`labels_positions` argument from `scatterD3` :
+
+```{r labels_export_scatterD3, eval = FALSE}
+labels <- read.csv("scatterD3_labels.csv")
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names, labels_positions = labels)
+```
+
+You can also use this file to reuse coordinates in a plot from a different
+package. The following example should work with `ggplot2` :
 
 ```{r labels_export_ggplot2, eval = FALSE}
 labels <- read.csv("scatterD3_labels.csv")
@@ -337,9 +347,9 @@ library(ggplot2)
 ggplot() +
   geom_point(data = mtcars, aes(x=wt, y=mpg)) +
   geom_text(data = labels,
-            aes(x = scatterD3_label_x,
-                y = scatterD3_label_y,
-                label = scatterD3_label))
+            aes(x = lab_x,
+                y = lab_y,
+                label = lab))
 ```
 
 
