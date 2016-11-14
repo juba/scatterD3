@@ -255,11 +255,13 @@ function scatterD3() {
 			.html("Toggle lasso on");
 		}
 
-		if (settings.has_labels) {
-                    menu.append("li")
-			.append("a")
-			.on("click", function() { export_labels_position(this, data, settings, scales); })
-			.html("Export labels positions");
+                var label_export = menu.append("li")
+		    .attr("class", "label-export");
+		label_export.append("a")
+		    .on("click", function() { export_labels_position(this, data, settings, scales); })
+		    .html("Export labels positions");
+		if (!settings.has_labels) {
+		    label_export.style("display", "none");
 		}
 
 		gear.on("click", function(d, i){
@@ -401,6 +403,12 @@ function scatterD3() {
             labels.enter().append("text").call(label_init).call(drag)
 		.merge(labels).transition().duration(1000).call(function(sel) { label_formatting(sel, settings, scales); });
             labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
+	}
+
+	if (settings.has_labels_changed) {
+	    var label_export = d3.select("#scatterD3-menu-" + settings.html_id)
+		.select(".label-export");
+	    label_export.style("display", settings.has_labels ? "block" : "none");
 	}
 
 	if (settings.legend_changed) {
