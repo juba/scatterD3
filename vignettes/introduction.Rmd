@@ -394,3 +394,15 @@ If you are not happy with these ids, you can specify their names yourself with t
 
 The
 [sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows you to see the different features described here. You can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app) for a better understanding of the different arguments.
+
+## Known problems
+
+Due to a lack of support of the `download` attribute in RStudio's interface, two problems may occur when exporting a plot to SVG, or labels positions to CSV :
+
+- the file name suggested in the file save dialog is the data URI. You have to replace it with the name of your choice, and the correct extension (`.svg` or `.csv`).
+
+- when replacing an existing file, if the data to be saved are shorter than the file, it seems that RStudio will just replace the beginning of the file with the new data, but keep existing file content at the end. A workaround is either to always save to a new file, or open the plot in a modern browser before exporting.
+
+
+
+
