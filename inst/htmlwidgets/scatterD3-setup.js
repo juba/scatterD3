@@ -113,9 +113,9 @@ function setup_scales (dims, settings, data) {
 
     // x, y scales
     if (!settings.x_categorical) {
-        scales.x = d3.scaleLinear()
-	    .range([0, dims.width])
-	    .domain([min_x - gap_x, max_x + gap_x]);
+	scales.x = settings.x_log ? d3.scaleLog(): d3.scaleLinear();
+        scales.x.range([0, dims.width])
+	    .domain([min_x - gap_x, max_x + gap_x]);;
     } else {
 	scales.x = d3.scalePoint()
 	    .range([0, dims.width])
@@ -123,8 +123,8 @@ function setup_scales (dims, settings, data) {
 	    .domain(d3.map(data, function(d){ return d.x; }).keys().sort());
     }
     if (!settings.y_categorical) {
-        scales.y = d3.scaleLinear()
-	    .range([dims.height, 0])
+	scales.y = settings.y_log ? d3.scaleLog(): d3.scaleLinear();
+        scales.y.range([dims.height, 0])
 	    .domain([min_y - gap_y, max_y + gap_y]);
     } else {
 	scales.y = d3.scalePoint()
@@ -137,9 +137,11 @@ function setup_scales (dims, settings, data) {
     scales.y_orig = scales.y;
     // x and y axis functions
     scales.xAxis = d3.axisBottom(scales.x)
-        .tickSize(-dims.height);
+        .tickSize(-dims.height)
+	.tickFormat(d3.format(""));
     scales.yAxis = d3.axisLeft(scales.y)
-        .tickSize(-dims.width);
+        .tickSize(-dims.width)
+    	.tickFormat(d3.format(""));;
 
     // Continuous color scale
     if (settings.col_continuous) {

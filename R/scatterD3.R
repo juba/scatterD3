@@ -5,6 +5,8 @@
 #' @param data default dataset to use for plot.
 #' @param x numerical vector of x values, or variable name if data is not NULL
 #' @param y numerical vector of y values, or variable name if data is not NULL
+#' @param x_log if TRUE, set x scale as logarithmic
+#' @param y_log if TRUE, set y scale as logarithmic
 #' @param lab optional character vector of text labels, or variable name if
 #'     data is not NULL
 #' @param point_size points size. Ignored if size_var is not NULL.
@@ -110,6 +112,7 @@
 #' @export
 
 scatterD3 <- function(x, y, data = NULL, lab = NULL,
+                      x_log = FALSE, y_log = FALSE,
                       point_size = 64, labels_size = 10,
                       labels_positions = NULL,
                       point_opacity = 1,
@@ -192,6 +195,18 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     x_categorical <- is.factor(x) || !is.numeric(x)
     y_categorical <- is.factor(y) || !is.numeric(y)
 
+    ## No negative values and no 0 lines if logarithmic scales
+    if (x_log) {
+        if (any(x <= 0))
+            stop("Logarithmic scale and negative values in x")
+        lines <- lines[!(lines$slope == 0 & lines$intercept == 0),]
+    }
+    if (y_log) {
+        if (any(y <= 0))
+            stop("Logarithmic scale and negative values in y")
+        lines <- lines[!(lines$slope == Inf & lines$intercept == 0),]
+    }
+    
     ## colors can be named
     ##  we'll need to convert named vector to a named list
     ##  for the JSON conversion
@@ -290,6 +305,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
 
     ## create a list that contains the settings
     settings <- list(
+        x_log = x_log,
+        y_log = y_log,
         labels_size = labels_size,
         labels_positions = labels_positions,
         point_size = point_size,

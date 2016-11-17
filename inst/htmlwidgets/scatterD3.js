@@ -743,6 +743,8 @@ HTMLWidgets.widget({
                     obj.settings.size_range_changed = !array_equal(scatter.settings().size_range, obj.settings.size_range);
                     obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
 		    obj.settings.colors_changed = scatter.settings().colors != obj.settings.colors;
+		    obj.settings.x_log_changed = scatter.settings().x_log != obj.settings.x_log;
+		    obj.settings.y_log_changed = scatter.settings().y_log != obj.settings.y_log;
 
 		    obj.settings.had_color_var = scatter.settings().has_color_var;
 		    obj.settings.had_symbol_var = scatter.settings().has_symbol_var;
@@ -769,6 +771,8 @@ HTMLWidgets.widget({
 			obj.settings.has_labels_changed ||
 			changed("ellipses_data") ||
 			obj.settings.ellipses_changed ||
+			obj.settings.x_log_changed ||
+			obj.settings.y_log_changed ||
 			changed("opacity_var") ||
 			changed("lines");
 
