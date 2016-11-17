@@ -178,7 +178,17 @@ scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
 ```
 
 
-## Axes and legend customization
+## Scales, axes and legend
+
+The `x_log` and `y_log` arguments allow to use logarithmic scales on the `x`
+and `y` values. Note that there must not be any value inferior or equal to
+zero in this case :
+
+```{r log_scales}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
+          x_log = TRUE, y_log = TRUE)
+```
+
 
 You can customize the value of the axes and legend labels with `xlab`, `ylab`, `col_lab`, `symbol_lab` and `size_lab` :
 
