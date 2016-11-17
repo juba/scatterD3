@@ -3,7 +3,7 @@ scatterD3 0.7.1
 
 * New argument `labels_positions`, allows to import a previously saved labels positions file
 * Toggle "export labels position" visibility when labels change
-* Bugfix : wrong display on mouseover after data updating
+* Bugfix : incoherent data on mouseover after data updating
 * Bugfix : unable to export SVG when text contains non-Latin1 characters
 
 
