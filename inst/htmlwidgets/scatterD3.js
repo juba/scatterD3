@@ -371,7 +371,7 @@ function scatterD3() {
 	var dot = chart_body.selectAll(".dot")
 	    .data(data.filter(point_filter), key);
 	dot.enter().append("path").call(function(sel) {dot_init(sel, settings, scales);})
-	    .merge(dot).transition().duration(1000).call(function(sel) {dot_formatting(sel, settings, scales);});
+	    .merge(dot).call(function(sel) {dot_init(sel, settings, scales);}).transition().duration(1000).call(function(sel) {dot_formatting(sel, settings, scales);});
 	dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
 	// Add arrows
 	var arrow = chart_body.selectAll(".arrow")
