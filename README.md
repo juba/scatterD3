@@ -14,7 +14,7 @@ Here is a small preview of what you will get :
 
 Take a look at
 the
-[visual guide](https://rawgit.com/juba/scatterD3/master/vignettes%2Fintroduction.html#open-urls-when-clicking-points) for
+[visual guide](https://rawgit.com/juba/scatterD3/master/vignettes%2Fintroduction.htm) for
 a list of features and examples. You can also test it live with
 the [sample shiny app](http://data.nozav.org/app/scatterD3/).
 
