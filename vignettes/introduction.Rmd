@@ -169,15 +169,6 @@ scatterD3(data = mtcars, x = wt, y = mpg, fixed = TRUE,
 ```
 
 
-## Axis limits
-
-You can manually specify the `x` or `y` axis limits with the `xlim` and `ylim` arguments :
-
-```{r axis_limits}
-scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
-```
-
-
 ## Scales, axes and legend
 
 The `x_log` and `y_log` arguments allow to use logarithmic scales on the `x`
@@ -189,6 +180,11 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           x_log = TRUE, y_log = TRUE)
 ```
 
+You can manually specify the `x` or `y` axis limits with the `xlim` and `ylim` arguments :
+
+```{r axis_limits}
+scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
+```
 
 You can customize the value of the axes and legend labels with `xlab`, `ylab`, `col_lab`, `symbol_lab` and `size_lab` :
 
@@ -209,6 +205,36 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
 ```
 
 You can provide any CSS compatible value, wether a fixed size such as `2em` or a relative one like `95%`.
+
+If the left plot margin is not big enough and your y axis labels are
+truncated, you can adjust it with the `left_margin` argument :
+
+```{r cust_left_margin}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
+          left_margin = 80)
+```
+
+## Caption
+
+You can add an optional caption to your plot, which will be shown when
+clicking on a "info sign" icon in the top right of your plot.
+
+To do so, use the `caption` argument with either a single character string :
+
+```{r caption_character}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
+          caption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam aliquam egestas pretium. Donec auctor semper vestibulum. Phasellus in tempor lacus. Maecenas vehicula, ipsum id malesuada placerat, diam lorem aliquet lectus, non lacinia quam leo quis eros.")
+```
+
+Or a list with the `title`, `subtitle` and `text` elements :
+
+```{r caption_list}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
+          caption = list(title = "Caption title",
+                         subtitle = "Caption subtitle",
+                         text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam aliquam egestas pretium. Donec auctor semper vestibulum. Phasellus in tempor lacus. Maecenas vehicula, ipsum id malesuada placerat, diam lorem aliquet lectus, non lacinia quam leo quis eros."))
+```
+
 
 
 ## Custom tooltips

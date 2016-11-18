@@ -87,6 +87,9 @@
 #' @param legend_width legend area width, in pixels. Set to 0 to disable
 #'     legend completely.
 #' @param left_margin margin on the left of the plot, in pixels
+#' @param caption caption to be displayed when clicking on the corresponding
+#'     icon. Either a character string, or a list with title, subtitle and
+#'     text elements.
 #' @param width figure width, computed when displayed
 #' @param height figure height, computed when displayed
 #'
@@ -156,8 +159,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                                          stroke_dasharray = c(5,5)),
                       axes_font_size = "100%",
                       legend_font_size = "100%",
-                      title = NULL,
-                      subtitle = NULL) {
+                      caption = NULL) {
 
     ## Variable names as default labels
     if (is.null(xlab)) xlab <- deparse(substitute(x))
@@ -225,6 +227,11 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         }
     }
 
+    ## If caption is a character string, convert it to a list
+    if (is.character(caption)) {
+        caption <- list(text = caption)
+    }
+    
     ## data element
     data <- data.frame(x = x, y = y)
     if (!is.null(lab)) data <- cbind(data, lab = lab)
@@ -356,8 +363,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         transitions = transitions,
         axes_font_size = axes_font_size,
         legend_font_size = legend_font_size,
-        title = title,
-        subtitle = subtitle,
+        caption = caption,
         lines = lines,
         hashes = hashes
     )

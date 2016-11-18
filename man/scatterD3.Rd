@@ -24,7 +24,7 @@ scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE, y_log = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
   click_callback = NULL, zoom_callback = NULL, lines = data.frame(slope =
   c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5, 5)),
-  axes_font_size = "100\%", legend_font_size = "100\%")
+  axes_font_size = "100\%", legend_font_size = "100\%", caption = NULL)
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}
@@ -165,6 +165,10 @@ and \code{stroke_dasharray} columns. To draw a vertical line, pass
 
 \item{legend_font_size}{font size for legend text (any CSS compatible
 value)}
+
+\item{caption}{caption to be displayed when clicking on the corresponding
+icon. Either a character string, or a list with title, subtitle and
+text elements.}
 }
 \description{
 Generates an interactive scatter plot based on d3.js.

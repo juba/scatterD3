@@ -220,7 +220,7 @@ function scatterD3() {
 		// Gear icon
 		var gear = svg.append("g")
 		    .attr("class", "gear-menu")
-		    .attr("transform", "translate(" + (width - 36) + ", 6)");
+		    .attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
 		gear.append("rect")
 		    .attr("class", "gear-toggle")
 		    .attr("width", "25")
@@ -283,34 +283,55 @@ function scatterD3() {
 		});
             }
 
-	    var title_parent = d3.select(svg.node().parentNode);
-	    var title = menu_parent.select(".scatterD3-title");
+	    var caption_parent = d3.select(svg.node().parentNode);
+	    var caption = caption_parent.select(".scatterD3-caption");
 
-	    // Title or subtitle
-	    if (settings.title || settings.subtitle) {
-
-		title.append("p").text(settings.title);
-		title.append("p").text(settings.subtitle);
+	    // Caption
+	    if (settings.caption) {
+		if (settings.caption.title)
+		    caption.append("h1").attr("class", "title").html(settings.caption.title);
+		if (settings.caption.subtitle)
+		    caption.append("h2").attr("class", "subtitle").html(settings.caption.subtitle);
+		if (settings.caption.text)
+		    caption.append("p").attr("class", "caption").html(settings.caption.text);
+		caption.style("top", dims.svg_height + "px");
 
 		// Caption icon
-		var caption = svg.append("g")
+		var caption_top_margin = settings.menu ? 35 : 10;
+		var caption_icon = svg.append("g")
 		    .attr("class", "caption-icon")
-		    .attr("transform", "translate(" + (width - 36) + "," + (height - 31) + ")");
-		caption.append("rect")
+		    .attr("transform", "translate(" + (dims.svg_width - 40) + "," + (dims.svg_height - 71) + ")")
+		    .attr("transform", "translate(" + (dims.svg_width - 40) + "," + caption_top_margin + ")");
+		caption_icon.append("rect")
 		    .attr("class", "caption-toggle")
 		    .attr("width", "25")
 		    .attr("height", "25")
 		    .style("fill", "#FFFFFF");
-		caption.append("path")
-		    .attr("d", gear_path())
-		    .attr("transform", "translate(-3,3)")
+		caption_icon.append("path")
+		    .attr("d", caption_path())
+		    .attr("transform", "translate(4,4)")
 		    .style("fill", "#666666");
 
+		caption_icon.on("click", function() {
+		    if (!caption.classed("visible")) {
+			caption.classed("visible", true);
+			caption.style("margin-top", -caption.node().getBoundingClientRect().height + "px");
+		    }
+		    else {
+			caption.classed("visible", false);
+			caption.style("margin-top", "0px");
+		    }
+		});
+
+		caption.on("click", function() {
+		    caption.classed("visible", false);
+		    caption.style("margin-top", "0px");
+		});
 		
 	    }
 	    // No title
 	    else {
-		title.remove();
+		caption.remove();
 	    }
 
         });
@@ -580,7 +601,17 @@ function scatterD3() {
             svg.select(".gear-menu")
 		.attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
         }
+        // Move caption icon and div
+        if (settings.caption) {
+	    var caption_top_margin = settings.menu ? 35 : 10;
+            svg.select(".caption-icon")
+	    	.attr("transform", "translate(" + (dims.svg_width - 40) + "," + caption_top_margin + ")");
+	    d3.select(svg.node().parentNode)
+		.select(".scatterD3-caption")
+		.style("top", dims.svg_height + "px");
+        }
 
+	
     };
 
 
@@ -706,10 +737,10 @@ HTMLWidgets.widget({
         }
 
 	// Create title and subtitle div
-        var menu = d3.select(el).select(".scatterD3-title");
-        if (menu.empty()) {
-            menu = d3.select(el).append("div")
-		.attr("class", "scatterD3-title");
+        var caption = d3.select(el).select(".scatterD3-caption");
+        if (caption.empty()) {
+            caption = d3.select(el).append("div")
+		.attr("class", "scatterD3-caption");
         }
 
         // Create menu div
