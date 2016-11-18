@@ -784,6 +784,7 @@ HTMLWidgets.widget({
 		if (!obj.settings.transitions) {
                     svg.selectAll("*:not(style)").remove();
 		    menu.selectAll("li").remove();
+		    caption.selectAll("*").remove();
 		}
 
 		// Complete draw
