@@ -1,6 +1,8 @@
-scatterD3 0.7.1
+scatterD3 0.8
 ------------------------------------------------------
 
+* New "caption" argument to add a toggable caption to the plot
+* New "x_log" and "y_log" arguments for x and y logarithmic scales
 * New argument `labels_positions`, allows to import a previously saved labels positions file
 * Toggle "export labels position" visibility when labels change
 * Bugfix : incoherent data on mouseover after data updating
