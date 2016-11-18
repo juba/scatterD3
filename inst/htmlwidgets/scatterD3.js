@@ -283,6 +283,36 @@ function scatterD3() {
 		});
             }
 
+	    var title_parent = d3.select(svg.node().parentNode);
+	    var title = menu_parent.select(".scatterD3-title");
+
+	    // Title or subtitle
+	    if (settings.title || settings.subtitle) {
+
+		title.append("p").text(settings.title);
+		title.append("p").text(settings.subtitle);
+
+		// Caption icon
+		var caption = svg.append("g")
+		    .attr("class", "caption-icon")
+		    .attr("transform", "translate(" + (width - 36) + "," + (height - 31) + ")");
+		caption.append("rect")
+		    .attr("class", "caption-toggle")
+		    .attr("width", "25")
+		    .attr("height", "25")
+		    .style("fill", "#FFFFFF");
+		caption.append("path")
+		    .attr("d", gear_path())
+		    .attr("transform", "translate(-3,3)")
+		    .style("fill", "#666666");
+
+		
+	    }
+	    // No title
+	    else {
+		title.remove();
+	    }
+
         });
     }
 
@@ -673,6 +703,13 @@ HTMLWidgets.widget({
 		.append("div")
 		.style("visibility", "hidden")
 		.attr("class", "scatterD3-tooltip");
+        }
+
+	// Create title and subtitle div
+        var menu = d3.select(el).select(".scatterD3-title");
+        if (menu.empty()) {
+            menu = d3.select(el).append("div")
+		.attr("class", "scatterD3-title");
         }
 
         // Create menu div

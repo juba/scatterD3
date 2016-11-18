@@ -155,7 +155,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                                          intercept = c(0, 0),
                                          stroke_dasharray = c(5,5)),
                       axes_font_size = "100%",
-                      legend_font_size = "100%") {
+                      legend_font_size = "100%",
+                      title = NULL,
+                      subtitle = NULL) {
 
     ## Variable names as default labels
     if (is.null(xlab)) xlab <- deparse(substitute(x))
@@ -354,6 +356,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         transitions = transitions,
         axes_font_size = axes_font_size,
         legend_font_size = legend_font_size,
+        title = title,
+        subtitle = subtitle,
         lines = lines,
         hashes = hashes
     )
