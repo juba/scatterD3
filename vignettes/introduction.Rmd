@@ -278,10 +278,23 @@ One usage can be to pass the index of the clicked point back to Shiny when `scat
 scatterD3(data = mtcars, x = wt, y = mpg,
   click_callback = "function(id, index) {
   if(id && typeof(Shiny) != 'undefined') {
-      Shiny.onInputChange(id + '_selected', index);
+      Shiny.onInputChange('selected_point', index);
   }
 }")
 ```
+
+You could then add something like this in your Shiny app `ui` :
+
+```{r click_callback_shiny_ui, eval = FALSE}
+textOutput("click_selected")
+```
+
+And this in `server` :
+
+```{r click_callback_shiny_server, eval = FALSE}
+output$click_selected <- renderText(paste0("Clicked point : ", input$selected_point))
+```
+
 
 Thanks to [detule](https://github.com/detule) and [harveyl888](https://github.com/harveyl888) for the code.
 
