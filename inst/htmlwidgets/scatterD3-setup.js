@@ -139,12 +139,15 @@ function setup_scales (dims, settings, data) {
     scales.y_orig = scales.y;
     // x and y axis functions
     scales.xAxis = d3.axisBottom(scales.x)
-        .tickSize(-dims.height)
-	.tickFormat(d3.format(""));
+        .tickSize(-dims.height);
+    if (!settings.x_categorical) {
+	scales.xAxis.tickFormat(d3.format(""));
+    }
     scales.yAxis = d3.axisLeft(scales.y)
-        .tickSize(-dims.width)
-    	.tickFormat(d3.format(""));;
-
+        .tickSize(-dims.width);
+    if (!settings.y_categorical) {
+	scales.yAxis.tickFormat(d3.format(""));
+    }
     // Continuous color scale
     if (settings.col_continuous) {
 	scales.color = d3.scaleSequential(d3.interpolateViridis)
