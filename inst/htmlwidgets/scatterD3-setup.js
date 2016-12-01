@@ -77,6 +77,11 @@ function setup_scales (dims, settings, data) {
         min_x = d3.min(data, function(d) { return(d.x);} );
         max_x = d3.max(data, function(d) { return(d.x);} );
         gap_x = (max_x - min_x) * 0.2;
+	if (min_x == max_x) {
+	    min_x = min_x * 0.8;
+	    max_x = max_x * 1.2;
+	    gap_x = 0;
+	}
     } else {
         min_x = settings.xlim[0];
         max_x = settings.xlim[1];
@@ -86,6 +91,11 @@ function setup_scales (dims, settings, data) {
         min_y = d3.min(data, function(d) { return(d.y);} );
         max_y = d3.max(data, function(d) { return(d.y);} );
         gap_y = (max_y - min_y) * 0.2;
+	if (min_y == max_y) {
+	    min_y = min_y * 0.8;
+	    max_y = max_y * 1.2;
+	    gap_y = 0;
+	}
     } else {
         min_y = settings.ylim[0];
         max_y = settings.ylim[1];
