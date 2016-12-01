@@ -127,25 +127,6 @@ function setup_scales (dims, settings, data) {
 	max_x = mid_x + range_x / 2;
     }
 
-
-	// if (settings.xlim === null && settings.ylim === null) {
-	//     min_x = min_y = Math.min(min_x, min_y);
-	//     max_x = max_y = Math.max(max_x, max_y);
-	//     gap_x = gap_y = Math.max(gap_x, gap_y);
-        // }
-        // if (settings.xlim !== null) {
-	//     min_y = min_x;
-	//     max_y = max_x;
-	//     gap_y = gap_x;
-        // }
-        // if (settings.ylim !== null) {
-	//     min_x = min_y;
-	//     max_x = max_y;
-	//     gap_x = gap_y;
-        // }
-
-    
-
     
     // x, y scales
     if (!settings.x_categorical) {
