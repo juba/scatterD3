@@ -2,6 +2,7 @@ scatterD3 0.8.1
 ------------------------------------------------------
 
 * Bugfix : categorical axes labels shown as NaN (thanks @zji90)
+* Bugfix : not centered data when fixed = TRUE (thanks  @jon-nagra)
 
 
 scatterD3 0.8

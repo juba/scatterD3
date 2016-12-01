@@ -140,8 +140,8 @@ In addition to your data points, you can add to your scatterplot. This is done v
 For example, if you want to add a 1:1 line :
 
 ```{r lines}
-scatterD3(data = mtcars, x = wt, y = mpg, fixed = TRUE, 
-          lines = data.frame(slope = 1, intercept = 0))
+scatterD3(data = mtcars, x = wt, y = mpg, 
+          lines = data.frame(slope = -5.344, intercept = 37.285))
 ```
 
 You can style your lines by adding `stroke`, `stroke_width` and `stroke_dasharray` columns. These columns values will be added as [corresponding styles](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Fills_and_Strokes) to the generated SVG line. So if you want a wide dashed red horizontal line :
@@ -411,7 +411,8 @@ Finally, and for more specific use cases, you can represent some points as an ar
 scatterD3(x = c(1, 0.9, 0.7, 0.2, -0.4, -0.5), xlab = "x",
           y = c(1, 0.1, -0.5, 0.5, -0.6, 0.7), ylab = "y",
           lab = LETTERS[1:6], type_var = c("point", rep("arrow", 5)),
-          unit_circle = TRUE, fixed = TRUE, xlim = c(-1.2, 1.2))
+          unit_circle = TRUE, fixed = TRUE, 
+          xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2))
 ```
 
 
