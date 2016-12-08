@@ -8,6 +8,13 @@ function add_axes(selection, dims, settings, scales) {
         .style("font-size", settings.axes_font_size)
         .call(scales.xAxis);
 
+    // y axis
+    selection.append("g")
+        .attr("class", "y axis")
+        .style("font-size", settings.axes_font_size)
+        .call(scales.yAxis);
+
+    // x axis label
     selection.append("text")
         .attr("class", "x-axis-label")
         .attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")")
@@ -15,12 +22,7 @@ function add_axes(selection, dims, settings, scales) {
         .style("font-size", settings.axes_font_size)
         .text(settings.xlab);
 
-    // y axis
-    selection.append("g")
-        .attr("class", "y axis")
-        .style("font-size", settings.axes_font_size)
-        .call(scales.yAxis);
-
+    // y axis label
     selection.append("text")
         .attr("class", "y-axis-label")
         .attr("transform", "translate(5,6) rotate(-90)")
