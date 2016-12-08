@@ -5,7 +5,7 @@ scatterD3 0.8.1
 * Bugfix : plot not centered when fixed = TRUE (thanks @jon-nagra)
 * Bugfix : incorrect plot when only one point (thanks @CUinNYC)
 * Bugfix : xlim and ylim not taken into account when updating chart (thanks @CUinNYC)
-
+* Bugfix : plot with no data should return an empty plot, not an error
 
 scatterD3 0.8
 ------------------------------------------------------

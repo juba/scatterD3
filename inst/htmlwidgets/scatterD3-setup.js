@@ -72,6 +72,13 @@ function setup_scales (dims, settings, data) {
     var min_x, min_y, max_x, max_y, gap_x, gap_y;
     var scales = {};
 
+    // if data is empty
+    if (data.length == 0) {
+	settings.x_categorical = false;
+	settings.y_categorical = false;
+	data = [{x:0, y:0, key:1}];
+    }
+    
     // x and y limits
     if (settings.xlim === null) {
         min_x = d3.min(data, function(d) { return(d.x);} );
@@ -81,6 +88,11 @@ function setup_scales (dims, settings, data) {
 	    min_x = min_x * 0.8;
 	    max_x = max_x * 1.2;
 	    gap_x = 0;
+	}
+	if (min_x == 0 && max_x == 0) {
+	    min_x = -1;
+	    max_x = 1;
+	    gap_x = 0.1;
 	}
     } else {
         min_x = settings.xlim[0];
@@ -95,6 +107,11 @@ function setup_scales (dims, settings, data) {
 	    min_y = min_y * 0.8;
 	    max_y = max_y * 1.2;
 	    gap_y = 0;
+	}
+	if (min_y == 0 && max_y == 0) {
+	    min_y = -1;
+	    max_y = 1;
+	    gap_y = 0.1;
 	}
     } else {
         min_y = settings.ylim[0];
@@ -112,8 +129,6 @@ function setup_scales (dims, settings, data) {
     var mid_x = (max_x + min_x) / 2;
     var range_y = max_y - min_y;
     var mid_y = (max_y + min_y) / 2;
-    console.log(mid_x);
-    console.log(mid_y);
     if (settings.fixed && settings.xlim === null && settings.ylim === null) {
 	var ratio = (range_y / range_x);
 	if (ratio > 1) {
