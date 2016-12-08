@@ -8,12 +8,12 @@ function scatterD3() {
 	data = [],
 	svg,
 	zoom, drag;
-    
+
     // Zoom behavior
     zoom = d3.zoom()
         .scaleExtent([0, 32])
         .on("zoom", zoomed);
-    
+
     // Zoom function
     function zoomed(reset) {
 	var root = svg.select(".root");
@@ -327,7 +327,7 @@ function scatterD3() {
 		    caption.classed("visible", false);
 		    caption.style("margin-top", "0px");
 		});
-		
+
 	    }
 	    // No title
 	    else {
@@ -465,7 +465,7 @@ function scatterD3() {
 	if (settings.legend_changed) {
 	    var legend = svg.select(".legend");
 	    dims = setup_legend_sizes(dims, scales, settings);
-	    
+
 	    // Move color legend
 	    if(settings.has_color_var && settings.had_color_var && !settings.col_changed) {
 		legend.call(function(sel) {
@@ -473,14 +473,14 @@ function scatterD3() {
 	    }
 	    // Replace color legend
 	    if(settings.has_color_var && settings.had_color_var && settings.col_changed) {
-		legend.call(function(sel) {		    
-		    remove_color_legend(sel); 
+		legend.call(function(sel) {
+		    remove_color_legend(sel);
 		    add_color_legend(svg, dims, settings, scales, 1000);
 		});
 	    }
 	    // Add color legend
 	    if(settings.has_color_var && !settings.had_color_var) {
-		add_color_legend(svg, dims, settings, scales, 1000); 
+		add_color_legend(svg, dims, settings, scales, 1000);
 	    }
 	    // Remove color legend
 	    if(!settings.has_color_var && settings.had_color_var) {
@@ -494,14 +494,14 @@ function scatterD3() {
 	    }
 	    // Replace symbol legend
 	    if(settings.has_symbol_var && settings.had_symbol_var && settings.symbol_changed) {
-		legend.call(function(sel) {		    
-		    remove_symbol_legend(sel); 
+		legend.call(function(sel) {
+		    remove_symbol_legend(sel);
 		    add_symbol_legend(svg, dims, settings, scales, 1000);
 		});
 	    }
 	    // Add symbol legend
 	    if(settings.has_symbol_var && !settings.had_symbol_var) {
-		add_symbol_legend(svg, dims, settings, scales, 1000); 
+		add_symbol_legend(svg, dims, settings, scales, 1000);
 	    }
 	    // Remove symbol legend
 	    if(!settings.has_symbol_var && settings.had_symbol_var) {
@@ -515,14 +515,14 @@ function scatterD3() {
 	    }
 	    // Replace size legend
 	    if(settings.has_size_var && settings.had_size_var && settings.size_changed) {
-		legend.call(function(sel) {		    
-		    remove_size_legend(sel); 
+		legend.call(function(sel) {
+		    remove_size_legend(sel);
 		    add_size_legend(svg, dims, settings, scales, 1000);
 		});
 	    }
 	    // Add size legend
 	    if(settings.has_size_var && !settings.had_size_var) {
-		add_size_legend(svg, dims, settings, scales, 1000); 
+		add_size_legend(svg, dims, settings, scales, 1000);
 	    }
 	    // Remove size legend
 	    if(!settings.has_size_var && settings.had_size_var) {
@@ -534,9 +534,9 @@ function scatterD3() {
 	svg.select(".root")
 	    .transition().delay(1000).duration(0)
 	    .call(zoom.transform, d3.zoomIdentity);
-	    
-	
-	
+
+
+
 
 	lasso_off(svg, settings, zoom);
     };
@@ -566,7 +566,7 @@ function scatterD3() {
 		.call(function(sel) { add_unit_circle(sel, scales); });
 	}
     }
-    
+
     // Dynamically resize chart elements
     function resize_chart () {
         // recompute sizes
@@ -589,7 +589,7 @@ function scatterD3() {
         // Move legends
 	if (settings.has_legend && settings.legend_width > 0) {
 	    var legend = svg.select(".legend");
-            if (settings.has_color_var) 
+            if (settings.has_color_var)
 		move_color_legend(legend, dims, 0);
             if (settings.has_symbol_var)
 		move_symbol_legend(legend, dims, 0);
@@ -611,7 +611,7 @@ function scatterD3() {
 		.style("top", dims.svg_height + "px");
         }
 
-	
+
     };
 
 
@@ -814,11 +814,13 @@ HTMLWidgets.widget({
 		    obj.settings.colors_changed = scatter.settings().colors != obj.settings.colors;
 		    obj.settings.x_log_changed = scatter.settings().x_log != obj.settings.x_log;
 		    obj.settings.y_log_changed = scatter.settings().y_log != obj.settings.y_log;
+		    obj.settings.xlim_changed = scatter.settings().xlim != obj.settings.xlim;
+		    obj.settings.ylim_changed = scatter.settings().ylim != obj.settings.ylim;
 
 		    obj.settings.had_color_var = scatter.settings().has_color_var;
 		    obj.settings.had_symbol_var = scatter.settings().has_symbol_var;
 		    obj.settings.had_size_var = scatter.settings().has_size_var;
-		    
+
 		    function changed(varname) {
 			return obj.settings.hashes[varname] != scatter.settings().hashes[varname];
                     };
@@ -842,6 +844,8 @@ HTMLWidgets.widget({
 			obj.settings.ellipses_changed ||
 			obj.settings.x_log_changed ||
 			obj.settings.y_log_changed ||
+			obj.settings.xlim_changed ||
+			obj.settings.ylim_changed ||
 			changed("opacity_var") ||
 			changed("lines");
 
