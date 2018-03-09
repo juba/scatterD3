@@ -122,6 +122,27 @@ function scatterD3() {
 		.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")")
 		.call(zoom);
 
+			// Workaround for RStudio/Safari mousewheel event
+			// We manually trigger a wheel event, copying needed arguments
+			root.node().addEventListener("mousewheel", function (e) {
+				// Create the event
+				var ev = document.createEvent("Event");
+				ev.initEvent("wheel", true, true);
+				ev.deltaY = -e.wheelDeltaY;
+				ev.deltaX = 0;
+				ev.deltaMode = 0;
+				ev.pageX = e.pageX;
+				ev.pageY = e.pageY;
+				ev.clientX = e.clientX;
+				ev.clientY = e.clientY;
+				ev.screenX = e.screenX;
+				ev.screenY = e.screenY;
+				ev.offsetX = e.offsetX;
+				ev.offsetY = e.offsetY;
+				// Dispatch/Trigger/Fire the event
+				this.dispatchEvent(ev);
+			});
+
             root.append("rect")
 		.style("fill", "#FFF")
 		.attr("width", dims.width)
