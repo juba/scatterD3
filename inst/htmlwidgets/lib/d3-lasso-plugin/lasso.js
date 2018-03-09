@@ -1,4 +1,4 @@
-d3.lasso = function() {
+d3v4.lasso = function() {
 
     var items = null,
         closePathDistance = 75,
@@ -57,16 +57,16 @@ d3.lasso = function() {
         var path_length_start;
 
         // Apply drag behaviors
-        var drag = d3.drag()
+        var drag = d3v4.drag()
             .on("start", dragstart)
             .on("drag", dragmove)
             .on("end", dragend);
 
 	// Init DOM-local data
-	var right_edges = d3.local();
-	var left_edges = d3.local();
-	var close_right_edges = d3.local();
-	var close_left_edges = d3.local();
+	var right_edges = d3v4.local();
+	var left_edges = d3v4.local();
+	var close_right_edges = d3v4.local();
+	var close_left_edges = d3v4.local();
 	
         // Call drag
         area.call(drag);
@@ -102,7 +102,7 @@ d3.lasso = function() {
             if(hoverSelect===true) {
                 items.on("mouseover.lasso",function() {
                     // if hovered, change lasso selection attribute to true
-                    d3.select(this).hoverSelected = true;
+                    d3v4.select(this).hoverSelected = true;
                 });
             }
 
@@ -112,11 +112,11 @@ d3.lasso = function() {
 
         function dragmove() {
             // Get mouse position within body, used for calculations
-            var x = d3.event.sourceEvent.clientX;
-            var y = d3.event.sourceEvent.clientY;
+            var x = d3v4.event.sourceEvent.clientX;
+            var y = d3v4.event.sourceEvent.clientY;
             // Get mouse position within drawing area, used for rendering
-            var tx = d3.mouse(this)[0];
-            var ty = d3.mouse(this)[1];
+            var tx = d3v4.mouse(this)[0];
+            var ty = d3v4.mouse(this)[1];
 
             // Initialize the path or add the latest point to it
             if (path==="") {
@@ -313,7 +313,7 @@ d3.lasso = function() {
         if (!arguments.length) return items;
         items = _;
         items.each(function(d) {
-            var item = d3.select(this);
+            var item = d3v4.select(this);
             if(typeof item.datum() === 'undefined') {
                 item.datum({possible:false,selected:false});
             }

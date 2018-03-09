@@ -10,7 +10,7 @@ function export_svg(sel, svg, settings) {
     svg_content = svg_content.replace(/<g class="caption-icon[\s\S]*?<\/g>/, '');
     svg_content = svg_content.replace(/<div class="scatterD3-caption[\s\S]*?<\/div>/, '');
     var image_data = "data:image/octet-stream;base64," + window.btoa(unescape(encodeURIComponent(svg_content)));
-    d3.select(sel)
+    d3v4.select(sel)
         .attr("download", settings.html_id + ".svg")
         .attr("href", image_data);
 }
@@ -33,7 +33,7 @@ function export_labels_position(sel, data, settings, scales) {
         lines_data.push(this_line);
     });
     var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
-    d3.select(sel)
+    d3v4.select(sel)
         .attr("download", settings.html_id + "_labels.csv")
         .attr("href", encodeURI(csv_content));
 }

@@ -10,7 +10,7 @@ function scatterD3() {
 		zoom, drag;
 
 	// Zoom behavior
-	zoom = d3.zoom()
+	zoom = d3v4.zoom()
 		.scaleExtent([0, 32])
 		.on("zoom", zoomed);
 
@@ -18,12 +18,12 @@ function scatterD3() {
 	function zoomed(reset) {
 		var root = svg.select(".root");
 		if (!settings.x_categorical) {
-			scales.x = d3.event.transform.rescaleX(scales.x_orig);
+			scales.x = d3v4.event.transform.rescaleX(scales.x_orig);
 			scales.xAxis = scales.xAxis.scale(scales.x);
 			root.select(".x.axis").call(scales.xAxis);
 		}
 		if (!settings.y_categorical) {
-			scales.y = d3.event.transform.rescaleY(scales.y_orig);
+			scales.y = d3v4.event.transform.rescaleY(scales.y_orig);
 			scales.yAxis = scales.yAxis.scale(scales.y);
 			root.select(".y.axis").call(scales.yAxis);
 		}
@@ -44,13 +44,13 @@ function scatterD3() {
 	// Reset zoom function
 	function reset_zoom() {
 		var root = svg.select(".root");
-		root.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+		root.transition().duration(750).call(zoom.transform, d3v4.zoomIdentity);
 	}
 
 
 	// Text labels dragging function
 	var dragging = false;
-	drag = d3.drag()
+	drag = d3v4.drag()
 		.subject(function (d, i) {
 			var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
 			var dx = get_label_dx(d, i, settings, scales);
@@ -58,14 +58,14 @@ function scatterD3() {
 			return { x: scales.x(d.x) + dx, y: scales.y(d.y) + dy };
 		})
 		.on('start', function (d, i) {
-			if (!d3.event.sourceEvent.shiftKey) {
+			if (!d3v4.event.sourceEvent.shiftKey) {
 				dragging = true;
-				d3.select(this).style('fill', '#000');
-				var chart = d3.select(this).node().parentNode;
+				d3v4.select(this).style('fill', '#000');
+				var chart = d3v4.select(this).node().parentNode;
 				var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
 				var dx = get_label_dx(d, i, settings, scales);
 				var dy = get_label_dy(d, i, settings, scales);
-				d3.select(chart).append("svg:line")
+				d3v4.select(chart).append("svg:line")
 					.attr("id", "scatterD3-drag-line")
 					.attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
 					.attr("y1", scales.y(d.y)).attr("y2", scales.y(d.y) + dy)
@@ -75,12 +75,12 @@ function scatterD3() {
 		})
 		.on('drag', function (d) {
 			if (dragging) {
-				var cx = d3.event.x - scales.x(d.x);
-				var cy = d3.event.y - scales.y(d.y);
-				d3.select(this)
+				var cx = d3v4.event.x - scales.x(d.x);
+				var cy = d3v4.event.y - scales.y(d.y);
+				d3v4.select(this)
 					.attr('dx', cx + "px")
 					.attr('dy', cy + "px");
-				d3.select("#scatterD3-drag-line")
+				d3v4.select("#scatterD3-drag-line")
 					.attr('x2', scales.x(d.x) + cx)
 					.attr("y2", scales.y(d.y) + cy);
 				d.lab_dx = cx;
@@ -89,8 +89,8 @@ function scatterD3() {
 		})
 		.on('end', function (d) {
 			if (dragging) {
-				d3.select(this).style('fill', scales.color(d.col_var));
-				d3.select("#scatterD3-drag-line").remove();
+				d3v4.select(this).style('fill', scales.color(d.col_var));
+				d3v4.select("#scatterD3-drag-line").remove();
 				dragging = false;
 			}
 		});
@@ -252,7 +252,7 @@ function scatterD3() {
 					.attr("transform", "translate(-3,3)")
 					.style("fill", "#666666");
 
-				var menu_parent = d3.select(svg.node().parentNode);
+				var menu_parent = d3v4.select(svg.node().parentNode);
 				menu_parent.style("position", "relative");
 				var menu = menu_parent.select(".scatterD3-menu");
 
@@ -286,7 +286,7 @@ function scatterD3() {
 				}
 
 				gear.on("click", function (d, i) {
-					var menu = d3.select("#scatterD3-menu-" + settings.html_id);
+					var menu = d3v4.select("#scatterD3-menu-" + settings.html_id);
 					var gear = svg.select(".gear-menu");
 					if (!menu.classed("open")) {
 						menu.transition().duration(300)
@@ -304,7 +304,7 @@ function scatterD3() {
 				});
 			}
 
-			var caption_parent = d3.select(svg.node().parentNode);
+			var caption_parent = d3v4.select(svg.node().parentNode);
 			var caption = caption_parent.select(".scatterD3-caption");
 
 			// Caption
@@ -397,7 +397,7 @@ function scatterD3() {
 			}
 		}
 		if (settings.menu) {
-			var menu_parent = d3.select(svg.node().parentNode);
+			var menu_parent = d3v4.select(svg.node().parentNode);
 			menu_parent.style("position", "relative");
 			var menu = menu_parent.select(".scatterD3-menu");
 			menu.attr("id", "scatterD3-menu-" + settings.html_id);
@@ -478,7 +478,7 @@ function scatterD3() {
 		}
 
 		if (settings.has_labels_changed) {
-			var label_export = d3.select("#scatterD3-menu-" + settings.html_id)
+			var label_export = d3v4.select("#scatterD3-menu-" + settings.html_id)
 				.select(".label-export");
 			label_export.style("display", settings.has_labels ? "block" : "none");
 		}
@@ -557,7 +557,7 @@ function scatterD3() {
 		// Reset zoom
 		svg.select(".root")
 			.transition().delay(1000).duration(0)
-			.call(zoom.transform, d3.zoomIdentity);
+			.call(zoom.transform, d3v4.zoomIdentity);
 
 
 
@@ -601,14 +601,14 @@ function scatterD3() {
 		scales.x_orig.range([0, dims.width]);
 		scales.y.range([dims.height, 0]);
 		scales.y_orig.range([dims.height, 0]);
-		scales.xAxis = d3.axisBottom(scales.x).tickSize(-dims.height);
-		scales.yAxis = d3.axisLeft(scales.y).tickSize(-dims.width);
+		scales.xAxis = d3v4.axisBottom(scales.x).tickSize(-dims.height);
+		scales.yAxis = d3v4.axisLeft(scales.y).tickSize(-dims.width);
 
 		svg.call(resize_plot);
 
 		svg.select(".root")
 			.call(zoom.transform,
-				d3.zoomTransform(svg.select(".root").node()));
+				d3v4.zoomTransform(svg.select(".root").node()));
 
 		// Move legends
 		if (settings.has_legend && settings.legend_width > 0) {
@@ -630,7 +630,7 @@ function scatterD3() {
 			var caption_top_margin = settings.menu ? 35 : 10;
 			svg.select(".caption-icon")
 				.attr("transform", "translate(" + (dims.svg_width - 40) + "," + caption_top_margin + ")");
-			d3.select(svg.node().parentNode)
+			d3v4.select(svg.node().parentNode)
 				.select(".scatterD3-caption")
 				.style("top", dims.svg_height + "px");
 		}
@@ -642,25 +642,25 @@ function scatterD3() {
 	// Add controls handlers for shiny
 	chart.add_controls_handlers = function () {
 		// Zoom reset
-		d3.select("#" + settings.dom_id_reset_zoom)
+		d3v4.select("#" + settings.dom_id_reset_zoom)
 			.on("click", reset_zoom);
 
 		// SVG export
-		d3.select("#" + settings.dom_id_svg_export)
+		d3v4.select("#" + settings.dom_id_svg_export)
 			.on("click", function () { export_svg(this, svg, settings); });
 
 		// Lasso toggle
-		d3.select("#" + settings.dom_id_lasso_toggle)
+		d3v4.select("#" + settings.dom_id_lasso_toggle)
 			.on("click", function () { lasso_toggle(svg, settings, scales, zoom); });
 	};
 
 	chart.add_global_listeners = function () {
 		// Toogle zoom and lasso behaviors when shift is pressed
-		var parent = d3.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
-		d3.select(parent)
+		var parent = d3v4.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
+		d3v4.select(parent)
 			.attr("tabindex", 0)
 			.on("keydown", function () {
-				var key = d3.event.key !== undefined ? d3.event.key : d3.event.keyIdentifier;
+				var key = d3v4.event.key !== undefined ? d3v4.event.key : d3v4.event.keyIdentifier;
 				if (key == "Shift") {
 					if (settings.lasso) {
 						lasso_on(svg, settings, scales, zoom);
@@ -668,7 +668,7 @@ function scatterD3() {
 				}
 			})
 			.on("keyup", function () {
-				var key = d3.event.key !== undefined ? d3.event.key : d3.event.keyIdentifier;
+				var key = d3v4.event.key !== undefined ? d3v4.event.key : d3v4.event.keyIdentifier;
 				if (key == "Shift") {
 					if (settings.lasso) {
 						lasso_off(svg, settings, zoom);
@@ -740,7 +740,7 @@ HTMLWidgets.widget({
 		if (width < 0) width = 0;
 		if (height < 0) height = 0;
 		// Create root svg element
-		var svg = d3.select(el).append("svg");
+		var svg = d3v4.select(el).append("svg");
 		svg
 			.attr("width", width)
 			.attr("height", height)
@@ -752,25 +752,25 @@ HTMLWidgets.widget({
 				".scatterD3 .axis text { fill: #000; }");
 
 		// Create tooltip content div
-		var tooltip = d3.select(".scatterD3-tooltip");
+		var tooltip = d3v4.select(".scatterD3-tooltip");
 		if (tooltip.empty()) {
-			tooltip = d3.select("body")
+			tooltip = d3v4.select("body")
 				.append("div")
 				.style("visibility", "hidden")
 				.attr("class", "scatterD3-tooltip");
 		}
 
 		// Create title and subtitle div
-		var caption = d3.select(el).select(".scatterD3-caption");
+		var caption = d3v4.select(el).select(".scatterD3-caption");
 		if (caption.empty()) {
-			caption = d3.select(el).append("div")
+			caption = d3v4.select(el).append("div")
 				.attr("class", "scatterD3-caption");
 		}
 
 		// Create menu div
-		var menu = d3.select(el).select(".scatterD3-menu");
+		var menu = d3v4.select(el).select(".scatterD3-menu");
 		if (menu.empty()) {
-			menu = d3.select(el).append("ul")
+			menu = d3v4.select(el).append("ul")
 				.attr("class", "scatterD3-menu");
 		}
 
@@ -783,7 +783,7 @@ HTMLWidgets.widget({
 				if (width < 0) width = 0;
 				if (height < 0) height = 0;
 				// resize root svg element
-				var svg = d3.select(el).select("svg");
+				var svg = d3v4.select(el).select("svg");
 				svg
 					.attr("width", width)
 					.attr("height", height);
@@ -795,7 +795,7 @@ HTMLWidgets.widget({
 				// Check if update or redraw
 				var first_draw = (Object.keys(scatter.settings()).length === 0);
 				var redraw = first_draw || !obj.settings.transitions;
-				var svg = d3.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
+				var svg = d3v4.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
 				scatter = scatter.svg(svg);
 
 				// convert data to d3 format
@@ -820,7 +820,7 @@ HTMLWidgets.widget({
 					scatter.add_controls_handlers();
 					scatter.add_global_listeners();
 					// draw chart
-					d3.select(el)
+					d3v4.select(el)
 						.call(scatter);
 				}
 				// Update only
