@@ -1,7 +1,8 @@
 scatterD3 0.8.2
 ------------------------------------------------------
 
-
+* Bugfix : zoom not working in RStudio (again)
+* Upgrade to d3 4.13.0 without patch for zoom-related problem
 
 
 scatterD3 0.8.1
