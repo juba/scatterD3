@@ -1,6 +1,7 @@
 scatterD3 0.8.2
 ------------------------------------------------------
 
+* Rename every d3 to d3v4 to avoid conflicts with other d3v3 htmlwidgets
 * Bugfix : zoom not working in RStudio (again)
 * Upgrade to d3 4.13.0 without patch for zoom-related problem
 
