@@ -11,7 +11,7 @@ dependencies:
     script: lasso.js
     stylesheet: lasso.css
   - name: scatterD3
-    version: 0.7
+    version: 0.8.2
     src: htmlwidgets/
     stylesheet: scatterD3.css
     script:
