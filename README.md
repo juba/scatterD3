@@ -1,10 +1,10 @@
 `scatterD3` is an HTML R widget for interactive scatter plots visualization.
 It is based on the [htmlwidgets](http://www.htmlwidgets.org/) R package and on
-the [d3.js](http://d3js.org/) javascript library.
+the [d3.js](https://d3js.org/) javascript library.
 
-![CRAN Downloads](http://cranlogs.r-pkg.org/badges/last-month/scatterD3)
+![CRAN Downloads](https://cranlogs.r-pkg.org/badges/last-month/scatterD3)
 [![Travis-CI Build Status](https://travis-ci.org/juba/scatterD3.svg?branch=master)](https://travis-ci.org/juba/scatterD3)
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/scatterD3)](https://cran.r-project.org/package=scatterD3)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/scatterD3)](https://cran.r-project.org/package=scatterD3)
 
 ## Features
 
@@ -16,7 +16,7 @@ Take a look at
 the
 [visual guide](https://rawgit.com/juba/scatterD3/master/vignettes/introduction.html) for
 a list of features and examples. You can also test it live with
-the [sample shiny app](http://data.nozav.org/app/scatterD3/).
+the [sample shiny app](https://data.nozav.org/app/scatterD3/).
 
 
 ## Installation
