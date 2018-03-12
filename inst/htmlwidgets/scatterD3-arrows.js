@@ -31,13 +31,13 @@ function draw_arrow(selection, scales) {
 function arrow_init (selection, settings) {
     // tooltips when hovering points
     if (settings.has_tooltips) {
-        var tooltip = d3.select(".scatterD3-tooltip");
+        var tooltip = d3v4.select(".scatterD3-tooltip");
         selection.on("mouseover", function(d, i){
             tooltip.style("visibility", "visible")
                 .html(tooltip_content(d, settings));
         });
         selection.on("mousemove", function(){
-            tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
+            tooltip.style("top", (d3v4.event.pageY+15)+"px").style("left",(d3v4.event.pageX+15)+"px");
         });
         selection.on("mouseout", function(){
             tooltip.style("visibility", "hidden");

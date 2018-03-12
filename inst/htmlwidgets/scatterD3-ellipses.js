@@ -9,7 +9,7 @@ function ellipse_init(selection) {
 function ellipse_formatting(selection, settings, scales) {
 
     // Ellipses path function
-    var ellipseFunc = d3.line()
+    var ellipseFunc = d3v4.line()
         .x(function(d) { return scales.x(d.x); })
         .y(function(d) { return scales.y(d.y); });
 
@@ -22,7 +22,7 @@ function ellipse_formatting(selection, settings, scales) {
 	    // Only one ellipse
 	    if (d.level == "_scatterD3_all") {
 		if (settings.col_continuous) {
-		    return(d3.interpolateViridis(0));
+		    return(d3v4.interpolateViridis(0));
 		} else {
 		    return(scales.color.range()[0]);
 		}

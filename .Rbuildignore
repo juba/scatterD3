@@ -6,3 +6,4 @@ rsconnect/
 vignettes/*.html
 ^\.travis\.yml$
 revdep/
+NOTES.md

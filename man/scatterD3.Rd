@@ -189,4 +189,3 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, data=NULL, lab = rownames(mtcars),
 \author{
 Julien Barnier <julien.barnier@ens-lyon.fr>
 }
-

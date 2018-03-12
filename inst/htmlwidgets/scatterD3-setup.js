@@ -1,7 +1,7 @@
 // Custom color scheme
 function custom_scheme10 () {
     // slice() to create a copy
-    var scheme = d3.schemeCategory10.slice();
+    var scheme = d3v4.schemeCategory10.slice();
     // Switch orange and red
     var	tmp = scheme[3];
     scheme[3] = scheme[1];
@@ -81,8 +81,8 @@ function setup_scales (dims, settings, data) {
     
     // x and y limits
     if (settings.xlim === null) {
-        min_x = d3.min(data, function(d) { return(d.x);} );
-        max_x = d3.max(data, function(d) { return(d.x);} );
+        min_x = d3v4.min(data, function(d) { return(d.x);} );
+        max_x = d3v4.max(data, function(d) { return(d.x);} );
         gap_x = (max_x - min_x) * 0.2;
 	if (min_x == max_x) {
 	    min_x = min_x * 0.8;
@@ -100,8 +100,8 @@ function setup_scales (dims, settings, data) {
         gap_x = 0;
     }
     if (settings.ylim === null) {
-        min_y = d3.min(data, function(d) { return(d.y);} );
-        max_y = d3.max(data, function(d) { return(d.y);} );
+        min_y = d3v4.min(data, function(d) { return(d.y);} );
+        max_y = d3v4.max(data, function(d) { return(d.y);} );
         gap_y = (max_y - min_y) * 0.2;
 	if (min_y == max_y) {
 	    min_y = min_y * 0.8;
@@ -155,74 +155,74 @@ function setup_scales (dims, settings, data) {
     
     // x, y scales
     if (!settings.x_categorical) {
-	scales.x = settings.x_log ? d3.scaleLog() : d3.scaleLinear();
+	scales.x = settings.x_log ? d3v4.scaleLog() : d3v4.scaleLinear();
         scales.x.range([0, dims.width])
 	    .domain([min_x, max_x]);
     } else {
-	scales.x = d3.scalePoint()
+	scales.x = d3v4.scalePoint()
 	    .range([0, dims.width])
 	    .padding(0.9)
-	    .domain(d3.map(data, function(d){ return d.x; }).keys().sort());
+	    .domain(d3v4.map(data, function(d){ return d.x; }).keys().sort());
     }
     if (!settings.y_categorical) {
-	scales.y = settings.y_log ? d3.scaleLog(): d3.scaleLinear();
+	scales.y = settings.y_log ? d3v4.scaleLog(): d3v4.scaleLinear();
         scales.y.range([dims.height, 0])
 	    .domain([min_y, max_y]);
     } else {
-	scales.y = d3.scalePoint()
+	scales.y = d3v4.scalePoint()
 	    .range([dims.height, 0])
 	    .padding(0.9)
-	    .domain(d3.map(data, function(d){ return d.y; }).keys().sort());
+	    .domain(d3v4.map(data, function(d){ return d.y; }).keys().sort());
     }
     // Keep track of original scales
     scales.x_orig = scales.x;
     scales.y_orig = scales.y;
     // x and y axis functions
-    scales.xAxis = d3.axisBottom(scales.x)
+    scales.xAxis = d3v4.axisBottom(scales.x)
         .tickSize(-dims.height);
     if (!settings.x_categorical) {
-	scales.xAxis.tickFormat(d3.format(""));
+	scales.xAxis.tickFormat(d3v4.format(""));
     }
-    scales.yAxis = d3.axisLeft(scales.y)
+    scales.yAxis = d3v4.axisLeft(scales.y)
         .tickSize(-dims.width);
     if (!settings.y_categorical) {
-	scales.yAxis.tickFormat(d3.format(""));
+	scales.yAxis.tickFormat(d3v4.format(""));
     }
     // Continuous color scale
     if (settings.col_continuous) {
-	scales.color = d3.scaleSequential(d3.interpolateViridis)
-	    .domain([d3.min(data, function(d) { return(d.col_var);} ),
-		     d3.max(data, function(d) { return(d.col_var);} )]);
+	scales.color = d3v4.scaleSequential(d3v4.interpolateViridis)
+	    .domain([d3v4.min(data, function(d) { return(d.col_var);} ),
+		     d3v4.max(data, function(d) { return(d.col_var);} )]);
     }
     // Ordinal color scale
     else {
         if (settings.colors === null) {
 	    // Number of different levels. See https://github.com/mbostock/d3/issues/472
-	    var n = d3.map(data, function(d) { return d.col_var; }).size();
-	    scales.color = n <= 9 ? d3.scaleOrdinal(custom_scheme10()) : d3.scaleOrdinal(d3.schemeCategory20);
+	    var n = d3v4.map(data, function(d) { return d.col_var; }).size();
+	    scales.color = n <= 9 ? d3v4.scaleOrdinal(custom_scheme10()) : d3v4.scaleOrdinal(d3v4.schemeCategory20);
         } else if (Array.isArray(settings.colors)) {
-	    scales.color = d3.scaleOrdinal().range(settings.colors);
+	    scales.color = d3v4.scaleOrdinal().range(settings.colors);
         } else if (typeof(settings.colors) === "string"){
 	    // Single string given
-	    scales.color = d3.scaleOrdinal().range(Array(settings.colors));
+	    scales.color = d3v4.scaleOrdinal().range(Array(settings.colors));
         } else if (typeof(settings.colors) === "object"){
-	    scales.color = d3.scaleOrdinal()
-                .range(d3.values(settings.colors))
-                .domain(d3.keys(settings.colors));
+	    scales.color = d3v4.scaleOrdinal()
+                .range(d3v4.values(settings.colors))
+                .domain(d3v4.keys(settings.colors));
         }
     }
     // Symbol scale
-    scales.symbol = d3.scaleOrdinal().range(d3.range(d3.symbols.length));
+    scales.symbol = d3v4.scaleOrdinal().range(d3v4.range(d3v4.symbols.length));
     // Size scale
-    scales.size = d3.scaleLinear()
+    scales.size = d3v4.scaleLinear()
         .range(settings.size_range)
-        .domain([d3.min(data, function(d) { return(d.size_var);} ),
-                 d3.max(data, function(d) { return(d.size_var);} )]);
+        .domain([d3v4.min(data, function(d) { return(d.size_var);} ),
+                 d3v4.max(data, function(d) { return(d.size_var);} )]);
     // Opacity scale
-    scales.opacity = d3.scaleLinear()
+    scales.opacity = d3v4.scaleLinear()
         .range([0.1, 1])
-        .domain([d3.min(data, function(d) { return(d.opacity_var);} ),
-                 d3.max(data, function(d) { return(d.opacity_var);} )]);
+        .domain([d3v4.min(data, function(d) { return(d.opacity_var);} ),
+                 d3v4.max(data, function(d) { return(d.opacity_var);} )]);
 
     return scales;
     

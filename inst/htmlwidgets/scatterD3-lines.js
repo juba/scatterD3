@@ -1,5 +1,5 @@
 // Zero horizontal and vertical lines
-var draw_line = d3.line()
+var draw_line = d3v4.line()
     .x(function(d) {return d.x;})
     .y(function(d) {return d.y;});
 

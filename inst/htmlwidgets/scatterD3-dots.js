@@ -8,12 +8,12 @@ function dot_size(data, settings, scales) {
 // Initial dot attributes
 function dot_init (selection, settings, scales) {
     // tooltips when hovering points
-    var tooltip = d3.select(".scatterD3-tooltip");
+    var tooltip = d3v4.select(".scatterD3-tooltip");
     selection.on("mouseover", function(d, i){
-        d3.select(this)
+        d3v4.select(this)
             .transition().duration(150)
-            .attr("d", d3.symbol()
-		  .type(function(d) { return d3.symbols[scales.symbol(d.symbol_var)]; })
+            .attr("d", d3v4.symbol()
+		  .type(function(d) { return d3v4.symbols[scales.symbol(d.symbol_var)]; })
 		  .size(function(d) { return (dot_size(d, settings, scales) * settings.hover_size); })
 		 )
             .style("opacity", function(d) {
@@ -24,7 +24,7 @@ function dot_init (selection, settings, scales) {
 		}
             });
 	if (settings.has_url_var) {
-            d3.select(this)
+            d3v4.select(this)
 		.style("cursor", function(d) {
 		    return (d.url_var != "" ? "pointer" : "default");
 		});
@@ -36,14 +36,14 @@ function dot_init (selection, settings, scales) {
     });
     selection.on("mousemove", function(){
 	if (settings.has_tooltips) {
-	    tooltip.style("top", (d3.event.pageY+15)+"px").style("left",(d3.event.pageX+15)+"px");
+	    tooltip.style("top", (d3v4.event.pageY+15)+"px").style("left",(d3v4.event.pageX+15)+"px");
 	}
     });
     selection.on("mouseout", function(){
-        d3.select(this)
+        d3v4.select(this)
             .transition().duration(150)
-            .attr("d", d3.symbol()
-		  .type(function(d) { return d3.symbols[scales.symbol(d.symbol_var)]; })
+            .attr("d", d3v4.symbol()
+		  .type(function(d) { return d3v4.symbols[scales.symbol(d.symbol_var)]; })
 		  .size(function(d) { return dot_size(d, settings, scales);})
 		 )
             .style("opacity", function(d) {
@@ -74,8 +74,8 @@ function dot_formatting(selection, settings, scales) {
 	    return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
 	})
     // symbol and size
-        .attr("d", d3.symbol()
-	      .type(function(d) {return d3.symbols[scales.symbol(d.symbol_var)];})
+        .attr("d", d3v4.symbol()
+	      .type(function(d) {return d3v4.symbols[scales.symbol(d.symbol_var)];})
 	      .size(function(d) { return dot_size(d, settings, scales); })
 	     )
         .attr("class", function(d,i) {
