@@ -20,8 +20,8 @@ function add_color_legend(svg, dims, settings, scales, duration) {
 	    .domain(legend_color_scale.domain().sort())
 	    .range(legend_color_scale.domain().map(function(d) {return scales.color(d);}));
     }
-    
-    var color_legend = d3v4.legendColor()
+
+    var color_legend = d3v5.legendColor()
         .shapePadding(3)
         .shape("rect")
         .scale(legend_color_scale);
@@ -72,7 +72,7 @@ function add_color_legend(svg, dims, settings, scales, duration) {
 	    .transition().duration(duration)
 	    .style("opacity", 1);
     }
-    
+
 }
 
 // Create symbol legend
@@ -86,9 +86,9 @@ function add_symbol_legend(svg, dims, settings, scales, duration) {
     var legend_symbol_scale = scales.symbol.copy();
     legend_symbol_scale
 	.domain(legend_symbol_scale.domain().sort())
-        .range(legend_symbol_scale.domain().map(function(d) {return d3v4.symbol().type(d3v4.symbols[scales.symbol(d)])();}));
-    
-    var symbol_legend = d3v4.legendSymbol()
+        .range(legend_symbol_scale.domain().map(function(d) {return d3v5.symbol().type(d3v5.symbols[scales.symbol(d)])();}));
+
+    var symbol_legend = d3v5.legendSymbol()
         .shapePadding(5)
         .scale(legend_symbol_scale)
         .on("cellover", function(d) {
@@ -146,7 +146,7 @@ function add_size_legend(svg, dims, settings, scales, duration) {
     // FIXME : find exact formula
     legend_size_scale.range(scales.size.range().map(function(d) {return Math.sqrt(d)/1.8;}));
 
-    var size_legend = d3v4.legendSize()
+    var size_legend = d3v5.legendSize()
         .shapePadding(3)
         .shape('circle')
         .scale(legend_size_scale);
@@ -170,7 +170,7 @@ function add_size_legend(svg, dims, settings, scales, duration) {
 	    .style("opacity", 1);
     }
 
-    
+
 }
 
 
