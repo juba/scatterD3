@@ -7,13 +7,14 @@
 D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 }
 \usage{
-scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE, y_log = FALSE,
-  point_size = 64, labels_size = 10, labels_positions = NULL,
-  point_opacity = 1, hover_size = 1, hover_opacity = NULL,
-  fixed = FALSE, col_var = NULL, col_continuous = NULL, colors = NULL,
-  ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
-  size_var = NULL, size_range = c(10, 300), col_lab = NULL,
-  symbol_lab = NULL, size_lab = NULL, key_var = NULL, type_var = NULL,
+scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE,
+  y_log = FALSE, point_size = 64, labels_size = 10,
+  labels_positions = NULL, point_opacity = 1, hover_size = 1,
+  hover_opacity = NULL, fixed = FALSE, col_var = NULL,
+  col_continuous = NULL, colors = NULL, ellipses = FALSE,
+  ellipses_level = 0.95, symbol_var = NULL, size_var = NULL,
+  size_range = c(10, 300), col_lab = NULL, symbol_lab = NULL,
+  size_lab = NULL, key_var = NULL, type_var = NULL,
   opacity_var = NULL, unit_circle = FALSE, url_var = NULL,
   tooltips = TRUE, tooltip_text = NULL, xlab = NULL, ylab = NULL,
   html_id = NULL, width = NULL, height = NULL, legend_width = 150,
@@ -22,9 +23,10 @@ scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE, y_log = FALSE,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
-  click_callback = NULL, zoom_callback = NULL, lines = data.frame(slope =
-  c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5, 5)),
-  axes_font_size = "100\%", legend_font_size = "100\%", caption = NULL)
+  click_callback = NULL, zoom_callback = NULL,
+  lines = data.frame(slope = c(0, Inf), intercept = c(0, 0),
+  stroke_dasharray = c(5, 5)), axes_font_size = "100\%",
+  legend_font_size = "100\%", caption = NULL)
 }
 \arguments{
 \item{x}{numerical vector of x values, or variable name if data is not NULL}
