@@ -1,0 +1,174 @@
+/* TOOLTIPS */
+
+.scatterD3-tooltip {
+    position: absolute;
+    color: #222;
+    background: #fff;
+    padding: .5em;
+    text-shadow: #f5f5f5 0 1px 0;
+    border-radius: 2px;
+    box-shadow: 0px 0px 7px 1px #a6a6a6;
+    opacity: 0.95;
+    font-family: Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;
+    font-size: 10px;
+    z-index: 10;
+}
+
+/* GEAR MENU */
+
+.scatterD3-menu {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  top: 37px;
+  right: 15px;
+  z-index: 10;
+  background: #F5F7F9;
+  box-shadow: 0px 0px 2px 1px #d6d6d6;
+  font-family: Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;
+  font-size: 11px;
+  text-align: right;
+  list-style: none;
+  padding: 0.2em;
+  margin: 0;
+}
+
+.scatterD3-menu li {
+  white-space: nowrap;
+  padding: 0.6em 0.8em;
+  margin: 0;
+}
+
+.scatterD3-menu li a {
+  cursor: pointer;
+  color: #727476;
+  /* font-weight: 600; */
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.scatterD3-menu li a:hover {
+  color: #25282A;
+}
+
+/* GEAR ICON */
+
+.scatterD3 .gear-menu {
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+}
+
+.scatterD3 .gear-menu path {
+    opacity: 0.2;
+    transition: opacity .3s;
+}
+
+.scatterD3 .gear-menu:hover path,
+.scatterD3 .gear-menu.selected path {
+    opacity: 0.8;
+    transition: opacity .3s;
+}
+
+/* CAPTION */
+
+.scatterD3-caption {
+    background: #F5F7F9;
+    color: #727476;
+    box-shadow: 0px 0px 2px 1px #d6d6d6;
+    font-family: Open Sans, Droid Sans, Helvetica, Verdana, sans-serif;
+    font-size: 1px;
+    text-align: left;
+    padding: 10px 0;
+    margin: 0;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    transition: all .3s;
+    opacity: 0;
+}
+
+.scatterD3-caption.visible {
+    opacity: 0.97;
+    cursor: pointer;
+}
+
+.scatterD3-caption h1,
+.scatterD3-caption h2,
+.scatterD3-caption p
+{
+    margin: 5px 15px;
+    line-height: 1.35;
+    padding: 0;
+    border: none;
+}
+
+.scatterD3-caption h1 {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.scatterD3-caption h2 {
+    font-size: 13px;
+    font-weight: normal;
+}
+
+.scatterD3-caption .caption {
+    font-size: 11px;
+    font-weight: normal;
+}
+
+/* CAPTION ICON */
+
+.scatterD3 .caption-icon {
+    cursor: pointer;
+    height: 25px;
+    width: 25px;
+}
+
+.scatterD3 .caption-icon path {
+    opacity: 0.2;
+    transition: opacity .3s;
+}
+
+.scatterD3 .caption-icon:hover path,
+.scatterD3 .caption-icon.selected path {
+    opacity: 0.8;
+    transition: opacity .3s;
+}
+
+
+
+/* OTHER STYLES */
+
+.hidden {
+    display: none;
+}
+
+.scatterD3 .dot {
+    cursor: default;
+}
+
+.scatterD3 .point-label {
+  cursor: pointer;
+}
+
+.scatterD3, .scatterD3:focus {
+  outline: 0px solid transparent
+}
+
+.scatterD3 .root {
+    cursor: move;
+}
+
+/* Specific styles for shiny apps */
+
+.shiny-bound-output .label {
+  font-size: 100%;
+  font-weight: normal;
+  text-align: left;
+}
+
+
+
