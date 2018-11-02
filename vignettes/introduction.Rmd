@@ -117,6 +117,14 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
+If your original R variable is a factor, its level orders should be preserved in the legend, both for symbols and colors.
+
+```{r map_factor levels}
+mtcars$cyl_o <- factor(mtcars$cyl, levels=c("8", "6", "4"))
+scatterD3(data = mtcars, x = wt, y = mpg, symbol_var = cyl_o)
+```
+
+
 If `col_var` is numeric, not a factor, and has more than 6 unique values, it
 is considered as continuous, and drawn accordingly using the Veridis d3
 interpolator.
@@ -133,6 +141,8 @@ Note that for now no legend for opacity is added, though.
 ```{r opacity_var}
 scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = drat)
 ```
+
+
 
 ## Adding lines
 
