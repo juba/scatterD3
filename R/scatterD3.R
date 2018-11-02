@@ -31,6 +31,11 @@
 #' @param ellipses_level confidence level for ellipses (0.95 by default)
 #' @param symbol_var optional vector for points symbol mapping, or variable
 #'     name if data is not NULL
+#' @param symbols vector of custom points symbols. Symbols must be defined as 
+#'     character strings with the following possible values : "circle", "cross", 
+#'     "diamond", "square", "star", "triangle", and "wye". If \code{symbols} is a 
+#'     named list or a named vector, then the symbols will be associated with their 
+#'     name within \code{symbol_var}.
 #' @param size_var optional vector for points size mapping, or variable name
 #'     if data is not NULL
 #' @param size_range numeric vector of length 2, giving the minimum and
@@ -128,6 +133,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       ellipses = FALSE,
                       ellipses_level = 0.95,
                       symbol_var = NULL,
+                      symbols = NULL,
                       size_var = NULL,
                       size_range = c(10,300),
                       col_lab = NULL, symbol_lab = NULL,
@@ -217,6 +223,11 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     if (!is.null(colors) && !is.null(names(colors))) {
         colors <- as.list(colors)
         if (!setequal(names(colors), unique(col_var))) warning("Set of colors and col_var values do not match")
+    }
+    ## Idem for symbols
+    if (!is.null(symbols) && !is.null(names(symbols))) {
+        symbols <- as.list(symbols)
+        if (!setequal(names(symbols), unique(symbol_var))) warning("Set of symbols and symbol_var values do not match")
     }
 
     ## Determine from the data if we have a continuous or ordinal color scale
@@ -339,6 +350,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         ellipses_data = ellipses_data,
         symbol_lab = symbol_lab,
         symbol_levels = symbol_levels,
+        symbols = symbols,
         size_range = size_range,
         size_lab = size_lab,
         opacity_lab = opacity_lab,

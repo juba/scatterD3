@@ -96,7 +96,7 @@ function add_symbol_legend(svg, dims, settings, scales, duration) {
     }
     legend_symbol_scale
         .domain(symbol_domain)
-        .range(symbol_domain.map(function (d) { return d3v5.symbol().type(d3v5.symbols[scales.symbol(d)])(); }));
+        .range(symbol_domain.map(function (d) { return d3v5.symbol().type(scales.symbol(d))();}));
 
     var symbol_legend = d3v5.legendSymbol()
         .shapePadding(5)

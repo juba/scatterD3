@@ -117,6 +117,14 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
+In the same way, you can specify custom symbols-value mapping by passing a vector of symbol names to the `symbols` argument. If the vector is named, then the symbols will be associated with their names within `symbol_var`. Available symbol names are : `"circle"`, `"cross"`, `"diamond"`, `"square"`, `"star"`, `"triangle"`, and `"wye"`.
+
+```{r map_custom_symbols}
+scatterD3(data = mtcars, x = wt, y = mpg, symbol_var = cyl,
+          symbols = c("4" = "wye", "8" = "star", "6" = "triangle"))
+```
+
+
 If your original R variable is a factor, its level orders should be preserved in the legend, both for symbols and colors.
 
 ```{r map_factor levels}
