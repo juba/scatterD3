@@ -7,3 +7,5 @@ vignettes/*.html
 ^\.travis\.yml$
 revdep/
 NOTES.md
+.vscode/
+docs/
