@@ -168,12 +168,12 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     if (is.null(symbol_lab)) symbol_lab <- deparse(substitute(symbol_var))
     if (is.null(size_lab)) size_lab <- deparse(substitute(size_var))
     opacity_lab <- deparse(substitute(opacity_var))
-    if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS,8,replace = TRUE),collapse = ""))
+    if (is.null(html_id)) html_id <- paste0("scatterD3-", paste0(sample(LETTERS, 8, replace = TRUE), collapse = ""))
 
     ## NSE
     if (!is.null(data)) {
-        null_or_name <- function(x) {
-            if (x != "NULL") return(data[, x])
+        null_or_name <- function(varname) {
+            if (varname != "NULL") return(data[, varname])
             else return(NULL)
         }
         ## Get variable names
@@ -234,8 +234,12 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     
     ## data element
     data <- data.frame(x = x, y = y)
+    col_levels <- NULL
+    symbol_levels <- NULL
     if (!is.null(lab)) data <- cbind(data, lab = lab)
     if (!is.null(col_var) && !col_continuous) {
+        # Keep order of levels if factor
+        if (is.factor(col_var)) col_levels <- levels(col_var)
         col_var <- as.character(col_var)
         col_var[is.na(col_var)] <- "NA"
         data <- cbind(data, col_var = col_var)
@@ -246,6 +250,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         data <- cbind(data, col_var = col_var)
     }
     if (!is.null(symbol_var)) {
+        # Keep order of levels if factor
+        if (is.factor(symbol_var)) symbol_levels <- levels(symbol_var)
         symbol_var <- as.character(symbol_var)
         symbol_var[is.na(symbol_var)] <- "NA"
         data <- cbind(data, symbol_var = symbol_var)
@@ -327,10 +333,12 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         has_labels = !is.null(lab),
         col_lab = col_lab,
         col_continuous = col_continuous,
+        col_levels = col_levels,
         colors = colors,
         ellipses = ellipses,
         ellipses_data = ellipses_data,
         symbol_lab = symbol_lab,
+        symbol_levels = symbol_levels,
         size_range = size_range,
         size_lab = size_lab,
         opacity_lab = opacity_lab,
