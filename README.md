@@ -14,7 +14,7 @@ Here is a small preview of what you will get :
 
 Take a look at
 the
-[visual guide](https://rawgit.com/juba/scatterD3/master/vignettes/introduction.html) for
+[visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for
 a list of features and examples. You can also test it live with
 the [sample shiny app](https://data.nozav.org/app/scatterD3/).
 
@@ -42,7 +42,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
 ```
 
 
-See [the visual guide](https://rawgit.com/juba/scatterD3/master/vignettes%2Fintroduction.html) for a step-by-step guide and details about the different function arguments.
+See [the visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for a step-by-step guide and details about the different function arguments.
 
 ## Shiny integration
 
@@ -57,7 +57,7 @@ for a more complete JavaScript interactivity and integration.
 The [sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows
 you to see the different features described here. You
 can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app)
-and the [visual guide](https://rawgit.com/juba/scatterD3/master/vignettes%2Fintroduction.html) for
+and the [visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for
 a better understanding of the different arguments.
 
 
