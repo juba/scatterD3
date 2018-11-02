@@ -13,7 +13,7 @@ function dot_init (selection, settings, scales) {
         d3v5.select(this)
             .transition().duration(150)
             .attr("d", d3v5.symbol()
-		  .type(function(d) { return d3v5.symbols[scales.symbol(d.symbol_var)]; })
+		  .type(function(d) { return scales.symbol(d.symbol_var); })
 		  .size(function(d) { return (dot_size(d, settings, scales) * settings.hover_size); })
 		 )
             .style("opacity", function(d) {
@@ -43,7 +43,7 @@ function dot_init (selection, settings, scales) {
         d3v5.select(this)
             .transition().duration(150)
             .attr("d", d3v5.symbol()
-		  .type(function(d) { return d3v5.symbols[scales.symbol(d.symbol_var)]; })
+		  .type(function(d) { return scales.symbol(d.symbol_var); })
 		  .size(function(d) { return dot_size(d, settings, scales);})
 		 )
             .style("opacity", function(d) {
@@ -75,7 +75,7 @@ function dot_formatting(selection, settings, scales) {
 	})
     // symbol and size
         .attr("d", d3v5.symbol()
-	      .type(function(d) {return d3v5.symbols[scales.symbol(d.symbol_var)];})
+	      .type(function(d) {return scales.symbol(d.symbol_var);})
 	      .size(function(d) { return dot_size(d, settings, scales); })
 	     )
         .attr("class", function(d,i) {

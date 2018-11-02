@@ -197,22 +197,42 @@ function setup_scales (dims, settings, data) {
     // Ordinal color scale
     else {
         if (settings.colors === null) {
-	    // Number of different levels. See https://github.com/mbostock/d3/issues/472
-	    var n = d3v5.map(data, function(d) { return d.col_var; }).size();
-	    scales.color = n <= 10 ? d3v5.scaleOrdinal(custom_scheme10()) : d3v5.scaleOrdinal(d3v5.schemePaired);
+            // Number of different levels. See https://github.com/mbostock/d3/issues/472
+            var n = d3v5.map(data, function (d) { return d.col_var; }).size();
+            scales.color = n <= 10 ? d3v5.scaleOrdinal(custom_scheme10()) : d3v5.scaleOrdinal(d3v5.schemePaired);
         } else if (Array.isArray(settings.colors)) {
-	    scales.color = d3v5.scaleOrdinal().range(settings.colors);
-        } else if (typeof(settings.colors) === "string"){
-	    // Single string given
-	    scales.color = d3v5.scaleOrdinal().range(Array(settings.colors));
-        } else if (typeof(settings.colors) === "object"){
-	    scales.color = d3v5.scaleOrdinal()
+            scales.color = d3v5.scaleOrdinal().range(settings.colors);
+        } else if (typeof (settings.colors) === "string") {
+            // Single string given
+            scales.color = d3v5.scaleOrdinal().range(Array(settings.colors));
+        } else if (typeof (settings.colors) === "object") {
+            scales.color = d3v5.scaleOrdinal()
                 .range(d3v5.values(settings.colors))
                 .domain(d3v5.keys(settings.colors));
         }
     }
     // Symbol scale
-    scales.symbol = d3v5.scaleOrdinal().range(d3v5.range(d3v5.symbols.length));
+    var symbol_table = {
+        "circle": d3v5.symbolCircle,
+        "cross": d3v5.symbolCross,
+        "diamond": d3v5.symbolDiamond,
+        "square": d3v5.symbolSquare,
+        "star": d3v5.symbolStar,
+        "triangle": d3v5.symbolTriangle,
+        "wye": d3v5.symbolWye,
+    }
+    if (settings.symbols === null) {
+        scales.symbol = d3v5.scaleOrdinal().range(d3v5.symbols);
+    } else if (Array.isArray(settings.symbols)) {
+        scales.symbol = d3v5.scaleOrdinal().range(settings.symbols.map(function(d) {return symbol_table[d];}));
+    } else if (typeof (settings.symbols) === "string") {
+        // Single string given
+        scales.symbol = d3v5.scaleOrdinal().range(Array(symbol_table[settings.symbols]));
+    } else if (typeof (settings.symbols) === "object") {
+        scales.symbol = d3v5.scaleOrdinal()
+            .range(d3v5.values(settings.symbols).map(function(d) {return symbol_table[d];}))
+            .domain(d3v5.keys(settings.symbols))
+    }
     // Size scale
     scales.size = d3v5.scaleLinear()
         .range(settings.size_range)
