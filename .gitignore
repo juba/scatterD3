@@ -13,3 +13,4 @@ vignettes/rsconnect/*
 example.R
 *~
 revdep/
+.vscode/
