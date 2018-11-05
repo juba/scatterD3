@@ -266,6 +266,13 @@ tooltips <- paste("This is an incredible <strong>", rownames(mtcars),"</strong><
 scatterD3(data = mtcars, x = wt, y = mpg, tooltip_text = tooltips)
 ```
 
+You can customize the tooltips placement with the `tooltip_position` argument. It can take as value a combination of `"top"` or `"bottom"` and `"left"` or `"right"` (the default is `"bottom right"`) :
+
+
+```{r tooltips_position}
+scatterD3(data = mtcars, x = wt, y = mpg, tooltip_position = "top left")
+```
+
 You can also disable tooltips entirely with `tooltips = FALSE`.
 
 ## Open URLs when clicking points

@@ -31,12 +31,23 @@ function dot_init (selection, settings, scales) {
 	}
 	if (settings.has_tooltips) {
 	    tooltip.style("visibility", "visible")
-		.html(tooltip_content(d, settings));
+		    .html(tooltip_content(d, settings));
 	}
     });
     selection.on("mousemove", function(){
 	if (settings.has_tooltips) {
-	    tooltip.style("top", (d3v5.event.pageY+15)+"px").style("left",(d3v5.event.pageX+15)+"px");
+	    if (settings.tooltip_position_y == "bottom") {
+	       tooltip.style("top", (d3v5.event.pageY+15)+"px")
+	    } else if (settings.tooltip_position_y == "top") {
+	       var tooltip_height = tooltip.node().getBoundingClientRect().height;
+	       tooltip.style("top", (d3v5.event.pageY - tooltip_height - 10)+"px")
+	    }
+	    if (settings.tooltip_position_x == "right") {
+	       tooltip.style("left", (d3v5.event.pageX+15)+"px");
+	    } else if (settings.tooltip_position_x == "left") {
+	       var tooltip_width = tooltip.node().getBoundingClientRect().width;
+	       tooltip.style("left", (d3v5.event.pageX - tooltip_width - 10)+"px");
+	    }
 	}
     });
     selection.on("mouseout", function(){

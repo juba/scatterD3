@@ -31,10 +31,10 @@
 #' @param ellipses_level confidence level for ellipses (0.95 by default)
 #' @param symbol_var optional vector for points symbol mapping, or variable
 #'     name if data is not NULL
-#' @param symbols vector of custom points symbols. Symbols must be defined as 
-#'     character strings with the following possible values : "circle", "cross", 
-#'     "diamond", "square", "star", "triangle", and "wye". If \code{symbols} is a 
-#'     named list or a named vector, then the symbols will be associated with their 
+#' @param symbols vector of custom points symbols. Symbols must be defined as
+#'     character strings with the following possible values : "circle", "cross",
+#'     "diamond", "square", "star", "triangle", and "wye". If \code{symbols} is a
+#'     named list or a named vector, then the symbols will be associated with their
 #'     name within \code{symbol_var}.
 #' @param size_var optional vector for points size mapping, or variable name
 #'     if data is not NULL
@@ -54,6 +54,9 @@
 #' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
 #' @param tooltip_text optional character vector of tooltips text
+#' @param tooltip_position the tooltip position relative to its point. Must a
+#'     combination of "top" or "bottom" with "left" or "right" (default is
+#'     "bottom right").
 #' @param xlab x axis label
 #' @param ylab y axis label.
 #' @param axes_font_size font size for axes text (any CSS compatible value)
@@ -145,6 +148,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       url_var = NULL,
                       tooltips = TRUE,
                       tooltip_text = NULL,
+                      tooltip_position = "bottom right",
                       xlab = NULL, ylab = NULL,
                       html_id = NULL,
                       width = NULL, height = NULL,
@@ -216,7 +220,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
             stop("Logarithmic scale and negative values in y")
         lines <- lines[!(lines$slope == Inf & lines$intercept == 0),]
     }
-    
+
     ## colors can be named
     ##  we'll need to convert named vector to a named list
     ##  for the JSON conversion
@@ -242,7 +246,17 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     if (is.character(caption)) {
         caption <- list(text = caption)
     }
-    
+
+    ## Tooltip position
+    tooltip_position_x <- gsub("^.* ([a-z]+) *$", "\\1", tooltip_position)
+    tooltip_position_y <- gsub("^ *([a-z]+) .*$", "\\1", tooltip_position)
+    if (!(tooltip_position_x %in% c("left", "right")) ||
+        !(tooltip_position_y %in% c("top", "bottom"))) {
+        warning("tooltip_position must be a combination of 'top' or 'bottom' and 'left' or 'right'.")
+        tooltip_position_x <- "right"
+        tooltip_position_y <- "bottom"
+    }
+
     ## data element
     data <- data.frame(x = x, y = y)
     col_levels <- NULL
@@ -363,6 +377,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
         has_tooltips = tooltips,
         tooltip_text = tooltip_text,
+        tooltip_position_x = tooltip_position_x,
+        tooltip_position_y = tooltip_position_y,
         has_custom_tooltips = !is.null(tooltip_text),
         click_callback = htmlwidgets::JS(click_callback),
         zoom_callback = htmlwidgets::JS(zoom_callback),

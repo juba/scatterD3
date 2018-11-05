@@ -6,6 +6,7 @@ scatterD3 0.8.3
 * Add documentation website with pkgdown
 * Keep the order of levels in legend if col_var or symbol_var is a factor (thanks @romanhaa)
 * Add `symbols` argument and custom symbol to value mapping (thanks @GiuseppeDiGuglielmo and @mmauri)
+* New `tooltip_position` argument to define tooltip placement (thanks @Tixierae)
 
 
 scatterD3 0.8.2

@@ -17,9 +17,10 @@ scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE,
   symbol_lab = NULL, size_lab = NULL, key_var = NULL,
   type_var = NULL, opacity_var = NULL, unit_circle = FALSE,
   url_var = NULL, tooltips = TRUE, tooltip_text = NULL,
-  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
-  height = NULL, legend_width = 150, left_margin = 30, xlim = NULL,
-  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
+  tooltip_position = "bottom right", xlab = NULL, ylab = NULL,
+  html_id = NULL, width = NULL, height = NULL, legend_width = 150,
+  left_margin = 30, xlim = NULL, ylim = NULL,
+  dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
@@ -79,10 +80,10 @@ mapping groups}
 \item{symbol_var}{optional vector for points symbol mapping, or variable
 name if data is not NULL}
 
-\item{symbols}{vector of custom points symbols. Symbols must be defined as 
-character strings with the following possible values : "circle", "cross", 
-"diamond", "square", "star", "triangle", and "wye". If \code{symbols} is a 
-named list or a named vector, then the symbols will be associated with their 
+\item{symbols}{vector of custom points symbols. Symbols must be defined as
+character strings with the following possible values : "circle", "cross",
+"diamond", "square", "star", "triangle", and "wye". If \code{symbols} is a
+named list or a named vector, then the symbols will be associated with their
 name within \code{symbol_var}.}
 
 \item{size_var}{optional vector for points size mapping, or variable name
@@ -114,6 +115,10 @@ where displayed rows are filtered interactively.}
 \item{tooltips}{logical value to display tooltips when hovering points}
 
 \item{tooltip_text}{optional character vector of tooltips text}
+
+\item{tooltip_position}{the tooltip position relative to its point. Must a
+combination of "top" or "bottom" with "left" or "right" (default is
+"bottom right").}
 
 \item{xlab}{x axis label}
 
