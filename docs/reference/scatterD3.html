@@ -136,9 +136,10 @@ size, point opacity or export the figure as an SVG file via HTML form controls.<
   <span class='kw'>symbol_lab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>size_lab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>key_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>type_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>opacity_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>unit_circle</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>url_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>tooltips</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>tooltip_text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>html_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>height</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>legend_width</span> <span class='kw'>=</span> <span class='fl'>150</span>, <span class='kw'>left_margin</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>dom_id_reset_zoom</span> <span class='kw'>=</span> <span class='st'>"scatterD3-reset-zoom"</span>,
+  <span class='kw'>tooltip_position</span> <span class='kw'>=</span> <span class='st'>"bottom right"</span>, <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>html_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>height</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>legend_width</span> <span class='kw'>=</span> <span class='fl'>150</span>,
+  <span class='kw'>left_margin</span> <span class='kw'>=</span> <span class='fl'>30</span>, <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
+  <span class='kw'>dom_id_reset_zoom</span> <span class='kw'>=</span> <span class='st'>"scatterD3-reset-zoom"</span>,
   <span class='kw'>dom_id_svg_export</span> <span class='kw'>=</span> <span class='st'>"scatterD3-svg-export"</span>,
   <span class='kw'>dom_id_lasso_toggle</span> <span class='kw'>=</span> <span class='st'>"scatterD3-lasso-toggle"</span>, <span class='kw'>transitions</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>menu</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>lasso</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>lasso_callback</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -240,10 +241,10 @@ name if data is not NULL</p></td>
     </tr>
     <tr>
       <th>symbols</th>
-      <td><p>vector of custom points symbols. Symbols must be defined as 
-character strings with the following possible values : "circle", "cross", 
-"diamond", "square", "star", "triangle", and "wye". If <code>symbols</code> is a 
-named list or a named vector, then the symbols will be associated with their 
+      <td><p>vector of custom points symbols. Symbols must be defined as
+character strings with the following possible values : "circle", "cross",
+"diamond", "square", "star", "triangle", and "wye". If <code>symbols</code> is a
+named list or a named vector, then the symbols will be associated with their
 name within <code>symbol_var</code>.</p></td>
     </tr>
     <tr>
@@ -299,6 +300,12 @@ where displayed rows are filtered interactively.</p></td>
     <tr>
       <th>tooltip_text</th>
       <td><p>optional character vector of tooltips text</p></td>
+    </tr>
+    <tr>
+      <th>tooltip_position</th>
+      <td><p>the tooltip position relative to its point. Must a
+combination of "top" or "bottom" with "left" or "right" (default is
+"bottom right").</p></td>
     </tr>
     <tr>
       <th>xlab</th>
