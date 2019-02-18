@@ -141,7 +141,17 @@ interpolator.
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp)
 ```
 
-In this case, any `colors` argument is ignored. You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
+You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
+
+When `col_var` is considered as continuous, you can specify a custom color palette
+by giving the `colors` argument the name of a [d3-scale-chromatic interpolating 
+function](https://github.com/d3/d3-scale-chromatic#sequential-single-hue). The default
+is `"interpolateViridis"`. For example :
+
+```{r custom_continuous_color}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp, colors = "interpolatePuRd")
+```
+
 
 You can also use the `opacity_var` argument to map point opacity to a variable.
 Note that for now no legend for opacity is added, though.
@@ -431,7 +441,7 @@ ggplot() +
 
 ## Other options
 
-Finally, and for more specific use cases, you can represent some points as an arrow starting from the origin by using the `type_var` argument, and you can add a unit circle with `unit_circle = TRUE`.
+For more specific use cases, you can represent some points as an arrow starting from the origin by using the `type_var` argument, and you can add a unit circle with `unit_circle = TRUE`.
 
 ```{r cust_arrows}
 scatterD3(x = c(1, 0.9, 0.7, 0.2, -0.4, -0.5), xlab = "x",
@@ -441,6 +451,8 @@ scatterD3(x = c(1, 0.9, 0.7, 0.2, -0.4, -0.5), xlab = "x",
           xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2))
 ```
 
+
+You can also disable mouse wheel zooming (for example when it is interfering with page scrolling) by using the `disable_wheel = TRUE` argument.
 
 ## Shiny integration
 

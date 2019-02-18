@@ -25,7 +25,9 @@
 #' @param colors vector of custom points colors. Colors must be defined as an
 #'     hexadecimal string (eg "#FF0000"). If \code{colors} is a named list or
 #'     a named vector, then the colors will be associated with their name
-#'     within \code{col_var}. Ignored for a continuous color scale.
+#'     within \code{col_var}. For a continuous color scale, can be a string giving
+#'     the interpolate function name from d3-scale-chromatic (for example,
+#'     "interpolatePurples")
 #' @param ellipses draw confidence ellipses for points or the different color
 #'     mapping groups
 #' @param ellipses_level confidence level for ellipses (0.95 by default)
