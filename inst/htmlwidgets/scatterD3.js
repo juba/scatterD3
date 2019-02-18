@@ -121,6 +121,10 @@ function scatterD3() {
 				.attr("class", "root")
 				.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")")
 				.call(zoom);
+			if (settings.disable_wheel) {
+			  root.on("wheel.zoom", null)
+			}
+
 
 			// Workaround for RStudio/Safari mousewheel event
 			// We manually trigger a wheel event, copying needed arguments
