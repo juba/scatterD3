@@ -215,12 +215,28 @@ function scatterD3() {
 				var labels = chart_body.selectAll(".point-label")
 					.data(data, key);
 
-				labels.enter()
+				var labels_elements = labels.enter()
 					.append("text")
 					.call(label_init)
 					.call(function (sel) { label_formatting(sel, settings, scales); })
 					.call(drag);
 			}
+			// Automatic label placement
+			if (settings.labels_positions == "auto") {
+				// Compute position
+				var label_array = labels_placement(labels_elements, settings, scales, dims);
+				// Update labels data with new position
+				data.forEach(function(d, i) {
+					d.lab_dx = label_array[i].x - scales.x(d.x);
+					d.lab_dy = label_array[i].y - scales.y(d.y);
+				})
+				// Redraw
+				labels_elements
+					.data(data, key)
+					.attr("text-anchor", "start")
+					.call(function (sel) { label_formatting(sel, settings, scales); });
+			}
+
 
 			// Legends
 			var legend = svg.append("g").attr("class", "legend")
@@ -846,7 +862,9 @@ HTMLWidgets.widget({
 				// convert data to d3 format
 				var data = HTMLWidgets.dataframeToD3(obj.data);
 				if (obj.settings.labels_positions) {
-					obj.settings.labels_positions = HTMLWidgets.dataframeToD3(obj.settings.labels_positions);
+					if (obj.settings.labels_positions != "auto") {
+						obj.settings.labels_positions = HTMLWidgets.dataframeToD3(obj.settings.labels_positions);
+					}
 				}
 
 				// If no transitions, remove chart and redraw it

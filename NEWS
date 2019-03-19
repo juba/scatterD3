@@ -10,6 +10,7 @@ scatterD3 0.8.3
 * Add `disable_wheel` argument to disable mousewheel zooming (thanks @romanhaa)
 * Add `colors` argument for continuous color variables (thanks @romanhaa)
 * Add `zoom_on` and `zoom_on_level` arguments for programmatic zooming (thanks @Tixierae)
+* First try at automatic label placement with `labels_positions = "auto"`
 
 
 scatterD3 0.8.2

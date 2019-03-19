@@ -11,9 +11,9 @@
 #'     data is not NULL
 #' @param point_size points size. Ignored if size_var is not NULL.
 #' @param labels_size text labels size
-#' @param labels_positions A data frame, as created by the
+#' @param labels_positions Either a data frame, as created by the
 #'     "Export labels positions" menu entry, giving each label x and y
-#'     position.
+#'     position, or the value `"auto"` to use an automatic labeler.
 #' @param point_opacity points opacity, as an integer (same opacity for all
 #'     points) or a vector of integers, or variable name if data is not NULL
 #' @param fixed force a 1:1 aspect ratio

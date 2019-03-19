@@ -91,6 +91,13 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names, labels_size = 9)
 
 Note that text labels are fully movable : click and drag a label with your mouse to place it where you want. Custom positions are preserved while zooming/panning.
 
+By using `labels_positions = "auto"`, labels positions can be computed to minimize overlapping :
+
+```{r labels_auto}
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names, labels_size = 9 , labels_positions = "auto")
+```
+
+
 ## Mapping colors, symbols, size and opacity to variables
 
 By passing vectors to the `col_var` and/or `symbol_var` arguments, you can map points colors and symbols to other variables.
