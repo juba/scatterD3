@@ -466,7 +466,23 @@ For a small demonstration of these transitions, you can take a look at the
 Enabling transitions in your shiny app is quite simple, you just have to add the `transitions = TRUE` argument to your `scatterD3` calls in your shiny server code. There's only one warning : if your shiny application may filter on your dataset rows via a form control, then you must provide a `key_var` variable that uniquely and persistently identify your rows.
 
 
-### Additional controls : Reset zoom and SVG export
+### Programmatic zooming
+
+By passing the `zoom_on` and `zoom_on_level` arguments to `scatterD3`, you can programmatically zoom on specific coordinates :
+
+- `zoom_on` takes a vector of `x,y` coordinates to zoom on
+- `zoom_on_level` takes a number, the zoom scale value
+
+When used outside of a shiny app, they just center the viewport on the specified point :
+
+```{r zoom_on}
+scatterD3(data = mtcars, x = wt, y = mpg, zoom_on = c(1.615, 30.4), zoom_on_level = 6, lab = names)
+```
+
+Inside a shiny app, these arguments allow to zoom on a specific point programmatically with transitions. See the [sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) for a demonstration.
+
+
+### Additional controls : Reset zoom, SVG export, lasso toggle
 
 Furthermore, `scatterD3` provides some additional handlers for three interactive features : SVG export, zoom resetting and lasso selection. Those are already accessible via the "gear menu", but you may want to replace it with custom form controls.
 

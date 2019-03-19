@@ -78,6 +78,8 @@
 #' @param zoom_callback the body of a JavaScript callback function whose
 #'     inputs are the new xmin, xmax, ymin and ymax after a zoom action is
 #'     triggered.
+#' @param zoom_on coordinates where to center zoom on plot draw or update.
+#' @param zoom_on_level zoom level on plot draw or update. Ignored if `zoom_on` is NULL.
 #' @param disable_wheel if TRUE, disable zooming with mousewheel.
 #' @param lines a data frame with at least the \code{slope} and
 #'     \code{intercept} columns, and as many rows as lines to add to
@@ -167,6 +169,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       lasso_callback = NULL,
                       click_callback = NULL,
                       zoom_callback = NULL,
+                      zoom_on = NULL,
+                      zoom_on_level = NULL,
                       disable_wheel = FALSE,
                       lines = data.frame(slope = c(0, Inf),
                                          intercept = c(0, 0),
@@ -386,6 +390,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         has_custom_tooltips = !is.null(tooltip_text),
         click_callback = htmlwidgets::JS(click_callback),
         zoom_callback = htmlwidgets::JS(zoom_callback),
+        zoom_on = zoom_on,
+        zoom_on_level = zoom_on_level,
         disable_wheel = disable_wheel,
         fixed = fixed,
         legend_width = legend_width,

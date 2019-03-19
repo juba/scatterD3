@@ -24,7 +24,8 @@ scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
-  click_callback = NULL, zoom_callback = NULL, disable_wheel = FALSE,
+  click_callback = NULL, zoom_callback = NULL, zoom_on = NULL,
+  zoom_on_level = NULL, disable_wheel = FALSE,
   lines = data.frame(slope = c(0, Inf), intercept = c(0, 0),
   stroke_dasharray = c(5, 5)), axes_font_size = "100\%",
   legend_font_size = "100\%", caption = NULL)
@@ -70,7 +71,9 @@ default, if \code{col_var} is numeric, not a factor, and has more than
 \item{colors}{vector of custom points colors. Colors must be defined as an
 hexadecimal string (eg "#FF0000"). If \code{colors} is a named list or
 a named vector, then the colors will be associated with their name
-within \code{col_var}. Ignored for a continuous color scale.}
+within \code{col_var}. For a continuous color scale, can be a string giving
+the interpolate function name from d3-scale-chromatic (for example,
+"interpolatePurples")}
 
 \item{ellipses}{draw confidence ellipses for points or the different color
 mapping groups}
@@ -167,6 +170,10 @@ inputs are html_id, and the index of the clicked element.}
 \item{zoom_callback}{the body of a JavaScript callback function whose
 inputs are the new xmin, xmax, ymin and ymax after a zoom action is
 triggered.}
+
+\item{zoom_on}{coordinates where to center zoom on plot draw or update.}
+
+\item{zoom_on_level}{zoom level on plot draw or update. Ignored if `zoom_on` is NULL.}
 
 \item{disable_wheel}{if TRUE, disable zooming with mousewheel.}
 

@@ -359,6 +359,23 @@ function scatterD3() {
 				caption.remove();
 			}
 
+			// Zoom on
+			if (settings.zoom_on !== null) {
+				var curZoom = d3v5.zoomTransform(root.node());
+				if (settings.zoom_on_level != curZoom.k) {
+					root.transition().duration(0).call(zoom.scaleTo, settings.zoom_on_level)
+						.on("end", function () {
+							var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
+							var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
+							root.call(zoom.translateBy, zoom_dx, zoom_dy)
+						});
+				} else {
+					var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
+					var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
+					root.call(zoom.translateBy, zoom_dx, zoom_dy)
+				}						
+			}
+
 		});
 	}
 
@@ -405,6 +422,33 @@ function scatterD3() {
 			menu_parent.style("position", "relative");
 			var menu = menu_parent.select(".scatterD3-menu");
 			menu.attr("id", "scatterD3-menu-" + settings.html_id);
+		}
+
+		// Zoom on
+		if (settings.zoom_on !== null) {
+			var root = svg.select(".root");
+			var curZoom = d3v5.zoomTransform(root.node());
+			if (settings.zoom_on_level != curZoom.k) {
+				root.transition().duration(1000)
+					.call(zoom.scaleTo, settings.zoom_on_level)
+					.on("end", function() {
+						var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
+						var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
+						root.transition().duration(1000)
+							.call(zoom.translateBy, zoom_dx , zoom_dy)
+				});
+			} else {
+				var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
+				var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
+				root.transition().duration(1000)
+					.call(zoom.translateBy, zoom_dx , zoom_dy)
+			}						
+		}
+		if (settings.zoom_on === null && old_settings.zoom_on !== null) {
+			// Reset zoom
+			svg.select(".root")
+				.transition().duration(1000)
+				.call(zoom.transform, d3v5.zoomIdentity);
 		}
 	};
 
@@ -562,9 +606,6 @@ function scatterD3() {
 		svg.select(".root")
 			.transition().delay(1000).duration(0)
 			.call(zoom.transform, d3v5.zoomIdentity);
-
-
-
 
 		lasso_off(svg, settings, zoom);
 	};
@@ -882,6 +923,7 @@ HTMLWidgets.widget({
 					// Update data only if needed
 					if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
 				}
+
 			},
 
 			s: scatter

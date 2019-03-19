@@ -19,11 +19,13 @@ function scatterD3() {
 		var root = svg.select(".root");
 		if (!settings.x_categorical) {
 			scales.x = d3v5.event.transform.rescaleX(scales.x_orig);
+			scales.x_orig = scales.x;
 			scales.xAxis = scales.xAxis.scale(scales.x);
 			root.select(".x.axis").call(scales.xAxis);
 		}
 		if (!settings.y_categorical) {
 			scales.y = d3v5.event.transform.rescaleY(scales.y_orig);
+			scales.y_orig = scales.y;
 			scales.yAxis = scales.yAxis.scale(scales.y);
 			root.select(".y.axis").call(scales.yAxis);
 		}
