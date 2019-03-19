@@ -1,10 +1,11 @@
 dependencies:
   - name: d3v5
-    version: 5.0.0
+    version: 5.9.2
     src: htmlwidgets/lib/d3
     script:
       - d3.v5.min.js
       - d3-legend.min.js
+      - d3-labeler.js
   - name: d3.lasso-plugin
     version: 1.0.0
     src: htmlwidgets/lib/d3-lasso-plugin

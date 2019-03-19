@@ -70,3 +70,4 @@ This package has been made possible by :
 -   Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
 -   Rob Moore's [article on reusable d3.js charts](http://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
 -   Speros Kokenes' [d3 lasso plugin](https://github.com/skokenes/D3-Lasso-Plugin)
+-   Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
