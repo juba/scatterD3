@@ -79,14 +79,14 @@ function dot_init (selection, settings, scales) {
 function dot_formatting(selection, settings, scales) {
     var sel = selection
         .attr("transform", function(d) { return translation(d, scales); })
-    // fill color
+    	// fill color
         .style("fill", function(d) { return scales.color(d.col_var); })
-	.style("opacity", function(d) {
-	    return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
-	})
-    // symbol and size
+		.style("opacity", function(d) {
+	    	return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
+		})
+    	// symbol and size
         .attr("d", d3v5.symbol()
-	      .type(function(d) {return scales.symbol(d.symbol_var);})
+	      .type(function(d) { return scales.symbol(d.symbol_var); })
 	      .size(function(d) { return dot_size(d, settings, scales); })
 	     )
         .attr("class", function(d,i) {
