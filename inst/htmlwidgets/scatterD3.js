@@ -753,9 +753,9 @@ function scatterD3() {
 	};
 
 	// settings getter/setter
-	chart.settings = function (value) {
+	chart.settings = function (value, redraw) {
 		if (!arguments.length) return settings;
-		if (Object.keys(settings).length === 0) {
+		if (Object.keys(settings).length === 0 || redraw) {
 			settings = value;
 		} else {
 			var old_settings = settings;
@@ -878,7 +878,7 @@ HTMLWidgets.widget({
 				if (redraw) {
 					scatter = scatter.data(data, redraw);
 					obj.settings.redraw = true;
-					scatter = scatter.settings(obj.settings);
+					scatter = scatter.settings(obj.settings, redraw);
 					// add controls handlers and global listeners for shiny apps
 					scatter.add_controls_handlers();
 					scatter.add_global_listeners();
@@ -937,7 +937,7 @@ HTMLWidgets.widget({
 						changed("lines");
 
 					// Update settings
-					scatter = scatter.settings(obj.settings);
+					scatter = scatter.settings(obj.settings, redraw);
 					// Update data only if needed
 					if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
 				}
