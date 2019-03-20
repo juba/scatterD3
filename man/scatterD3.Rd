@@ -48,9 +48,9 @@ data is not NULL}
 
 \item{labels_size}{text labels size}
 
-\item{labels_positions}{A data frame, as created by the
+\item{labels_positions}{Either a data frame, as created by the
 "Export labels positions" menu entry, giving each label x and y
-position.}
+position, or the value `"auto"` to use an automatic labeler.}
 
 \item{point_opacity}{points opacity, as an integer (same opacity for all
 points) or a vector of integers, or variable name if data is not NULL}
