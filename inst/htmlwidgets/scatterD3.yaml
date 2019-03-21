@@ -24,6 +24,7 @@ dependencies:
       - scatterD3-labels.js
       - scatterD3-lines.js
       - scatterD3-ellipses.js
+      - scatterD3-zoom.js
       - scatterD3-legend.js
       - scatterD3-lasso.js
       - scatterD3-exports.js

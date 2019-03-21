@@ -9,11 +9,6 @@ function scatterD3() {
 		svg,
 		zoom, drag;
 
-	// Zoom behavior
-	zoom = d3v5.zoom()
-		.scaleExtent([0, 32])
-		.on("zoom", zoomed);
-
 	// Zoom function
 	function zoomed(reset) {
 		var root = svg.select(".root");
@@ -119,12 +114,13 @@ function scatterD3() {
 			// Root chart element and axes
 			var root = svg.append("g")
 				.attr("class", "root")
-				.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")")
-				.call(zoom);
-			if (settings.disable_wheel) {
-			  root.on("wheel.zoom", null)
-			}
+				.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")");
 
+			var viewport = root.append("rect")
+				.attr("class", "viewport")
+				.style("fill", "#FFF")
+				.attr("width", dims.width)
+				.attr("height", dims.height);
 
 			// Workaround for RStudio/Safari mousewheel event
 			// We manually trigger a wheel event, copying needed arguments
@@ -146,11 +142,6 @@ function scatterD3() {
 				// Dispatch/Trigger/Fire the event
 				this.dispatchEvent(ev);
 			});
-
-			root.append("rect")
-				.style("fill", "#FFF")
-				.attr("width", dims.width)
-				.attr("height", dims.height);
 
 			root.call(function (sel) { add_axes(sel, dims, settings, scales); });
 
@@ -375,21 +366,23 @@ function scatterD3() {
 				caption.remove();
 			}
 
+			// Zoom init
+			zoom = zoom_behavior(root, settings, zoomed);
+			root.call(zoom);
 			// Zoom on
 			if (settings.zoom_on !== null) {
 				var curZoom = d3v5.zoomTransform(root.node());
-				if (settings.zoom_on_level != curZoom.k) {
-					root.transition().duration(0).call(zoom.scaleTo, settings.zoom_on_level)
-						.on("end", function () {
-							var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
-							var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
-							root.call(zoom.translateBy, zoom_dx, zoom_dy)
-						});
-				} else {
-					var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
-					var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
-					root.call(zoom.translateBy, zoom_dx, zoom_dy)
-				}						
+
+				var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / curZoom.k;
+				var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / curZoom.k;
+				root.transition()
+					.duration(0)
+					.call(zoom.translateBy, zoom_dx, zoom_dy)
+					.on("end", function () {
+						if (settings.zoom_on_level != curZoom.k) {
+							root.call(zoom.scaleTo, settings.zoom_on_level)
+						}
+					})					
 			}
 
 		});
@@ -444,27 +437,27 @@ function scatterD3() {
 		if (settings.zoom_on !== null) {
 			var root = svg.select(".root");
 			var curZoom = d3v5.zoomTransform(root.node());
-			if (settings.zoom_on_level != curZoom.k) {
-				root.transition().duration(1000)
-					.call(zoom.scaleTo, settings.zoom_on_level)
-					.on("end", function() {
-						var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
-						var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
-						root.transition().duration(1000)
-							.call(zoom.translateBy, zoom_dx , zoom_dy)
-				});
-			} else {
-				var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / settings.zoom_on_level;
-				var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / settings.zoom_on_level;
-				root.transition().duration(1000)
-					.call(zoom.translateBy, zoom_dx , zoom_dy)
-			}						
-		}
+
+			var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / curZoom.k;
+			var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / curZoom.k;
+			root.transition()
+				.duration(1000)
+				.call(zoom.translateBy, zoom_dx, zoom_dy)
+				.on("end", function () {
+					if (settings.zoom_on_level != curZoom.k) {
+						root.transition()
+							.duration(1000)
+							.call(zoom.scaleTo, settings.zoom_on_level)
+					}
+				})
+		};
 		if (settings.zoom_on === null && old_settings.zoom_on !== null) {
 			// Reset zoom
-			svg.select(".root")
-				.transition().duration(1000)
-				.call(zoom.transform, d3v5.zoomIdentity);
+			var root = svg.select(".root");
+			if (settings.transitions) {
+				root = root.transition().duration(1000);
+			}
+			root.call(zoom.transform, d3v5.zoomIdentity);
 		}
 	};
 
@@ -650,6 +643,12 @@ function scatterD3() {
 			selection.select(".unit-circle")
 				.call(function (sel) { add_unit_circle(sel, scales); });
 		}
+
+		var root = selection.select(".root");
+		zoom = zoom_behavior(root, settings, zoomed);
+		root.call(zoom.transform,
+			d3v5.zoomTransform(svg.select(".root").node()));
+
 	}
 
 	// Dynamically resize chart elements
@@ -667,9 +666,9 @@ function scatterD3() {
 
 		svg.call(resize_plot);
 
-		svg.select(".root")
-			.call(zoom.transform,
-				d3v5.zoomTransform(svg.select(".root").node()));
+		// svg.select(".root")
+		// 	.call(zoom.transform,
+		// 		d3v5.zoomTransform(svg.select(".root").node()));
 
 		// Move legends
 		if (settings.has_legend && settings.legend_width > 0) {
