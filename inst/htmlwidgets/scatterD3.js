@@ -142,13 +142,13 @@ function scatterD3() {
 				dims = setup_legend_dims(chart);
 				// Color legend
 				if (settings.has_color_var)
-					add_color_legend(svg, dims, settings, scales);
+					add_color_legend(chart, 0);
 				// Symbol legend
 				if (settings.has_symbol_var)
-					add_symbol_legend(svg, dims, settings, scales);
+					add_symbol_legend(chart, 0);
 				// Size legend
 				if (settings.has_size_var)
-					add_size_legend(svg, dims, settings, scales);
+					add_size_legend(chart, 0);
 			}
 
 			// Tools menu
@@ -332,20 +332,18 @@ function scatterD3() {
 
 			// Move color legend
 			if (settings.has_color_var && settings.had_color_var && !settings.col_changed) {
-				legend.call(function (sel) {
-					move_color_legend(sel, dims, 1000);
-				});
+				legend.call(move_color_legend, chart, 1000);
 			}
 			// Replace color legend
 			if (settings.has_color_var && settings.had_color_var && settings.col_changed) {
 				legend.call(function (sel) {
 					remove_color_legend(sel);
-					add_color_legend(svg, dims, settings, scales, 1000);
+					add_color_legend(chart, 1000);
 				});
 			}
 			// Add color legend
 			if (settings.has_color_var && !settings.had_color_var) {
-				add_color_legend(svg, dims, settings, scales, 1000);
+				add_color_legend(chart, 1000);
 			}
 			// Remove color legend
 			if (!settings.has_color_var && settings.had_color_var) {
@@ -354,20 +352,18 @@ function scatterD3() {
 
 			// Move symbol legend
 			if (settings.has_symbol_var && settings.had_symbol_var && !settings.symbol_changed) {
-				legend.call(function (sel) {
-					move_symbol_legend(sel, dims, 1000);
-				});
+				legend.call(move_symbol_legend, chart, 1000);
 			}
 			// Replace symbol legend
 			if (settings.has_symbol_var && settings.had_symbol_var && settings.symbol_changed) {
 				legend.call(function (sel) {
 					remove_symbol_legend(sel);
-					add_symbol_legend(svg, dims, settings, scales, 1000);
+					add_symbol_legend(chart, 1000);
 				});
 			}
 			// Add symbol legend
 			if (settings.has_symbol_var && !settings.had_symbol_var) {
-				add_symbol_legend(svg, dims, settings, scales, 1000);
+				add_symbol_legend(chart, 1000);
 			}
 			// Remove symbol legend
 			if (!settings.has_symbol_var && settings.had_symbol_var) {
@@ -376,20 +372,18 @@ function scatterD3() {
 
 			// Move size legend
 			if (settings.has_size_var && settings.had_size_var && !settings.size_changed) {
-				legend.call(function (sel) {
-					move_size_legend(sel, dims, 1000);
-				});
+				legend.call(move_size_legend, chart, 1000);
 			}
 			// Replace size legend
 			if (settings.has_size_var && settings.had_size_var && settings.size_changed) {
 				legend.call(function (sel) {
 					remove_size_legend(sel);
-					add_size_legend(svg, dims, settings, scales, 1000);
+					add_size_legend(chart, 1000);
 				});
 			}
 			// Add size legend
 			if (settings.has_size_var && !settings.had_size_var) {
-				add_size_legend(svg, dims, settings, scales, 1000);
+				add_size_legend(chart, 1000);
 			}
 			// Remove size legend
 			if (!settings.has_size_var && settings.had_size_var) {
@@ -457,11 +451,11 @@ function scatterD3() {
 		if (settings.has_legend && settings.legend_width > 0) {
 			var legend = svg.select(".legend");
 			if (settings.has_color_var)
-				move_color_legend(legend, dims, 0);
+				move_color_legend(legend, chart, 0);
 			if (settings.has_symbol_var)
-				move_symbol_legend(legend, dims, 0);
+				move_symbol_legend(legend, chart, 0);
 			if (settings.has_size_var)
-				move_size_legend(legend, dims, 0);
+				move_size_legend(legend, chart, 0);
 		}
 		// Move menu
 		if (settings.menu) {
