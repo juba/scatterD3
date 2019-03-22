@@ -17,7 +17,8 @@ dependencies:
     stylesheet: scatterD3.css
     script:
       - scatterD3-utils.js
-      - scatterD3-setup.js
+      - scatterD3-scales.js
+      - scatterD3-dims.js
       - scatterD3-axes.js
       - scatterD3-dots.js
       - scatterD3-arrows.js

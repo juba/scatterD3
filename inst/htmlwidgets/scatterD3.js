@@ -74,8 +74,8 @@ function scatterD3() {
 	function chart(selection) {
 		selection.each(function () {
 
-			dims = setup_sizes(width, height, settings);
-			scales = setup_scales(dims, settings, data);
+			dims = setup_dims(chart);
+			scales = setup_scales(chart);
 
 			// Root chart element and axes
 			var root = svg.append("g")
@@ -200,7 +200,7 @@ function scatterD3() {
 				.style("font-size", settings.legend_font_size);
 
 			if (settings.has_legend && settings.legend_width > 0) {
-				dims = setup_legend_sizes(dims, scales, settings);
+				dims = setup_legend_dims(chart);
 				// Color legend
 				if (settings.has_color_var)
 					add_color_legend(svg, dims, settings, scales);
@@ -425,8 +425,8 @@ function scatterD3() {
 	// Update data with transitions
 	function update_data() {
 
-		dims = setup_sizes(width, height, settings);
-		scales = setup_scales(dims, settings, data);
+		dims = setup_dims(chart);
+		scales = setup_scales(chart);
 
 		// Change axes labels
 		svg.select(".x-axis-label").text(settings.xlab);
@@ -503,7 +503,7 @@ function scatterD3() {
 
 		if (settings.legend_changed) {
 			var legend = svg.select(".legend");
-			dims = setup_legend_sizes(dims, scales, settings);
+			dims = setup_legend_dims(chart);
 
 			// Move color legend
 			if (settings.has_color_var && settings.had_color_var && !settings.col_changed) {
@@ -612,9 +612,9 @@ function scatterD3() {
 
 	// Dynamically resize chart elements
 	function resize_chart() {
-		// recompute sizes
-		dims = setup_sizes(width, height, settings);
-		dims = setup_legend_sizes(dims, scales, settings);
+		// recompute dims
+		dims = setup_dims(chart);
+		dims = setup_legend_dims(chart);
 		// recompute x and y scales
 		scales.x.range([0, dims.width]);
 		scales.x_orig.range([0, dims.width]);
@@ -743,13 +743,17 @@ function scatterD3() {
 		return chart;
 	};
 
-	// dims getter
-	chart.dims = function() {
+	// dims getter/setter
+	chart.dims = function(value) {
+		if (!arguments.length) return dims;
+		dims = value;
 		return dims;
 	}
 
-	// scales getter
-	chart.scales = function() {
+	// scales getter/setter
+	chart.scales = function(value) {
+		if (!arguments.length) return scales;
+		scales = value;
 		return scales;
 	}
 
