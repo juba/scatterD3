@@ -35,7 +35,7 @@ function dot_init(selection, chart) {
 	}
 	if (settings.has_tooltips) {
 	    tooltip.style("visibility", "visible")
-		    .html(tooltip_content(d, settings));
+		    .html(tooltip_content(d, chart));
 	}
     });
     selection.on("mousemove", function(){

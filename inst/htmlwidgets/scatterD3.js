@@ -86,14 +86,14 @@ function scatterD3() {
 				.call(dot_init, chart)
 				.call(dot_formatting, chart);
 			// Add arrows
-			if (!settings.col_continuous) add_arrows_defs(svg, settings, scales);
+			if (!settings.col_continuous) add_arrows_defs(chart);
 			var arrow = chart_body
 				.selectAll(".arrow")
 				.data(data.filter(arrow_filter), key);
 			arrow.enter()
 				.append("svg:line")
-				.call(function (sel) { arrow_init(sel, settings); })
-				.call(function (sel) { arrow_formatting(sel, settings, scales); });
+				.call(arrow_init, chart)
+				.call(arrow_formatting, chart);
 
 			// Add ellipses
 			if (settings.ellipses) {

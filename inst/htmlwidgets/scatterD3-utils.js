@@ -24,7 +24,10 @@ function arrow_filter(d) {
 
 
 // Create tooltip content function
-function tooltip_content(d, settings) {
+function tooltip_content(d, chart) {
+
+    var settings = chart.settings();
+
     // no tooltips
     if (!settings.has_tooltips) return null;
     if (settings.has_custom_tooltips) {
