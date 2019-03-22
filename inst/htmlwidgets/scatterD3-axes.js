@@ -1,5 +1,9 @@
 // Create and draw x and y axes
-function add_axes(selection, dims, settings, scales) {
+function add_axes(selection, chart) {
+
+    var dims = chart.dims();
+    var settings = chart.settings();
+    var scales = chart.scales();
 
     // x axis
     selection.append("g")
@@ -32,13 +36,17 @@ function add_axes(selection, dims, settings, scales) {
 
 }
 
+
 // Add unit circle
-function add_unit_circle(selection, scales) {
+function add_unit_circle(selection, chart) {
+
+    var scales = chart.scales();
+
     selection
         .attr('cx', scales.x(0))
         .attr('cy', scales.y(0))
-        .attr('rx', scales.x(1)-scales.x(0))
-        .attr('ry', scales.y(0)-scales.y(1))
+        .attr('rx', scales.x(1) - scales.x(0))
+        .attr('ry', scales.y(0) - scales.y(1))
         .style("stroke", "#888")
         .style("fill", "none")
         .style("opacity", "1");

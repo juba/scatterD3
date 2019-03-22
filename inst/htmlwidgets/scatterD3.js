@@ -12,6 +12,7 @@ function scatterD3() {
 
 
 	function chart(selection) {
+
 		selection.each(function () {
 
 			dims = setup_dims(chart);
@@ -49,7 +50,7 @@ function scatterD3() {
 				this.dispatchEvent(ev);
 			});
 
-			root.call(function (sel) { add_axes(sel, dims, settings, scales); });
+			root.call(add_axes, chart);
 
 			// chart body
 			var chart_body = root.append("svg")
@@ -75,7 +76,7 @@ function scatterD3() {
 			if (settings.unit_circle) {
 				var unit_circle = chart_body.append('svg:ellipse')
 					.attr('class', 'unit-circle')
-					.call(function (sel) { add_unit_circle(sel, scales); });
+					.call(add_unit_circle, chart);
 			}
 
 			// Add points
@@ -211,7 +212,7 @@ function scatterD3() {
 			if (!settings.unit_circle) {
 				var circle = svg.select(".unit-circle");
 				circle.transition().duration(1000)
-					.call(function (sel) { add_unit_circle(sel, scales); })
+					.call(add_unit_circle, chart)
 					.style("opacity", "0").remove();
 			}
 			if (settings.unit_circle) {
@@ -282,7 +283,7 @@ function scatterD3() {
 		// Unit circle
 		if (settings.unit_circle) {
 			t0.select(".unit-circle")
-				.call(function (sel) { add_unit_circle(sel, scales); });
+				.call(add_unit_circle, chart);
 		}
 
 		// Add points
@@ -428,7 +429,7 @@ function scatterD3() {
 
 		if (settings.unit_circle) {
 			selection.select(".unit-circle")
-				.call(function (sel) { add_unit_circle(sel, scales); });
+				.call(add_unit_circle, chart);
 		}
 
 		var root = selection.select(".root");

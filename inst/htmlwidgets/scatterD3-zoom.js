@@ -47,7 +47,7 @@ function zoomed(chart) {
     });
     chart_body.selectAll(".arrow").call(function (sel) { draw_arrow(sel, chart.scales()); });
     chart_body.selectAll(".ellipse").call(function (sel) { ellipse_formatting(sel, chart.settings(), chart.scales()); });
-    chart.svg().select(".unit-circle").call(function (sel) { add_unit_circle(sel, chart.scales()); });
+    chart.svg().select(".unit-circle").call(add_unit_circle, chart);
     
     if (typeof chart.settings().zoom_callback === 'function') {
         chart.settings().zoom_callback(chart.scales().x.domain()[0], chart.scales().x.domain()[1], 
