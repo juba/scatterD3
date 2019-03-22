@@ -10,7 +10,12 @@ function line_init(selection) {
     return selection;
 }
 
-function line_formatting(selection, dims, settings, scales) {
+function line_formatting(selection, chart) {
+
+	var settings = chart.settings();
+	var scales = chart.scales();
+	var dims = chart.dims();
+
     selection
 	.attr("d", function(d) {
 	    // Categorical variables

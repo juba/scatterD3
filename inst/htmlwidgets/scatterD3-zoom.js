@@ -43,7 +43,7 @@ function zoomed(chart) {
     chart_body.selectAll(".dot, .point-label")
         .attr("transform", function (d) { return translation(d, chart.scales()); });
     chart_body.selectAll(".line").call(function (sel) {
-        line_formatting(sel, chart.dims(), chart.settings(), chart.scales());
+        line_formatting(sel, chart);
     });
     chart_body.selectAll(".arrow").call(function (sel) { draw_arrow(sel, chart.scales()); });
     chart_body.selectAll(".ellipse").call(function (sel) { ellipse_formatting(sel, chart.settings(), chart.scales()); });

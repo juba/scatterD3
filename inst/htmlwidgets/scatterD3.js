@@ -66,9 +66,7 @@ function scatterD3() {
 				lines.enter()
 					.append("path")
 					.call(line_init)
-					.call(function (sel) {
-						line_formatting(sel, dims, settings, scales);
-					});
+					.call(line_formatting, chart);
 			}
 
 
@@ -273,9 +271,7 @@ function scatterD3() {
 				.style("opacity", "0")
 				.merge(line)
 				.transition().duration(1000)
-				.call(function (sel) {
-					line_formatting(sel, dims, settings, scales);
-				})
+				.call(line_formatting, chart)
 				.style("opacity", "1");
 			line.exit().transition().duration(1000).style("opacity", "0").remove();
 		}
