@@ -19,16 +19,14 @@ function zoom_behavior(chart) {
         .scaleExtent([0, 32])
         .on("zoom", function() { zoomed(chart); });
 
-    if (chart.settings().disable_wheel) {
-        root.on("wheel.zoom", null)
-    }
-
     return zoom;
 }
 
 // Zoom function
 function zoomed(chart) {
+
     var root = chart.svg().select(".root");
+    
     if (!chart.settings().x_categorical) {
         chart.scales().x = d3v5.event.transform.rescaleX(chart.scales().x_orig);
         chart.scales().xAxis = chart.scales().xAxis.scale(chart.scales().x);
@@ -39,7 +37,9 @@ function zoomed(chart) {
         chart.scales().yAxis = chart.scales().yAxis.scale(chart.scales().y);
         root.select(".y.axis").call(chart.scales().yAxis);
     }
+    
     var chart_body = chart.svg().select(".chart-body");
+    
     chart_body.selectAll(".dot, .point-label")
         .attr("transform", function (d) { return translation(d, chart.scales()); });
     chart_body.selectAll(".line").call(function (sel) {
@@ -48,10 +48,12 @@ function zoomed(chart) {
     chart_body.selectAll(".arrow").call(function (sel) { draw_arrow(sel, chart.scales()); });
     chart_body.selectAll(".ellipse").call(function (sel) { ellipse_formatting(sel, chart.settings(), chart.scales()); });
     chart.svg().select(".unit-circle").call(function (sel) { add_unit_circle(sel, chart.scales()); });
+    
     if (typeof chart.settings().zoom_callback === 'function') {
         chart.settings().zoom_callback(chart.scales().x.domain()[0], chart.scales().x.domain()[1], 
             chart.scales().y.domain()[0], chart.scales().y.domain()[1]);
     }
+    
 }
 
 // Reset zoom function

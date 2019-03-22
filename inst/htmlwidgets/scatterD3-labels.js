@@ -92,3 +92,59 @@ function labels_placement(selection, settings, scales, dims) {
     return(label_array);
 
 }
+
+// Drag behavior
+function drag_behavior(chart) {
+
+    var settings = chart.settings();
+    var scales = chart.scales();
+
+	// Text labels dragging function
+	var drag = d3v5.drag()
+		.subject(function (d, i) {
+			var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
+			var dx = get_label_dx(d, i, settings, scales);
+			var dy = get_label_dy(d, i, settings, scales);
+			return { x: scales.x(d.x) + dx, y: scales.y(d.y) + dy };
+		})
+		.on('start', function (d, i) {
+			if (!d3v5.event.sourceEvent.shiftKey) {
+				dragging = true;
+				d3v5.select(this).style('fill', '#000');
+				var chart = d3v5.select(this).node().parentNode;
+				var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
+				var dx = get_label_dx(d, i, settings, scales);
+				var dy = get_label_dy(d, i, settings, scales);
+				d3v5.select(chart).append("svg:line")
+					.attr("id", "scatterD3-drag-line")
+					.attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
+					.attr("y1", scales.y(d.y)).attr("y2", scales.y(d.y) + dy)
+					.style("stroke", "#000")
+					.style("opacity", 0.3);
+			}
+		})
+		.on('drag', function (d) {
+			if (dragging) {
+				var cx = d3v5.event.x - scales.x(d.x);
+				var cy = d3v5.event.y - scales.y(d.y);
+				d3v5.select(this)
+					.attr('dx', cx + "px")
+					.attr('dy', cy + "px");
+				d3v5.select("#scatterD3-drag-line")
+					.attr('x2', scales.x(d.x) + cx)
+					.attr("y2", scales.y(d.y) + cy);
+				d.lab_dx = cx;
+				d.lab_dy = cy;
+			}
+		})
+		.on('end', function (d) {
+			if (dragging) {
+				d3v5.select(this).style('fill', scales.color(d.col_var));
+				d3v5.select("#scatterD3-drag-line").remove();
+				dragging = false;
+			}
+		});
+
+    return drag;
+
+}
