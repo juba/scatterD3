@@ -103,7 +103,7 @@ function scatterD3() {
 				ellipse.enter()
 					.append("svg:path")
 					.call(ellipse_init)
-					.call(function (sel) { ellipse_formatting(sel, settings, scales); });
+					.call(ellipse_formatting, chart);
 			}
 
 			// Add text labels
@@ -307,7 +307,7 @@ function scatterD3() {
 				.style("opacity", "0")
 				.merge(ellipse)
 				.transition().duration(1000)
-				.call(function (sel) { ellipse_formatting(sel, settings, scales); })
+				.call(ellipse_formatting, chart)
 				.style("opacity", "1");
 			ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
 		}
@@ -397,10 +397,9 @@ function scatterD3() {
 			}
 
 		}
-		// Reset zoom
-		reset_zoom(chart);
 
-		lasso_off(svg, settings, zoom);
+		reset_zoom(chart);
+		lasso_off(chart);
 	};
 
 	// Dynamically resize plot area
@@ -491,11 +490,11 @@ function scatterD3() {
 
 		// SVG export
 		d3v5.select("#" + settings.dom_id_svg_export)
-			.on("click", function () { export_svg(this, svg, settings); });
+			.on("click", function () { export_svg(this, chart); });
 
 		// Lasso toggle
 		d3v5.select("#" + settings.dom_id_lasso_toggle)
-			.on("click", function () { lasso_toggle(svg, settings, scales, zoom); });
+			.on("click", lasso_toggle, chart);
 	};
 
 	chart.add_global_listeners = function () {
@@ -507,7 +506,7 @@ function scatterD3() {
 				var key = d3v5.event.key !== undefined ? d3v5.event.key : d3v5.event.keyIdentifier;
 				if (key == "Shift") {
 					if (settings.lasso) {
-						lasso_on(svg, settings, scales, zoom);
+						lasso_on(chart);
 					}
 				}
 			})
@@ -515,7 +514,7 @@ function scatterD3() {
 				var key = d3v5.event.key !== undefined ? d3v5.event.key : d3v5.event.keyIdentifier;
 				if (key == "Shift") {
 					if (settings.lasso) {
-						lasso_off(svg, settings, zoom);
+						lasso_off(chart);
 					}
 				}
 			});

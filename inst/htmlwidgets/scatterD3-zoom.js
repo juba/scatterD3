@@ -42,11 +42,9 @@ function zoomed(chart) {
     
     chart_body.selectAll(".dot, .point-label")
         .attr("transform", function (d) { return translation(d, chart.scales()); });
-    chart_body.selectAll(".line").call(function (sel) {
-        line_formatting(sel, chart);
-    });
-    chart_body.selectAll(".arrow").call(function (sel) { draw_arrow(sel, chart.scales()); });
-    chart_body.selectAll(".ellipse").call(function (sel) { ellipse_formatting(sel, chart.settings(), chart.scales()); });
+    chart_body.selectAll(".line").call(line_formatting, chart)
+    chart_body.selectAll(".arrow").call(draw_arrow, chart);
+    chart_body.selectAll(".ellipse").call(ellipse_formatting, chart);
     chart.svg().select(".unit-circle").call(add_unit_circle, chart);
     
     if (typeof chart.settings().zoom_callback === 'function') {

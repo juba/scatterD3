@@ -30,21 +30,21 @@ function add_menu(chart) {
 
     menu.append("li")
         .append("a")
-        .on("click", function () { export_svg(this, svg, settings); })
+        .on("click", function () { export_svg(this, chart); })
         .html("Export to SVG");
 
     if (chart.settings().lasso) {
         menu.append("li")
             .append("a")
             .attr("class", "lasso-entry")
-            .on("click", function () { lasso_toggle(svg, settings, scales, zoom); })
+            .on("click", function() { lasso_toggle(chart); })
             .html("Toggle lasso on");
     }
 
     var label_export = menu.append("li")
         .attr("class", "label-export");
     label_export.append("a")
-        .on("click", function () { export_labels_position(this, data, settings, scales); })
+        .on("click", function () { export_labels_position(this, chart); })
         .html("Export labels positions");
     if (!chart.settings().has_labels) {
         label_export.style("display", "none");
@@ -72,6 +72,7 @@ function add_menu(chart) {
 
 // Add caption
 function add_caption(chart) {
+
     var caption_parent = d3v5.select(chart.svg().node().parentNode);
     var caption = caption_parent.select(".scatterD3-caption");
 

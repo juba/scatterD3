@@ -6,7 +6,9 @@ function ellipse_init(selection) {
 }
 
 // Apply format to ellipse
-function ellipse_formatting(selection, settings, scales) {
+function ellipse_formatting(selection, chart) {
+
+    var scales = chart.scales();
 
     // Ellipses path function
     var ellipseFunc = d3v5.line()
@@ -21,7 +23,7 @@ function ellipse_formatting(selection, settings, scales) {
         .style("stroke", function(d) {
 	    // Only one ellipse
 	    if (d.level == "_scatterD3_all") {
-		if (settings.col_continuous) {
+		if (chart.settings().col_continuous) {
 		    return(d3v5.interpolateViridis(0));
 		} else {
 		    return(scales.color.range()[0]);
