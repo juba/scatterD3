@@ -1,5 +1,5 @@
 // Add menu to chart
-add_menu = function (chart) {
+function add_menu(chart) {
 
     var svg = chart.svg();
 
@@ -71,7 +71,7 @@ add_menu = function (chart) {
 
 
 // Add caption
-add_caption = function (chart) {
+function add_caption(chart) {
     var caption_parent = d3v5.select(chart.svg().node().parentNode);
     var caption = caption_parent.select(".scatterD3-caption");
 
