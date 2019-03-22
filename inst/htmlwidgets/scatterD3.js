@@ -56,21 +56,6 @@ function scatterD3() {
 			}
 		});
 
-
-	// Key function to identify rows when interactively filtering
-	function key(d) {
-		return d.key_var;
-	}
-
-	// Filter points and arrows data
-	function point_filter(d) {
-		return d.type_var === undefined || d.type_var == "point";
-	}
-	function arrow_filter(d) {
-		return d.type_var !== undefined && d.type_var == "arrow";
-	}
-
-
 	function chart(selection) {
 		selection.each(function () {
 
