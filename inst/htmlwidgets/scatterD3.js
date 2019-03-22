@@ -9,40 +9,6 @@ function scatterD3() {
 		svg,
 		zoom, drag;
 
-	// Zoom function
-	function zoomed(reset) {
-		var root = svg.select(".root");
-		if (!settings.x_categorical) {
-			scales.x = d3v5.event.transform.rescaleX(scales.x_orig);
-			scales.xAxis = scales.xAxis.scale(scales.x);
-			root.select(".x.axis").call(scales.xAxis);
-		}
-		if (!settings.y_categorical) {
-			scales.y = d3v5.event.transform.rescaleY(scales.y_orig);
-			scales.yAxis = scales.yAxis.scale(scales.y);
-			root.select(".y.axis").call(scales.yAxis);
-		}
-		var chart_body = svg.select(".chart-body");
-		chart_body.selectAll(".dot, .point-label")
-			.attr("transform", function (d) { return translation(d, scales); });
-		chart_body.selectAll(".line").call(function (sel) {
-			line_formatting(sel, dims, settings, scales);
-		});
-		chart_body.selectAll(".arrow").call(function (sel) { draw_arrow(sel, scales); });
-		chart_body.selectAll(".ellipse").call(function (sel) { ellipse_formatting(sel, settings, scales); });
-		svg.select(".unit-circle").call(function (sel) { add_unit_circle(sel, scales); });
-		if (typeof settings.zoom_callback === 'function') {
-			settings.zoom_callback(scales.x.domain()[0], scales.x.domain()[1], scales.y.domain()[0], scales.y.domain()[1]);
-		}
-	}
-
-	// Reset zoom function
-	function reset_zoom() {
-		var root = svg.select(".root");
-		root.transition().duration(750).call(zoom.transform, d3v5.zoomIdentity);
-	}
-
-
 	// Text labels dragging function
 	var dragging = false;
 	drag = d3v5.drag()
@@ -271,7 +237,7 @@ function scatterD3() {
 
 				menu.append("li")
 					.append("a")
-					.on("click", reset_zoom)
+					.on("click", function() { reset_zoom(chart) })
 					.html("Reset zoom");
 
 				menu.append("li")
@@ -367,7 +333,7 @@ function scatterD3() {
 			}
 
 			// Zoom init
-			zoom = zoom_behavior(root, settings, zoomed);
+			zoom = zoom_behavior(chart);
 			root.call(zoom);
 			// Zoom on
 			if (settings.zoom_on !== null) {
@@ -452,12 +418,7 @@ function scatterD3() {
 				})
 		};
 		if (settings.zoom_on === null && old_settings.zoom_on !== null) {
-			// Reset zoom
-			var root = svg.select(".root");
-			if (settings.transitions) {
-				root = root.transition().duration(1000);
-			}
-			root.call(zoom.transform, d3v5.zoomIdentity);
+			reset_zoom(chart);
 		}
 	};
 
@@ -612,9 +573,7 @@ function scatterD3() {
 
 		}
 		// Reset zoom
-		svg.select(".root")
-			.transition().delay(1000).duration(0)
-			.call(zoom.transform, d3v5.zoomIdentity);
+		reset_zoom(chart);
 
 		lasso_off(svg, settings, zoom);
 	};
@@ -645,7 +604,7 @@ function scatterD3() {
 		}
 
 		var root = selection.select(".root");
-		zoom = zoom_behavior(root, settings, zoomed);
+		zoom = zoom_behavior(chart);
 		root.call(zoom.transform,
 			d3v5.zoomTransform(svg.select(".root").node()));
 
@@ -703,7 +662,7 @@ function scatterD3() {
 	chart.add_controls_handlers = function () {
 		// Zoom reset
 		d3v5.select("#" + settings.dom_id_reset_zoom)
-			.on("click", reset_zoom);
+			.on("click", function() { reset_zoom(chart) });
 
 		// SVG export
 		d3v5.select("#" + settings.dom_id_svg_export)
@@ -783,6 +742,22 @@ function scatterD3() {
 		height = value;
 		return chart;
 	};
+
+	// dims getter
+	chart.dims = function() {
+		return dims;
+	}
+
+	// scales getter
+	chart.scales = function() {
+		return scales;
+	}
+
+	// zoom getter
+	chart.zoom = function() {
+		return zoom;
+	}
+
 
 	return chart;
 }
