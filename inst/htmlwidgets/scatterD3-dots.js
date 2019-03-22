@@ -1,12 +1,16 @@
 // Returns dot size from associated data
-function dot_size(data, settings, scales) {
-    var size = settings.point_size;
-    if (settings.has_size_var) { size = scales.size(data.size_var); }
+function dot_size(d, chart) {
+    var size = chart.settings().point_size;
+    if (chart.settings().has_size_var) { size = chart.scales().size(d.size_var); }
     return(size);
 }
 
 // Initial dot attributes
-function dot_init (selection, settings, scales) {
+function dot_init(selection, chart) {
+
+	var settings = chart.settings();
+	var scales = chart.scales();
+
     // tooltips when hovering points
     var tooltip = d3v5.select(".scatterD3-tooltip");
     selection.on("mouseover", function(d, i){
@@ -14,7 +18,7 @@ function dot_init (selection, settings, scales) {
             .transition().duration(150)
             .attr("d", d3v5.symbol()
 		  .type(function(d) { return scales.symbol(d.symbol_var); })
-		  .size(function(d) { return (dot_size(d, settings, scales) * settings.hover_size); })
+		  .size(function(d) { return (dot_size(d, chart) * settings.hover_size); })
 		 )
             .style("opacity", function(d) {
 		if (settings.hover_opacity !== null) {
@@ -55,7 +59,7 @@ function dot_init (selection, settings, scales) {
             .transition().duration(150)
             .attr("d", d3v5.symbol()
 		  .type(function(d) { return scales.symbol(d.symbol_var); })
-		  .size(function(d) { return dot_size(d, settings, scales);})
+		  .size(function(d) { return dot_size(d, chart);})
 		 )
             .style("opacity", function(d) {
 		return(d.opacity_var === undefined ? settings.point_opacity : scales.opacity(d.opacity_var));
@@ -76,21 +80,20 @@ function dot_init (selection, settings, scales) {
 }
 
 // Apply format to dot
-function dot_formatting(selection, settings, scales) {
-    var sel = selection
-        .attr("transform", function(d) { return translation(d, scales); })
+function dot_formatting(selection, chart) {
+    selection
+        .attr("transform", function(d) { return translation(d, chart.scales()); })
     	// fill color
-        .style("fill", function(d) { return scales.color(d.col_var); })
+        .style("fill", function(d) { return chart.scales().color(d.col_var); })
 		.style("opacity", function(d) {
-	    	return d.opacity_var !== undefined ? scales.opacity(d.opacity_var) : settings.point_opacity;
+	    	return d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity;
 		})
     	// symbol and size
         .attr("d", d3v5.symbol()
-	      .type(function(d) { return scales.symbol(d.symbol_var); })
-	      .size(function(d) { return dot_size(d, settings, scales); })
+	      .type(function(d) { return chart.scales().symbol(d.symbol_var); })
+	      .size(function(d) { return dot_size(d, chart); })
 	     )
         .attr("class", function(d,i) {
 	    return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
         });
-    return sel;
 }

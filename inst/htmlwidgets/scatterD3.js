@@ -85,8 +85,8 @@ function scatterD3() {
 				.data(data.filter(point_filter), key);
 			dot.enter()
 				.append("path")
-				.call(function (sel) { dot_init(sel, settings, scales); })
-				.call(function (sel) { dot_formatting(sel, settings, scales); });
+				.call(dot_init, chart)
+				.call(dot_formatting, chart);
 			// Add arrows
 			if (!settings.col_continuous) add_arrows_defs(svg, settings, scales);
 			var arrow = chart_body
@@ -192,7 +192,7 @@ function scatterD3() {
 		if (old_settings.point_size != settings.point_size ||
 			old_settings.point_opacity != settings.point_opacity) {
 			svg.selectAll(".dot").transition()
-				.call(function (sel) { dot_formatting(sel, settings, scales); });
+				.call(dot_formatting, chart);
 		}
 		if (old_settings.has_labels != settings.has_labels) {
 			if (!settings.has_labels) {
@@ -289,8 +289,8 @@ function scatterD3() {
 		// Add points
 		var dot = chart_body.selectAll(".dot")
 			.data(data.filter(point_filter), key);
-		dot.enter().append("path").call(function (sel) { dot_init(sel, settings, scales); })
-			.merge(dot).call(function (sel) { dot_init(sel, settings, scales); }).transition().duration(1000).call(function (sel) { dot_formatting(sel, settings, scales); });
+		dot.enter().append("path").call(dot_init, chart)
+			.merge(dot).call(dot_init, chart).transition().duration(1000).call(dot_formatting, chart);
 		dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
 		// Add arrows
 		var arrow = chart_body.selectAll(".arrow")
