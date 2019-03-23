@@ -23,7 +23,7 @@ function scatterD3() {
 				.attr("class", "root")
 				.attr("transform", "translate(" + dims.margins.left + "," + dims.margins.top + ")");
 
-			var viewport = root.append("rect")
+			root.append("rect")
 				.attr("class", "viewport")
 				.style("fill", "#FFF")
 				.attr("width", dims.width)
@@ -58,103 +58,20 @@ function scatterD3() {
 				.attr("width", dims.width)
 				.attr("height", dims.height);
 
-			// lines
-			if (settings.lines !== null) {
-				var lines = chart_body
-					.selectAll(".lines")
-					.data(HTMLWidgets.dataframeToD3(settings.lines));
-				lines.enter()
-					.append("path")
-					.call(line_init)
-					.call(line_formatting, chart);
-			}
-
-
-			// Unit circle
-			if (settings.unit_circle) {
-				var unit_circle = chart_body.append('svg:ellipse')
-					.attr('class', 'unit-circle')
-					.call(add_unit_circle, chart);
-			}
-
-			// Add points
-			var dot = chart_body
-				.selectAll(".dot")
-				.data(data.filter(point_filter), key);
-			dot.enter()
-				.append("path")
-				.call(dot_init, chart)
-				.call(dot_formatting, chart);
-			// Add arrows
-			if (!settings.col_continuous) add_arrows_defs(chart);
-			var arrow = chart_body
-				.selectAll(".arrow")
-				.data(data.filter(arrow_filter), key);
-			arrow.enter()
-				.append("svg:line")
-				.call(arrow_init, chart)
-				.call(arrow_formatting, chart);
-
-			// Add ellipses
-			if (settings.ellipses) {
-				var ellipse = chart_body
-					.selectAll(".ellipse")
-					.data(settings.ellipses_data);
-				ellipse.enter()
-					.append("svg:path")
-					.call(ellipse_init)
-					.call(ellipse_formatting, chart);
-			}
-
-			// Add text labels
-			if (settings.has_labels) {
-				var labels = chart_body.selectAll(".point-label")
-					.data(data, key);
-
-				var labels_elements = labels.enter()
-					.append("text")
-					.call(label_init)
-					.call(function (sel) { label_formatting(sel, settings, scales); })
-					.call(drag_behavior(chart));
-			}
-			// Automatic label placement
-			if (settings.labels_positions == "auto") {
-				// Compute position
-				var label_array = labels_placement(labels_elements, settings, scales, dims);
-				// Update labels data with new position
-				data.forEach(function(d, i) {
-					d.lab_dx = label_array[i].x - scales.x(d.x);
-					d.lab_dy = label_array[i].y - scales.y(d.y);
-				})
-				// Redraw
-				labels_elements
-					.data(data, key)
-					.attr("text-anchor", "start")
-					.call(function (sel) { label_formatting(sel, settings, scales); });
-			}
-
+			// Create elements
+			lines_create(chart);
+			unit_circle_create(chart);
+			dots_create(chart);
+			arrows_create(chart);
+			ellipses_create(chart);
+			labels_create(chart);
 
 			// Legends
-			var legend = svg.append("g").attr("class", "legend")
-				.style("font-size", settings.legend_font_size);
+			legends_create(chart);
 
-			if (settings.has_legend && settings.legend_width > 0) {
-				dims = setup_legend_dims(chart);
-				// Color legend
-				if (settings.has_color_var)
-					add_color_legend(chart, 0);
-				// Symbol legend
-				if (settings.has_symbol_var)
-					add_symbol_legend(chart, 0);
-				// Size legend
-				if (settings.has_size_var)
-					add_size_legend(chart, 0);
-			}
-
-			// Tools menu
-			if (settings.menu) add_menu(chart);
-			// Caption
-			if (settings.caption) add_caption(chart);
+			// Menu and caption
+			if (settings.menu) menu_create(chart);
+			if (settings.caption) caption_create(chart);
 
 			// Zoom init
 			zoom = zoom_behavior(chart);
@@ -182,7 +99,7 @@ function scatterD3() {
 	}
 
 
-	// Update chart with transitions
+	// Update chart settings with transitions
 	function update_settings(old_settings) {
 		var chart_body = svg.select(".chart-body");
 		if (old_settings.labels_size != settings.labels_size)
@@ -210,7 +127,7 @@ function scatterD3() {
 			if (!settings.unit_circle) {
 				var circle = svg.select(".unit-circle");
 				circle.transition().duration(1000)
-					.call(add_unit_circle, chart)
+					.call(unit_circle_formatting, chart)
 					.style("opacity", "0").remove();
 			}
 			if (settings.unit_circle) {
@@ -249,6 +166,7 @@ function scatterD3() {
 		}
 	};
 
+
 	// Update data with transitions
 	function update_data() {
 
@@ -259,142 +177,23 @@ function scatterD3() {
 		svg.select(".x-axis-label").text(settings.xlab);
 		svg.select(".y-axis-label").text(settings.ylab);
 
-		var t0 = svg.transition().duration(1000);
-		t0.call(resize_plot);
+		svg.transition().duration(1000)
+			.call(resize_plot);
 
 		var chart_body = svg.select(".chart-body");
-		// Add lines
-		if (settings.lines !== null) {
-			var line = chart_body.selectAll(".line")
-				.data(HTMLWidgets.dataframeToD3(settings.lines));
-			line.enter().append("path").call(line_init)
-				.style("opacity", "0")
-				.merge(line)
-				.transition().duration(1000)
-				.call(line_formatting, chart)
-				.style("opacity", "1");
-			line.exit().transition().duration(1000).style("opacity", "0").remove();
-		}
-
-		// Unit circle
-		if (settings.unit_circle) {
-			t0.select(".unit-circle")
-				.call(add_unit_circle, chart);
-		}
-
-		// Add points
-		var dot = chart_body.selectAll(".dot")
-			.data(data.filter(point_filter), key);
-		dot.enter().append("path").call(dot_init, chart)
-			.merge(dot).call(dot_init, chart).transition().duration(1000).call(dot_formatting, chart);
-		dot.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
-		// Add arrows
-		var arrow = chart_body.selectAll(".arrow")
-			.data(data.filter(arrow_filter), key);
-		arrow.enter().append("svg:line").call(function (sel) { arrow_init(sel, settings); })
-			.style("opacity", "0")
-			.merge(arrow)
-			.transition().duration(1000)
-			.call(function (sel) { arrow_formatting(sel, settings, scales); })
-			.style("opacity", "1");
-		arrow.exit().transition().duration(1000).style("opacity", "0").remove();
-
-		// Add ellipses
-		if (settings.ellipses || settings.ellipses_changed) {
-			var ellipse = chart_body.selectAll(".ellipse")
-				.data(settings.ellipses_data);
-			ellipse.enter().append("path").call(ellipse_init)
-				.style("opacity", "0")
-				.merge(ellipse)
-				.transition().duration(1000)
-				.call(ellipse_formatting, chart)
-				.style("opacity", "1");
-			ellipse.exit().transition().duration(1000).style("opacity", "0").remove();
-		}
-
-		if (settings.has_labels) {
-			var labels = chart_body.selectAll(".point-label")
-				.data(data, key);
-			labels.enter().append("text").call(label_init).call(drag_behavior(chart))
-				.merge(labels).transition().duration(1000).call(function (sel) { label_formatting(sel, settings, scales); });
-			labels.exit().transition().duration(1000).attr("transform", "translate(0,0)").remove();
-		}
-
-		if (settings.has_labels_changed) {
-			var label_export = d3v5.select("#scatterD3-menu-" + settings.html_id)
-				.select(".label-export");
-			label_export.style("display", settings.has_labels ? "block" : "none");
-		}
-
-		if (settings.legend_changed) {
-			var legend = svg.select(".legend");
-			dims = setup_legend_dims(chart);
-
-			// Move color legend
-			if (settings.has_color_var && settings.had_color_var && !settings.col_changed) {
-				legend.call(move_color_legend, chart, 1000);
-			}
-			// Replace color legend
-			if (settings.has_color_var && settings.had_color_var && settings.col_changed) {
-				legend.call(function (sel) {
-					remove_color_legend(sel);
-					add_color_legend(chart, 1000);
-				});
-			}
-			// Add color legend
-			if (settings.has_color_var && !settings.had_color_var) {
-				add_color_legend(chart, 1000);
-			}
-			// Remove color legend
-			if (!settings.has_color_var && settings.had_color_var) {
-				legend.call(remove_color_legend);
-			}
-
-			// Move symbol legend
-			if (settings.has_symbol_var && settings.had_symbol_var && !settings.symbol_changed) {
-				legend.call(move_symbol_legend, chart, 1000);
-			}
-			// Replace symbol legend
-			if (settings.has_symbol_var && settings.had_symbol_var && settings.symbol_changed) {
-				legend.call(function (sel) {
-					remove_symbol_legend(sel);
-					add_symbol_legend(chart, 1000);
-				});
-			}
-			// Add symbol legend
-			if (settings.has_symbol_var && !settings.had_symbol_var) {
-				add_symbol_legend(chart, 1000);
-			}
-			// Remove symbol legend
-			if (!settings.has_symbol_var && settings.had_symbol_var) {
-				legend.call(remove_symbol_legend);
-			}
-
-			// Move size legend
-			if (settings.has_size_var && settings.had_size_var && !settings.size_changed) {
-				legend.call(move_size_legend, chart, 1000);
-			}
-			// Replace size legend
-			if (settings.has_size_var && settings.had_size_var && settings.size_changed) {
-				legend.call(function (sel) {
-					remove_size_legend(sel);
-					add_size_legend(chart, 1000);
-				});
-			}
-			// Add size legend
-			if (settings.has_size_var && !settings.had_size_var) {
-				add_size_legend(chart, 1000);
-			}
-			// Remove size legend
-			if (!settings.has_size_var && settings.had_size_var) {
-				legend.call(remove_size_legend);
-			}
-
-		}
+		
+		lines_update(chart);
+		unit_circle_update(chart);
+		dots_update(chart);
+		arrows_update(chart);
+		ellipses_update(chart);
+		labels_update(chart);
+		legends_update(chart);
 
 		reset_zoom(chart);
 		lasso_off(chart);
 	};
+
 
 	// Dynamically resize plot area
 	function resize_plot(selection) {
@@ -416,10 +215,7 @@ function scatterD3() {
 		selection.select(".x.axis").call(scales.xAxis);
 		selection.select(".y.axis").call(scales.yAxis);
 
-		if (settings.unit_circle) {
-			selection.select(".unit-circle")
-				.call(add_unit_circle, chart);
-		}
+		unit_circle_update(chart);
 
 		var root = selection.select(".root");
 		zoom = zoom_behavior(chart);
@@ -443,36 +239,9 @@ function scatterD3() {
 
 		svg.call(resize_plot);
 
-		// svg.select(".root")
-		// 	.call(zoom.transform,
-		// 		d3v5.zoomTransform(svg.select(".root").node()));
-
-		// Move legends
-		if (settings.has_legend && settings.legend_width > 0) {
-			var legend = svg.select(".legend");
-			if (settings.has_color_var)
-				move_color_legend(legend, chart, 0);
-			if (settings.has_symbol_var)
-				move_symbol_legend(legend, chart, 0);
-			if (settings.has_size_var)
-				move_size_legend(legend, chart, 0);
-		}
-		// Move menu
-		if (settings.menu) {
-			svg.select(".gear-menu")
-				.attr("transform", "translate(" + (width - 40) + "," + 10 + ")");
-		}
-		// Move caption icon and div
-		if (settings.caption) {
-			var caption_top_margin = settings.menu ? 35 : 10;
-			svg.select(".caption-icon")
-				.attr("transform", "translate(" + (dims.svg_width - 40) + "," + caption_top_margin + ")");
-			d3v5.select(svg.node().parentNode)
-				.select(".scatterD3-caption")
-				.style("top", dims.svg_height + "px");
-		}
-
-
+		legends_move(chart);
+		menu_move(chart);
+		caption_move(chart);
 	};
 
 
@@ -488,7 +257,7 @@ function scatterD3() {
 
 		// Lasso toggle
 		d3v5.select("#" + settings.dom_id_lasso_toggle)
-			.on("click", lasso_toggle, chart);
+			.on("click", function() { lasso_toggle(chart); });
 	};
 
 	chart.add_global_listeners = function () {

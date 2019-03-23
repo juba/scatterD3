@@ -17,6 +17,44 @@ function add_arrows_defs(chart) {
     });
 }
 
+// Filter arrows data
+function arrow_filter(d) {
+    return d.type_var !== undefined && d.type_var == "arrow";
+}
+
+
+function arrows_create(chart) {
+    if (!chart.settings().col_continuous) add_arrows_defs(chart);
+    var arrows = chart.svg().select(".chart-body")
+        .selectAll(".arrow")
+        .data(chart.data().filter(arrow_filter), key);
+
+    arrows.enter()
+        .append("svg:line")
+        .call(arrow_init, chart)
+        .call(arrow_formatting, chart);
+}
+
+
+function arrows_update(chart) {
+    var arrows = chart.svg().select(".chart-body")
+        .selectAll(".arrow")
+        .data(chart.data().filter(arrow_filter), key);
+
+    arrows.enter()
+        .append("svg:line").call(arrow_init, chart)
+        .style("opacity", "0")
+        .merge(arrows)
+        .transition().duration(1000)
+        .call(arrow_formatting, chart)
+        .style("opacity", "1");
+    
+    arrows.exit()
+        .transition().duration(1000)
+        .style("opacity", "0")
+        .remove();
+}
+
 
 // Arrow drawing function
 function draw_arrow(selection, chart) {
@@ -28,7 +66,7 @@ function draw_arrow(selection, chart) {
 }
 
 // Initial arrow attributes
-function arrow_init (selection, chart) {
+function arrow_init(selection, chart) {
     // tooltips when hovering points
     if (chart.settings().has_tooltips) {
         var tooltip = d3v5.select(".scatterD3-tooltip");

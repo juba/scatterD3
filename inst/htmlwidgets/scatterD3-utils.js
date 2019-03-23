@@ -14,14 +14,6 @@ function key(d) {
     return d.key_var;
 }
 
-// Filter points and arrows data
-function point_filter(d) {
-    return d.type_var === undefined || d.type_var == "point";
-}
-function arrow_filter(d) {
-    return d.type_var !== undefined && d.type_var == "arrow";
-}
-
 
 // Create tooltip content function
 function tooltip_content(d, chart) {

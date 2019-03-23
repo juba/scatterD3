@@ -5,6 +5,47 @@ function dot_size(d, chart) {
     return(size);
 }
 
+
+// Filter points and arrows data
+function dot_filter(d) {
+    return d.type_var === undefined || d.type_var == "point";
+}
+
+
+// Create dots
+function dots_create(chart) {
+
+	var chart_body = chart.svg().select(".chart-body")
+	var dot = chart_body.selectAll(".dot")
+		.data(chart.data().filter(dot_filter), key);
+	dot.enter()
+		.append("path")
+		.call(dot_init, chart)
+		.call(dot_formatting, chart);
+}
+
+// Update dots
+function dots_update(chart) {
+
+	var chart_body = chart.svg().select(".chart-body")
+	var dots = chart_body.selectAll(".dot")
+		.data(chart.data().filter(dot_filter), key);
+	dots.enter()
+	   .append("path")
+	   .call(dot_init, chart)
+	   .merge(dots)
+	   .call(dot_init, chart)
+	   .transition().duration(1000)
+	   .call(dot_formatting, chart);
+	dots.exit()
+	   .transition().duration(1000)
+	   .attr("transform", "translate(0,0)")
+	   .remove();
+}
+
+
+
+
 // Initial dot attributes
 function dot_init(selection, chart) {
 

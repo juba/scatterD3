@@ -45,7 +45,7 @@ function zoomed(chart) {
     chart_body.selectAll(".line").call(line_formatting, chart)
     chart_body.selectAll(".arrow").call(draw_arrow, chart);
     chart_body.selectAll(".ellipse").call(ellipse_formatting, chart);
-    chart.svg().select(".unit-circle").call(add_unit_circle, chart);
+    chart.svg().select(".unit-circle").call(unit_circle_formatting, chart);
     
     if (typeof chart.settings().zoom_callback === 'function') {
         chart.settings().zoom_callback(chart.scales().x.domain()[0], chart.scales().x.domain()[1], 

@@ -1,5 +1,5 @@
 // Add menu to chart
-function add_menu(chart) {
+function menu_create(chart) {
 
     var svg = chart.svg();
 
@@ -69,9 +69,16 @@ function add_menu(chart) {
     });
 }
 
+// Move menu icon when plot is resized
+function menu_move(chart) {
+    if (!chart.settings().menu) return;
+    chart.svg().select(".gear-menu")
+        .attr("transform", "translate(" + (chart.width() - 40) + "," + 10 + ")");
+}
+
 
 // Add caption
-function add_caption(chart) {
+function caption_create(chart) {
 
     var caption_parent = d3v5.select(chart.svg().node().parentNode);
     var caption = caption_parent.select(".scatterD3-caption");
@@ -115,5 +122,17 @@ function add_caption(chart) {
         caption.classed("visible", false);
         caption.style("margin-top", "0px");
     });
+
+}
+
+// Move caption icon and position when plot is resized
+function caption_move(chart) {
+	if (!chart.settings().caption) return;
+	var caption_top_margin = chart.settings().menu ? 35 : 10;
+	chart.svg().select(".caption-icon")
+        .attr("transform", "translate(" + (cart.dims().svg_width - 40) + "," + caption_top_margin + ")");
+	d3v5.select(chart.svg().node().parentNode)
+		.select(".scatterD3-caption")
+		.style("top", chart.dims().svg_height + "px");
 
 }
