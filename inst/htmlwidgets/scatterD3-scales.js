@@ -1,4 +1,6 @@
 
+
+
 // Compute x and y axes limits
 function compute_limits(chart) {
 

@@ -38,21 +38,19 @@ function add_axes(selection, chart) {
 
 
 function unit_circle_create(chart) {
-    if (chart.settings().unit_circle) {
-        chart.svg().select(".chart-body")
-            .append('svg:ellipse')
-            .attr('class', 'unit-circle')
-            .call(unit_circle_formatting, chart);
-    }
+    if (!chart.settings().unit_circle) return;
+    chart.svg().select(".chart-body")
+        .append('svg:ellipse')
+        .attr('class', 'unit-circle')
+        .call(unit_circle_formatting, chart);
 }
 
 function unit_circle_update(chart) {
-    if (chart.settings().unit_circle) {
-        chart.svg().select(".chart-body")
-            .select(".unit-circle")
-            .transition().duration(1000)
-            .call(unit_circle_formatting, chart);
-    }
+    if (!chart.settings().unit_circle) return;
+    chart.svg().select(".chart-body")
+        .select(".unit-circle")
+        .transition().duration(1000)
+        .call(unit_circle_formatting, chart);
 }
 
 

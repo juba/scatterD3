@@ -57,5 +57,20 @@ function zoomed(chart) {
 // Reset zoom function
 function reset_zoom(chart) {
     var root = chart.svg().select(".root");
-    root.transition().duration(750).call(chart.zoom().transform, d3v5.zoomIdentity);
+    root.transition().duration(1000)
+        .call(chart.zoom().transform, d3v5.zoomIdentity);
+}
+
+// Update zoom function
+function update_zoom(chart) {
+    var root = chart.svg().select(".root");
+    root.select(".x.axis")
+        .transition().duration(1000)
+        .call(chart.scales().xAxis);
+    root.select(".y.axis")
+        .transition().duration(1000)
+        .call(chart.scales().yAxis)
+        .on("end", function() {
+            root.call(chart.zoom().transform, d3v5.zoomIdentity);
+        });
 }

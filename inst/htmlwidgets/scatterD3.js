@@ -101,7 +101,6 @@ function scatterD3() {
 
 	// Update chart settings with transitions
 	function update_settings(old_settings) {
-		var chart_body = svg.select(".chart-body");
 		if (old_settings.labels_size != settings.labels_size)
 			svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
 		if (old_settings.point_size != settings.point_size ||
@@ -114,7 +113,7 @@ function scatterD3() {
 				svg.selectAll(".point-label").remove();
 			}
 			if (settings.has_labels) {
-				var labels = chart_body.selectAll(".point-label")
+				var labels = svg.selectAll(".point-label")
 					.data(data, key);
 				labels.enter()
 					.append("text")
@@ -131,6 +130,7 @@ function scatterD3() {
 					.style("opacity", "0").remove();
 			}
 			if (settings.unit_circle) {
+				var chart_body = svg.select(".chart-body");
 				chart_body.append('svg:ellipse')
 					.attr('class', 'unit-circle')
 					.style("opacity", "0");
@@ -150,37 +150,35 @@ function scatterD3() {
 
 			var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / curZoom.k;
 			var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / curZoom.k;
-			root.transition()
-				.duration(1000)
-				.call(zoom.translateBy, zoom_dx, zoom_dy)
-				.on("end", function () {
-					if (settings.zoom_on_level != curZoom.k) {
-						root.transition()
-							.duration(1000)
-							.call(zoom.scaleTo, settings.zoom_on_level)
-					}
-				})
-		};
-		if (settings.zoom_on === null && old_settings.zoom_on !== null) {
-			reset_zoom(chart);
-		}
-	};
-
-
-	// Update data with transitions
-	function update_data() {
-
-		dims = setup_dims(chart);
+			root.transition() 
+				.duration(1000) 
+				.call(zoom.translateBy, zoom_dx, zoom_dy) 
+				.on("end", function () { 
+					if (settings.zoom_on_level != curZoom.k) { 
+						root.transition() 
+							.duration(1000) 
+							.call(zoom.scaleTo, settings.zoom_on_level) 
+					} 
+				}) 
+		}; 
+		if (settings.zoom_on === null && old_settings.zoom_on !== null) { 
+			reset_zoom(chart); 
+		} 
+	}; 
+ 
+ 
+	// Update data with transitions 
+	function update_data() { 
+ 
+		dims = setup_dims(chart); 
+		dims = setup_legend_dims(chart);
 		scales = setup_scales(chart);
-
+		update_zoom(chart);
+		lasso_off(chart);
+		
 		// Change axes labels
 		svg.select(".x-axis-label").text(settings.xlab);
 		svg.select(".y-axis-label").text(settings.ylab);
-
-		svg.transition().duration(1000)
-			.call(resize_plot);
-
-		var chart_body = svg.select(".chart-body");
 		
 		lines_update(chart);
 		unit_circle_update(chart);
@@ -189,9 +187,7 @@ function scatterD3() {
 		ellipses_update(chart);
 		labels_update(chart);
 		legends_update(chart);
-
-		reset_zoom(chart);
-		lasso_off(chart);
+		
 	};
 
 
@@ -201,8 +197,7 @@ function scatterD3() {
 		selection.selectAll(".root")
 			.attr("width", dims.width)
 			.attr("height", dims.height);
-		selection.selectAll(".root")
-			.select("rect")
+		selection.selectAll(".viewport")
 			.attr("width", dims.width)
 			.attr("height", dims.height);
 		selection.selectAll(".chart-body")
@@ -215,7 +210,7 @@ function scatterD3() {
 		selection.select(".x.axis").call(scales.xAxis);
 		selection.select(".y.axis").call(scales.yAxis);
 
-		unit_circle_update(chart);
+		selection.call(function() { unit_circle_update(chart); });
 
 		var root = selection.select(".root");
 		zoom = zoom_behavior(chart);
@@ -487,6 +482,7 @@ HTMLWidgets.widget({
 					obj.settings.legend_changed = obj.settings.col_changed ||
 						obj.settings.symbol_changed ||
 						obj.settings.size_changed;
+
 					obj.settings.data_changed = obj.settings.x_changed ||
 						obj.settings.y_changed ||
 						obj.settings.lab_changed ||
