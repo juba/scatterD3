@@ -201,8 +201,6 @@ function scatterD3() {
 		svg.select(".x.axis").call(scales.xAxis);
 		svg.select(".y.axis").call(scales.yAxis);
 
-		svg.call(function() { unit_circle_update(chart); });
-
 		var root = svg.select(".root");
 		zoom = zoom_behavior(chart);
 		root.call(zoom.transform,
