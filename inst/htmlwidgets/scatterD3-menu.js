@@ -130,7 +130,7 @@ function caption_move(chart) {
 	if (!chart.settings().caption) return;
 	var caption_top_margin = chart.settings().menu ? 35 : 10;
 	chart.svg().select(".caption-icon")
-        .attr("transform", "translate(" + (cart.dims().svg_width - 40) + "," + caption_top_margin + ")");
+        .attr("transform", "translate(" + (chart.dims().svg_width - 40) + "," + caption_top_margin + ")");
 	d3v5.select(chart.svg().node().parentNode)
 		.select(".scatterD3-caption")
 		.style("top", chart.dims().svg_height + "px");
