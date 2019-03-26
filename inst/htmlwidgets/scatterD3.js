@@ -170,36 +170,9 @@ function scatterD3() {
 	};
 
 
-	// Dynamically resize plot area
-	function resize_plot(selection) {
-		// Change svg attributes
-		selection.selectAll(".root")
-			.attr("width", dims.width)
-			.attr("height", dims.height);
-		selection.selectAll(".viewport")
-			.attr("width", dims.width)
-			.attr("height", dims.height);
-		selection.selectAll(".chart-body")
-			.attr("width", dims.width)
-			.attr("height", dims.height);
-		selection.select(".x.axis")
-			.attr("transform", "translate(0," + dims.height + ")");
-		selection.select(".x-axis-label")
-			.attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
-		selection.select(".x.axis").call(scales.xAxis);
-		selection.select(".y.axis").call(scales.yAxis);
-
-		selection.call(function() { unit_circle_update(chart); });
-
-		var root = selection.select(".root");
-		zoom = zoom_behavior(chart);
-		root.call(zoom.transform,
-			d3v5.zoomTransform(svg.select(".root").node()));
-
-	}
-
-	// Dynamically resize chart elements
+	// Resize chart on window resize
 	function resize_chart() {
+
 		// recompute dims
 		dims = setup_dims(chart);
 		dims = setup_legend_dims(chart);
@@ -211,11 +184,35 @@ function scatterD3() {
 		scales.xAxis = d3v5.axisBottom(scales.x).tickSize(-dims.height);
 		scales.yAxis = d3v5.axisLeft(scales.y).tickSize(-dims.width);
 
-		svg.call(resize_plot);
+		svg.select(".root")
+			.attr("width", dims.width)
+			.attr("height", dims.height);
+		svg.select(".viewport")
+			.attr("width", dims.width)
+			.attr("height", dims.height);
+		svg.select(".chart-body")
+			.attr("width", dims.width)
+			.attr("height", dims.height);
+		svg.select(".x.axis")
+			.attr("transform", "translate(0," + dims.height + ")");
+		svg.select(".x-axis-label")
+			.attr("transform", "translate(" + (dims.width - 5) + "," + (dims.height - 6) + ")");
+
+		svg.select(".x.axis").call(scales.xAxis);
+		svg.select(".y.axis").call(scales.yAxis);
+
+		svg.call(function() { unit_circle_update(chart); });
+
+		var root = svg.select(".root");
+		zoom = zoom_behavior(chart);
+		root.call(zoom.transform,
+			d3v5.zoomTransform(svg.select(".root").node()));
 
 		legends_move(chart);
 		menu_move(chart);
 		caption_move(chart);
+
+		console.log(zoom.extent());
 	};
 
 
