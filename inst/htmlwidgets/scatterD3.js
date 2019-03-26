@@ -60,53 +60,44 @@ function scatterD3() {
 			}
 			// Zoom on
 			zoom_on(chart, 0);
-			
+
 		});
 	}
 
 
 	// Update chart settings with transitions
 	function update_settings(old_settings) {
-		if (old_settings.labels_size != settings.labels_size)
-			svg.selectAll(".point-label").transition().style("font-size", settings.labels_size + "px");
+
+		// Change in labels size
+		if (old_settings.labels_size != settings.labels_size) {
+			svg.selectAll(".point-label")
+				.transition().duration(1000)
+				.style("font-size", settings.labels_size + "px");
+		}
+		// Change in point size or opacity
 		if (old_settings.point_size != settings.point_size ||
 			old_settings.point_opacity != settings.point_opacity) {
-			svg.selectAll(".dot").transition()
+			svg.selectAll(".dot")
+				.transition().duration(1000)
 				.call(dot_formatting, chart);
 		}
-		if (old_settings.has_labels != settings.has_labels) {
-			if (!settings.has_labels) {
-				svg.selectAll(".point-label").remove();
-			}
-			if (settings.has_labels) {
-				var labels = svg.selectAll(".point-label")
-					.data(data, key);
-				labels.enter()
-					.append("text")
-					.call(label_init)
-					.call(function (sel) { label_formatting(sel, settings, scales); })
-					.call(drag_behavior(chart));
-			}
+		// Labels
+		if (!old_settings.has_labels && settings.has_labels) {
+			labels_create(chart);
 		}
-		if (old_settings.unit_circle != settings.unit_circle) {
-			if (!settings.unit_circle) {
-				var circle = svg.select(".unit-circle");
-				circle.transition().duration(1000)
-					.call(unit_circle_formatting, chart)
-					.style("opacity", "0").remove();
-			}
-			if (settings.unit_circle) {
-				var chart_body = svg.select(".chart-body");
-				chart_body.append('svg:ellipse')
-					.attr('class', 'unit-circle')
-					.style("opacity", "0");
-			}
+		// No more labels
+		if (old_settings.has_labels && !settings.has_labels) {
+			svg.selectAll(".point-label").remove();		
 		}
-		if (settings.menu) {
-			var menu_parent = d3v5.select(svg.node().parentNode);
-			menu_parent.style("position", "relative");
-			var menu = menu_parent.select(".scatterD3-menu");
-			menu.attr("id", "scatterD3-menu-" + settings.html_id);
+		// Unit circle
+		if (!old_settings.unit_circle && settings.unit_circle) {
+			unit_circle_create(chart);
+		}
+		// No more unit circle
+		if (old_settings.unit_circle && !settings.unit_circle) {
+			var circle = svg.select(".unit-circle");
+			circle.transition().duration(1000)
+				.style("opacity", "0").remove();
 		}
 
 		// Zoom on
