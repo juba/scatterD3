@@ -59,21 +59,8 @@ function scatterD3() {
 				root.on("wheel.zoom", null)
 			}
 			// Zoom on
-			if (settings.zoom_on !== null) {
-				var curZoom = d3v5.zoomTransform(root.node());
-
-				var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / curZoom.k;
-				var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / curZoom.k;
-				root.transition()
-					.duration(0)
-					.call(zoom.translateBy, zoom_dx, zoom_dy)
-					.on("end", function () {
-						if (settings.zoom_on_level != curZoom.k) {
-							root.call(zoom.scaleTo, settings.zoom_on_level)
-						}
-					})					
-			}
-
+			zoom_on(chart, 0);
+			
 		});
 	}
 
@@ -123,23 +110,7 @@ function scatterD3() {
 		}
 
 		// Zoom on
-		if (settings.zoom_on !== null) {
-			var root = svg.select(".root");
-			var curZoom = d3v5.zoomTransform(root.node());
-
-			var zoom_dx = (dims.width / 2 - scales.x(settings.zoom_on[0])) / curZoom.k;
-			var zoom_dy = (dims.height / 2 - scales.y(settings.zoom_on[1])) / curZoom.k;
-			root.transition() 
-				.duration(1000) 
-				.call(zoom.translateBy, zoom_dx, zoom_dy) 
-				.on("end", function () { 
-					if (settings.zoom_on_level != curZoom.k) { 
-						root.transition() 
-							.duration(1000) 
-							.call(zoom.scaleTo, settings.zoom_on_level) 
-					} 
-				}) 
-		}; 
+		zoom_on(chart, 1000);
 		if (settings.zoom_on === null && old_settings.zoom_on !== null) { 
 			reset_zoom(chart); 
 		} 
@@ -210,7 +181,6 @@ function scatterD3() {
 		menu_move(chart);
 		caption_move(chart);
 
-		console.log(zoom.extent());
 	};
 
 

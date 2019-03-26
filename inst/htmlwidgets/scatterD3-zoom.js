@@ -74,3 +74,26 @@ function update_zoom(chart) {
             root.call(chart.zoom().transform, d3v5.zoomIdentity);
         });
 }
+
+
+// Zoom on 
+function zoom_on(chart, duration) {
+
+    if (chart.settings().zoom_on === null) return;
+
+    var root = chart.svg().select(".root");
+    var curZoom = d3v5.zoomTransform(root.node());
+    var zoom_x = chart.scales().x(chart.settings().zoom_on[0]);
+    var zoom_y = chart.scales().y(chart.settings().zoom_on[1]);
+    var zoom_dx = (chart.dims().width / 2 - zoom_x) / curZoom.k;
+    var zoom_dy = (chart.dims().height / 2 - zoom_y) / curZoom.k;
+    root.transition().duration(duration)
+        .call(chart.zoom().translateBy, zoom_dx, zoom_dy)
+        .on("end", function() {
+        if (chart.settings().zoom_on_level != curZoom.k) { 
+            root.transition().duration(duration)
+                .call(chart.zoom().scaleTo, chart.settings().zoom_on_level)
+        }
+    }) 
+
+}
