@@ -114,7 +114,13 @@ function scatterD3() {
 		dims = setup_dims(chart); 
 		dims = setup_legend_dims(chart);
 		scales = setup_scales(chart);
-		update_zoom(chart);
+
+		if (settings.has_legend_changed) {
+			resize_chart();
+		} else {
+			update_zoom(chart);
+		}
+
 		lasso_off(chart);
 		
 		// Change axes labels
