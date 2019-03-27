@@ -51,7 +51,8 @@ function menu_create(chart) {
     }
 
     gear.on("click", function (d, i) {
-        var menu = d3v5.select("#scatterD3-menu-" + chart.settings().html_id);
+        var menu_parent = d3v5.select(svg.node().parentNode);
+        var menu = menu_parent.select(".scatterD3-menu");
         var gear = svg.select(".gear-menu");
         if (!menu.classed("open")) {
             menu.transition().duration(300)
