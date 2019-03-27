@@ -156,6 +156,37 @@ function labels_placement(selection, chart) {
 
 }
 
+
+function drag_coordinates(label, x_orig, y_orig, x, y) {
+    var label_bb = label.node().getBBox();
+    var bb = {left: x - label_bb.width / 2,
+              right: x + label_bb.width / 2,
+              top: y - label_bb.height / 2,
+              bottom: y + label_bb.height / 2,
+              middle: y};
+    var coord = {};
+
+    if (bb.left > x_orig + 20) {
+        coord.x = bb.left - 5;
+        coord.y = bb.middle;
+    } else if ((bb.right) < x_orig - 20) {
+        coord.x = bb.right + 5;
+        coord.y = bb.middle;
+    } else {
+        coord.x = x;
+        if (y > y_orig) {
+            coord.y = bb.top;
+        } else {
+            coord.y = bb.bottom;
+        }
+    }
+
+    coord.dist = Math.sqrt((coord.x - x_orig)**2 + (coord.y - y_orig)**2);
+
+    return(coord);
+
+}
+
 // Drag behavior
 function drag_behavior(chart) {
 
@@ -165,7 +196,6 @@ function drag_behavior(chart) {
     // Text labels dragging function
     var drag = d3v5.drag()
         .subject(function (d, i) {
-            var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
             var dx = get_label_dx(d, i, chart);
             var dy = get_label_dy(d, i, chart);
             return { x: scales.x(d.x) + dx, y: scales.y(d.y) + dy };
@@ -173,28 +203,35 @@ function drag_behavior(chart) {
         .on('start', function (d, i) {
             if (!d3v5.event.sourceEvent.shiftKey) {
                 dragging = true;
-                d3v5.select(this).style('fill', '#000');
-                var dx = get_label_dx(d, i, chart);
-                var dy = get_label_dy(d, i, chart);
+                var label = d3v5.select(this);
+                label.style('fill', '#000');
+                //var dx = get_label_dx(d, i, chart);
+                //var dy = get_label_dy(d, i, chart);
+                var coord = drag_coordinates(label, scales.x(d.x), scales.y(d.y), d3v5.event.x, d3v5.event.y);
                 chart.svg().select(".chart-body")
                     .append("svg:line")
                     .attr("id", "scatterD3-drag-line")
-                    .attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
-                    .attr("y1", scales.y(d.y)).attr("y2", scales.y(d.y) + dy)
+                    .attr("x1", scales.x(d.x)).attr("x2", coord.x)
+                    .attr("y1", scales.y(d.y)).attr("y2", coord.y)
                     .style("stroke", "#000")
                     .style("opacity", 0.3);
             }
         })
         .on('drag', function (d) {
             if (dragging) {
+                var line = d3v5.select("#scatterD3-drag-line");
+                var label = d3v5.select(this);
+                var coord = drag_coordinates(label, line.attr("x1"), line.attr("y1"), d3v5.event.x, d3v5.event.y);
                 var cx = d3v5.event.x - scales.x(d.x);
                 var cy = d3v5.event.y - scales.y(d.y);
                 d3v5.select(this)
                     .attr('dx', cx + "px")
                     .attr('dy', cy + "px");
-                d3v5.select("#scatterD3-drag-line")
-                    .attr('x2', scales.x(d.x) + cx)
-                    .attr("y2", scales.y(d.y) + cy);
+                if (coord.dist > 25) {
+                    d3v5.select("#scatterD3-drag-line")
+                        .attr('x2', coord.x)
+                        .attr("y2", coord.y);
+                }
                 d.lab_dx = cx;
                 d.lab_dy = cy;
             }
