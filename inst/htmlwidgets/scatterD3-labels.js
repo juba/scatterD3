@@ -174,11 +174,10 @@ function drag_behavior(chart) {
             if (!d3v5.event.sourceEvent.shiftKey) {
                 dragging = true;
                 d3v5.select(this).style('fill', '#000');
-                var chart = d3v5.select(this).node().parentNode;
-                var size = (d.size_var === undefined) ? settings.point_size : scales.size(d.size_var);
                 var dx = get_label_dx(d, i, chart);
                 var dy = get_label_dy(d, i, chart);
-                d3v5.select(chart).append("svg:line")
+                chart.svg().select(".chart-body")
+                    .append("svg:line")
                     .attr("id", "scatterD3-drag-line")
                     .attr("x1", scales.x(d.x)).attr("x2", scales.x(d.x) + dx)
                     .attr("y1", scales.y(d.y)).attr("y2", scales.y(d.y) + dy)
