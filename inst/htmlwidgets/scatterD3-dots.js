@@ -27,6 +27,8 @@ function dots_create(chart) {
 // Update dots
 function dots_update(chart) {
 
+	var duration = chart.settings().symbol_changed ? 0 : 1000;
+
 	var chart_body = chart.svg().select(".chart-body")
 	var dots = chart_body.selectAll(".dot")
 		.data(chart.data().filter(dot_filter), key);
@@ -35,7 +37,7 @@ function dots_update(chart) {
 	   .call(dot_init, chart)
 	   .merge(dots)
 	   .call(dot_init, chart)
-	   .transition().duration(1000)
+	   .transition().duration(duration)
 	   .call(dot_formatting, chart);
 	dots.exit()
 	   .transition().duration(1000)
@@ -123,7 +125,7 @@ function dot_init(selection, chart) {
 // Apply format to dot
 function dot_formatting(selection, chart) {
     selection
-        .attr("transform", function(d) { return translation(d, chart.scales()); })
+		.attr("transform", function(d) { return translation(d, chart.scales()); })
     	// fill color
         .style("fill", function(d) { return chart.scales().color(d.col_var); })
 		.style("opacity", function(d) {
