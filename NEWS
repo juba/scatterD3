@@ -1,4 +1,4 @@
-scatterD3 0.8.3
+scatterD3 0.9
 ------------------------------------------------------
 
 * Qualitative color palettes between 10 and 12 items now use ColorBrewer's schemePaired
@@ -11,6 +11,7 @@ scatterD3 0.8.3
 * Add `colors` argument for continuous color variables (thanks @romanhaa)
 * Add `zoom_on` and `zoom_on_level` arguments for programmatic zooming (thanks @Tixierae)
 * First try at automatic label placement with `labels_positions = "auto"`
+* Complete code refactoring
 
 
 scatterD3 0.8.2
