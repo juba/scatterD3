@@ -27,7 +27,7 @@ function dots_create(chart) {
 // Update dots
 function dots_update(chart) {
 
-	var duration = chart.settings().symbol_changed ? 0 : 1000;
+	var duration = chart.settings().symbol_lab_changed ? 0 : 1000;
 
 	var chart_body = chart.svg().select(".chart-body")
 	var dots = chart_body.selectAll(".dot")
@@ -133,10 +133,10 @@ function dot_formatting(selection, chart) {
 		})
     	// symbol and size
         .attr("d", d3v5.symbol()
-	      .type(function(d) { return chart.scales().symbol(d.symbol_var); })
-	      .size(function(d) { return dot_size(d, chart); })
+	      	.type(function(d) { return chart.scales().symbol(d.symbol_var); })
+	      	.size(function(d) { return dot_size(d, chart); })
 	     )
         .attr("class", function(d,i) {
-	    return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
+	    	return "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var);
         });
 }

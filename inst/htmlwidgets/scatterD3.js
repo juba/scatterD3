@@ -405,6 +405,8 @@ HTMLWidgets.widget({
 					obj.settings.xlim_changed = scatter.settings().xlim != obj.settings.xlim;
 					obj.settings.ylim_changed = scatter.settings().ylim != obj.settings.ylim;
 
+					obj.settings.symbol_lab_changed = scatter.settings().symbol_lab != obj.settings.symbol_lab;
+
 					obj.settings.had_color_var = scatter.settings().has_color_var;
 					obj.settings.had_symbol_var = scatter.settings().has_symbol_var;
 					obj.settings.had_size_var = scatter.settings().has_size_var;

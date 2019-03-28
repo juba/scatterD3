@@ -149,7 +149,7 @@ function setup_scales(chart) {
         }
         scales.color = scales.color
             .domain([d3v5.min(data, function (d) { return (d.col_var); }),
-            d3v5.max(data, function (d) { return (d.col_var); })]);
+                     d3v5.max(data, function (d) { return (d.col_var); })]);
     }
     // Ordinal color scale
     else {

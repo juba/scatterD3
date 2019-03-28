@@ -40,7 +40,7 @@ function zoomed(chart) {
     
     var chart_body = chart.svg().select(".chart-body");
     
-    chart_body.selectAll(".dot, .point-label")
+    chart_body.selectAll(".dot, .point-label, .point-label-line")
         .attr("transform", function (d) { return translation(d, chart.scales()); });
     chart_body.selectAll(".line").call(line_formatting, chart)
     chart_body.selectAll(".arrow").call(draw_arrow, chart);
