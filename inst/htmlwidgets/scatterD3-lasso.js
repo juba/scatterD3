@@ -17,7 +17,12 @@ var lasso_start = function(lasso) {
                 d.scatterD3_lasso_text_stroke = d.scatterD3_lasso_text_stroke ? d.scatterD3_lasso_text_stroke : d3v5.select(this).style("stroke");
                 d.scatterD3_lasso_text_fill = d.scatterD3_lasso_text_fill ? d.scatterD3_lasso_text_fill : d3v5.select(this).style("fill");
                 d.scatterD3_lasso_text_opacity = d.scatterD3_lasso_text_opacity ? d.scatterD3_lasso_text_opacity : d3v5.select(this).style("opacity");
-	    }
+        }
+        if (d3v5.select(this).classed('point-label-line')) {
+            d.scatterD3_lasso_line_stroke = d.scatterD3_lasso_line_stroke ? d.scatterD3_lasso_line_stroke : d3v5.select(this).style("stroke");
+            d.scatterD3_lasso_line_fill = d.scatterD3_lasso_line_fill ? d.scatterD3_lasso_line_fill : d3v5.select(this).style("fill");
+            d.scatterD3_lasso_line_opacity = d.scatterD3_lasso_line_opacity ? d.scatterD3_lasso_line_opacity : d3v5.select(this).style("opacity");
+        }
         })
 	    .style("fill", null) // clear all of the fills
         .style("opacity", null) // clear all of the opacities
@@ -48,19 +53,22 @@ var lasso_end = function(lasso, chart) {
     // Reset the color of all dots
     lasso.items()
         .style("fill", function(d) {
-	    if (d3v5.select(this).classed('point-label')) { return d.scatterD3_lasso_text_fill; }
+        if (d3v5.select(this).classed('point-label')) { return d.scatterD3_lasso_text_fill; }
+        if (d3v5.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_fill; }
 	    if (d3v5.select(this).classed('dot')) { return d.scatterD3_lasso_dot_fill; }
 	    if (d3v5.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_fill; }
 	    return null;
         })
         .style("opacity", function(d) {
-	    if (d3v5.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
+        if (d3v5.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
+        if (d3v5.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_opacity; }
 	    if (d3v5.select(this).classed('dot')) { return d.scatterD3_lasso_dot_opacity; }
 	    if (d3v5.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_opacity; }
 	    return null;
         })
         .style("stroke", function(d) {
-	    if (d3v5.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
+        if (d3v5.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
+        if (d3v5.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_stroke; }
 	    if (d3v5.select(this).classed('dot')) { return d.scatterD3_lasso_dot_stroke; }
 	    if (d3v5.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_stroke; }
 	    return null;
@@ -68,15 +76,15 @@ var lasso_end = function(lasso, chart) {
     if (some_selected) {
         // Style the selected dots
         var sel = lasso.items().filter(function(d) {return d.selected === true;})
-	    .classed("not-possible-lasso possible-lasso", false)
-	    .classed("selected-lasso", true)
-	    .style("opacity", "1");
+	        .classed("not-possible-lasso possible-lasso", false)
+	        .classed("selected-lasso", true)
+	        .style("opacity", "1");
 
         // Reset the style of the not selected dots
         lasso.items().filter(function(d) {return d.selected === false;})
-	    .classed("not-possible-lasso possible-lasso", false)
-	    .classed("not-selected-lasso", true)
-	    .style("opacity", function(d) { return chart.settings().point_opacity / 7; });
+	        .classed("not-possible-lasso possible-lasso", false)
+	        .classed("not-selected-lasso", true)
+	        .style("opacity", function(d) { return chart.settings().point_opacity / 7; });
 
         // Call custom callback function
         var callback_sel = chart.svg().selectAll(".dot, .arrow").filter(function(d) {return d.selected === true;});
@@ -86,8 +94,8 @@ var lasso_end = function(lasso, chart) {
         lasso.items()
 	    .classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
 	    .style("opacity", function(d) {
-                if (d3v5.select(this).classed('point-label')) {return 1;};
-		return d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity;
+            if (d3v5.select(this).classed('point-label')) {return 1;};
+		    return d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity;
 	    });
     }
 };
@@ -99,7 +107,7 @@ function lasso_on(chart) {
     var root = chart.svg().select(".root");
     var chart_body = chart.svg().select(".chart-body");
 
-    var lasso_classes = ".dot, .arrow, .point-label";
+    var lasso_classes = ".dot, .arrow, .point-label, .point-label-line";
     // Disable zoom behavior
     root.on(".zoom", null);
     // Enable lasso
