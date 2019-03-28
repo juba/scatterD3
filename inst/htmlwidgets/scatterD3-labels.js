@@ -240,7 +240,7 @@ function drag_behavior(chart) {
             var dy = get_label_dy(d, i, chart);
             return { x: scales.x(d.x) + dx, y: scales.y(d.y) + dy };
         })
-        .on('start', function (d, i) {
+        .on('start', function (d) {
             if (!d3v5.event.sourceEvent.shiftKey) {
                 dragging = true;
                 var label = d3v5.select(this);
@@ -250,7 +250,7 @@ function drag_behavior(chart) {
                 label.call(label_line_formatting, d, dx, dy, chart); 
             }
         })
-        .on('drag', function(d, i) {
+        .on('drag', function(d) {
             if (dragging) {
                 var label = d3v5.select(this);
                 var dx = d3v5.event.x - scales.x(d.x);
@@ -262,9 +262,9 @@ function drag_behavior(chart) {
                 d.lab_dy = dy;
             }
         })
-        .on('end', function(d, i) {
+        .on('end', function(d) {
             if (dragging) {
-                d3v5.select(this).style('fill', scales.color(d.col_var));
+                d3v5.select(this).style('fill', chart.scales().color(d.col_var));
                 d3v5.select(this).call(label_line_formatting, d, d.lab_dx, d.lab_dy, chart);
                 dragging = false;
             }
