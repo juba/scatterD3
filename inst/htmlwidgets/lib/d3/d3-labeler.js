@@ -8,16 +8,16 @@ d3v5.labeler = function() {
       labeler = {};
 
   var max_move = 5.0,
-      max_angle = 0.5,
+      max_angle = 90,
       acc = 0;
       rej = 0;
 
   // weights
   var w_len = 0.2, // leader line length 
-      w_inter = 1.0, // leader line intersection
+      w_inter = 30.0, // leader line intersection
       w_lab2 = 30.0, // label-label overlap
       w_lab_anc = 30.0; // label-anchor overlap
-      w_orient = 3.0; // orientation bias
+      w_orient = 0.01; // orientation bias
 
   // booleans for user defined functions
   var user_energy = false,
@@ -42,12 +42,12 @@ d3v5.labeler = function() {
       if (dist > 0) ener += dist * w_len;
 
       // label orientation bias
-      dx /= dist;
-      dy /= dist;
-      if (dx > 0 && dy > 0) { ener += 0 * w_orient; }
-      else if (dx < 0 && dy > 0) { ener += 1 * w_orient; }
-      else if (dx < 0 && dy < 0) { ener += 2 * w_orient; }
-      else { ener += 3 * w_orient; }
+      // dx /= dist;
+      // dy /= dist;
+      // if (dx > 0 && dy > 0) { ener += 0 * w_orient; }
+      // else if (dx < 0 && dy > 0) { ener += 1 * w_orient; }
+      // else if (dx < 0 && dy < 0) { ener += 2 * w_orient; }
+      // else { ener += 3 * w_orient; }
 
       var x21 = lab[index].x,
           y21 = lab[index].y - lab[index].height + 2.0,
@@ -222,6 +222,7 @@ d3v5.labeler = function() {
           initialT = 1.0;
       for (var i = 0; i < nsweeps; i++) {
         for (var j = 0; j < m; j++) { 
+          //mcmove(currT);
           if (Math.random() < 0.5) { mcmove(currT); }
           else { mcrotate(currT); }
         }
