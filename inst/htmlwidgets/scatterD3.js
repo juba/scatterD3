@@ -426,11 +426,14 @@ HTMLWidgets.widget({
 						obj.settings.symbol_changed ||
 						obj.settings.size_changed;
 
+					obj.settings.labels_positions_changed = changed("labels_positions");
+
 					obj.settings.data_changed = obj.settings.x_changed ||
 						obj.settings.y_changed ||
 						obj.settings.lab_changed ||
 						obj.settings.legend_changed ||
 						obj.settings.has_labels_changed ||
+						obj.settings.labels_positions_changed ||
 						changed("ellipses_data") ||
 						obj.settings.ellipses_changed ||
 						obj.settings.x_log_changed ||

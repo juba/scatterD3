@@ -21,19 +21,28 @@ function labels_create(chart) {
         var label_array = labels_placement(labels_elements, chart);
         // Update labels data with new position
         chart.data().forEach(function (d, i) {
-            d.lab_dx = label_array[i].x - chart.scales().x(d.x);
-            d.lab_dy = label_array[i].y - chart.scales().y(d.y);
+            d.lab_dx = label_array[i].x + label_array[i].width / 2 - chart.scales().x(d.x);
+            d.lab_dy = label_array[i].y - label_array[i].height / 2 - chart.scales().y(d.y);
         })
         // Redraw
         labels_elements
             .data(chart.data(), key)
-            .attr("text-anchor", "start")
+            //.attr("text-anchor", "start")
             .call(label_formatting, chart);
     }
 }
 
 
 function labels_update(chart) {
+
+    function endall(transition, callback) { 
+        if (typeof callback !== "function") throw new Error("Wrong callback in endall");
+        if (transition.size() === 0) { callback() }
+        var n = 0; 
+        transition 
+            .each(function() { ++n; }) 
+            .on("end", function() { if (!--n) callback.apply(this, arguments); }); 
+      } 
 
     if (!chart.settings().has_labels) return;
 
@@ -45,21 +54,33 @@ function labels_update(chart) {
         .call(label_init)
         .call(drag_behavior(chart))
         .merge(labels)
-        .transition().duration(1000)
-        .call(label_formatting, chart);
+        .transition().duration(1100)
+        .call(label_formatting, chart)
+        .call(endall, function() {
+            if (chart.settings().labels_positions == "auto") {
+            var label_array = labels_placement(labels, chart);
+            chart.data().forEach(function (d, i) {
+                d.lab_dx = label_array[i].x + label_array[i].width / 2 - chart.scales().x(d.x);
+                d.lab_dy = label_array[i].y - label_array[i].height / 2 - chart.scales().y(d.y);
+            })
+            labels
+                .data(chart.data(), key)
+                .transition().duration(1000)
+                .call(label_formatting, chart);
+            }
+         });
 
     labels.exit()
+        .each(function(d) {
+            console.log(d);
+            chart.svg()
+                .select(".label-line-" + css_clean(key(d)))
+                .remove();
+        })
         .transition().duration(1000)
         .attr("transform", "translate(0,0)")
         .remove();
-    labels.exit()
-        .each(function(sel, d) {
-            chart.svg()
-            .select(".label-line-" + css_clean(key(d)))
-            .transition().duration(1000)
-            .attr("transform", "translate(0,0)")    
-            .remove();
-        });
+
 
     if (chart.settings().has_labels_changed) {
         var label_export = d3v5.select("#scatterD3-menu-" + chart.settings().html_id)
@@ -172,11 +193,12 @@ function labels_placement(selection, chart) {
     var index = 0;
 
     selection.each(function (d) {
+        var bb = this.getBBox();
         label_array[index] = {};
-        label_array[index].width = this.getBBox().width;
-        label_array[index].height = this.getBBox().height;
-        label_array[index].x = chart.scales().x(d.x);
-        label_array[index].y = chart.scales().y(d.y);
+        label_array[index].width = bb.width;
+        label_array[index].height = bb.height;
+        label_array[index].x = chart.scales().x(d.x) - bb.width / 2;
+        label_array[index].y = chart.scales().y(d.y) - bb.height / 2;
         label_array[index].name = d.lab;
         anchor_array[index] = {};
         anchor_array[index].x = chart.scales().x(d.x);
