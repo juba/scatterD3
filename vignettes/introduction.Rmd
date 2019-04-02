@@ -18,7 +18,7 @@ knitr::opts_chunk$set(screenshot.force = FALSE)
 ```
 
 
-The `scatterD3` package provides an HTML widget based on the `htmlwidgets` package and allows to produce interactive scatterplots by using the `d3.js` javascript visualization library.
+The `scatterD3` package provides an HTML widget based on the `htmlwidgets` package and allows to produce interactive scatterplots by using the `d3` javascript visualization library.
 
 ## Basic scatterplot
 
@@ -80,7 +80,7 @@ scatterD3(data = mtcars, x = wt, y = cyl_fac, left_margin = 80)
 ```
 
 
-## Point labels
+## Labels
 
 You can add text labels to the points by passing a character vector to the `lab` parameter. Labels size are controlled by the `labels_size` parameter.
 
@@ -90,6 +90,8 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names, labels_size = 9)
 ```
 
 Note that text labels are fully movable : click and drag a label with your mouse to place it where you want. Custom positions are preserved while zooming/panning.
+A leader line between the point and its label is automaticcaly drawn when the distance between both is above a certain threshold.
+
 
 By using `labels_positions = "auto"`, labels positions can be computed to minimize overlapping :
 
