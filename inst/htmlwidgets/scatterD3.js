@@ -399,12 +399,17 @@ HTMLWidgets.widget({
 					obj.settings.has_labels_changed = scatter.settings().has_labels != obj.settings.has_labels;
 					obj.settings.size_range_changed = !array_equal(scatter.settings().size_range, obj.settings.size_range);
 					obj.settings.ellipses_changed = scatter.settings().ellipses != obj.settings.ellipses;
-					obj.settings.colors_changed = scatter.settings().colors != obj.settings.colors;
+					
+					if (Array.isArray(scatter.settings().colors) && Array.isArray(obj.settings.colors)) {
+						obj.settings.colors_changed = !array_equal(scatter.settings().colors, obj.settings.colors);
+					} else {
+						obj.settings.colors_changed = scatter.settings().colors != obj.settings.colors;
+					}
+					
 					obj.settings.x_log_changed = scatter.settings().x_log != obj.settings.x_log;
 					obj.settings.y_log_changed = scatter.settings().y_log != obj.settings.y_log;
 					obj.settings.xlim_changed = scatter.settings().xlim != obj.settings.xlim;
 					obj.settings.ylim_changed = scatter.settings().ylim != obj.settings.ylim;
-
 					obj.settings.symbol_lab_changed = scatter.settings().symbol_lab != obj.settings.symbol_lab;
 
 					obj.settings.had_color_var = scatter.settings().has_color_var;
