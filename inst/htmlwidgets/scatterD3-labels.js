@@ -16,20 +16,8 @@ function labels_create(chart) {
         .call(drag_behavior(chart));
 
     // Automatic label placement
-    if (chart.settings().labels_positions == "auto") {
-        // Compute position
-        var label_array = labels_placement(labels_elements, chart);
-        // Update labels data with new position
-        chart.data().forEach(function (d, i) {
-            d.lab_dx = label_array[i].x + label_array[i].width / 2 - chart.scales().x(d.x);
-            d.lab_dy = label_array[i].y - label_array[i].height / 2 - chart.scales().y(d.y);
-        })
-        // Redraw
-        labels_elements
-            .data(chart.data(), key)
-            //.attr("text-anchor", "start")
-            .call(label_formatting, chart);
-    }
+    labels_placement(chart);
+
 }
 
 
@@ -56,19 +44,7 @@ function labels_update(chart) {
         .merge(labels)
         .transition().duration(1100)
         .call(label_formatting, chart)
-        .call(endall, function() {
-            if (chart.settings().labels_positions == "auto") {
-            var label_array = labels_placement(labels, chart);
-            chart.data().forEach(function (d, i) {
-                d.lab_dx = label_array[i].x + label_array[i].width / 2 - chart.scales().x(d.x);
-                d.lab_dy = label_array[i].y - label_array[i].height / 2 - chart.scales().y(d.y);
-            })
-            labels
-                .data(chart.data(), key)
-                .transition().duration(1000)
-                .call(label_formatting, chart);
-            }
-         });
+        .call(endall, function() { labels_placement(chart);});
 
     labels.exit()
         .each(function(d) {
@@ -185,14 +161,18 @@ function label_line_formatting(selection, d, dx, dy, chart) {
 
 
 // Compute automatic label placement
-function labels_placement(selection, chart) {
+function labels_placement(chart) {
+
+    if (chart.settings().labels_positions != "auto") return;
 
     var label_array = [];
     var anchor_array = [];
     var nsweeps = 1000;
     var index = 0;
 
-    selection.each(function (d) {
+    var labels = chart.svg().selectAll(".point-label");
+
+    labels.each(function (d) {
         var bb = this.getBBox();
         label_array[index] = {};
         label_array[index].width = bb.width;
@@ -213,6 +193,16 @@ function labels_placement(selection, chart) {
         .width(chart.dims().width)
         .height(chart.dims().height)
         .start(nsweeps);
+
+    labels.data().forEach(function (d, i) {
+        d.lab_dx = label_array[i].x + label_array[i].width / 2 - chart.scales().x(d.x);
+        d.lab_dy = label_array[i].y - label_array[i].height / 2 - chart.scales().y(d.y);
+    })
+    
+    labels
+        .transition().duration(1000)
+        .call(label_formatting, chart);
+
 
     return (label_array);
 
