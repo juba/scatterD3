@@ -9,3 +9,4 @@ revdep/
 NOTES.md
 .vscode/
 docs/
+tests.R
