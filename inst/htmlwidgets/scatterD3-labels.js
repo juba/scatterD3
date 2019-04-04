@@ -205,7 +205,7 @@ function labels_placement(chart) {
 
     var label_array = [];
     var anchor_array = [];
-    var nsweeps = 1000;
+    var nsweeps = 200;
     var index = 0;
 
     var labels = chart.svg().selectAll(".point-label");

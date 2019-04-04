@@ -7,17 +7,18 @@ d3v5.labeler = function() {
       h = 1, // box width
       labeler = {};
 
-  var max_move = 10.0,
-      max_angle = 6,
-      acc = 0;
+  var max_move = 15.0,
+      max_angle = 2,
+      acc = 0,
       rej = 0;
 
   // weights
-  var w_len = 0.2, // leader line length 
+  var w_len = 0.1, // leader line length 
       w_inter = 30.0, // leader line intersection
       w_lab2 = 30.0, // label-label overlap
       w_lab_anc = 30.0; // label-anchor overlap
-      w_orient = 1.5; // orientation bias
+      w_line_lab = 30.0; // line-label overlap
+      w_orient = 0.2; // orientation bias
 
   // booleans for user defined functions
   var user_energy = false,
@@ -35,7 +36,7 @@ d3v5.labeler = function() {
           dy = anc[index].y - lab[index].y,
           dist = Math.sqrt(dx * dx + dy * dy),
           overlap = true,
-          amount = 0
+          amount = 0,
           theta = 0;
 
       // penalty for length of leader line
@@ -51,9 +52,9 @@ d3v5.labeler = function() {
       // else { ener += 3 * w_orient; }
 
       var x21 = lab[index].x - lab[index].width / 2,
-          y21 = lab[index].y - 3 * lab[index].height / 4,
+          y21 = lab[index].y - 3 * lab[index].height / 4 - 2,
           x22 = lab[index].x + lab[index].width / 2,
-          y22 = lab[index].y + lab[index].height / 4;
+          y22 = lab[index].y + lab[index].height / 4 - 2;
       var x11, x12, y11, y12, x_overlap, y_overlap, overlap_area;
 
       for (var i = 0; i < m; i++) {
@@ -65,15 +66,34 @@ d3v5.labeler = function() {
           if (overlap) ener += w_inter;
 
           // penalty for label-label overlap
-          x11 = lab[i].x - lab[i].width / 2;
-          y11 = lab[i].y - 3 * lab[i].height / 4;
-          x12 = lab[i].x + lab[i].width / 2;
-          y12 = lab[i].y + lab[i].height / 4;
+          x11 = lab[i].x - lab[i].width / 2 - 2;
+          y11 = lab[i].y - 3 * lab[i].height / 4 - 2;
+          x12 = lab[i].x + lab[i].width / 2 + 2;
+          y12 = lab[i].y + lab[i].height / 4 + 2;
           x_overlap = Math.max(0, Math.min(x12,x22) - Math.max(x11,x21));
           y_overlap = Math.max(0, Math.min(y12,y22) - Math.max(y11,y21));
           overlap_area = x_overlap * y_overlap;
           ener += (overlap_area * w_lab2);
-          }
+
+          // penalty for line-label overlap
+          overlap = intersect(anc[index].x, lab[index].x, x11, x12,
+            anc[index].y, lab[index].y, y11, y11) ||
+          intersect(anc[index].x, lab[index].x, x11, x11,
+            anc[index].y, lab[index].y, y11, y12) ||
+          intersect(anc[index].x, lab[index].x, x11, x12,
+            anc[index].y, lab[index].y, y12, y12) ||
+          intersect(anc[index].x, lab[index].x, x12, x12,
+            anc[index].y, lab[index].y, y11, y12) ||
+          intersect(anc[i].x, lab[i].x, x21, x22,
+            anc[i].y, lab[i].y, y21, y21) ||
+          intersect(anc[i].x, lab[i].x, x21, x21,
+            anc[i].y, lab[i].y, y21, y22) ||
+          intersect(anc[i].x, lab[i].x, x21, x22,
+            anc[i].y, lab[i].y, y22, y22) ||
+          intersect(anc[i].x, lab[i].x, x22, x22,
+            anc[i].y, lab[i].y, y21, y22);  
+          if (overlap) ener += w_line_lab;
+        }
 
           // penalty for label-anchor overlap
           x11 = anc[i].x - anc[i].r;
@@ -84,6 +104,8 @@ d3v5.labeler = function() {
           y_overlap = Math.max(0, Math.min(y12,y22) - Math.max(y11,y21));
           overlap_area = x_overlap * y_overlap;
           ener += (overlap_area * w_lab_anc);
+
+
 
       }
       return ener;
