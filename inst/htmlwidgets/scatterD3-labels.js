@@ -131,82 +131,6 @@ function label_formatting(selection, chart) {
         })
 }
 
-// Format line between point and label
-function label_line_formatting(selection, d, dx, dy, chart) {
-
-    var x = chart.scales().x(d.x);
-    var y = chart.scales().y(d.y);
-    var coord = label_line_coordinates(selection, x, y, x + dx, y + dy);
-    var x2 = coord.x - x;
-    var y2 = coord.y - y;
-    var line = chart.svg().select(".label-line-" + css_clean(key(d)));
-    var gap0 = default_label_dy(d, chart);
-
-    if (coord.dist > 20 && line.empty()) {
-        line = chart.svg().select(".chart-body")
-            .append("svg:line")
-            .datum(d)
-            .attr("transform", translation(d, chart.scales()))
-            .attr("class", "point-label-line label-line-" + css_clean(key(d)));
-    } 
-    if (coord.dist > 20) {
-        line.attr("x1", - x2 * gap0 / coord.dist).attr("x2", x2)
-            .attr("y1", - y2 * gap0 / coord.dist).attr("y2", y2)
-            .style("stroke", chart.scales().color(d.col_var));
-    } 
-    if (coord.dist <= 20 && !line.empty()) {
-        line.remove();
-    }
-}
-
-
-// Compute automatic label placement
-function labels_placement(chart) {
-
-    if (chart.settings().labels_positions != "auto") return;
-
-    var label_array = [];
-    var anchor_array = [];
-    var nsweeps = 1000;
-    var index = 0;
-
-    var labels = chart.svg().selectAll(".point-label");
-
-    labels.each(function (d) {
-        var bb = this.getBBox();
-        label_array[index] = {};
-        label_array[index].width = bb.width;
-        label_array[index].height = bb.height;
-        label_array[index].x = chart.scales().x(d.x) - bb.width / 2;
-        label_array[index].y = chart.scales().y(d.y) - bb.height / 2;
-        label_array[index].name = d.lab;
-        anchor_array[index] = {};
-        anchor_array[index].x = chart.scales().x(d.x);
-        anchor_array[index].y = chart.scales().y(d.y);
-        anchor_array[index].r = Math.sqrt(dot_size(d, chart));
-        index += 1;
-    });
-
-    d3v5.labeler()
-        .label(label_array)
-        .anchor(anchor_array)
-        .width(chart.dims().width)
-        .height(chart.dims().height)
-        .start(nsweeps);
-
-    labels.data().forEach(function (d, i) {
-        d.lab_dx = label_array[i].x + label_array[i].width / 2 - chart.scales().x(d.x);
-        d.lab_dy = label_array[i].y - label_array[i].height / 2 - chart.scales().y(d.y);
-    })
-    
-    labels
-        .transition().duration(1000)
-        .call(label_formatting, chart);
-
-
-    return (label_array);
-
-}
 
 // Compute end of label line coordinates and distance with point
 function label_line_coordinates(label, x_orig, y_orig, x, y) {
@@ -233,12 +157,95 @@ function label_line_coordinates(label, x_orig, y_orig, x, y) {
         }
     }
 
-
     coord.dist = Math.sqrt((coord.x - x_orig)**2 + (coord.y - y_orig)**2);
+
+    // No line if label is just around point
+    if (bb.bottom  >= y_orig - 10 && bb.top <= y_orig + 10 && 
+        bb.left <= x_orig + 4 && bb.right >= x_orig - 4) {
+        coord.dist = 0;
+    }
 
     return(coord);
 
 }
+
+// Format line between point and label
+function label_line_formatting(selection, d, dx, dy, chart) {
+
+    var x = chart.scales().x(d.x);
+    var y = chart.scales().y(d.y);
+    var coord = label_line_coordinates(selection, x, y, x + dx, y + dy);
+    var x2 = coord.x - x;
+    var y2 = coord.y - y;
+    var line = chart.svg().select(".label-line-" + css_clean(key(d)));
+    var gap0 = default_label_dy(d, chart);
+
+    if (coord.dist > 15 && line.empty()) {
+        line = chart.svg().select(".chart-body")
+            .append("svg:line")
+            .datum(d)
+            .attr("transform", translation(d, chart.scales()))
+            .attr("class", "point-label-line label-line-" + css_clean(key(d)));
+    } 
+    if (coord.dist > 15) {
+        line.attr("x1", - x2 * gap0 / coord.dist).attr("x2", x2)
+            .attr("y1", - y2 * gap0 / coord.dist).attr("y2", y2)
+            .style("stroke", chart.scales().color(d.col_var));
+    } 
+    if (coord.dist <= 15 && !line.empty()) {
+        line.remove();
+    }
+}
+
+
+// Compute automatic label placement
+function labels_placement(chart) {
+
+    if (chart.settings().labels_positions != "auto") return;
+
+    var label_array = [];
+    var anchor_array = [];
+    var nsweeps = 1000;
+    var index = 0;
+
+    var labels = chart.svg().selectAll(".point-label");
+
+    labels.each(function (d) {
+        var bb = this.getBBox();
+        label_array[index] = {};
+        label_array[index].width = bb.width;
+        label_array[index].height = bb.height;
+        label_array[index].x = chart.scales().x(d.x);
+        label_array[index].y = chart.scales().y(d.y);
+        label_array[index].name = d.lab;
+        anchor_array[index] = {};
+        anchor_array[index].x = chart.scales().x(d.x);
+        anchor_array[index].y = chart.scales().y(d.y);
+        anchor_array[index].r = Math.sqrt(dot_size(d, chart));
+        index += 1;
+    });
+
+    d3v5.labeler()
+        .label(label_array)
+        .anchor(anchor_array)
+        .width(chart.dims().width)
+        .height(chart.dims().height)
+        .start(nsweeps);
+
+    labels.data().forEach(function (d, i) {
+        d.lab_dx = label_array[i].x - chart.scales().x(d.x);
+        d.lab_dy = label_array[i].y - chart.scales().y(d.y);
+    })
+    
+    labels
+        .transition().duration(1000)
+        .call(label_formatting, chart);
+
+
+    return (label_array);
+
+}
+
 
 // Drag behavior
 function drag_behavior(chart) {
