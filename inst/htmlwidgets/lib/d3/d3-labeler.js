@@ -7,8 +7,8 @@ d3v5.labeler = function() {
       h = 1, // box width
       labeler = {};
 
-  var max_move = 5.0,
-      max_angle = 90,
+  var max_move = 10.0,
+      max_angle = 6,
       acc = 0;
       rej = 0;
 
@@ -17,7 +17,7 @@ d3v5.labeler = function() {
       w_inter = 30.0, // leader line intersection
       w_lab2 = 30.0, // label-label overlap
       w_lab_anc = 30.0; // label-anchor overlap
-      w_orient = 0.01; // orientation bias
+      w_orient = 1.5; // orientation bias
 
   // booleans for user defined functions
   var user_energy = false,
@@ -42,17 +42,18 @@ d3v5.labeler = function() {
       if (dist > 0) ener += dist * w_len;
 
       // label orientation bias
-      // dx /= dist;
-      // dy /= dist;
+      dx /= dist;
+      dy /= dist;
+      if (dy < 0) { ener += w_orient; }
       // if (dx > 0 && dy > 0) { ener += 0 * w_orient; }
       // else if (dx < 0 && dy > 0) { ener += 1 * w_orient; }
       // else if (dx < 0 && dy < 0) { ener += 2 * w_orient; }
       // else { ener += 3 * w_orient; }
 
-      var x21 = lab[index].x,
-          y21 = lab[index].y - lab[index].height + 2.0,
-          x22 = lab[index].x + lab[index].width,
-          y22 = lab[index].y + 2.0;
+      var x21 = lab[index].x - lab[index].width / 2,
+          y21 = lab[index].y - 3 * lab[index].height / 4,
+          x22 = lab[index].x + lab[index].width / 2,
+          y22 = lab[index].y + lab[index].height / 4;
       var x11, x12, y11, y12, x_overlap, y_overlap, overlap_area;
 
       for (var i = 0; i < m; i++) {
@@ -64,10 +65,10 @@ d3v5.labeler = function() {
           if (overlap) ener += w_inter;
 
           // penalty for label-label overlap
-          x11 = lab[i].x;
-          y11 = lab[i].y - lab[i].height + 2.0;
-          x12 = lab[i].x + lab[i].width;
-          y12 = lab[i].y + 2.0;
+          x11 = lab[i].x - lab[i].width / 2;
+          y11 = lab[i].y - 3 * lab[i].height / 4;
+          x12 = lab[i].x + lab[i].width / 2;
+          y12 = lab[i].y + lab[i].height / 4;
           x_overlap = Math.max(0, Math.min(x12,x22) - Math.max(x11,x21));
           y_overlap = Math.max(0, Math.min(y12,y22) - Math.max(y11,y21));
           overlap_area = x_overlap * y_overlap;
