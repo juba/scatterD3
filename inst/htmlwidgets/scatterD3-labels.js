@@ -94,7 +94,7 @@ function get_label_dx(d, i, chart) {
         return dx;
     }
     // Default
-    return ("0");
+    return (0);
 }
 
 // Compute label y position
@@ -181,6 +181,7 @@ function label_line_formatting(selection, d, dx, dy, chart) {
     var gap0 = default_label_dy(d, chart);
 
     if (coord.dist > 15 && line.empty()) {
+        console.log(d, dx, dy);
         line = chart.svg().select(".chart-body")
             .append("svg:line")
             .datum(d)
