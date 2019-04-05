@@ -205,7 +205,7 @@ function setup_scales(chart) {
     }
 
     // Opacity scale
-    if (settings.opacities) {
+    if (settings.opacities === null) {
         scales.opacity = d3v5.scaleLinear()
             .range([0.1, 1])
             .domain([d3v5.min(data, function (d) { return (d.opacity_var); }),
