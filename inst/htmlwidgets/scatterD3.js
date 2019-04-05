@@ -393,6 +393,11 @@ HTMLWidgets.widget({
 					function array_equal(a1, a2) {
 						return a1.length == a2.length && a1.every(function (v, i) { return v === a2[i]; });
 					}
+					function object_equal(o1, o2) {
+						var keys_equal = array_equal(d3v5.keys(o1), d3v5.keys(o2));
+						var values_equal = array_equal(d3v5.values(o1), d3v5.values(o2));
+						return keys_equal && values_equal;
+					}
 
 					// Check what did change
 					obj.settings.has_legend_changed = scatter.settings().has_legend != obj.settings.has_legend;
@@ -404,6 +409,16 @@ HTMLWidgets.widget({
 						obj.settings.colors_changed = !array_equal(scatter.settings().colors, obj.settings.colors);
 					} else {
 						obj.settings.colors_changed = scatter.settings().colors != obj.settings.colors;
+					}
+					if (typeof(scatter.settings().sizes) === "object" && typeof(obj.settings.sizes) === "object") {
+						obj.settings.sizes_changed = !object_equal(scatter.settings().sizes, obj.settings.sizes);
+					} else {
+						obj.settings.sizes_changed = scatter.settings().sizes != obj.settings.sizes;
+					}
+					if (typeof(scatter.settings().opacities) === "object" && typeof(obj.settings.opacities) === "object") {
+						obj.settings.opacities_changed = !object_equal(scatter.settings().opacities, obj.settings.opacities);
+					} else {
+						obj.settings.opacities_changed = scatter.settings().opacities != obj.settings.opacities;
 					}
 					
 					obj.settings.x_log_changed = scatter.settings().x_log != obj.settings.x_log;
@@ -425,7 +440,8 @@ HTMLWidgets.widget({
 					obj.settings.col_changed = changed("col_var") ||
 						obj.settings.colors_changed;
 					obj.settings.size_changed = changed("size_var") ||
-						obj.settings.size_range_changed;
+						obj.settings.size_range_changed ||
+						obj.settings.sizes_changed;
 					obj.settings.symbol_changed = changed("symbol_var");
 					obj.settings.legend_changed = obj.settings.col_changed ||
 						obj.settings.symbol_changed ||
@@ -446,6 +462,7 @@ HTMLWidgets.widget({
 						obj.settings.xlim_changed ||
 						obj.settings.ylim_changed ||
 						changed("opacity_var") ||
+						obj.settings.opacities_changed ||
 						changed("lines");
 
 					// Update settings
