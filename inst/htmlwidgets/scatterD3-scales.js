@@ -193,16 +193,28 @@ function setup_scales(chart) {
     }
 
     // Size scale
-    scales.size = d3v5.scaleLinear()
-        .range(settings.size_range)
-        .domain([d3v5.min(data, function (d) { return (d.size_var); }),
-        d3v5.max(data, function (d) { return (d.size_var); })]);
+    if (settings.sizes === null) {
+        scales.size = d3v5.scaleLinear()
+            .range(settings.size_range)
+            .domain([d3v5.min(data, function (d) { return (d.size_var); }),
+            d3v5.max(data, function (d) { return (d.size_var); })]);
+    } else if (typeof (settings.sizes) === "object") {
+        scales.size = d3v5.scaleOrdinal()
+            .range(d3v5.values(settings.sizes))
+            .domain(d3v5.keys(settings.sizes));
+    }
 
     // Opacity scale
-    scales.opacity = d3v5.scaleLinear()
-        .range([0.1, 1])
-        .domain([d3v5.min(data, function (d) { return (d.opacity_var); }),
-        d3v5.max(data, function (d) { return (d.opacity_var); })]);
+    if (settings.opacities) {
+        scales.opacity = d3v5.scaleLinear()
+            .range([0.1, 1])
+            .domain([d3v5.min(data, function (d) { return (d.opacity_var); }),
+            d3v5.max(data, function (d) { return (d.opacity_var); })]);
+    } else if (typeof (settings.opacities) === "object") {
+        scales.opacity = d3v5.scaleOrdinal()
+            .range(d3v5.values(settings.opacities))
+            .domain(d3v5.keys(settings.opacities));
+    }
 
     return scales;
 

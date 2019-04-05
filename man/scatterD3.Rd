@@ -9,18 +9,18 @@ D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 \usage{
 scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE,
   y_log = FALSE, point_size = 64, labels_size = 10,
-  labels_positions = NULL, point_opacity = 1, hover_size = 1,
-  hover_opacity = NULL, fixed = FALSE, col_var = NULL,
-  col_continuous = NULL, colors = NULL, ellipses = FALSE,
-  ellipses_level = 0.95, symbol_var = NULL, symbols = NULL,
-  size_var = NULL, size_range = c(10, 300), col_lab = NULL,
-  symbol_lab = NULL, size_lab = NULL, key_var = NULL,
-  type_var = NULL, opacity_var = NULL, unit_circle = FALSE,
-  url_var = NULL, tooltips = TRUE, tooltip_text = NULL,
-  tooltip_position = "bottom right", xlab = NULL, ylab = NULL,
-  html_id = NULL, width = NULL, height = NULL, legend_width = 150,
-  left_margin = 30, xlim = NULL, ylim = NULL,
-  dom_id_reset_zoom = "scatterD3-reset-zoom",
+  labels_positions = NULL, point_opacity = 1, opacities = NULL,
+  hover_size = 1, hover_opacity = NULL, fixed = FALSE,
+  col_var = NULL, col_continuous = NULL, colors = NULL,
+  ellipses = FALSE, ellipses_level = 0.95, symbol_var = NULL,
+  symbols = NULL, size_var = NULL, size_range = c(10, 300),
+  sizes = NULL, col_lab = NULL, symbol_lab = NULL, size_lab = NULL,
+  key_var = NULL, type_var = NULL, opacity_var = NULL,
+  unit_circle = FALSE, url_var = NULL, tooltips = TRUE,
+  tooltip_text = NULL, tooltip_position = "bottom right",
+  xlab = NULL, ylab = NULL, html_id = NULL, width = NULL,
+  height = NULL, legend_width = 150, left_margin = 30, xlim = NULL,
+  ylim = NULL, dom_id_reset_zoom = "scatterD3-reset-zoom",
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
@@ -53,7 +53,10 @@ data is not NULL}
 position, or the value `"auto"` to use an automatic labeler.}
 
 \item{point_opacity}{points opacity, as an integer (same opacity for all
-points) or a vector of integers, or variable name if data is not NULL}
+points).}
+
+\item{opacities}{named list or named vector of opacities. Each opacity
+will be associated by their name within `opacity_var`.}
 
 \item{hover_size}{factor for changing size when hovering points}
 
@@ -94,6 +97,9 @@ if data is not NULL}
 
 \item{size_range}{numeric vector of length 2, giving the minimum and
 maximum point sizes when mapping with size_var}
+
+\item{sizes}{named list or named vector of sizes. Each size 
+will be associated by their name within `size_var`.}
 
 \item{col_lab}{color legend title}
 

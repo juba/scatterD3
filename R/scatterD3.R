@@ -15,7 +15,7 @@
 #'     "Export labels positions" menu entry, giving each label x and y
 #'     position, or the value `"auto"` to use an automatic labeler.
 #' @param point_opacity points opacity, as an integer (same opacity for all
-#'     points) or a vector of integers, or variable name if data is not NULL
+#'     points).
 #' @param fixed force a 1:1 aspect ratio
 #' @param col_var optional vector for points color mapping, or variable name
 #'     if data is not NULL
@@ -42,6 +42,8 @@
 #'     if data is not NULL
 #' @param size_range numeric vector of length 2, giving the minimum and
 #'     maximum point sizes when mapping with size_var
+#' @param sizes named list or named vector of sizes. Each size 
+#'     will be associated by their name within `size_var`.
 #' @param col_lab color legend title
 #' @param symbol_lab symbols legend title
 #' @param size_lab size legend title
@@ -52,6 +54,8 @@
 #'     (default), "arrow" for an arrow starting from the origin.
 #' @param opacity_var optional vector of points opacity (values between 0 and
 #'     1)
+#' @param opacities named list or named vector of opacities. Each opacity
+#'     will be associated by their name within `opacity_var`.
 #' @param url_var optional vector of URLs to be opened when a point is clicked
 #' @param unit_circle set tot TRUE to draw a unit circle
 #' @param tooltips logical value to display tooltips when hovering points
@@ -132,6 +136,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       point_size = 64, labels_size = 10,
                       labels_positions = NULL,
                       point_opacity = 1,
+                      opacities = NULL,
                       hover_size = 1,
                       hover_opacity = NULL,
                       fixed = FALSE,
@@ -144,7 +149,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       symbols = NULL,
                       size_var = NULL,
                       size_range = c(10,300),
-                      col_lab = NULL, symbol_lab = NULL,
+                      sizes = NULL,
+                      col_lab = NULL, 
+                      symbol_lab = NULL,
                       size_lab = NULL,
                       key_var = NULL,
                       type_var = NULL,
@@ -241,6 +248,17 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         symbols <- as.list(symbols)
         if (!setequal(names(symbols), unique(symbol_var))) warning("Set of symbols and symbol_var values do not match")
     }
+    ## Idem for sizes
+    if (!is.null(sizes) && !is.null(names(sizes))) {
+        sizes <- as.list(sizes)
+        if (!setequal(names(sizes), unique(size_var))) warning("Set of sizes and size_var values do not match")
+    }
+    ## Idem for opacities
+    if (!is.null(opacities) && !is.null(names(opacities))) {
+        opacities <- as.list(opacities)
+        if (!setequal(names(opacities), unique(opacity_var))) warning("Set of opacities and opacity_var values do not match")
+    }
+
 
     ## Determine from the data if we have a continuous or ordinal color scale
     if (is.null(col_continuous)) {
@@ -359,6 +377,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         labels_positions = labels_positions,
         point_size = point_size,
         point_opacity = point_opacity,
+        opacities = opacities,
         hover_size = hover_size,
         hover_opacity = hover_opacity,
         xlab = xlab,
@@ -375,7 +394,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         symbols = symbols,
         size_range = size_range,
         size_lab = size_lab,
+        sizes = sizes,
         opacity_lab = opacity_lab,
+        opacities = opacities,
         unit_circle = unit_circle,
         has_color_var = !is.null(col_var),
         has_symbol_var = !is.null(symbol_var),
