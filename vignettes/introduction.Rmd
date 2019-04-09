@@ -126,13 +126,19 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
-In the same way, you can specify custom symbols-value mapping by passing a vector of symbol names to the `symbols` argument. If the vector is named, then the symbols will be associated with their names within `symbol_var`. Available symbol names are : `"circle"`, `"cross"`, `"diamond"`, `"square"`, `"star"`, `"triangle"`, and `"wye"`.
+In the same way, you can specify custom symbol-value mapping by passing a vector of symbol names to the `symbols` argument. If the vector is named, then the symbols will be associated with their names within `symbol_var`. Available symbol names are : `"circle"`, `"cross"`, `"diamond"`, `"square"`, `"star"`, `"triangle"`, and `"wye"`.
 
 ```{r map_custom_symbols}
 scatterD3(data = mtcars, x = wt, y = mpg, symbol_var = cyl,
           symbols = c("4" = "wye", "8" = "star", "6" = "triangle"))
 ```
 
+And you can also specify custom opacity-value or size-value mapping by passing a named vector to `opacities` or `sizes` :
+
+```{r custom_sizes}
+scatterD3(data = mtcars, x = mpg, y = wt, size_var = cyl, 
+  sizes = c("4" = 10, "6" = 100, "8" = 1000))
+```
 
 If your original R variable is a factor, its level orders should be preserved in the legend, both for symbols and colors.
 
@@ -168,6 +174,7 @@ Note that for now no legend for opacity is added, though.
 ```{r opacity_var}
 scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = drat)
 ```
+
 
 
 
@@ -232,6 +239,12 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear,
 ```
 
 Note that default tooltips are updated accordingly.
+
+You can remove a color, symbol or size legend entirely by specifying `NA` as its corresponding `_lab` value :
+
+```{r rm_legend}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, col_lab = NA)
+```
 
 You can also change the font size of axes and legend text with `axes_font_size` and `legend_font_size` :
 
