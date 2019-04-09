@@ -101,11 +101,11 @@ maximum point sizes when mapping with size_var}
 \item{sizes}{named list or named vector of sizes. Each size 
 will be associated by their name within `size_var`.}
 
-\item{col_lab}{color legend title}
+\item{col_lab}{color legend title. Set to NA to remove color legend entirely.}
 
-\item{symbol_lab}{symbols legend title}
+\item{symbol_lab}{symbols legend title. Set to NA to remove symbol legend entirely.}
 
-\item{size_lab}{size legend title}
+\item{size_lab}{size legend title. Set to NA to remove size legend entirely.}
 
 \item{key_var}{optional vector of rows ids, or variable name if data is not
 NULL. This is passed as a key to d3, and is only added in shiny apps
