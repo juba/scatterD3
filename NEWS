@@ -2,7 +2,7 @@ scatterD3 0.9
 ------------------------------------------------------
 
 * Qualitative color palettes between 10 and 12 items now use ColorBrewer's schemePaired
-* Upgrade to d3 5.7.0 (with version conflicts patch)
+* Upgrade to d3 5.9.2 (with version conflicts patch)
 * Add documentation website with pkgdown
 * Keep the order of levels in legend if col_var or symbol_var is a factor (thanks @romanhaa)
 * Add `symbols` argument and custom symbol to value mapping (thanks @GiuseppeDiGuglielmo and @mmauri)
@@ -11,6 +11,10 @@ scatterD3 0.9
 * Add `colors` argument for continuous color variables (thanks @romanhaa)
 * Add `zoom_on` and `zoom_on_level` arguments for programmatic zooming (thanks @Tixierae)
 * Permanent lines between dot and labels above a certain distance
+* Add small white outline around labels
+* Add ability to specify custom values <=> sizes or opacities
+* Ignore empty "" domain values in legends
+* Don't show legend if it's corresponding _lab value is NA
 * First try at automatic label placement with `labels_positions = "auto"`
 * Complete code refactoring
 
