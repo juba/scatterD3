@@ -165,6 +165,13 @@
     cursor: move;
 }
 
+.scatterD3 .x-axis-label,
+.scatterD3 .y-axis-label {
+    paint-order: stroke;
+    stroke-width: 5px;
+    stroke: #FFFFFF;
+}
+
 /* Specific styles for shiny apps */
 
 .shiny-bound-output .label {
