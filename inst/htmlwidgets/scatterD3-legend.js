@@ -8,13 +8,13 @@ function legends_create(chart) {
     if (chart.settings().has_legend && chart.settings().legend_width > 0) {
         chart.dims(setup_legend_dims(chart));
         // Color legend
-        if (chart.settings().has_color_var)
+        if (chart.settings().has_color_var && chart.settings().col_lab !== null)
             add_color_legend(chart, 0);
         // Symbol legend
-        if (chart.settings().has_symbol_var)
+        if (chart.settings().has_symbol_var && chart.settings().symbol_lab !== null)
             add_symbol_legend(chart, 0);
         // Size legend
-        if (chart.settings().has_size_var)
+        if (chart.settings().has_size_var  && chart.settings().size_lab !== null)
             add_size_legend(chart, 0);
     }
 }

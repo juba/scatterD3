@@ -44,9 +44,9 @@
 #'     maximum point sizes when mapping with size_var
 #' @param sizes named list or named vector of sizes. Each size 
 #'     will be associated by their name within `size_var`.
-#' @param col_lab color legend title
-#' @param symbol_lab symbols legend title
-#' @param size_lab size legend title
+#' @param col_lab color legend title. Set to NA to remove color legend entirely.
+#' @param symbol_lab symbols legend title. Set to NA to remove symbol legend entirely.
+#' @param size_lab size legend title. Set to NA to remove size legend entirely.
 #' @param key_var optional vector of rows ids, or variable name if data is not
 #'     NULL. This is passed as a key to d3, and is only added in shiny apps
 #'     where displayed rows are filtered interactively.
@@ -403,7 +403,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         has_size_var = !is.null(size_var),
         has_opacity_var = !is.null(opacity_var),
         has_url_var = !is.null(url_var),
-        has_legend = !is.null(col_var) || !is.null(symbol_var) || !is.null(size_var),
+        has_legend = (!is.na(col_lab) && !is.null(col_var)) || 
+                     (!is.na(symbol_lab) && !is.null(symbol_var)) ||
+                     (!is.na(size_lab) && !is.null(size_var)),
         has_tooltips = tooltips,
         tooltip_text = tooltip_text,
         tooltip_position_x = tooltip_position_x,
