@@ -186,6 +186,7 @@ function label_line_formatting(selection, d, dx, dy, chart) {
     if (coord.dist > 15 && line.empty()) {
         line = chart.svg().select(".chart-body")
             .append("svg:line")
+            .lower()
             .datum(d)
             .attr("transform", translation(d, chart.scales()))
             .attr("class", "point-label-line label-line-" + css_clean(key(d)));
