@@ -371,7 +371,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
 
     ## Disable automatic labels position if too many labels
     n_lab <- sum(lab != "")
-    if (n_lab > 500 && labels_positions == "auto") {
+    if (n_lab > 500 && !is.null(labels_positions) && labels_positions == "auto") {
         warning(gettext("More than 500 labels, automatic labels positioning has been disabled"))
         labels_positions <- NULL
     }
