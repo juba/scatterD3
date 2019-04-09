@@ -87,7 +87,8 @@ function scatterD3() {
 		}
 		// No more labels
 		if (old_settings.has_labels && !settings.has_labels) {
-			svg.selectAll(".point-label").remove();		
+			svg.selectAll(".point-label").remove();
+			svg.selectAll(".point-label-line").remove();		
 		}
 		// Unit circle
 		if (!old_settings.unit_circle && settings.unit_circle) {
