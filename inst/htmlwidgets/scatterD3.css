@@ -152,6 +152,9 @@
 
 .scatterD3 .point-label {
   cursor: pointer;
+  paint-order: stroke;
+  stroke-width: 3px;
+  stroke: #FFFFFF;
 }
 
 .scatterD3, .scatterD3:focus {
