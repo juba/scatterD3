@@ -135,6 +135,7 @@ function add_color_legend(chart, duration) {
         } else {
             var col_domain = chart.settings().col_levels;
         }
+        col_domain = col_domain.filter(function(d) { return d != "";});
         legend_color_scale
             .domain(col_domain)
             .range(col_domain.map(function (d) { return chart.scales().color(d); }));
@@ -209,6 +210,7 @@ function add_symbol_legend(chart, duration) {
     } else {
         var symbol_domain = chart.settings().symbol_levels;
     }
+    symbol_domain = symbol_domain.filter(function(d) { return d != "";});
     legend_symbol_scale
         .domain(symbol_domain)
         .range(symbol_domain.map(function (d) { return d3v5.symbol().type(chart.scales().symbol(d))(); }));
