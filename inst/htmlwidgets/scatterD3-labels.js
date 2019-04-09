@@ -180,7 +180,8 @@ function label_line_formatting(selection, d, dx, dy, chart) {
     var x2 = coord.x - x;
     var y2 = coord.y - y;
     var line = chart.svg().select(".label-line-" + css_clean(key(d)));
-    var gap0 = default_label_dy(d, chart);
+    // Force negative gap for labels below arrows
+    var gap0 = -Math.abs(default_label_dy(d, chart));
 
     if (coord.dist > 15 && line.empty()) {
         line = chart.svg().select(".chart-body")
