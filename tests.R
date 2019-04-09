@@ -14,9 +14,11 @@ d <- data.frame(lab = "toto", x = rnorm(100), y = rnorm(100))
 i(); scatterD3(data=d, x, y,
   lab=lab, labels_positions="auto")
 
-d <- data.frame(lab = "toto", x = rnorm(499), y = rnorm(499))
+d <- data.frame(lab = "toto", x = rnorm(501), y = rnorm(501))
 i(); scatterD3(data=d, x, y, lab=lab, labels_positions="auto")
 
+d <- data.frame(lab = c(rep("toto", 100), rep("", 401)), x = rnorm(501), y = rnorm(501))
+i(); scatterD3(data=d, x, y, lab=lab, labels_positions="auto")
 
 
 
