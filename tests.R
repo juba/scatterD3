@@ -44,7 +44,9 @@ i(); scatterD3(x=df$x, y=df$y, lab=df$lab, type_var = rep("arrow", 5))
 
 ## LEGENDS
 
-i(); scatterD3(data=mtcars, wt, mpg, col_var = cyl, col_lab = "")
+i(); scatterD3(data=mtcars, wt, mpg, col_var = cyl, col_lab = NA)
+
+i(); scatterD3(data=mtcars, wt, mpg, col_var = cyl, size_var = qsec, size_lab = NA)
 
 df <- mtcars
 df$cyl[df$cyl==4] <- ""
