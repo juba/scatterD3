@@ -152,6 +152,9 @@
 
 .scatterD3 .point-label {
   cursor: pointer;
+  paint-order: stroke;
+  stroke-width: 4px;
+  stroke: #FFFFFF;
 }
 
 .scatterD3, .scatterD3:focus {
@@ -160,6 +163,13 @@
 
 .scatterD3 .root {
     cursor: move;
+}
+
+.scatterD3 .x-axis-label,
+.scatterD3 .y-axis-label {
+    paint-order: stroke;
+    stroke-width: 5px;
+    stroke: #FFFFFF;
 }
 
 /* Specific styles for shiny apps */

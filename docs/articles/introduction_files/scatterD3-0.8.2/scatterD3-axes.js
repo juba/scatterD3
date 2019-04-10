@@ -1,5 +1,9 @@
 // Create and draw x and y axes
-function add_axes(selection, dims, settings, scales) {
+function add_axes(selection, chart) {
+
+    var dims = chart.dims();
+    var settings = chart.settings();
+    var scales = chart.scales();
 
     // x axis
     selection.append("g")
@@ -28,17 +32,39 @@ function add_axes(selection, dims, settings, scales) {
         .attr("transform", "translate(5,6) rotate(-90)")
         .attr("dy", ".71em")
         .style("text-anchor", "end")
+        .style("font-size", settings.axes_font_size)
         .text(settings.ylab);
 
 }
 
+
+function unit_circle_create(chart) {
+    if (!chart.settings().unit_circle) return;
+    chart.svg().select(".chart-body")
+        .append('svg:ellipse')
+        .attr('class', 'unit-circle')
+        .call(unit_circle_formatting, chart);
+}
+
+function unit_circle_update(chart) {
+    if (!chart.settings().unit_circle) return;
+    chart.svg().select(".chart-body")
+        .select(".unit-circle")
+        .transition().duration(1000)
+        .call(unit_circle_formatting, chart);
+}
+
+
 // Add unit circle
-function add_unit_circle(selection, scales) {
+function unit_circle_formatting(selection, chart) {
+
+    var scales = chart.scales();
+
     selection
         .attr('cx', scales.x(0))
         .attr('cy', scales.y(0))
-        .attr('rx', scales.x(1)-scales.x(0))
-        .attr('ry', scales.y(0)-scales.y(1))
+        .attr('rx', scales.x(1) - scales.x(0))
+        .attr('ry', scales.y(0) - scales.y(1))
         .style("stroke", "#888")
         .style("fill", "none")
         .style("opacity", "1");

@@ -27,12 +27,20 @@
   stroke: rgb(200,200,200);
 }
 
+.scatterD3 .point-label-line.not-possible-lasso {
+  stroke: rgb(200,200,200);
+}
+
 .scatterD3 .possible-lasso {
   fill: #EC888C;
   opacity: 1;
 }
 
 .scatterD3 .arrow.possible-lasso {
+  stroke: #EC888C;
+}
+
+.scatterD3 .point-label-line.possible-lasso {
   stroke: #EC888C;
 }
 
