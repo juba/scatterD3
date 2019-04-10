@@ -111,7 +111,7 @@ will be associated by their name within `size_var`.}
 NULL. This is passed as a key to d3, and is only added in shiny apps
 where displayed rows are filtered interactively.}
 
-\item{type_var}{optional vector of points type : "point" for adot
+\item{type_var}{optional vector of points type : "point" for a dot
 (default), "arrow" for an arrow starting from the origin.}
 
 \item{opacity_var}{optional vector of points opacity (values between 0 and
