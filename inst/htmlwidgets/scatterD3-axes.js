@@ -32,6 +32,7 @@ function add_axes(selection, chart) {
         .attr("transform", "translate(5,6) rotate(-90)")
         .attr("dy", ".71em")
         .style("text-anchor", "end")
+        .style("font-size", settings.axes_font_size)
         .text(settings.ylab);
 
 }
