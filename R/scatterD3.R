@@ -50,7 +50,7 @@
 #' @param key_var optional vector of rows ids, or variable name if data is not
 #'     NULL. This is passed as a key to d3, and is only added in shiny apps
 #'     where displayed rows are filtered interactively.
-#' @param type_var optional vector of points type : "point" for adot
+#' @param type_var optional vector of points type : "point" for a dot
 #'     (default), "arrow" for an arrow starting from the origin.
 #' @param opacity_var optional vector of points opacity (values between 0 and
 #'     1)
@@ -211,6 +211,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         opacity_var <- deparse(substitute(opacity_var))
         url_var <- deparse(substitute(url_var))
         key_var <- deparse(substitute(key_var))
+        type_var <- deparse(substitute(type_var))
         ## Get variable data if not "NULL"
         lab <- null_or_name(lab)
         col_var <- null_or_name(col_var)
@@ -219,6 +220,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         opacity_var <- null_or_name(opacity_var)
         url_var <- null_or_name(url_var)
         key_var <- null_or_name(key_var)
+        type_var <- null_or_name(type_var)
     }
 
     x_categorical <- is.factor(x) || !is.numeric(x)
