@@ -102,7 +102,7 @@ function scatterD3() {
 		}
 
 		// Zoom on
-		zoom_on(chart, 1000);
+		if (!settings.data_changed) zoom_on(chart, 1000);
 		if (settings.zoom_on === null && old_settings.zoom_on !== null) { 
 			reset_zoom(chart); 
 		} 
