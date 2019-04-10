@@ -28,6 +28,11 @@ Authors@R: c(
         "Speros", "Kokenes"
         , role = c("aut", "cph")
         , comment = "d3-lasso-plugin library, https://github.com/skokenes/D3-Lasso-Plugin"
+    ),
+    person(
+        "Evan", "Wang"
+        , role = c("aut", "cph")
+        , comment = "d3-labeler plugin, https://github.com/tinker10/D3-Labeler"
     )
   )
 Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
