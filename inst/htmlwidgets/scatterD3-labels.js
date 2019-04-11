@@ -189,7 +189,9 @@ function label_line_formatting(selection, d, dx, dy, chart) {
             .lower()
             .datum(d)
             .attr("transform", translation(d, chart.scales()))
-            .attr("class", "point-label-line label-line-" + css_clean(key(d)));
+            .attr("class", function (d, i) {
+                return "point-label-line label-line-" + css_clean(key(d)) + " color color-c" + css_clean(d.col_var) + " symbol symbol-c" + css_clean(d.symbol_var);
+            })
     }
     if (coord.dist > 15) {
         line.attr("x1", - x2 * gap0 / coord.dist).attr("x2", x2)
