@@ -8,13 +8,13 @@ function legends_create(chart) {
     if (chart.settings().has_legend && chart.settings().legend_width > 0) {
         chart.dims(setup_legend_dims(chart));
         // Color legend
-        if (chart.settings().has_color_var && chart.settings().col_lab !== null)
+        if (chart.settings().has_color_var)
             add_color_legend(chart, 0);
         // Symbol legend
-        if (chart.settings().has_symbol_var && chart.settings().symbol_lab !== null)
+        if (chart.settings().has_symbol_var)
             add_symbol_legend(chart, 0);
         // Size legend
-        if (chart.settings().has_size_var  && chart.settings().size_lab !== null)
+        if (chart.settings().has_size_var)
             add_size_legend(chart, 0);
     }
 }
@@ -121,6 +121,8 @@ function legend_label_formatting(selection) {
 
 // Create color legend
 function add_color_legend(chart, duration) {
+    
+    if (chart.settings().color_lab === null) return;
 
     // Default transition duration to 0
     duration = typeof duration !== 'undefined' ? duration : 0;
@@ -198,6 +200,8 @@ function add_color_legend(chart, duration) {
 // Create symbol legend
 function add_symbol_legend(chart, duration) {
 
+    if (chart.settings().symbol_lab === null) return;
+
     // Default transition duration to 0
     duration = typeof duration !== 'undefined' ? duration : 0;
     var svg = chart.svg();
@@ -265,6 +269,8 @@ function add_symbol_legend(chart, duration) {
 
 // Create size legend
 function add_size_legend(chart, duration) {
+
+    if (chart.settings().size_lab === null) return;
 
     // Default transition duration to 0
     duration = typeof duration !== 'undefined' ? duration : 0;
