@@ -1,8 +1,8 @@
 Package: scatterD3
 Type: Package
 Title: D3 JavaScript Scatterplot from R
-Version: 0.9
-Date: 2019-03-27
+Version: 0.9.1
+Date: 2019-04-27
 Authors@R: c(
     person(
       "Julien", "Barnier",
@@ -41,7 +41,7 @@ Description: Creates 'D3' 'JavaScript' scatterplots from 'R' with interactive
 License: GPL (>=3)
 VignetteBuilder: knitr
 Encoding: UTF-8
-URL: https://github.com/juba/scatterD3
+URL: https://juba.github.io/scatterD3/
 BugReports: https://github.com/juba/scatterD3/issues
 LazyData: TRUE
 Enhances: shiny

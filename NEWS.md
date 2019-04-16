@@ -1,4 +1,7 @@
-# scatterD3 0.9
+# scatterD3 0.9.1
+
+
+# scatterD3 0.9.0
 
 * Qualitative color palettes between 10 and 12 items now use ColorBrewer's schemePaired
 * Upgrade to d3 5.9.2 (with version conflicts patch)
