@@ -12,11 +12,9 @@ Here is a small preview of what you will get :
 
 ![example](https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif)
 
-Take a look at
-the
-[visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for
-a list of features and examples. You can also test it live with
-the [sample shiny app](https://data.nozav.org/app/scatterD3/).
+- The
+[visual guide](https://juba.github.io/scatterD3/articles/introduction.html) gives a list of features and examples.
+- The [sample shiny app](https://data.nozav.org/app/scatterD3/) allows to live test the package features and its shiny integration.
 
 
 ## Installation
