@@ -60,4 +60,18 @@ df$cyl[df$cyl==4] <- ""
 i(); scatterD3(data=df, wt, mpg, col_var = cyl)
 
 
+## CODE FOR DEMO GIF
+
+library(scatterD3)
+mtcars2 <- mtcars[sample(1:nrow(mtcars), 15),]
+mtcars2$name <- rownames(mtcars2)
+scatterD3(data = mtcars2,
+  x = mpg, y = wt, col_var = cyl, size_var = qsec, symbol_var = am,
+  symbol_lab = "Transmission", col_lab = "Cylinders",
+  size_lab = "1/4 mile time",
+  lab = name, labels_positions = "auto",
+  lasso = TRUE
+)
+
+
 
