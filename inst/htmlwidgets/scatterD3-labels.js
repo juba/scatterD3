@@ -38,7 +38,7 @@ function labels_update(chart) {
         .selectAll(".point-label")
         .data(chart.data(), key);
     labels.enter()
-        .append("text")    
+        .append("text")
         .call(label_init)
         .call(drag_behavior(chart))
         .merge(labels)
@@ -114,7 +114,7 @@ function get_label_dy(d, i, chart) {
 
 // Apply format to text label
 function label_formatting(selection, chart) {
-    
+
     selection
         .text(function (d) { return (d.lab); })
         .style("font-size", chart.settings().labels_size + "px")
@@ -159,7 +159,7 @@ function label_line_coordinates(label, x_orig, y_orig, x, y) {
         }
     }
 
-    coord.dist = Math.sqrt((coord.x - x_orig)**2 + (coord.y - y_orig)**2);
+    coord.dist = Math.sqrt(Math.pow(coord.x - x_orig, 2) + Math.pow(coord.y - y_orig, 2));
 
     // No line if label is just around point
     if (bb.bottom  >= y_orig - 10 && bb.top <= y_orig + 10 &&
