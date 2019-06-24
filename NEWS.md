@@ -1,5 +1,7 @@
 # scatterD3 0.9.1
 
+* Bugfix : ** operator not working in Safari / old RStudio
+
 
 # scatterD3 0.9.0
 
