@@ -10,7 +10,6 @@
 vignettes/*.pdf
 vignettes/rsconnect/*
 .Rproj.user
-example.R
 *~
 revdep/
 .vscode/
