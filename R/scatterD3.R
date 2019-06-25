@@ -42,7 +42,7 @@
 #'     if data is not NULL
 #' @param size_range numeric vector of length 2, giving the minimum and
 #'     maximum point sizes when mapping with size_var
-#' @param sizes named list or named vector of sizes. Each size 
+#' @param sizes named list or named vector of sizes. Each size
 #'     will be associated by their name within `size_var`.
 #' @param col_lab color legend title. Set to NA to remove color legend entirely.
 #' @param symbol_lab symbols legend title. Set to NA to remove symbol legend entirely.
@@ -82,6 +82,8 @@
 #' @param zoom_callback the body of a JavaScript callback function whose
 #'     inputs are the new xmin, xmax, ymin and ymax after a zoom action is
 #'     triggered.
+#' @param init_callback the body of a JavaScript callback function applied
+#'     to the scatter object at init time.
 #' @param zoom_on coordinates where to center zoom on plot draw or update.
 #' @param zoom_on_level zoom level on plot draw or update. Ignored if `zoom_on` is NULL.
 #' @param disable_wheel if TRUE, disable zooming with mousewheel.
@@ -150,7 +152,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       size_var = NULL,
                       size_range = c(10,300),
                       sizes = NULL,
-                      col_lab = NULL, 
+                      col_lab = NULL,
                       symbol_lab = NULL,
                       size_lab = NULL,
                       key_var = NULL,
@@ -175,6 +177,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
                       lasso = FALSE,
                       lasso_callback = NULL,
                       click_callback = NULL,
+                      init_callback = NULL,
                       zoom_callback = NULL,
                       zoom_on = NULL,
                       zoom_on_level = NULL,
@@ -412,7 +415,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         has_size_var = !is.null(size_var),
         has_opacity_var = !is.null(opacity_var),
         has_url_var = !is.null(url_var),
-        has_legend = (!is.na(col_lab) && !is.null(col_var)) || 
+        has_legend = (!is.na(col_lab) && !is.null(col_var)) ||
                      (!is.na(symbol_lab) && !is.null(symbol_var)) ||
                      (!is.na(size_lab) && !is.null(size_var)),
         has_tooltips = tooltips,
@@ -421,6 +424,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         tooltip_position_y = tooltip_position_y,
         has_custom_tooltips = !is.null(tooltip_text),
         click_callback = htmlwidgets::JS(click_callback),
+        init_callback = htmlwidgets::JS(init_callback),
         zoom_callback = htmlwidgets::JS(zoom_callback),
         zoom_on = zoom_on,
         zoom_on_level = zoom_on_level,

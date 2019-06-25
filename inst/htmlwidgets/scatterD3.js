@@ -472,6 +472,10 @@ HTMLWidgets.widget({
 					if (obj.settings.data_changed) scatter = scatter.data(data, redraw);
 				}
 
+				if (typeof(obj.settings.init_callback) === "function") {
+					obj.settings.init_callback.call(scatter);
+				}
+
 			},
 
 			s: scatter

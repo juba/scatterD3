@@ -24,8 +24,8 @@ scatterD3(x, y, data = NULL, lab = NULL, x_log = FALSE,
   dom_id_svg_export = "scatterD3-svg-export",
   dom_id_lasso_toggle = "scatterD3-lasso-toggle", transitions = FALSE,
   menu = TRUE, lasso = FALSE, lasso_callback = NULL,
-  click_callback = NULL, zoom_callback = NULL, zoom_on = NULL,
-  zoom_on_level = NULL, disable_wheel = FALSE,
+  click_callback = NULL, init_callback = NULL, zoom_callback = NULL,
+  zoom_on = NULL, zoom_on_level = NULL, disable_wheel = FALSE,
   lines = data.frame(slope = c(0, Inf), intercept = c(0, 0),
   stroke_dasharray = c(5, 5)), axes_font_size = "100\%",
   legend_font_size = "100\%", caption = NULL)
@@ -98,7 +98,7 @@ if data is not NULL}
 \item{size_range}{numeric vector of length 2, giving the minimum and
 maximum point sizes when mapping with size_var}
 
-\item{sizes}{named list or named vector of sizes. Each size 
+\item{sizes}{named list or named vector of sizes. Each size
 will be associated by their name within `size_var`.}
 
 \item{col_lab}{color legend title. Set to NA to remove color legend entirely.}
@@ -172,6 +172,9 @@ argument \code{sel} to be applied to a lasso plugin selection}
 
 \item{click_callback}{the body of a JavaScript callback function whose
 inputs are html_id, and the index of the clicked element.}
+
+\item{init_callback}{the body of a JavaScript callback function applied
+to the scatter object at init time.}
 
 \item{zoom_callback}{the body of a JavaScript callback function whose
 inputs are the new xmin, xmax, ymin and ymax after a zoom action is
