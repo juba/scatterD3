@@ -2,7 +2,7 @@
 
 * New `init_callback` argument for (undocumented) callback on scatter object after init or update
 * Bugfix : ** operator not working in Safari / old RStudio
-
+* Bugfix : NS_ERROR_FAILURE with getBBox in labels
 
 # scatterD3 0.9.0
 
