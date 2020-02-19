@@ -13,3 +13,4 @@ vignettes/rsconnect/*
 *~
 revdep/
 .vscode/
+\.github/

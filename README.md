@@ -3,8 +3,8 @@ It is based on the [htmlwidgets](http://www.htmlwidgets.org/) R package and on
 the [d3.js](https://d3js.org/) javascript library.
 
 ![CRAN Downloads](https://cranlogs.r-pkg.org/badges/last-month/scatterD3)
-[![Travis-CI Build Status](https://travis-ci.org/juba/scatterD3.svg?branch=master)](https://travis-ci.org/juba/scatterD3)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version-ago/scatterD3)](https://cran.r-project.org/package=scatterD3)
+[![R build status](https://github.com/juba/scatterD3/workflows/R-CMD-check/badge.svg)](https://github.com/juba/scatterD3/actions?query=workflow%3AR-CMD-check)
 
 ## Features
 
