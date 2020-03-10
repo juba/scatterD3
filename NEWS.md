@@ -1,3 +1,6 @@
+# scatterD3 0.9.2
+
+
 # scatterD3 0.9.1
 
 * New `init_callback` argument for (undocumented) callback on scatter object after init or update
