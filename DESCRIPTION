@@ -2,11 +2,11 @@ Package: scatterD3
 Type: Package
 Title: D3 JavaScript Scatterplot from R
 Version: 0.9.1
-Date: 2019-04-27
+Date: 2020-03-10
 Authors@R: c(
     person(
       "Julien", "Barnier",
-      email = "julien.barnier@ens-lyon.fr",
+      email = "julien.barnier@cnrs.fr",
       role = c("aut", "cre")
     ),
     person(
@@ -35,7 +35,7 @@ Authors@R: c(
         , comment = "d3-labeler plugin, https://github.com/tinker10/D3-Labeler"
     )
   )
-Maintainer: Julien Barnier <julien.barnier@ens-lyon.fr>
+Maintainer: Julien Barnier <julien.barnier@cnrs.fr>
 Description: Creates 'D3' 'JavaScript' scatterplots from 'R' with interactive
     features : panning, zooming, tooltips, etc.
 License: GPL (>=3)
@@ -52,4 +52,4 @@ Imports:
 Suggests:
     knitr,
     rmarkdown
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
