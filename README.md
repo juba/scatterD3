@@ -42,6 +42,8 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
 
 See [the visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for a step-by-step guide and details about the different function arguments.
 
+`scatterD3` provides a built-in SVG export of the current widget view. As an [HTML widget](http://www.htmlwidgets.org/), you can also include it in an [Rmarkdown](https://rmarkdown.rstudio.com/) HTML document while keeping its interactive features.
+
 ## Shiny integration
 
 Like every R HTML widget, shiny integration is straightforward. But as a D3
