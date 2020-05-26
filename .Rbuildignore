@@ -13,3 +13,4 @@ NOTES.md
 docs/
 tests.R
 \.github/
+^\.github$
