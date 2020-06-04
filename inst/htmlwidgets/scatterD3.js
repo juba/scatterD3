@@ -368,7 +368,12 @@ HTMLWidgets.widget({
 				// Check if update or redraw
 				var first_draw = (Object.keys(scatter.settings()).length === 0);
 				var redraw = first_draw || !obj.settings.transitions;
-				var svg = d3v5.select(el).select("svg").attr("id", "scatterD3-svg-" + obj.settings.html_id);
+				var svg = d3v5.select(el).select("svg")
+				var menu = d3v5.select(el).select(".scatterD3-menu");
+				// Set or update html_id for svg and menu
+				svg.attr("id", "scatterD3-svg-" + obj.settings.html_id);
+				menu.attr("id", "scatterD3-menu-" + obj.settings.html_id);
+
 				scatter = scatter.svg(svg);
 
 				// convert data to d3 format
