@@ -81,6 +81,16 @@ function scatterD3() {
 				.transition().duration(1000)
 				.call(dot_formatting, chart);
 		}
+  	// Caption
+		if (old_settings.caption != settings.caption) {
+			d3v5.select(svg.node().parentNode)
+		     .select(".scatterD3-caption")
+		     .selectAll("*")
+			 .remove();
+			svg.select(".caption-icon").remove()
+			caption_create(chart);
+		}
+
 		// Labels
 		if (!old_settings.has_labels && settings.has_labels) {
 			labels_create(chart);
@@ -88,7 +98,7 @@ function scatterD3() {
 		// No more labels
 		if (old_settings.has_labels && !settings.has_labels) {
 			svg.selectAll(".point-label").remove();
-			svg.selectAll(".point-label-line").remove();		
+			svg.selectAll(".point-label-line").remove();
 		}
 		// Unit circle
 		if (!old_settings.unit_circle && settings.unit_circle) {
