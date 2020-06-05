@@ -1,5 +1,7 @@
 # scatterD3 0.9.2
 
+* Fix label lines updating (thanks @Tixierae)
+* Fix caption not updated (thanks @damirpolat)
 
 # scatterD3 0.9.1
 
