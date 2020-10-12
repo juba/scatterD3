@@ -138,69 +138,70 @@ fading effects in legend. Additional handlers are provided to change label
 size, point opacity or export the figure as an SVG file via HTML form controls.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>scatterD3</span>(
-  <span class='no'>x</span>,
-  <span class='no'>y</span>,
-  <span class='kw'>data</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>lab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>x_log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>y_log</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>point_size</span> <span class='kw'>=</span> <span class='fl'>64</span>,
-  <span class='kw'>labels_size</span> <span class='kw'>=</span> <span class='fl'>10</span>,
-  <span class='kw'>labels_positions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>point_opacity</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>opacities</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>hover_size</span> <span class='kw'>=</span> <span class='fl'>1</span>,
-  <span class='kw'>hover_opacity</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>fixed</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>col_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>col_continuous</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>colors</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ellipses</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>ellipses_level</span> <span class='kw'>=</span> <span class='fl'>0.95</span>,
-  <span class='kw'>symbol_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>symbols</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size_range</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>10</span>, <span class='fl'>300</span>),
-  <span class='kw'>sizes</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>col_lab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>symbol_lab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>size_lab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>key_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>type_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>opacity_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>unit_circle</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>url_var</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tooltips</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>tooltip_text</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>tooltip_position</span> <span class='kw'>=</span> <span class='st'>"bottom right"</span>,
-  <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>html_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>width</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>height</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>legend_width</span> <span class='kw'>=</span> <span class='fl'>150</span>,
-  <span class='kw'>left_margin</span> <span class='kw'>=</span> <span class='fl'>30</span>,
-  <span class='kw'>xlim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>dom_id_reset_zoom</span> <span class='kw'>=</span> <span class='st'>"scatterD3-reset-zoom"</span>,
-  <span class='kw'>dom_id_svg_export</span> <span class='kw'>=</span> <span class='st'>"scatterD3-svg-export"</span>,
-  <span class='kw'>dom_id_lasso_toggle</span> <span class='kw'>=</span> <span class='st'>"scatterD3-lasso-toggle"</span>,
-  <span class='kw'>transitions</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>menu</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>lasso</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>lasso_callback</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>click_callback</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>init_callback</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoom_callback</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoom_on</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>zoom_on_level</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>disable_wheel</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>lines</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(<span class='kw'>slope</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>Inf</span>), <span class='kw'>intercept</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0</span>, <span class='fl'>0</span>), <span class='kw'>stroke_dasharray</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>, <span class='fl'>5</span>)),
-  <span class='kw'>axes_font_size</span> <span class='kw'>=</span> <span class='st'>"100%"</span>,
-  <span class='kw'>legend_font_size</span> <span class='kw'>=</span> <span class='st'>"100%"</span>,
-  <span class='kw'>caption</span> <span class='kw'>=</span> <span class='kw'>NULL</span>
-)</pre>
+    <pre class="usage"><span class='fu'>scatterD3</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>y</span>,
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  lab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  x_log <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  y_log <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  point_size <span class='op'>=</span> <span class='fl'>64</span>,
+  labels_size <span class='op'>=</span> <span class='fl'>10</span>,
+  labels_positions <span class='op'>=</span> <span class='cn'>NULL</span>,
+  point_opacity <span class='op'>=</span> <span class='fl'>1</span>,
+  opacities <span class='op'>=</span> <span class='cn'>NULL</span>,
+  hover_size <span class='op'>=</span> <span class='fl'>1</span>,
+  hover_opacity <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fixed <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  col_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  col_continuous <span class='op'>=</span> <span class='cn'>NULL</span>,
+  colors <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ellipses <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  ellipses_level <span class='op'>=</span> <span class='fl'>0.95</span>,
+  symbol_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  symbols <span class='op'>=</span> <span class='cn'>NULL</span>,
+  size_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  size_range <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>300</span><span class='op'>)</span>,
+  sizes <span class='op'>=</span> <span class='cn'>NULL</span>,
+  col_lab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  symbol_lab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  size_lab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  key_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  type_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  opacity_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  unit_circle <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  url_var <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tooltips <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  tooltip_text <span class='op'>=</span> <span class='cn'>NULL</span>,
+  tooltip_position <span class='op'>=</span> <span class='st'>"bottom right"</span>,
+  xlab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ylab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  html_id <span class='op'>=</span> <span class='cn'>NULL</span>,
+  width <span class='op'>=</span> <span class='cn'>NULL</span>,
+  height <span class='op'>=</span> <span class='cn'>NULL</span>,
+  legend_width <span class='op'>=</span> <span class='fl'>150</span>,
+  left_margin <span class='op'>=</span> <span class='fl'>30</span>,
+  xlim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  ylim <span class='op'>=</span> <span class='cn'>NULL</span>,
+  dom_id_reset_zoom <span class='op'>=</span> <span class='st'>"scatterD3-reset-zoom"</span>,
+  dom_id_svg_export <span class='op'>=</span> <span class='st'>"scatterD3-svg-export"</span>,
+  dom_id_lasso_toggle <span class='op'>=</span> <span class='st'>"scatterD3-lasso-toggle"</span>,
+  transitions <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  menu <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  lasso <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  lasso_callback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  click_callback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  init_callback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  zoom_callback <span class='op'>=</span> <span class='cn'>NULL</span>,
+  zoom_on <span class='op'>=</span> <span class='cn'>NULL</span>,
+  zoom_on_level <span class='op'>=</span> <span class='cn'>NULL</span>,
+  disable_wheel <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  lines <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>slope <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='cn'>Inf</span><span class='op'>)</span>, intercept <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span>, stroke_dasharray <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>5</span>,
+    <span class='fl'>5</span><span class='op'>)</span><span class='op'>)</span>,
+  axes_font_size <span class='op'>=</span> <span class='st'>"100%"</span>,
+  legend_font_size <span class='op'>=</span> <span class='st'>"100%"</span>,
+  caption <span class='op'>=</span> <span class='cn'>NULL</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -507,10 +508,12 @@ text elements.</p></td>
     <p>Interactive scatter plots based on htmlwidgets and d3.js</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>scatterD3</span>(<span class='kw'>x</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>wt</span>, <span class='kw'>y</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>mpg</span>, <span class='kw'>data</span><span class='kw'>=</span><span class='kw'>NULL</span>, <span class='kw'>lab</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span>(<span class='no'>mtcars</span>),
-          <span class='kw'>col_var</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>cyl</span>, <span class='kw'>symbol_var</span> <span class='kw'>=</span> <span class='no'>mtcars</span>$<span class='no'>am</span>,
-          <span class='kw'>xlab</span> <span class='kw'>=</span> <span class='st'>"Weight"</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"Mpg"</span>, <span class='kw'>col_lab</span> <span class='kw'>=</span> <span class='st'>"Cylinders"</span>,
-          <span class='kw'>symbol_lab</span> <span class='kw'>=</span> <span class='st'>"Manual transmission"</span>, <span class='kw'>html_id</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>scatterD3</span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>wt</span>, y <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>mpg</span>, data<span class='op'>=</span><span class='cn'>NULL</span>, lab <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>rownames</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>,
+          col_var <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>cyl</span>, symbol_var <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>$</span><span class='va'>am</span>,
+          xlab <span class='op'>=</span> <span class='st'>"Weight"</span>, ylab <span class='op'>=</span> <span class='st'>"Mpg"</span>, col_lab <span class='op'>=</span> <span class='st'>"Cylinders"</span>,
+          symbol_lab <span class='op'>=</span> <span class='st'>"Manual transmission"</span>, html_id <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -526,7 +529,7 @@ text elements.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
