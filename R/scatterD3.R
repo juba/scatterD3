@@ -117,8 +117,6 @@
 #' fading effects in legend. Additional handlers are provided to change label
 #' size, point opacity or export the figure as an SVG file via HTML form controls.
 #'
-#' @author Julien Barnier <julien.barnier@@ens-lyon.fr>
-#'
 #' @source
 #' D3.js was created by Michael Bostock. See \url{http://d3js.org/}
 #'
