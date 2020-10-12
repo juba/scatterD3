@@ -65,7 +65,8 @@ scatterD3(
   zoom_on = NULL,
   zoom_on_level = NULL,
   disable_wheel = FALSE,
-  lines = data.frame(slope = c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5, 5)),
+  lines = data.frame(slope = c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5,
+    5)),
   axes_font_size = "100\%",
   legend_font_size = "100\%",
   caption = NULL
@@ -257,7 +258,4 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg, data=NULL, lab = rownames(mtcars),
           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
           symbol_lab = "Manual transmission", html_id = NULL)
 
-}
-\author{
-Julien Barnier <julien.barnier@ens-lyon.fr>
 }
