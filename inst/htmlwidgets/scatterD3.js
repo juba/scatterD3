@@ -425,7 +425,7 @@ HTMLWidgets.widget({
 				else {
 					// Array equality test
 					function array_equal(a1, a2) {
-						return a1.length == a2.length && a1.every(function (v, i) { return v === a2[i]; });
+						return a1.length == a2.length && a1.every((v, i) => v === a2[i]);
 					}
 					function object_equal(x, y) {
 					  const ok = Object.keys, tx = typeof x, ty = typeof y;

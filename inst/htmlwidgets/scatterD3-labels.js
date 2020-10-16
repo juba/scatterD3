@@ -42,10 +42,7 @@ function labels_update(chart) {
         .call(drag_behavior(chart))
         .merge(labels)
         .transition().duration(1000)
-        .call(label_formatting, chart)
-        // .call(endall, () => {
-        //     if (chart.settings().positions_changed) labels_placement(chart);
-        // });
+        .call(label_formatting, chart);
 
     labels.exit()
         .each(function(d) {

@@ -1,7 +1,7 @@
 // Zero horizontal and vertical lines
 var draw_line = d3v6.line()
-	.x(function (d) { return d.x; })
-	.y(function (d) { return d.y; });
+	.x(d => d.x)
+	.y(d => d.y);
 
 
 
@@ -54,7 +54,7 @@ function line_formatting(selection, chart) {
 	var dims = chart.dims();
 
 	selection
-		.attr("d", function (d) {
+		.attr("d", d => {
 			// Categorical variables
 			if (settings.x_categorical && settings.y_categorical) { return null; };
 			if (settings.x_categorical) {
@@ -78,15 +78,9 @@ function line_formatting(selection, chart) {
 				{ x: dims.width, y: scales.y(d.slope * scales.x.domain()[1] + d.intercept) }]);
 			}
 		})
-		.style("stroke-width", function (d) {
-			return d.stroke_width !== undefined && d.stroke_width !== null ? d.stroke_width : "1px";
-		})
-		.style("stroke", function (d) {
-			return d.stroke !== undefined && d.stroke !== null ? d.stroke : "#000000";
-		})
-		.style("stroke-dasharray", function (d) {
-			return d.stroke_dasharray !== undefined && d.stroke_dasharray !== null ? d.stroke_dasharray : null;
-		});
+		.style("stroke-width", d =>	d.stroke_width !== undefined && d.stroke_width !== null ? d.stroke_width : "1px")
+		.style("stroke", d => d.stroke !== undefined && d.stroke !== null ? d.stroke : "#000000")
+		.style("stroke-dasharray", d => d.stroke_dasharray !== undefined && d.stroke_dasharray !== null ? d.stroke_dasharray : null);
 
 	return selection;
 }

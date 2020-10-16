@@ -51,15 +51,15 @@ function ellipse_formatting(selection, chart) {
 
     // Ellipses path function
     var ellipseFunc = d3v6.line()
-        .x(function(d) { return scales.x(d.x); })
-        .y(function(d) { return scales.y(d.y); });
+        .x(d => scales.x(d.x))
+        .y(d => scales.y(d.y));
 
     selection
-        .attr("d", function(d) {
+        .attr("d", d => {
 	    var ell = HTMLWidgets.dataframeToD3(d.data);
 	    return (ellipseFunc(ell));
         })
-        .style("stroke", function(d) {
+        .style("stroke", d => {
 	    // Only one ellipse
 	    if (d.level == "_scatterD3_all") {
 		if (chart.settings().col_continuous) {
@@ -71,7 +71,5 @@ function ellipse_formatting(selection, chart) {
 	    return( scales.color(d.level));
         })
         .style("opacity", 1)
-        .attr("class", function(d) {
-	    return "ellipse color color-c" + css_clean(d.level);
-        });
+        .attr("class", d => "ellipse color color-c" + css_clean(d.level));
 }

@@ -10,8 +10,8 @@ function compute_limits(chart) {
 
     // x and y limits
     if (settings.xlim === null) {
-        min_x = d3v6.min(data, function (d) { return (d.x); });
-        max_x = d3v6.max(data, function (d) { return (d.x); });
+        min_x = d3v6.min(data, d => d.x);
+        max_x = d3v6.max(data, d => d.x);
         gap_x = (max_x - min_x) * 0.2;
         if (min_x == max_x) {
             min_x = min_x * 0.8;
@@ -29,8 +29,8 @@ function compute_limits(chart) {
         gap_x = 0;
     }
     if (settings.ylim === null) {
-        min_y = d3v6.min(data, function (d) { return (d.y); });
-        max_y = d3v6.max(data, function (d) { return (d.y); });
+        min_y = d3v6.min(data, d => d.y);
+        max_y = d3v6.max(data, d => d.y);
         gap_y = (max_y - min_y) * 0.2;
         if (min_y == max_y) {
             min_y = min_y * 0.8;
@@ -154,8 +154,8 @@ function setup_scales(chart) {
             scales.color = d3v6.scaleSequential(d3v6[settings.colors]);
         }
         scales.color = scales.color
-            .domain([d3v6.min(data, function (d) { return (d.col_var); }),
-                     d3v6.max(data, function (d) { return (d.col_var); })]);
+            .domain([d3v6.min(data, d => d.col_var),
+                     d3v6.max(data, d => d.col_var)]);
     }
     // Ordinal color scale
     else {
@@ -188,13 +188,13 @@ function setup_scales(chart) {
     if (settings.symbols === null) {
         scales.symbol = d3v6.scaleOrdinal().range(d3v6.symbols);
     } else if (Array.isArray(settings.symbols)) {
-        scales.symbol = d3v6.scaleOrdinal().range(settings.symbols.map(function (d) { return symbol_table[d]; }));
+        scales.symbol = d3v6.scaleOrdinal().range(settings.symbols.map(d => symbol_table[d]));
     } else if (typeof (settings.symbols) === "string") {
         // Single string given
         scales.symbol = d3v6.scaleOrdinal().range(Array(symbol_table[settings.symbols]));
     } else if (typeof (settings.symbols) === "object") {
         scales.symbol = d3v6.scaleOrdinal()
-            .range(Object.values(settings.symbols).map(function (d) { return symbol_table[d]; }))
+            .range(Object.values(settings.symbols).map(d => symbol_table[d]))
             .domain(Object.keys(settings.symbols))
     }
 
@@ -202,8 +202,8 @@ function setup_scales(chart) {
     if (settings.sizes === null) {
         scales.size = d3v6.scaleLinear()
             .range(settings.size_range)
-            .domain([d3v6.min(data, function (d) { return (d.size_var); }),
-            d3v6.max(data, function (d) { return (d.size_var); })]);
+            .domain([d3v6.min(data, d => d.size_var),
+            d3v6.max(data, d => d.size_var)]);
     } else if (typeof(settings.sizes) === "object") {
         scales.size = d3v6.scaleOrdinal()
             .range(Object.values(settings.sizes))
@@ -214,8 +214,8 @@ function setup_scales(chart) {
     if (settings.opacities === null) {
         scales.opacity = d3v6.scaleLinear()
             .range([0.1, 1])
-            .domain([d3v6.min(data, function (d) { return (d.opacity_var); }),
-            d3v6.max(data, function (d) { return (d.opacity_var); })]);
+            .domain([d3v6.min(data, d => d.opacity_var),
+            d3v6.max(data, d => d.opacity_var)]);
     } else if (typeof(settings.opacities) === "object") {
         scales.opacity = d3v6.scaleOrdinal()
             .range(Object.values(settings.opacities))

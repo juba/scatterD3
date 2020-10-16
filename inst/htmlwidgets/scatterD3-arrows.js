@@ -3,7 +3,7 @@ function add_arrows_defs(chart) {
     // <defs>
     var defs = chart.svg().append("defs");
     // arrow head markers
-    chart.scales().color.range().forEach(function(d) {
+    chart.scales().color.range().forEach(d => {
         defs.append("marker")
 	    .attr("id", "arrow-head-" + chart.settings().html_id + "-" + d)
 	    .attr("markerWidth", "10")
@@ -59,10 +59,10 @@ function arrows_update(chart) {
 // Arrow drawing function
 function draw_arrow(selection, chart) {
     selection
-        .attr("x1", function(d) { return chart.scales().x(0); })
-        .attr("y1", function(d) { return chart.scales().y(0); })
-        .attr("x2", function(d) { return chart.scales().x(d.x); })
-        .attr("y2", function(d) { return chart.scales().y(d.y); });
+        .attr("x1", d => chart.scales().x(0))
+        .attr("y1", d => chart.scales().y(0))
+        .attr("x2", d => chart.scales().x(d.x))
+        .attr("y2", d => chart.scales().y(d.y));
 }
 
 // Initial arrow attributes
@@ -90,8 +90,8 @@ function arrow_formatting(selection, chart) {
         .style("stroke-width", "1px")
     // stroke color
         .style("stroke", d => chart.scales().color(d.col_var))
-        .attr("marker-end", function(d) { return "url(#arrow-head-" + chart.settings().html_id + "-" + chart.scales().color(d.col_var) + ")"; })
-        .attr("class", function(d,i) { return "arrow color color-c" + css_clean(d.col_var); })
+        .attr("marker-end", d => "url(#arrow-head-" + chart.settings().html_id + "-" + chart.scales().color(d.col_var) + ")")
+        .attr("class", d => "arrow color color-c" + css_clean(d.col_var))
         .style("opacity", function(d) {
 	    return d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity;
 	});
