@@ -1,5 +1,6 @@
 # scatterD3 0.9.2
 
+* Take levels order into account when a variable is a factor (thanks @sharvarinarendra)
 * Fix label lines updating (thanks @Tixierae)
 * Fix caption not updated (thanks @damirpolat)
 
