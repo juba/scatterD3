@@ -110,20 +110,26 @@ function setup_scales(chart) {
         scales.x.range([0, dims.width])
             .domain([limits.min_x, limits.max_x]);
     } else {
+        var x_domain = settings.x_levels === null ?
+            d3v5.map(data, function (d) { return d.x; }).keys().sort() :
+            settings.x_levels;
         scales.x = d3v5.scalePoint()
             .range([0, dims.width])
             .padding(0.9)
-            .domain(d3v5.map(data, function (d) { return d.x; }).keys().sort());
+            .domain(x_domain);
     }
     if (!settings.y_categorical) {
         scales.y = settings.y_log ? d3v5.scaleLog() : d3v5.scaleLinear();
         scales.y.range([dims.height, 0])
             .domain([limits.min_y, limits.max_y]);
     } else {
+        var y_domain = settings.y_levels === null ?
+            d3v5.map(data, function (d) { return d.y; }).keys().sort() :
+            settings.y_levels;
         scales.y = d3v5.scalePoint()
             .range([dims.height, 0])
             .padding(0.9)
-            .domain(d3v5.map(data, function (d) { return d.y; }).keys().sort());
+            .domain(y_domain);
     }
     // Keep track of original scales
     scales.x_orig = scales.x;
