@@ -137,10 +137,10 @@ function add_color_legend(chart, duration) {
         } else {
             var col_domain = chart.settings().col_levels;
         }
-        col_domain = col_domain.filter(function(d) { return d != "";});
+        col_domain = col_domain.filter(d => d != "");
         legend_color_scale
             .domain(col_domain)
-            .range(col_domain.map(function (d) { return chart.scales().color(d); }));
+            .range(col_domain.map(d => chart.scales().color(d)));
     }
 
     var color_legend = d3v6.legendColor()
@@ -150,7 +150,7 @@ function add_color_legend(chart, duration) {
 
     if (!chart.settings().col_continuous) {
         color_legend
-            .on("cellover", function (d) {
+            .on("cellover", d => {
                 d = css_clean(d);
                 var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
                 var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
@@ -161,13 +161,11 @@ function add_color_legend(chart, duration) {
                     .transition()
                     .style("opacity", 1);
             })
-            .on("cellout", function (d) {
+            .on("cellout", d => {
                 var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
                 svg.selectAll(sel)
                     .transition()
-                    .style("opacity", function (d2) {
-                        return (d2.opacity_var === undefined ? chart.settings().point_opacity : chart.scales().opacity(d2.opacity_var));
-                    });
+                    .style("opacity", d2 => d2.opacity_var === undefined ? chart.settings().point_opacity : chart.scales().opacity(d2.opacity_var));
                 svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
                     .transition()
                     .style("opacity", 1);
@@ -214,15 +212,15 @@ function add_symbol_legend(chart, duration) {
     } else {
         var symbol_domain = chart.settings().symbol_levels;
     }
-    symbol_domain = symbol_domain.filter(function(d) { return d != "";});
+    symbol_domain = symbol_domain.filter(d => d != "");
     legend_symbol_scale
         .domain(symbol_domain)
-        .range(symbol_domain.map(function (d) { return d3v6.symbol().type(chart.scales().symbol(d))(); }));
+        .range(symbol_domain.map(d => d3v6.symbol().type(chart.scales().symbol(d))()));
 
     var symbol_legend = d3v6.legendSymbol()
         .shapePadding(5)
         .scale(legend_symbol_scale)
-        .on("cellover", function (d) {
+        .on("cellover", d => {
             d = css_clean(d);
             var nsel = ".symbol:not(.symbol-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
             var sel = ".symbol-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
@@ -237,9 +235,7 @@ function add_symbol_legend(chart, duration) {
             var sel = ".symbol:not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(sel)
                 .transition()
-                .style("opacity", function (d2) {
-                    return (d2.opacity_var === undefined ? chart.settings().point_opacity : chart.scales().opacity(d2.opacity_var));
-                });
+                .style("opacity", d2 => d2.opacity_var === undefined ? chart.settings().point_opacity : chart.scales().opacity(d2.opacity_var));
             svg.selectAll(".point-label:not(.selected-lasso):not(.not-selected-lasso)")
                 .transition()
                 .style("opacity", 1);
@@ -278,7 +274,7 @@ function add_size_legend(chart, duration) {
     var legend = chart.svg().select(".legend");
     var legend_size_scale = chart.scales().size.copy();
     // FIXME : find exact formula
-    legend_size_scale.range(chart.scales().size.range().map(function (d) { return Math.sqrt(d) / 1.8; }));
+    legend_size_scale.range(chart.scales().size.range().map(d => Math.sqrt(d) / 1.8));
 
     var size_legend = d3v6.legendSize()
         .shapePadding(3)

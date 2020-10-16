@@ -1,4 +1,4 @@
-function label_lines_update(chart) {
+function label_lines_update(chart, duration) {
 
     if (!chart.settings().has_labels) return;
 
@@ -11,7 +11,7 @@ function label_lines_update(chart) {
         .lower()
         .merge(labels_lines)
 
-    if (!chart.dragging()) t = t.transition().duration(1000)
+    if (!chart.dragging()) t = t.transition().duration(duration)
 
     t.call(label_line_formatting, chart);
 
@@ -75,7 +75,7 @@ function label_line_coordinates(label, x_orig, y_orig, x, y) {
 }
 
 // Format line between point and label
-function label_line_display(selection, chart) {
+function label_line_display(selection, chart, duration) {
 
     const d = selection.datum()
     const x = chart.scales().x(d.x);
@@ -101,5 +101,5 @@ function label_line_display(selection, chart) {
         )
     }
 
-    label_lines_update(chart);
+    label_lines_update(chart, duration);
 }

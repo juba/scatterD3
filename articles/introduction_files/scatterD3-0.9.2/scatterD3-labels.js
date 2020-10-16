@@ -1,5 +1,5 @@
 
-function labels_create(chart) {
+function labels_create(chart, duration) {
 
     if (!chart.settings().has_labels) return;
 
@@ -11,15 +11,15 @@ function labels_create(chart) {
         .append("text")
 	    .call(label_init)
         .call(label_formatting, chart)
-        .call(drag_behavior(chart));
+        .call(drag_behavior(chart, duration));
 
     // Automatic label placement
-    labels_placement(chart);
+    labels_placement(chart, duration);
 
 }
 
 
-function labels_update(chart) {
+function labels_update(chart, duration) {
 
     function endall(transition, callback) {
         if (typeof callback !== "function") throw new Error("Wrong callback in endall");
@@ -31,7 +31,7 @@ function labels_update(chart) {
       }
 
     if (!chart.settings().has_labels) return;
-    if (chart.settings().positions_changed) labels_placement(chart);
+    if (chart.settings().positions_changed) labels_placement(chart, duration);
 
     var labels = chart.svg().select(".chart-body")
         .selectAll(".point-label")
@@ -39,13 +39,10 @@ function labels_update(chart) {
     labels.enter()
         .append("text")
         .call(label_init)
-        .call(drag_behavior(chart))
+        .call(drag_behavior(chart, duration))
         .merge(labels)
-        .transition().duration(1000)
-        .call(label_formatting, chart)
-        // .call(endall, () => {
-        //     if (chart.settings().positions_changed) labels_placement(chart);
-        // });
+        .transition().duration(duration)
+        .call(label_formatting, chart);
 
     labels.exit()
         .each(function(d) {
@@ -53,7 +50,7 @@ function labels_update(chart) {
                 .select(".label-line-" + css_clean(key(d)))
                 .remove();
         })
-        .transition().duration(1000)
+        .transition().duration(duration)
         .attr("transform", "translate(0,0)")
         .remove();
 
@@ -139,7 +136,7 @@ function label_formatting(selection, chart) {
 
 
 // Compute automatic label placement
-function labels_placement(chart) {
+function labels_placement(chart, duration) {
 
     if (chart.settings().labels_positions != "auto") return;
 
@@ -184,15 +181,15 @@ function labels_placement(chart) {
     chart.positions(positions);
 
     labels
-        .transition().duration(1000)
+        .transition().duration(duration)
         .call(label_formatting, chart)
 
-    labels.call(label_line_display, chart)
+    labels.call(label_line_display, chart, duration)
 }
 
 
 // Drag behavior
-function drag_behavior(chart) {
+function drag_behavior(chart, duration) {
 
     var scales = chart.scales();
     var labels = chart.svg().selectAll(".point-label");
