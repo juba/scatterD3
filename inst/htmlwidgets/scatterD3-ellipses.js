@@ -50,7 +50,7 @@ function ellipse_formatting(selection, chart) {
     var scales = chart.scales();
 
     // Ellipses path function
-    var ellipseFunc = d3v5.line()
+    var ellipseFunc = d3v6.line()
         .x(function(d) { return scales.x(d.x); })
         .y(function(d) { return scales.y(d.y); });
 
@@ -63,7 +63,7 @@ function ellipse_formatting(selection, chart) {
 	    // Only one ellipse
 	    if (d.level == "_scatterD3_all") {
 		if (chart.settings().col_continuous) {
-		    return(d3v5.interpolateViridis(0));
+		    return(d3v6.interpolateViridis(0));
 		} else {
 		    return(scales.color.range()[0]);
 		}

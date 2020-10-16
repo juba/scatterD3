@@ -6,7 +6,7 @@ function labels_create(chart) {
     var labels = chart.svg().select(".chart-body")
         .selectAll(".point-label")
         .data(chart.data(), key);
-    
+
     labels.enter()
         .append("text")
 	    .call(label_init)
@@ -31,7 +31,7 @@ function labels_update(chart) {
       }
 
     if (!chart.settings().has_labels) return;
-    if (chart.settings().positions_changed) labels_placement(chart); 
+    if (chart.settings().positions_changed) labels_placement(chart);
 
     var labels = chart.svg().select(".chart-body")
         .selectAll(".point-label")
@@ -44,7 +44,7 @@ function labels_update(chart) {
         .transition().duration(1000)
         .call(label_formatting, chart)
         // .call(endall, () => {
-        //     if (chart.settings().positions_changed) labels_placement(chart); 
+        //     if (chart.settings().positions_changed) labels_placement(chart);
         // });
 
     labels.exit()
@@ -58,7 +58,7 @@ function labels_update(chart) {
         .remove();
 
     if (chart.settings().has_labels_changed) {
-        var label_export = d3v5.select("#scatterD3-menu-" + chart.settings().html_id)
+        var label_export = d3v6.select("#scatterD3-menu-" + chart.settings().html_id)
             .select(".label-export");
         label_export.style("display", chart.settings().has_labels ? "block" : "none");
     }
@@ -126,7 +126,7 @@ function label_formatting(selection, chart) {
 	    .filter(d => (d.lab !== "" && d.lab !== null))
         .text(d => (d.lab))
         .style("font-size", chart.settings().labels_size + "px")
-        .attr("class", (d, i) => 
+        .attr("class", (d, i) =>
             (`point-label color color-c${css_clean(d.col_var)} symbol symbol-c${css_clean(d.symbol_var)}`)
         )
         .attr("transform", d => ( translation(d, chart.scales()) ))
@@ -167,14 +167,14 @@ function labels_placement(chart) {
         index += 1;
     });
 
-    d3v5.labeler()
+    d3v6.labeler()
         .label(label_array)
         .anchor(anchor_array)
         .width(chart.dims().width)
         .height(chart.dims().height)
         .start(nsweeps);
 
-    let positions = chart.positions();        
+    let positions = chart.positions();
     labels.data().forEach(function (d, i) {
         d.lab_dx = label_array[i].x - chart.scales().x(d.x);
         d.lab_dy = label_array[i].y - chart.scales().y(d.y);
@@ -195,29 +195,27 @@ function labels_placement(chart) {
 function drag_behavior(chart) {
 
     var scales = chart.scales();
+    var labels = chart.svg().selectAll(".point-label");
 
     // Text labels dragging function
-    var drag = d3v5.drag()
-        .subject(function(d, i) {
+    var drag = d3v6.drag()
+        .subject((event, d, i) => {
             var dx = get_label_dx(d, i, chart);
             var dy = get_label_dy(d, i, chart);
             return { x: scales.x(d.x) + dx, y: scales.y(d.y) + dy };
         })
-        .on('start', function (d) {
-            if (!d3v5.event.sourceEvent.shiftKey) {
+        .on('start', (event, d) => {
+            if (!event.sourceEvent.shiftKey) {
                 chart.dragging(true);
-                var label = d3v5.select(this);
+                var label = labels.filter(p => p === d);
                 label.style('fill', '#000');
-                var dx = d3v5.event.x - scales.x(d.x);
-                var dy = d3v5.event.y - scales.y(d.y);
-                label.call(label_line_display, chart);
             }
         })
-        .on('drag', function(d, i) {
+        .on('drag', (event, d) => {
             if (chart.dragging()) {
-                var label = d3v5.select(this);
-                var dx = d3v5.event.x - scales.x(d.x);
-                var dy = d3v5.event.y - scales.y(d.y);
+                var label = labels.filter(p => p === d);
+                var dx = event.x - scales.x(d.x);
+                var dy = event.y - scales.y(d.y);
                 label.attr('dx', dx + "px")
                      .attr('dy', dy + "px");
                 d.lab_dx = dx;
@@ -225,13 +223,13 @@ function drag_behavior(chart) {
                 label.call(label_line_display, chart);
                 let positions = chart.positions();
                 positions = positions.filter(p => key(p) != key(d))
-                positions.push({lab_dx: d.lab_dx, lab_dy: d.lab_dy, key_var: d.key_var})        
+                positions.push({lab_dx: d.lab_dx, lab_dy: d.lab_dy, key_var: d.key_var})
                 chart.positions(positions)
             }
         })
-        .on('end', function(d) {
+        .on('end', (event, d) => {
             if (chart.dragging()) {
-                var label = d3v5.select(this);
+                var label = labels.filter(p => p === d);
                 label.style('fill', chart.scales().color(d.col_var));
                 label.call(label_line_display, chart);
                 chart.dragging(false);

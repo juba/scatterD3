@@ -44,7 +44,7 @@ function tooltip_content(d, chart) {
 // Custom color scheme
 function custom_scheme10() {
     // slice() to create a copy
-    var scheme = d3v5.schemeCategory10.slice();
+    var scheme = d3v6.schemeCategory10.slice();
     // Switch orange and red
     var tmp = scheme[3];
     scheme[3] = scheme[1];

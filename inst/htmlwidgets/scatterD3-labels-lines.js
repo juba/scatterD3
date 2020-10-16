@@ -10,9 +10,9 @@ function label_lines_update(chart) {
         .append("svg:line")
         .lower()
         .merge(labels_lines)
-    
+
     if (!chart.dragging()) t = t.transition().duration(1000)
-    
+
     t.call(label_line_formatting, chart);
 
     labels_lines.exit()
@@ -38,7 +38,7 @@ function label_line_formatting(selection, chart) {
 
 // Compute end of label line coordinates and distance with point
 function label_line_coordinates(label, x_orig, y_orig, x, y) {
-    
+
     var label_bb = label.node().getBBox();
     var bb = {left: x - label_bb.width / 2,
               right: x + label_bb.width / 2,
@@ -76,11 +76,13 @@ function label_line_coordinates(label, x_orig, y_orig, x, y) {
 
 // Format line between point and label
 function label_line_display(selection, chart) {
-    
+
     const d = selection.datum()
-    const x = chart.scales().x(d.lab_dx);
-    const y = chart.scales().y(d.lab_dy);
+    const x = chart.scales().x(d.x);
+    const y = chart.scales().y(d.y);
     const coord = label_line_coordinates(selection, x, y, x + d.lab_dx, y + d.lab_dy);
+
+
     // Force negative gap for labels below arrows
     var gap0 = -Math.abs(default_label_dy(d, chart));
 
@@ -93,7 +95,7 @@ function label_line_display(selection, chart) {
     if (coord.dist > 15) {
         chart.data().label_lines.push(
             {
-                x1: x1, y1: y1, x2: x2, y2: y2, x: d.x, y: d.y, 
+                x1: x1, y1: y1, x2: x2, y2: y2, x: d.x, y: d.y,
                 col_var: d.col_var, key_var: d.key_var, symbol_var: d.symbol_var
             }
         )

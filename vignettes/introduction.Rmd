@@ -524,7 +524,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
 
 The `init_callback` argument allows to pass a JavaScript function that will be applied after the plot has been created or updated, with the JavaScript scatter object as `this`.
 
-This is not documented yet, and you'll have to dig into the JS package code to use it. Please note that to access `d3` functions you'll have to use the `d3v5` prefix.
+This is not documented yet, and you'll have to dig into the JS package code to use it. Please note that to access `d3` functions you'll have to use the `d3v6` prefix.
 
 Here is a bad but potentially useful example that formats the `x` axis as percentages :
 
@@ -533,7 +533,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
   init_callback = "function() {
     var scales = this.scales();
     var svg = this.svg();
-    new_x_axis = scales.xAxis.tickFormat(d3v5.format(',.0%'));
+    new_x_axis = scales.xAxis.tickFormat(d3v6.format(',.0%'));
     svg.select('.x.axis').call(new_x_axis);
   }"
 )

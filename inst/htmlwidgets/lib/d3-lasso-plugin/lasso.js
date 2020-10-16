@@ -1,4 +1,4 @@
-d3v5.lasso = function() {
+d3v6.lasso = function() {
 
     var items = null,
         closePathDistance = 75,
@@ -57,16 +57,16 @@ d3v5.lasso = function() {
         var path_length_start;
 
         // Apply drag behaviors
-        var drag = d3v5.drag()
+        var drag = d3v6.drag()
             .on("start", dragstart)
             .on("drag", dragmove)
             .on("end", dragend);
 
 	// Init DOM-local data
-	var right_edges = d3v5.local();
-	var left_edges = d3v5.local();
-	var close_right_edges = d3v5.local();
-	var close_left_edges = d3v5.local();
+	var right_edges = d3v6.local();
+	var left_edges = d3v6.local();
+	var close_right_edges = d3v6.local();
+	var close_left_edges = d3v6.local();
 
         // Call drag
         area.call(drag);
@@ -102,7 +102,7 @@ d3v5.lasso = function() {
             if(hoverSelect===true) {
                 items.on("mouseover.lasso",function() {
                     // if hovered, change lasso selection attribute to true
-                    d3v5.select(this).hoverSelected = true;
+                    d3v6.select(this).hoverSelected = true;
                 });
             }
 
@@ -110,13 +110,13 @@ d3v5.lasso = function() {
             on.start();
         }
 
-        function dragmove() {
+        function dragmove(event) {
             // Get mouse position within body, used for calculations
-            var x = d3v5.event.sourceEvent.clientX;
-            var y = d3v5.event.sourceEvent.clientY;
+            var x = event.sourceEvent.clientX;
+            var y = event.sourceEvent.clientY;
             // Get mouse position within drawing area, used for rendering
-            var tx = d3v5.mouse(this)[0];
-            var ty = d3v5.mouse(this)[1];
+            var tx = d3v6.pointer(event, this)[0];
+            var ty = d3v6.pointer(event, this)[1];
 
             // Initialize the path or add the latest point to it
             if (path==="") {
@@ -313,7 +313,7 @@ d3v5.lasso = function() {
         if (!arguments.length) return items;
         items = _;
         items.each(function(d) {
-            var item = d3v5.select(this);
+            var item = d3v6.select(this);
             if(typeof item.datum() === 'undefined') {
                 item.datum({possible:false,selected:false});
             }
