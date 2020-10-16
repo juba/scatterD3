@@ -226,6 +226,9 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
 
     x_categorical <- is.factor(x) || !is.numeric(x)
     y_categorical <- is.factor(y) || !is.numeric(y)
+    x_levels <- levels(x)
+    y_levels <- levels(y)
+
 
     ## No negative values and no 0 lines if logarithmic scales
     if (x_log) {
@@ -435,6 +438,8 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
         ylim = ylim,
         x_categorical = x_categorical,
         y_categorical = y_categorical,
+        x_levels = x_levels,
+        y_levels = y_levels,
         menu = menu,
         lasso = lasso,
         lasso_callback = htmlwidgets::JS(lasso_callback),
