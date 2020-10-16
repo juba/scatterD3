@@ -1,0 +1,34 @@
+dependencies:
+  - name: d3v6
+    version: 6.2.0
+    src: htmlwidgets/lib/d3
+    script:
+      - d3.v6.min.js
+      - d3-legend.min.js
+      - d3-labeler.js
+  - name: d3.lasso-plugin
+    version: 1.0.0
+    src: htmlwidgets/lib/d3-lasso-plugin
+    script: lasso.js
+    stylesheet: lasso.css
+  - name: scatterD3
+    version: 0.9.2
+    src: htmlwidgets/
+    stylesheet: scatterD3.css
+    script:
+      - scatterD3-utils.js
+      - scatterD3-scales.js
+      - scatterD3-dims.js
+      - scatterD3-menu.js
+      - scatterD3-axes.js
+      - scatterD3-dots.js
+      - scatterD3-arrows.js
+      - scatterD3-labels.js
+      - scatterD3-labels-lines.js
+      - scatterD3-lines.js
+      - scatterD3-ellipses.js
+      - scatterD3-zoom.js
+      - scatterD3-legend.js
+      - scatterD3-lasso.js
+      - scatterD3-exports.js
+

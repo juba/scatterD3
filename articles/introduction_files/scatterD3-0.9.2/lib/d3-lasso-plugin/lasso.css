@@ -1,0 +1,53 @@
+.lasso path {
+  stroke: rgb(80,80,80);
+  stroke-width: 2px;
+}
+
+.lasso .drawn {
+  fill: #CCCCCC;
+  fill-opacity: .15 ;
+}
+
+.lasso .loop_close {
+  fill: none;
+  stroke-dasharray: 4,4;
+}
+
+.lasso .origin {
+  fill: #3399FF;
+  fill-opacity: .5;
+}
+
+.scatterD3 .not-possible-lasso {
+  fill: rgb(150,150,150);
+  opacity: 1;
+}
+
+.scatterD3 .arrow.not-possible-lasso {
+  stroke: rgb(200,200,200);
+}
+
+.scatterD3 .point-label-line.not-possible-lasso {
+  stroke: rgb(200,200,200);
+}
+
+.scatterD3 .possible-lasso {
+  fill: #EC888C;
+  opacity: 1;
+}
+
+.scatterD3 .arrow.possible-lasso {
+  stroke: #EC888C;
+}
+
+.scatterD3 .point-label-line.possible-lasso {
+  stroke: #EC888C;
+}
+
+/*.scatterD3 .selected-lasso {
+  opacity: 1 !important;
+}
+
+.scatterD3 .not-selected-lasso {
+  opacity: 0.1 !important;
+}*/
