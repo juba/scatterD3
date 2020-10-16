@@ -44,7 +44,7 @@ function scatterD3() {
 			dots_create(chart);
 			arrows_create(chart);
 			ellipses_create(chart);
-			labels_create(chart);
+			labels_create(chart, settings.transitions ? 1000 : 0);
 
 			// Legends
 			legends_create(chart);
@@ -94,7 +94,7 @@ function scatterD3() {
 
 		// Labels
 		if (!old_settings.has_labels && settings.has_labels) {
-			labels_create(chart);
+			labels_create(chart, settings);
 		}
 		// No more labels
 		if (old_settings.has_labels && !settings.has_labels) {
@@ -144,8 +144,8 @@ function scatterD3() {
 		dots_update(chart);
 		arrows_update(chart);
 		ellipses_update(chart);
-		labels_update(chart);
-		label_lines_update(chart);
+		labels_update(chart, settings.transitions ? 1000 : 0);
+		label_lines_update(chart, settings.transitions ? 1000 : 0);
 		legends_update(chart);
 
 	};
