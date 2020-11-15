@@ -56,12 +56,12 @@ function dot_init(selection, chart) {
 
     // tooltips when hovering points
     var tooltip = d3v6.select(".scatterD3-tooltip");
-    selection.on("mouseover", (event, d, i) => {
-        d3v6.select(this)
+    selection.on("mouseover", (event, d) => {
+        d3v6.select(event.currentTarget)
             .transition().duration(150)
             .attr("d", d3v6.symbol()
-		  .type(d => scales.symbol(d.symbol_var))
-		  .size(d => dot_size(d, chart) * settings.hover_size)
+		  .type(v => scales.symbol(v.symbol_var))
+		  .size(v => dot_size(v, chart) * settings.hover_size)
 		 )
             .style("opacity", d => {
 		if (settings.hover_opacity !== null) {
@@ -71,7 +71,7 @@ function dot_init(selection, chart) {
 		}
             });
 	if (settings.has_url_var) {
-            d3v6.select(this)
+            d3v6.select(event.currentTarget)
 		.style("cursor", d => d.url_var != "" ? "pointer" : "default");
 	}
 	if (settings.has_tooltips) {
@@ -96,7 +96,7 @@ function dot_init(selection, chart) {
 	}
     });
     selection.on("mouseout", function(event){
-        d3v6.select(this)
+        d3v6.select(event.currentTarget)
             .transition().duration(150)
             .attr("d", d3v6.symbol()
 		  .type(d => scales.symbol(d.symbol_var))
