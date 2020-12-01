@@ -83,7 +83,7 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<p><code>scatterD3</code> is an HTML R widget for interactive scatter plots visualization. It is based on the <a href="http://www.htmlwidgets.org/">htmlwidgets</a> R package and on the <a href="https://d3js.org/">d3.js</a> javascript library.</p>
+<p><code>scatterD3</code> is an HTML R widget for interactive scatter plots visualization. It is based on the <a href="https://www.htmlwidgets.org/">htmlwidgets</a> R package and on the <a href="https://d3js.org/">d3.js</a> javascript library.</p>
 <p><img src="https://cranlogs.r-pkg.org/badges/last-month/scatterD3" alt="CRAN Downloads"><a href="https://cran.r-project.org/package=scatterD3"><img src="https://www.r-pkg.org/badges/version-ago/scatterD3" alt="CRAN_Status_Badge"></a> <a href="https://github.com/juba/scatterD3/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/juba/scatterD3/workflows/R-CMD-check/badge.svg" alt="R build status"></a></p>
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
@@ -113,14 +113,14 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
           xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
           symbol_lab = "Manual transmission")</code></pre>
 <p>See <a href="https://juba.github.io/scatterD3/articles/introduction.html">the visual guide</a> for a step-by-step guide and details about the different function arguments.</p>
-<p><code>scatterD3</code> provides a built-in SVG export of the current widget view. As an <a href="http://www.htmlwidgets.org/">HTML widget</a>, you can also include it in an <a href="https://rmarkdown.rstudio.com/">Rmarkdown</a> HTML document while keeping its interactive features.</p>
+<p><code>scatterD3</code> provides a built-in SVG export of the current widget view. As an <a href="https://www.htmlwidgets.org/">HTML widget</a>, you can also include it in an <a href="https://rmarkdown.rstudio.com/">Rmarkdown</a> HTML document while keeping its interactive features.</p>
 </div>
 <div id="shiny-integration" class="section level2">
 <h2 class="hasAnchor">
 <a href="#shiny-integration" class="anchor"></a>Shiny integration</h2>
 <p>Like every R HTML widget, shiny integration is straightforward. But as a D3 widget, <code>scatterD3</code> is <em>updatable</em> : changes in settings or data can be displayed via smooth transitions instead of a complete chart redraw, which can provide interesting visual clues.</p>
 <p>Furthermore, <code>scatterD3</code> provides some additional handlers and callback hooks for a more complete JavaScript interactivity and integration.</p>
-<p>The <a href="http://data.nozav.org/app/scatterD3/">sample scatterD3 shiny app</a> allows you to see the different features described here. You can <a href="https://github.com/juba/scatterD3_shiny_app">check its source code on GitHub</a> and the <a href="https://juba.github.io/scatterD3/articles/introduction.html">visual guide</a> for a better understanding of the different arguments.</p>
+<p>The <a href="https://data.nozav.org/app/scatterD3/">sample scatterD3 shiny app</a> allows you to see the different features described here. You can <a href="https://github.com/juba/scatterD3_shiny_app">check its source code on GitHub</a> and the <a href="https://juba.github.io/scatterD3/articles/introduction.html">visual guide</a> for a better understanding of the different arguments.</p>
 </div>
 <div id="credits" class="section level2">
 <h2 class="hasAnchor">
@@ -128,9 +128,9 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
 <p>This package has been made possible by :</p>
 <ul>
 <li>Michael Bostock’s incredible <a href="https://d3js.org/">d3.js</a> library and documentation</li>
-<li>RStudio’s <a href="http://shiny.rstudio.com/">shiny</a> and <a href="http://www.htmlwidgets.org/">htmlwidgets</a> packages</li>
+<li>RStudio’s <a href="https://shiny.rstudio.com/">shiny</a> and <a href="https://www.htmlwidgets.org/">htmlwidgets</a> packages</li>
 <li>Susie Lu’s <a href="https://github.com/susielu/d3-legend">d3-legend</a> module</li>
-<li>Rob Moore’s <a href="http://www.toptal.com/d3-js/towards-reusable-d3-js-charts">article on reusable d3.js charts</a>
+<li>Rob Moore’s <a href="https://www.toptal.com/d3-js/towards-reusable-d3-js-charts">article on reusable d3.js charts</a>
 </li>
 <li>Speros Kokenes’ <a href="https://github.com/skokenes/D3-Lasso-Plugin">d3 lasso plugin</a>
 </li>
