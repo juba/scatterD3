@@ -1,3 +1,6 @@
+# scatterD3 0.9.3
+
+
 # scatterD3 0.9.2
 
 * Upgrade to d3 6.2.0
