@@ -4,7 +4,7 @@
 \alias{scatterD3}
 \title{Scatter plot HTML widget}
 \source{
-D3.js was created by Michael Bostock. See \url{http://d3js.org/}
+D3.js was created by Michael Bostock. See \url{https://d3js.org/}
 }
 \usage{
 scatterD3(

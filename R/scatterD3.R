@@ -118,7 +118,7 @@
 #' size, point opacity or export the figure as an SVG file via HTML form controls.
 #'
 #' @source
-#' D3.js was created by Michael Bostock. See \url{http://d3js.org/}
+#' D3.js was created by Michael Bostock. See \url{https://d3js.org/}
 #'
 #' @examples
 #' scatterD3(x = mtcars$wt, y = mtcars$mpg, data=NULL, lab = rownames(mtcars),

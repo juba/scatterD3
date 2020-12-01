@@ -1,5 +1,5 @@
 `scatterD3` is an HTML R widget for interactive scatter plots visualization.
-It is based on the [htmlwidgets](http://www.htmlwidgets.org/) R package and on
+It is based on the [htmlwidgets](https://www.htmlwidgets.org/) R package and on
 the [d3.js](https://d3js.org/) javascript library.
 
 ![CRAN Downloads](https://cranlogs.r-pkg.org/badges/last-month/scatterD3)
@@ -42,7 +42,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
 
 See [the visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for a step-by-step guide and details about the different function arguments.
 
-`scatterD3` provides a built-in SVG export of the current widget view. As an [HTML widget](http://www.htmlwidgets.org/), you can also include it in an [Rmarkdown](https://rmarkdown.rstudio.com/) HTML document while keeping its interactive features.
+`scatterD3` provides a built-in SVG export of the current widget view. As an [HTML widget](https://www.htmlwidgets.org/), you can also include it in an [Rmarkdown](https://rmarkdown.rstudio.com/) HTML document while keeping its interactive features.
 
 ## Shiny integration
 
@@ -54,7 +54,7 @@ provide interesting visual clues.
 Furthermore, `scatterD3` provides some additional handlers and callback hooks
 for a more complete JavaScript interactivity and integration.
 
-The [sample scatterD3 shiny app](http://data.nozav.org/app/scatterD3/) allows
+The [sample scatterD3 shiny app](https://data.nozav.org/app/scatterD3/) allows
 you to see the different features described here. You
 can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app)
 and the [visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for
@@ -66,8 +66,8 @@ a better understanding of the different arguments.
 This package has been made possible by :
 
 -   Michael Bostock's incredible [d3.js](https://d3js.org/) library and documentation
--   RStudio's [shiny](http://shiny.rstudio.com/) and [htmlwidgets](http://www.htmlwidgets.org/) packages
+-   RStudio's [shiny](https://shiny.rstudio.com/) and [htmlwidgets](https://www.htmlwidgets.org/) packages
 -   Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
--   Rob Moore's [article on reusable d3.js charts](http://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
+-   Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
 -   Speros Kokenes' [d3 lasso plugin](https://github.com/skokenes/D3-Lasso-Plugin)
 -   Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
