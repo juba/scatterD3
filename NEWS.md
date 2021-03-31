@@ -1,5 +1,7 @@
 # scatterD3 0.9.3
 
+* Fix bug in biplot sidebar menu
+
 
 # scatterD3 0.9.2
 
