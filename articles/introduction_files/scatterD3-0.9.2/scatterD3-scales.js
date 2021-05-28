@@ -166,8 +166,13 @@ function setup_scales(chart) {
         } else if (Array.isArray(settings.colors)) {
             scales.color = d3v6.scaleOrdinal().range(settings.colors);
         } else if (typeof (settings.colors) === "string") {
-            // Single string given
-            scales.color = d3v6.scaleOrdinal().range(Array(settings.colors));
+            // Single string : hex color code
+            if (settings.colors.trim()[0] == "#") {
+                scales.color = d3v6.scaleOrdinal().range(Array(settings.colors));
+            } else {
+                // Single string : palette name
+                scales.color = d3v6.scaleOrdinal(d3v6[settings.colors]);
+            }
         } else if (typeof (settings.colors) === "object") {
             scales.color = d3v6.scaleOrdinal()
                 .range(Object.values(settings.colors))
