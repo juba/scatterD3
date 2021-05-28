@@ -11,6 +11,8 @@ devtools::install(".") ; scatterD3(x = mtcars$wt, y = mtcars$mpg, lab = rownames
 
 scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$qsec, colors = "interpolatePurples")
 
+scatterD3(x = mtcars$wt, y = mtcars$mpg, col_var = mtcars$cyl, colors = "schemeTableau10")
+
 mtcars$id <- seq_len(nrow(mtcars))
 mtcars$name <- rownames(mtcars)
 mtcars$opacity <- runif(32)
@@ -42,7 +44,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = name, tooltips = TRUE,
    alert('scatterplot ID: ' + id + ' - Point index: ' + index)
    }")
 
-mtcars$id <- 1:nrow(mtcars)
+mtcars$id <- 1:seq_len(nrow(mtcars))
 scatterD3(data = mtcars,
           x = wt, y = mpg, key_var = id,
           lasso = TRUE,

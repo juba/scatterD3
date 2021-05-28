@@ -47,7 +47,7 @@ This will display a simple visualization with the given variables as `x` and `y`
 
 - `point_size` allows to change the global size of all points
 - `point_opacity` allows to change the global opacity of all points
-- `colors`, when given a single HTML color code, allows to change the global color of all points
+- `colors`, when given a single HTML color code (starting with `#`), allows to change the global color of all points
 
 ```{r basic_cust}
 scatterD3(data = mtcars, x = wt, y = mpg, 
@@ -232,10 +232,26 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
+You can also specify a custom color palette
+by giving the `colors` argument the name of a d3-scale-chromatic function, either [sequential](https://github.com/d3/d3-scale-chromatic#sequential-single-hue) or [categorical](https://github.com/d3/d3-scale-chromatic#categorical). The defaults are `"interpolateViridis"` for continuous variables, and `"schemePaired"` for categorical variables with more than 10 levels (for categorical variables with less than 10 levels a custom scheme is used). 
+
+Example for a continuous variable :
+
+```{r custom_continuous_color}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp, colors = "interpolatePuRd")
+```
+
+Example for a categorical variable :
+
+```{r custom_categorical_color}
+scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, colors = "schemeTableau10")
+```
+
+
 If your original R vector is a factor, its level orders should be preserved in the legend.
 
 ```{r map_factor_levels_color}
-mtcars$cyl_o <- factor(mtcars$cyl, levels=c("8", "6", "4"))
+mtcars$cyl_o <- factor(mtcars$cyl, levels = c("8", "6", "4"))
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl_o)
 ```
 
@@ -249,14 +265,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp)
 
 You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
 
-When `col_var` is considered as continuous, you can specify a custom color palette
-by giving the `colors` argument the name of a [d3-scale-chromatic interpolating 
-function](https://github.com/d3/d3-scale-chromatic#sequential-single-hue). The default
-is `"interpolateViridis"`. For example :
-
-```{r custom_continuous_color}
-scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp, colors = "interpolatePuRd")
-```
+When `col_var` is considered as continuous, 
 
 ### Size
 

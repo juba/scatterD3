@@ -1,6 +1,6 @@
 # scatterD3 0.9.3
 
-* Fix bug in biplot sidebar menu
+* Allow to specify a d3 color palette for categorical variable mapping
 
 
 # scatterD3 0.9.2
