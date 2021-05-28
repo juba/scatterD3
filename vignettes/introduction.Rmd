@@ -12,6 +12,13 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+<style>
+.scatterD3 .legend .label {
+  font-size: 100%;
+  font-weight: 400;
+}
+</style>
+
 ```{r, include=FALSE}
 library(scatterD3)
 knitr::opts_chunk$set(screenshot.force = FALSE)
