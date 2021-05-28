@@ -232,8 +232,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
-You can also specify a custom color palette
-by giving the `colors` argument the name of a d3-scale-chromatic function, either [sequential](https://github.com/d3/d3-scale-chromatic#sequential-single-hue) or [categorical](https://github.com/d3/d3-scale-chromatic#categorical). The defaults are `"interpolateViridis"` for continuous variables, and `"schemePaired"` for categorical variables with more than 10 levels (for categorical variables with less than 10 levels a custom scheme is used). 
+You can also specify a custom color palette by giving the `colors` argument the name of a d3-scale-chromatic function, either [sequential](https://github.com/d3/d3-scale-chromatic#sequential-single-hue) or [categorical](https://github.com/d3/d3-scale-chromatic#categorical). 
 
 Example for a continuous variable :
 
