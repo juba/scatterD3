@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scatterD3</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1</span>
       </span>
     </div>
 
@@ -82,9 +82,11 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+<div id="scatterd3" class="section level1">
+<div class="page-header"><h1 class="hasAnchor">
+<a href="#scatterd3" class="anchor"></a>ScatterD3</h1></div>
 
 <p><code>scatterD3</code> is an HTML R widget for interactive scatter plots visualization. It is based on the <a href="https://www.htmlwidgets.org/">htmlwidgets</a> R package and on the <a href="https://d3js.org/">d3.js</a> javascript library.</p>
-<p><img src="https://cranlogs.r-pkg.org/badges/last-month/scatterD3" alt="CRAN Downloads"><a href="https://cran.r-project.org/package=scatterD3"><img src="https://www.r-pkg.org/badges/version-ago/scatterD3" alt="CRAN_Status_Badge"></a> <a href="https://github.com/juba/scatterD3/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/juba/scatterD3/workflows/R-CMD-check/badge.svg" alt="R build status"></a></p>
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#features" class="anchor"></a>Features</h2>
@@ -107,11 +109,12 @@
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>Quick example of the <code>scatterD3</code> function based on the <code>mtcars</code> dataset :</p>
-<pre class="{r}"><code>mtcars$names &lt;- rownames(mtcars)
-scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
-          col_var = cyl, symbol_var = am,
-          xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders",
-          symbol_lab = "Manual transmission")</code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mtcars</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>
+<span class="fu"><a href="reference/scatterD3.html">scatterD3</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mtcars</span>, x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span>, lab <span class="op">=</span> <span class="va">names</span>,
+          col_var <span class="op">=</span> <span class="va">cyl</span>, symbol_var <span class="op">=</span> <span class="va">am</span>,
+          xlab <span class="op">=</span> <span class="st">"Weight"</span>, ylab <span class="op">=</span> <span class="st">"Mpg"</span>, col_lab <span class="op">=</span> <span class="st">"Cylinders"</span>,
+          symbol_lab <span class="op">=</span> <span class="st">"Manual transmission"</span><span class="op">)</span></code></pre></div>
 <p>See <a href="https://juba.github.io/scatterD3/articles/introduction.html">the visual guide</a> for a step-by-step guide and details about the different function arguments.</p>
 <p><code>scatterD3</code> provides a built-in SVG export of the current widget view. As an <a href="https://www.htmlwidgets.org/">HTML widget</a>, you can also include it in an <a href="https://rmarkdown.rstudio.com/">Rmarkdown</a> HTML document while keeping its interactive features.</p>
 </div>
@@ -134,10 +137,11 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
 </li>
 <li>Speros Kokenes’ <a href="https://github.com/skokenes/D3-Lasso-Plugin">d3 lasso plugin</a>
 </li>
-<li>Evan Wang’s <a href="https://github.com/tinker10/D3-Labeler">d3-labeler</a> plugin</li>
+<li>Evan Wang’s <a href="https://github.com/tinker10/D3-Labeler">d3-labeler plugin</a>
+</li>
 </ul>
 </div>
-
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -174,7 +178,14 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=scatterD3"><img src="https://www.r-pkg.org/badges/version-ago/scatterD3" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://github.com/juba/scatterD3/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/juba/scatterD3/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
