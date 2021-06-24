@@ -1,3 +1,6 @@
+# scatterD3 1.0.1
+
+
 # scatterD3 1.0.0
 
 * Upgrade to d3 7.0.0
