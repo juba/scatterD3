@@ -69,13 +69,13 @@ function draw_arrow(selection, chart) {
 function arrow_init(selection, chart) {
     // tooltips when hovering points
     if (chart.settings().has_tooltips) {
-        var tooltip = d3v6.select(".scatterD3-tooltip");
+        var tooltip = d3v7.select(".scatterD3-tooltip");
         selection.on("mouseover", (event, d, i) => {
             tooltip.style("visibility", "visible")
                 .html(tooltip_content(d, chart));
         });
         selection.on("mousemove", event => {
-            tooltip.style("top", (event.pageY+15)+"px").style("left",(d3v6.event.pageX+15)+"px");
+            tooltip.style("top", (event.pageY+15)+"px").style("left",(d3v7.event.pageX+15)+"px");
         });
         selection.on("mouseout", event => {
             tooltip.style("visibility", "hidden");

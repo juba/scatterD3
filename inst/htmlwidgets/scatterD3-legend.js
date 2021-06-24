@@ -143,7 +143,7 @@ function add_color_legend(chart, duration) {
             .range(col_domain.map(d => chart.scales().color(d)));
     }
 
-    var color_legend = d3v6.legendColor()
+    var color_legend = d3v7.legendColor()
         .shapePadding(3)
         .shape("rect")
         .scale(legend_color_scale);
@@ -215,9 +215,9 @@ function add_symbol_legend(chart, duration) {
     symbol_domain = symbol_domain.filter(d => d != "");
     legend_symbol_scale
         .domain(symbol_domain)
-        .range(symbol_domain.map(d => d3v6.symbol().type(chart.scales().symbol(d))()));
+        .range(symbol_domain.map(d => d3v7.symbol().type(chart.scales().symbol(d))()));
 
-    var symbol_legend = d3v6.legendSymbol()
+    var symbol_legend = d3v7.legendSymbol()
         .shapePadding(5)
         .scale(legend_symbol_scale)
         .on("cellover", d => {
@@ -276,7 +276,7 @@ function add_size_legend(chart, duration) {
     // FIXME : find exact formula
     legend_size_scale.range(chart.scales().size.range().map(d => Math.sqrt(d) / 1.8));
 
-    var size_legend = d3v6.legendSize()
+    var size_legend = d3v7.legendSize()
         .shapePadding(3)
         .shape('circle')
         .scale(legend_size_scale);

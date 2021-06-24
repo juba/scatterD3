@@ -17,7 +17,7 @@ function menu_create(chart) {
         .attr("transform", "translate(-3,3)")
         .style("fill", "#666666");
 
-    var menu_parent = d3v6.select(svg.node().parentNode);
+    var menu_parent = d3v7.select(svg.node().parentNode);
     menu_parent.style("position", "relative");
     var menu = menu_parent.select(".scatterD3-menu");
 
@@ -51,7 +51,7 @@ function menu_create(chart) {
     }
 
     gear.on("click", (event, d, i) => {
-        var menu_parent = d3v6.select(svg.node().parentNode);
+        var menu_parent = d3v7.select(svg.node().parentNode);
         var menu = menu_parent.select(".scatterD3-menu");
         var gear = svg.select(".gear-menu");
         if (!menu.classed("open")) {
@@ -81,7 +81,7 @@ function menu_move(chart) {
 // Add caption
 function caption_create(chart) {
 
-    var caption_parent = d3v6.select(chart.svg().node().parentNode);
+    var caption_parent = d3v7.select(chart.svg().node().parentNode);
     var caption = caption_parent.select(".scatterD3-caption");
 
     if (chart.settings().caption.title)
@@ -132,7 +132,7 @@ function caption_move(chart) {
 	var caption_top_margin = chart.settings().menu ? 35 : 10;
 	chart.svg().select(".caption-icon")
         .attr("transform", "translate(" + (chart.dims().svg_width - 40) + "," + caption_top_margin + ")");
-	d3v6.select(chart.svg().node().parentNode)
+	d3v7.select(chart.svg().node().parentNode)
 		.select(".scatterD3-caption")
 		.style("top", chart.dims().svg_height + "px");
 

@@ -14,7 +14,7 @@ function zoom_behavior(chart) {
     var y1 = viewport_bb.bottom - root_bb.top;
 
     // Zoom behavior
-    var zoom = d3v6.zoom()
+    var zoom = d3v7.zoom()
         .extent([[0, y0], [x1 - x0, y1]])
         .scaleExtent([0, 32])
         .on("zoom", (event) => zoomed(event, chart));
@@ -58,7 +58,7 @@ function zoomed(event, chart) {
 function reset_zoom(chart) {
     var root = chart.svg().select(".root");
     root.transition().duration(1000)
-        .call(chart.zoom().transform, d3v6.zoomIdentity);
+        .call(chart.zoom().transform, d3v7.zoomIdentity);
 }
 
 // Update zoom function
@@ -71,7 +71,7 @@ function update_zoom(chart) {
         .transition().duration(1000)
         .call(chart.scales().yAxis)
         .on("end", function() {
-            root.call(chart.zoom().transform, d3v6.zoomIdentity);
+            root.call(chart.zoom().transform, d3v7.zoomIdentity);
         });
 }
 
@@ -82,7 +82,7 @@ function zoom_on(chart, duration) {
     if (chart.settings().zoom_on === null) return;
 
     var root = chart.svg().select(".root");
-    var curZoom = d3v6.zoomTransform(root.node());
+    var curZoom = d3v7.zoomTransform(root.node());
     var zoom_x = chart.scales().x(chart.settings().zoom_on[0]);
     var zoom_y = chart.scales().y(chart.settings().zoom_on[1]);
     var zoom_dx = (chart.dims().width / 2 - zoom_x) / curZoom.k;

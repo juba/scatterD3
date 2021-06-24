@@ -1,9 +1,9 @@
 dependencies:
-  - name: d3v6
-    version: 6.2.0
+  - name: d3v7
+    version: 7.0.0
     src: htmlwidgets/lib/d3
     script:
-      - d3.v6.min.js
+      - d3.v7.min.js
       - d3-legend.min.js
       - d3-labeler.js
   - name: d3.lasso-plugin
@@ -12,7 +12,7 @@ dependencies:
     script: lasso.js
     stylesheet: lasso.css
   - name: scatterD3
-    version: 0.9.2
+    version: 1.0.0
     src: htmlwidgets/
     stylesheet: scatterD3.css
     script:

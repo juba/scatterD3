@@ -55,11 +55,11 @@ function dot_init(selection, chart) {
 	var scales = chart.scales();
 
     // tooltips when hovering points
-    var tooltip = d3v6.select(".scatterD3-tooltip");
+    var tooltip = d3v7.select(".scatterD3-tooltip");
     selection.on("mouseover", (event, d) => {
-        d3v6.select(event.currentTarget)
+        d3v7.select(event.currentTarget)
             .transition().duration(150)
-            .attr("d", d3v6.symbol()
+            .attr("d", d3v7.symbol()
 		  .type(v => scales.symbol(v.symbol_var))
 		  .size(v => dot_size(v, chart) * settings.hover_size)
 		 )
@@ -71,7 +71,7 @@ function dot_init(selection, chart) {
 		}
             });
 	if (settings.has_url_var) {
-            d3v6.select(event.currentTarget)
+            d3v7.select(event.currentTarget)
 		.style("cursor", d => d.url_var != "" ? "pointer" : "default");
 	}
 	if (settings.has_tooltips) {
@@ -96,9 +96,9 @@ function dot_init(selection, chart) {
 	}
     });
     selection.on("mouseout", function(event){
-        d3v6.select(event.currentTarget)
+        d3v7.select(event.currentTarget)
             .transition().duration(150)
-            .attr("d", d3v6.symbol()
+            .attr("d", d3v7.symbol()
 		  .type(d => scales.symbol(d.symbol_var))
 		  .size(d => dot_size(d, chart))
 		 )
@@ -109,9 +109,9 @@ function dot_init(selection, chart) {
             tooltip.style("visibility", "hidden");
 	}
     });
-    selection.on("click", function(event, d, i) {
+    selection.on("click", function(event, d) {
 	if (typeof settings.click_callback === 'function') {
-	    settings.click_callback(settings.html_id, i + 1);
+	    settings.click_callback(settings.html_id, d);
 	}
 	if (settings.has_url_var && d.url_var != "") {
 	    var win = window.open(d.url_var, '_blank');
@@ -128,7 +128,7 @@ function dot_formatting(selection, chart) {
         .style("fill", d => chart.scales().color(d.col_var))
 		.style("opacity", d => d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity)
     	// symbol and size
-        .attr("d", d3v6.symbol()
+        .attr("d", d3v7.symbol()
 	      	.type(d => chart.scales().symbol(d.symbol_var))
 	      	.size(d => dot_size(d, chart))
 	     )

@@ -10,8 +10,8 @@ function compute_limits(chart) {
 
     // x and y limits
     if (settings.xlim === null) {
-        min_x = d3v6.min(data, d => d.x);
-        max_x = d3v6.max(data, d => d.x);
+        min_x = d3v7.min(data, d => d.x);
+        max_x = d3v7.max(data, d => d.x);
         gap_x = (max_x - min_x) * 0.2;
         if (min_x == max_x) {
             min_x = min_x * 0.8;
@@ -29,8 +29,8 @@ function compute_limits(chart) {
         gap_x = 0;
     }
     if (settings.ylim === null) {
-        min_y = d3v6.min(data, d => d.y);
-        max_y = d3v6.max(data, d => d.y);
+        min_y = d3v7.min(data, d => d.y);
+        max_y = d3v7.max(data, d => d.y);
         gap_y = (max_y - min_y) * 0.2;
         if (min_y == max_y) {
             min_y = min_y * 0.8;
@@ -106,27 +106,27 @@ function setup_scales(chart) {
 
     // x, y scales
     if (!settings.x_categorical) {
-        scales.x = settings.x_log ? d3v6.scaleLog() : d3v6.scaleLinear();
+        scales.x = settings.x_log ? d3v7.scaleLog() : d3v7.scaleLinear();
         scales.x.range([0, dims.width])
             .domain([limits.min_x, limits.max_x]);
     } else {
         var x_domain = settings.x_levels === null ?
             [...new Set(data.map(d => d.x))].sort() :
             settings.x_levels;
-        scales.x = d3v6.scalePoint()
+        scales.x = d3v7.scalePoint()
             .range([0, dims.width])
             .padding(0.9)
             .domain(x_domain);
     }
     if (!settings.y_categorical) {
-        scales.y = settings.y_log ? d3v6.scaleLog() : d3v6.scaleLinear();
+        scales.y = settings.y_log ? d3v7.scaleLog() : d3v7.scaleLinear();
         scales.y.range([dims.height, 0])
             .domain([limits.min_y, limits.max_y]);
     } else {
         var y_domain = settings.y_levels === null ?
             [...new Set(data.map(d => d.y))].sort() :
             settings.y_levels;
-        scales.y = d3v6.scalePoint()
+        scales.y = d3v7.scalePoint()
             .range([dims.height, 0])
             .padding(0.9)
             .domain(y_domain);
@@ -135,46 +135,46 @@ function setup_scales(chart) {
     scales.x_orig = scales.x;
     scales.y_orig = scales.y;
     // x and y axis functions
-    scales.xAxis = d3v6.axisBottom(scales.x)
+    scales.xAxis = d3v7.axisBottom(scales.x)
         .tickSize(-dims.height);
     if (!settings.x_categorical) {
-        scales.xAxis.tickFormat(d3v6.format(""));
+        scales.xAxis.tickFormat(d3v7.format(""));
     }
-    scales.yAxis = d3v6.axisLeft(scales.y)
+    scales.yAxis = d3v7.axisLeft(scales.y)
         .tickSize(-dims.width);
     if (!settings.y_categorical) {
-        scales.yAxis.tickFormat(d3v6.format(""));
+        scales.yAxis.tickFormat(d3v7.format(""));
     }
 
     // Continuous color scale
     if (settings.col_continuous) {
         if (settings.colors === null) {
-            scales.color = d3v6.scaleSequential(d3v6.interpolateViridis);
+            scales.color = d3v7.scaleSequential(d3v7.interpolateViridis);
         } else {
-            scales.color = d3v6.scaleSequential(d3v6[settings.colors]);
+            scales.color = d3v7.scaleSequential(d3v7[settings.colors]);
         }
         scales.color = scales.color
-            .domain([d3v6.min(data, d => d.col_var),
-                     d3v6.max(data, d => d.col_var)]);
+            .domain([d3v7.min(data, d => d.col_var),
+                     d3v7.max(data, d => d.col_var)]);
     }
     // Ordinal color scale
     else {
         if (settings.colors === null) {
             // Number of different levels. See https://github.com/mbostock/d3/issues/472
             var n = new Set(data.map(d => d.col_var)).size;
-            scales.color = n <= 10 ? d3v6.scaleOrdinal(custom_scheme10()) : d3v6.scaleOrdinal(d3v6.schemePaired);
+            scales.color = n <= 10 ? d3v7.scaleOrdinal(custom_scheme10()) : d3v7.scaleOrdinal(d3v7.schemePaired);
         } else if (Array.isArray(settings.colors)) {
-            scales.color = d3v6.scaleOrdinal().range(settings.colors);
+            scales.color = d3v7.scaleOrdinal().range(settings.colors);
         } else if (typeof (settings.colors) === "string") {
             // Single string : hex color code
             if (settings.colors.trim()[0] == "#") {
-                scales.color = d3v6.scaleOrdinal().range(Array(settings.colors));
+                scales.color = d3v7.scaleOrdinal().range(Array(settings.colors));
             } else {
                 // Single string : palette name
-                scales.color = d3v6.scaleOrdinal(d3v6[settings.colors]);
+                scales.color = d3v7.scaleOrdinal(d3v7[settings.colors]);
             }
         } else if (typeof (settings.colors) === "object") {
-            scales.color = d3v6.scaleOrdinal()
+            scales.color = d3v7.scaleOrdinal()
                 .range(Object.values(settings.colors))
                 .domain(Object.keys(settings.colors));
         }
@@ -182,47 +182,47 @@ function setup_scales(chart) {
 
     // Symbol scale
     var symbol_table = {
-        "circle": d3v6.symbolCircle,
-        "cross": d3v6.symbolCross,
-        "diamond": d3v6.symbolDiamond,
-        "square": d3v6.symbolSquare,
-        "star": d3v6.symbolStar,
-        "triangle": d3v6.symbolTriangle,
-        "wye": d3v6.symbolWye,
+        "circle": d3v7.symbolCircle,
+        "cross": d3v7.symbolCross,
+        "diamond": d3v7.symbolDiamond,
+        "square": d3v7.symbolSquare,
+        "star": d3v7.symbolStar,
+        "triangle": d3v7.symbolTriangle,
+        "wye": d3v7.symbolWye,
     }
     if (settings.symbols === null) {
-        scales.symbol = d3v6.scaleOrdinal().range(d3v6.symbols);
+        scales.symbol = d3v7.scaleOrdinal().range(d3v7.symbols);
     } else if (Array.isArray(settings.symbols)) {
-        scales.symbol = d3v6.scaleOrdinal().range(settings.symbols.map(d => symbol_table[d]));
+        scales.symbol = d3v7.scaleOrdinal().range(settings.symbols.map(d => symbol_table[d]));
     } else if (typeof (settings.symbols) === "string") {
         // Single string given
-        scales.symbol = d3v6.scaleOrdinal().range(Array(symbol_table[settings.symbols]));
+        scales.symbol = d3v7.scaleOrdinal().range(Array(symbol_table[settings.symbols]));
     } else if (typeof (settings.symbols) === "object") {
-        scales.symbol = d3v6.scaleOrdinal()
+        scales.symbol = d3v7.scaleOrdinal()
             .range(Object.values(settings.symbols).map(d => symbol_table[d]))
             .domain(Object.keys(settings.symbols))
     }
 
     // Size scale
     if (settings.sizes === null) {
-        scales.size = d3v6.scaleLinear()
+        scales.size = d3v7.scaleLinear()
             .range(settings.size_range)
-            .domain([d3v6.min(data, d => d.size_var),
-            d3v6.max(data, d => d.size_var)]);
+            .domain([d3v7.min(data, d => d.size_var),
+            d3v7.max(data, d => d.size_var)]);
     } else if (typeof(settings.sizes) === "object") {
-        scales.size = d3v6.scaleOrdinal()
+        scales.size = d3v7.scaleOrdinal()
             .range(Object.values(settings.sizes))
             .domain(Object.keys(settings.sizes));
     }
 
     // Opacity scale
     if (settings.opacities === null) {
-        scales.opacity = d3v6.scaleLinear()
+        scales.opacity = d3v7.scaleLinear()
             .range([0.1, 1])
-            .domain([d3v6.min(data, d => d.opacity_var),
-            d3v6.max(data, d => d.opacity_var)]);
+            .domain([d3v7.min(data, d => d.opacity_var),
+            d3v7.max(data, d => d.opacity_var)]);
     } else if (typeof(settings.opacities) === "object") {
-        scales.opacity = d3v6.scaleOrdinal()
+        scales.opacity = d3v7.scaleOrdinal()
             .range(Object.values(settings.opacities))
             .domain(Object.keys(settings.opacities));
     }

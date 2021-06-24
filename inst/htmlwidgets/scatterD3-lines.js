@@ -1,5 +1,5 @@
 // Zero horizontal and vertical lines
-var draw_line = d3v6.line()
+var draw_line = d3v7.line()
 	.x(d => d.x)
 	.y(d => d.y);
 

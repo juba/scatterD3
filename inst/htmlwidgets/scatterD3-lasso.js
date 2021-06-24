@@ -3,25 +3,25 @@ var lasso_start = function(lasso) {
 
     lasso.items()
         .each(function(d){
-	    if (d3v6.select(this).classed('dot')) {
-                d.scatterD3_lasso_dot_stroke = d.scatterD3_lasso_dot_stroke ? d.scatterD3_lasso_dot_stroke : d3v6.select(this).style("stroke");
-                d.scatterD3_lasso_dot_fill = d.scatterD3_lasso_dot_fill ? d.scatterD3_lasso_dot_fill : d3v6.select(this).style("fill");
-                d.scatterD3_lasso_dot_opacity = d.scatterD3_lasso_dot_opacity ? d.scatterD3_lasso_dot_opacity : d3v6.select(this).style("opacity");
+	    if (d3v7.select(this).classed('dot')) {
+                d.scatterD3_lasso_dot_stroke = d.scatterD3_lasso_dot_stroke ? d.scatterD3_lasso_dot_stroke : d3v7.select(this).style("stroke");
+                d.scatterD3_lasso_dot_fill = d.scatterD3_lasso_dot_fill ? d.scatterD3_lasso_dot_fill : d3v7.select(this).style("fill");
+                d.scatterD3_lasso_dot_opacity = d.scatterD3_lasso_dot_opacity ? d.scatterD3_lasso_dot_opacity : d3v7.select(this).style("opacity");
 	    }
-	    if (d3v6.select(this).classed('arrow')) {
-                d.scatterD3_lasso_arrow_stroke = d.scatterD3_lasso_arrow_stroke ? d.scatterD3_lasso_arrow_stroke : d3v6.select(this).style("stroke");
-                d.scatterD3_lasso_arrow_fill = d.scatterD3_lasso_arrow_fill ? d.scatterD3_lasso_arrow_fill : d3v6.select(this).style("fill");
-                d.scatterD3_lasso_arrow_opacity = d.scatterD3_lasso_arrow_opacity ? d.scatterD3_lasso_arrow_opacity : d3v6.select(this).style("opacity");
+	    if (d3v7.select(this).classed('arrow')) {
+                d.scatterD3_lasso_arrow_stroke = d.scatterD3_lasso_arrow_stroke ? d.scatterD3_lasso_arrow_stroke : d3v7.select(this).style("stroke");
+                d.scatterD3_lasso_arrow_fill = d.scatterD3_lasso_arrow_fill ? d.scatterD3_lasso_arrow_fill : d3v7.select(this).style("fill");
+                d.scatterD3_lasso_arrow_opacity = d.scatterD3_lasso_arrow_opacity ? d.scatterD3_lasso_arrow_opacity : d3v7.select(this).style("opacity");
 	    }
-	    if (d3v6.select(this).classed('point-label')) {
-                d.scatterD3_lasso_text_stroke = d.scatterD3_lasso_text_stroke ? d.scatterD3_lasso_text_stroke : d3v6.select(this).style("stroke");
-                d.scatterD3_lasso_text_fill = d.scatterD3_lasso_text_fill ? d.scatterD3_lasso_text_fill : d3v6.select(this).style("fill");
-                d.scatterD3_lasso_text_opacity = d.scatterD3_lasso_text_opacity ? d.scatterD3_lasso_text_opacity : d3v6.select(this).style("opacity");
+	    if (d3v7.select(this).classed('point-label')) {
+                d.scatterD3_lasso_text_stroke = d.scatterD3_lasso_text_stroke ? d.scatterD3_lasso_text_stroke : d3v7.select(this).style("stroke");
+                d.scatterD3_lasso_text_fill = d.scatterD3_lasso_text_fill ? d.scatterD3_lasso_text_fill : d3v7.select(this).style("fill");
+                d.scatterD3_lasso_text_opacity = d.scatterD3_lasso_text_opacity ? d.scatterD3_lasso_text_opacity : d3v7.select(this).style("opacity");
         }
-        if (d3v6.select(this).classed('point-label-line')) {
-            d.scatterD3_lasso_line_stroke = d.scatterD3_lasso_line_stroke ? d.scatterD3_lasso_line_stroke : d3v6.select(this).style("stroke");
-            d.scatterD3_lasso_line_fill = d.scatterD3_lasso_line_fill ? d.scatterD3_lasso_line_fill : d3v6.select(this).style("fill");
-            d.scatterD3_lasso_line_opacity = d.scatterD3_lasso_line_opacity ? d.scatterD3_lasso_line_opacity : d3v6.select(this).style("opacity");
+        if (d3v7.select(this).classed('point-label-line')) {
+            d.scatterD3_lasso_line_stroke = d.scatterD3_lasso_line_stroke ? d.scatterD3_lasso_line_stroke : d3v7.select(this).style("stroke");
+            d.scatterD3_lasso_line_fill = d.scatterD3_lasso_line_fill ? d.scatterD3_lasso_line_fill : d3v7.select(this).style("fill");
+            d.scatterD3_lasso_line_opacity = d.scatterD3_lasso_line_opacity ? d.scatterD3_lasso_line_opacity : d3v7.select(this).style("opacity");
         }
         })
 	    .style("fill", null) // clear all of the fills
@@ -53,24 +53,24 @@ var lasso_end = function(lasso, chart) {
     // Reset the color of all dots
     lasso.items()
         .style("fill", function(d) {
-        if (d3v6.select(this).classed('point-label')) { return d.scatterD3_lasso_text_fill; }
-        if (d3v6.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_fill; }
-	    if (d3v6.select(this).classed('dot')) { return d.scatterD3_lasso_dot_fill; }
-	    if (d3v6.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_fill; }
+        if (d3v7.select(this).classed('point-label')) { return d.scatterD3_lasso_text_fill; }
+        if (d3v7.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_fill; }
+	    if (d3v7.select(this).classed('dot')) { return d.scatterD3_lasso_dot_fill; }
+	    if (d3v7.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_fill; }
 	    return null;
         })
         .style("opacity", function(d) {
-        if (d3v6.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
-        if (d3v6.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_opacity; }
-	    if (d3v6.select(this).classed('dot')) { return d.scatterD3_lasso_dot_opacity; }
-	    if (d3v6.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_opacity; }
+        if (d3v7.select(this).classed('point-label')) { return d.scatterD3_lasso_text_opacity; }
+        if (d3v7.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_opacity; }
+	    if (d3v7.select(this).classed('dot')) { return d.scatterD3_lasso_dot_opacity; }
+	    if (d3v7.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_opacity; }
 	    return null;
         })
         .style("stroke", function(d) {
-        if (d3v6.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
-        if (d3v6.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_stroke; }
-	    if (d3v6.select(this).classed('dot')) { return d.scatterD3_lasso_dot_stroke; }
-	    if (d3v6.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_stroke; }
+        if (d3v7.select(this).classed('point-label')) { return d.scatterD3_lasso_text_stroke; }
+        if (d3v7.select(this).classed('point-label-line')) { return d.scatterD3_lasso_line_stroke; }
+	    if (d3v7.select(this).classed('dot')) { return d.scatterD3_lasso_dot_stroke; }
+	    if (d3v7.select(this).classed('arrow')) { return d.scatterD3_lasso_arrow_stroke; }
 	    return null;
         });
     if (some_selected) {
@@ -94,7 +94,7 @@ var lasso_end = function(lasso, chart) {
         lasso.items()
 	    .classed("not-possible-lasso possible-lasso not-selected-lasso selected-lasso", false)
 	    .style("opacity", function(d) {
-            if (d3v6.select(this).classed('point-label')) {return 1;};
+            if (d3v7.select(this).classed('point-label')) {return 1;};
 		    return d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity;
 	    });
     }
@@ -111,7 +111,7 @@ function lasso_on(chart) {
     // Disable zoom behavior
     root.on(".zoom", null);
     // Enable lasso
-    var lasso = d3v6.lasso()
+    var lasso = d3v7.lasso()
 	    .closePathDistance(2000)   // max distance for the lasso loop to be closed
 	    .closePathSelect(true)     // can items be selected by closing the path?
 	    .hoverSelect(true)         // can items by selected by hovering over them?
@@ -125,8 +125,8 @@ function lasso_on(chart) {
     // Change cursor style
     root.style("cursor", "crosshair");
     // Change togglers state
-    var menu_entry = d3v6.select("#scatterD3-menu-" + chart.settings().html_id + " .lasso-entry");
-    var custom_entry = d3v6.select("#" + chart.settings().dom_id_lasso_toggle);
+    var menu_entry = d3v7.select("#scatterD3-menu-" + chart.settings().html_id + " .lasso-entry");
+    var custom_entry = d3v7.select("#" + chart.settings().dom_id_lasso_toggle);
     if (!menu_entry.empty()) {
         menu_entry.classed("active", true)
 	    .html("Toggle lasso off");
@@ -149,8 +149,8 @@ function lasso_off(chart) {
     // Change cursor style
     root.style("cursor", "move");
     // Change togglers state
-    var menu_entry = d3v6.select("#scatterD3-menu-" + chart.settings().html_id + " .lasso-entry");
-    var custom_entry = d3v6.select("#" + chart.settings().dom_id_lasso_toggle);
+    var menu_entry = d3v7.select("#scatterD3-menu-" + chart.settings().html_id + " .lasso-entry");
+    var custom_entry = d3v7.select("#" + chart.settings().dom_id_lasso_toggle);
     if (!menu_entry.empty()) {
         menu_entry
             .classed("active", false)
@@ -161,8 +161,8 @@ function lasso_off(chart) {
 
 // Toggle lasso state when element clicked
 function lasso_toggle(chart) {
-    var menu_entry = d3v6.select("#scatterD3-menu-" + chart.settings().html_id + " .lasso-entry");
-    var custom_entry = d3v6.select("#" + chart.settings().dom_id_lasso_toggle);
+    var menu_entry = d3v7.select("#scatterD3-menu-" + chart.settings().html_id + " .lasso-entry");
+    var custom_entry = d3v7.select("#" + chart.settings().dom_id_lasso_toggle);
     if (chart.settings().lasso &&
         ((!menu_entry.empty() && menu_entry.classed("active")) ||
          (!custom_entry.empty() && custom_entry.classed("active")))) {

@@ -14,7 +14,7 @@ function export_svg(sel, chart) {
     
     var image_data = "data:image/octet-stream;base64," + window.btoa(unescape(encodeURIComponent(svg_content)));
 
-    d3v6.select(sel)
+    d3v7.select(sel)
         .attr("download", chart.settings().html_id + ".svg")
         .attr("href", image_data);
 }
@@ -44,7 +44,7 @@ function export_labels_position(sel, chart) {
 
     var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
     
-    d3v6.select(sel)
+    d3v7.select(sel)
         .attr("download", settings.html_id + "_labels.csv")
         .attr("href", encodeURI(csv_content));
 }

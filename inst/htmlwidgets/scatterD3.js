@@ -84,7 +84,7 @@ function scatterD3() {
 		}
   	// Caption
 		if (old_settings.caption != settings.caption) {
-			d3v6.select(svg.node().parentNode)
+			d3v7.select(svg.node().parentNode)
 		     .select(".scatterD3-caption")
 		     .selectAll("*")
 			 .remove();
@@ -162,8 +162,8 @@ function scatterD3() {
 		scales.x_orig.range([0, dims.width]);
 		scales.y.range([dims.height, 0]);
 		scales.y_orig.range([dims.height, 0]);
-		scales.xAxis = d3v6.axisBottom(scales.x).tickSize(-dims.height);
-		scales.yAxis = d3v6.axisLeft(scales.y).tickSize(-dims.width);
+		scales.xAxis = d3v7.axisBottom(scales.x).tickSize(-dims.height);
+		scales.yAxis = d3v7.axisLeft(scales.y).tickSize(-dims.width);
 
 		svg.select(".root")
 			.attr("width", dims.width)
@@ -185,7 +185,7 @@ function scatterD3() {
 		const root = svg.select(".root");
 		zoom = zoom_behavior(chart);
 		root.call(zoom.transform,
-			d3v6.zoomTransform(svg.select(".root").node()));
+			d3v7.zoomTransform(svg.select(".root").node()));
 
 		legends_move(chart);
 		menu_move(chart);
@@ -197,22 +197,22 @@ function scatterD3() {
 	// Add controls handlers for shiny
 	chart.add_controls_handlers = function () {
 		// Zoom reset
-		d3v6.select("#" + settings.dom_id_reset_zoom)
+		d3v7.select("#" + settings.dom_id_reset_zoom)
 			.on("click", function() { reset_zoom(chart) });
 
 		// SVG export
-		d3v6.select("#" + settings.dom_id_svg_export)
+		d3v7.select("#" + settings.dom_id_svg_export)
 			.on("click", function () { export_svg(this, chart); });
 
 		// Lasso toggle
-		d3v6.select("#" + settings.dom_id_lasso_toggle)
+		d3v7.select("#" + settings.dom_id_lasso_toggle)
 			.on("click", function() { lasso_toggle(chart); });
 	};
 
 	chart.add_global_listeners = function () {
 		// Toogle zoom and lasso behaviors when shift is pressed
-		const parent = d3v6.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
-		d3v6.select(parent)
+		const parent = d3v7.select("#scatterD3-svg-" + settings.html_id).node().parentNode;
+		d3v7.select(parent)
 			.attr("tabindex", 0)
 			.on("keydown", function (event) {
 				const key = event.key !== undefined ? event.key : event.keyIdentifier;
@@ -328,7 +328,7 @@ HTMLWidgets.widget({
 		if (width < 0) width = 0;
 		if (height < 0) height = 0;
 		// Create root svg element
-		var svg = d3v6.select(el).append("svg");
+		var svg = d3v7.select(el).append("svg");
 		svg
 			.attr("width", width)
 			.attr("height", height)
@@ -340,25 +340,25 @@ HTMLWidgets.widget({
 				".scatterD3 .axis text { fill: #000; }");
 
 		// Create tooltip content div
-		let tooltip = d3v6.select(".scatterD3-tooltip");
+		let tooltip = d3v7.select(".scatterD3-tooltip");
 		if (tooltip.empty()) {
-			tooltip = d3v6.select("body")
+			tooltip = d3v7.select("body")
 				.append("div")
 				.style("visibility", "hidden")
 				.attr("class", "scatterD3-tooltip");
 		}
 
 		// Create title and subtitle div
-		let caption = d3v6.select(el).select(".scatterD3-caption");
+		let caption = d3v7.select(el).select(".scatterD3-caption");
 		if (caption.empty()) {
-			caption = d3v6.select(el).append("div")
+			caption = d3v7.select(el).append("div")
 				.attr("class", "scatterD3-caption");
 		}
 
 		// Create menu div
-		let menu = d3v6.select(el).select(".scatterD3-menu");
+		let menu = d3v7.select(el).select(".scatterD3-menu");
 		if (menu.empty()) {
-			menu = d3v6.select(el).append("ul")
+			menu = d3v7.select(el).append("ul")
 				.attr("class", "scatterD3-menu");
 		}
 
@@ -371,7 +371,7 @@ HTMLWidgets.widget({
 				if (width < 0) width = 0;
 				if (height < 0) height = 0;
 				// resize root svg element
-				const svg = d3v6.select(el).select("svg");
+				const svg = d3v7.select(el).select("svg");
 				svg
 					.attr("width", width)
 					.attr("height", height);
@@ -383,8 +383,8 @@ HTMLWidgets.widget({
 				// Check if update or redraw
 				const first_draw = (Object.keys(scatter.settings()).length === 0);
 				const redraw = first_draw || !obj.settings.transitions;
-				const svg = d3v6.select(el).select("svg")
-				const menu = d3v6.select(el).select(".scatterD3-menu");
+				const svg = d3v7.select(el).select("svg")
+				const menu = d3v7.select(el).select(".scatterD3-menu");
 				// Set or update html_id for svg and menu
 				svg.attr("id", "scatterD3-svg-" + obj.settings.html_id);
 				menu.attr("id", "scatterD3-menu-" + obj.settings.html_id);
@@ -418,7 +418,7 @@ HTMLWidgets.widget({
 					scatter.add_controls_handlers();
 					scatter.add_global_listeners();
 					// draw chart
-					d3v6.select(el)
+					d3v7.select(el)
 						.call(scatter);
 				}
 				// Update only

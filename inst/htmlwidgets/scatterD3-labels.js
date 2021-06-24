@@ -55,7 +55,7 @@ function labels_update(chart, duration) {
         .remove();
 
     if (chart.settings().has_labels_changed) {
-        var label_export = d3v6.select("#scatterD3-menu-" + chart.settings().html_id)
+        var label_export = d3v7.select("#scatterD3-menu-" + chart.settings().html_id)
             .select(".label-export");
         label_export.style("display", chart.settings().has_labels ? "block" : "none");
     }
@@ -164,7 +164,7 @@ function labels_placement(chart, duration) {
         index += 1;
     });
 
-    d3v6.labeler()
+    d3v7.labeler()
         .label(label_array)
         .anchor(anchor_array)
         .width(chart.dims().width)
@@ -195,7 +195,7 @@ function drag_behavior(chart, duration) {
     var labels = chart.svg().selectAll(".point-label");
 
     // Text labels dragging function
-    var drag = d3v6.drag()
+    var drag = d3v7.drag()
         .subject((event, d, i) => {
             var dx = get_label_dx(d, i, chart);
             var dy = get_label_dy(d, i, chart);

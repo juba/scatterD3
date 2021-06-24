@@ -1,6 +1,6 @@
 (function() {
 
-d3v6.labeler = function() {
+d3v7.labeler = function() {
   var lab = [],
       anc = [],
       w = 1, // box width
