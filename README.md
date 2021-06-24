@@ -22,11 +22,15 @@ Here is a small preview of what you will get :
 
 Install latest stable release from CRAN :
 
-    install.packages("scatterD3")
+```r
+install.packages("scatterD3")
+```
 
 Or from Github for the latest, bleeding edge, full of bugs version :
 
-    devtools::install_github("juba/scatterD3")
+```r
+remotes::install_github("juba/scatterD3")
+```
 
 ## Usage
 
@@ -68,5 +72,5 @@ This package has been made possible by :
 - RStudio's [shiny](https://shiny.rstudio.com/) and [htmlwidgets](https://www.htmlwidgets.org/) packages
 - Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
 - Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
-- Speros Kokenes' [d3 lasso plugin](https://github.com/skokenes/D3-Lasso-Plugin)
-- Evan Wang's [d3-labeler plugin](https://github.com/tinker10/D3-Labeler)
+- Speros Kokenes' [d3 lasso](https://github.com/skokenes/D3-Lasso-Plugin) plugin
+- Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
