@@ -2,7 +2,8 @@
 
 * Upgrade to d3 7.0.0
 * Allow to specify a d3 color palette for categorical variable mapping
-* *Breaking change :* the `click_callback` function is now passed the point datum object instead of the point index.
+* *Breaking change :* the `click_callback` function is now passed the point datum object instead of the point index
+* Fix legend labels formatting in Rmarkdown HTML output
 
 # scatterD3 0.9.2
 
