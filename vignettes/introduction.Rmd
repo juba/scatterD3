@@ -2,7 +2,7 @@
 title: "scatterD3 : a Visual Guide"
 author: "Julien Barnier"
 date: "`r Sys.Date()`"
-output: 
+output:
   rmarkdown::html_vignette:
     fig_width: 5
     toc: true
@@ -39,7 +39,7 @@ scatterD3(x = mtcars$wt, y = mtcars$mpg)
 You can pass data arguments as vectors, like above, or give a data frame as `data` argument and then provide variable names which will be evaluated inside this data frame :
 
 ```{r basic_nse}
-scatterD3(data = mtcars , x = wt, y = mpg)
+scatterD3(data = mtcars, x = wt, y = mpg)
 ```
 
 
@@ -57,7 +57,7 @@ This will display a simple visualization with the given variables as `x` and `y`
 - `colors`, when given a single HTML color code (starting with `#`), allows to change the global color of all points
 
 ```{r basic_cust}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           point_size = 200, point_opacity = 0.5,
           colors = "#A94175")
 ```
@@ -65,7 +65,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
 - `hover_size` and `hover_opacity` change size and opacity of points when hovering
 
 ```{r hover_cust}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           point_size = 100, point_opacity = 0.5,
           hover_size = 4, hover_opacity = 1)
 ```
@@ -75,8 +75,10 @@ scatterD3(data = mtcars, x = wt, y = mpg,
 If the default tooltips don't suit your needs, you can customize them by providing a character vector to the `tooltip_text` argument. This can contain HTML tags for formatting.
 
 ```{r cust_tooltips}
-tooltips <- paste("This is an incredible <strong>", rownames(mtcars),"</strong><br />with ", 
-                  mtcars$cyl, "cylinders !")
+tooltips <- paste(
+  "This is an incredible <strong>", rownames(mtcars), "</strong><br />with ",
+  mtcars$cyl, "cylinders !"
+)
 scatterD3(data = mtcars, x = wt, y = mpg, tooltip_text = tooltips)
 ```
 
@@ -115,28 +117,28 @@ scatterD3(data = mtcars, x = wt, y = cyl_fac, left_margin = 80)
 Use `fixed = TRUE` to force a fixed 1:1 ratio between the two axes :
 
 ```{r fixed}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           fixed = TRUE)
 ```
 
-`x_log` and `y_log` allow to use logarithmic scales. Note that there must not be any 
+`x_log` and `y_log` allow to use logarithmic scales. Note that there must not be any
 value inferior or equal to zero in this case :
 
 ```{r log_scales}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           x_log = TRUE, y_log = TRUE)
 ```
 
 `x_lim` and `y_lim` manually specify the `x` or `y` axis limits :
 
 ```{r axis_limits}
-scatterD3(data = mtcars, x = wt, y = mpg, xlim=c(0,10), ylim=c(10,35))
+scatterD3(data = mtcars, x = wt, y = mpg, xlim = c(0, 10), ylim = c(10, 35))
 ```
 
 `xlab` and `ylab` allow to set the axes labels :
 
 ```{r cust_labels}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           xlab = "Weight", ylab = "Mpg")
 ```
 
@@ -145,7 +147,7 @@ This also changes the default tooltips labels.
 You can also change the font size of axes text with `axes_font_size` :
 
 ```{r cust_labels_size}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           xlab = "Weight", ylab = "Mpg",
           axes_font_size = "160%")
 ```
@@ -156,11 +158,11 @@ You can provide any CSS compatible value, wether a fixed size such as `2em` or a
 
 ### Adding labels
 
-You can add text labels to the points by passing a character vector to the `lab` parameter. 
+You can add text labels to the points by passing a character vector to the `lab` parameter.
 
 ```{r labels}
 mtcars$names <- rownames(mtcars)
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           lab = names)
 ```
 
@@ -170,7 +172,7 @@ Use `labels_size` to modify the labels size.
 
 ```{r labels_size}
 mtcars$names <- rownames(mtcars)
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           lab = names, labels_size = 12)
 ```
 
@@ -179,11 +181,11 @@ scatterD3(data = mtcars, x = wt, y = mpg,
 By using `labels_positions = "auto"`, labels positions can be computed to minimize overlapping.
 
 ```{r labels_auto}
-scatterD3(data = mtcars, x = wt, y = mpg, lab = names, 
+scatterD3(data = mtcars, x = wt, y = mpg, lab = names,
           labels_positions = "auto")
 ```
 
-The computation is made in JavaScript, and can be quite intensive. It is automatically disabled 
+The computation is made in JavaScript, and can be quite intensive. It is automatically disabled
 with a warning if there are more than 500 points.
 
 ### Custom labels positions export
@@ -213,7 +215,7 @@ package. The following example should work with `ggplot2` :
 labels <- read.csv("scatterD3_labels.csv")
 library(ggplot2)
 ggplot() +
-  geom_point(data = mtcars, aes(x=wt, y=mpg)) +
+  geom_point(data = mtcars, aes(x = wt, y = mpg)) +
   geom_text(data = labels,
             aes(x = lab_x,
                 y = lab_y,
@@ -222,7 +224,7 @@ ggplot() +
 
 ## Mapping variables
 
-You can map points size, color, symbol and opacity with variables values. 
+You can map points size, color, symbol and opacity with variables values.
 
 ### Color
 
@@ -239,7 +241,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           colors = c("4" = "#ECD078", "8" = "#C02942", "6" = "#53777A"))
 ```
 
-You can also specify a custom color palette by giving the `colors` argument the name of a d3-scale-chromatic function, either [sequential](https://github.com/d3/d3-scale-chromatic#sequential-single-hue) or [categorical](https://github.com/d3/d3-scale-chromatic#categorical). 
+You can also specify a custom color palette by giving the `colors` argument the name of a d3-scale-chromatic function, either [sequential](https://github.com/d3/d3-scale-chromatic#sequential-single-hue) or [categorical](https://github.com/d3/d3-scale-chromatic#categorical).
 
 Example for a continuous variable :
 
@@ -271,7 +273,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = disp)
 
 You can force `col_var` to be considered as continuous with `col_continuous = TRUE`.
 
-When `col_var` is considered as continuous, 
+When `col_var` is considered as continuous,
 
 ### Size
 
@@ -284,14 +286,14 @@ scatterD3(data = mtcars, x = wt, y = mpg, size_var = hp)
 `size_range` allows to customize the sizes range.
 
 ```{r map_size_range}
-scatterD3(data = mtcars, x = wt, y = mpg, size_var = hp, 
-          size_range = c(10,1000), point_opacity = 0.7)
+scatterD3(data = mtcars, x = wt, y = mpg, size_var = hp,
+          size_range = c(10, 1000), point_opacity = 0.7)
 ```
 
 By passing a named vector to `sizes`, you can specify a custom size-value mapping.
 
 ```{r custom_sizes}
-scatterD3(data = mtcars, x = mpg, y = wt, size_var = cyl, 
+scatterD3(data = mtcars, x = mpg, y = wt, size_var = cyl,
   sizes = c("4" = 10, "6" = 100, "8" = 1000))
 ```
 
@@ -308,7 +310,7 @@ scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear)
 If your original R vector is a factor, its level orders should be preserved in the legend.
 
 ```{r map_factor levels}
-mtcars$cyl_o <- factor(mtcars$cyl, levels=c("8", "6", "4"))
+mtcars$cyl_o <- factor(mtcars$cyl, levels = c("8", "6", "4"))
 scatterD3(data = mtcars, x = wt, y = mpg, symbol_var = cyl_o)
 ```
 
@@ -319,18 +321,18 @@ scatterD3(data = mtcars, x = wt, y = mpg, symbol_var = cyl,
           symbols = c("4" = "wye", "8" = "star", "6" = "triangle"))
 ```
 
-### Opacity 
+### Opacity
 
 Pass a vector to `opacity_var`  to map point opacity to its values. Note that for now no legend for opacity is added, though.
 
 ```{r opacity_var}
-scatterD3(data=mtcars, x=mpg, y=wt, opacity_var = drat)
+scatterD3(data = mtcars, x = mpg, y = wt, opacity_var = drat)
 ```
 
 You can specify custom opacity-value mapping by passing a named vector to `opacities`.
 
 ```{r custom_opacity}
-scatterD3(data = mtcars, x = mpg, y = wt, opacity_var = cyl, 
+scatterD3(data = mtcars, x = mpg, y = wt, opacity_var = cyl,
   opacities = c("4" = 1, "6" = 0.1, "8" = 0.5))
 ```
 
@@ -342,15 +344,15 @@ scatterD3(data = mtcars, x = mpg, y = wt, opacity_var = cyl,
 In addition to your data points, you can add lines to your scatterplot. This is done by passing a *data frame* to the `lines` argument. This *data frame* must have at least two columns called `slope` and `intercept`, and as many rows as lines you want to draw.
 
 ```{r lines}
-scatterD3(data = mtcars, x = wt, y = mpg, 
+scatterD3(data = mtcars, x = wt, y = mpg,
           lines = data.frame(slope = -5.344, intercept = 37.285))
 ```
 
 You can style your lines by adding `stroke`, `stroke_width` and `stroke_dasharray` columns. These columns values will be added as [corresponding styles](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Fills_and_Strokes) to the generated SVG line. So if you want a wide dashed red horizontal line :
 
 ```{r lines_style}
-scatterD3(data = mtcars, x = wt, y = mpg, 
-          lines = data.frame(slope = 0, 
+scatterD3(data = mtcars, x = wt, y = mpg,
+          lines = data.frame(slope = 0,
                              intercept = 30,
                              stroke = "red",
                              stroke_width = 5,
@@ -362,8 +364,8 @@ If you want to draw a vertical line, pass the `Inf` value to `slope`. The value 
 By default, if no `lines` argument is provided two dashed horizontal and vertical lines are drawn through the origin, which is equivalent to :
 
 ```{r lines_default}
-scatterD3(data = mtcars, x = wt, y = mpg, fixed = TRUE, 
-          lines = data.frame(slope = c(0, Inf), 
+scatterD3(data = mtcars, x = wt, y = mpg, fixed = TRUE,
+          lines = data.frame(slope = c(0, Inf),
                              intercept = c(0, 0),
                              stroke = "#000",
                              stroke_width = 1,
@@ -396,7 +398,7 @@ df <- data.frame(x = c(1, 0.9, 0.7, 0.2, -0.4, -0.5),
                  y = c(1, 0.1, -0.5, 0.5, -0.6, 0.7),
                  type_var = c("point", rep("arrow", 5)),
                  lab = LETTERS[1:6])
-scatterD3(data = df, x = x, y = y, 
+scatterD3(data = df, x = x, y = y,
           type_var = type_var, lab = lab,
           fixed = TRUE, xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2))
 ```
@@ -404,9 +406,9 @@ scatterD3(data = df, x = x, y = y,
 Use `unit_circle = TRUE` to add a unit circle to your plot.
 
 ```{r unit_circle}
-scatterD3(data = df, x = x, y = y, 
+scatterD3(data = df, x = x, y = y,
           type_var = type_var,
-          unit_circle = TRUE, fixed = TRUE, 
+          unit_circle = TRUE, fixed = TRUE,
           xlim = c(-1.2, 1.2), ylim = c(-1.2, 1.2))
 ```
 
@@ -422,7 +424,8 @@ A legend is automatically added when a color, size or symbol mapping is used. No
 
 ```{r cust_labels2}
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl, symbol_var = gear,
-          xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders", symbol_lab = "Gears")
+          xlab = "Weight", ylab = "Mpg", col_lab = "Cylinders", 
+          symbol_lab = "Gears")
 ```
 
 You can remove a color, symbol or size legend entirely by specifying `NA` as its corresponding `_lab` value :
@@ -457,7 +460,11 @@ To do so, use the `caption` argument with either a single character string :
 
 ```{r caption_character}
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
-          caption = "Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Nullam aliquam egestas pretium. Donec auctor semper vestibulum. Phasellus in tempor lacus. Maecenas vehicula, ipsum id malesuada placerat, diam lorem aliquet lectus, non lacinia quam leo quis eros.")
+          caption = "Lorem ipsum dolor sit amet, <strong>consectetur adipiscing
+          elit</strong>. Nullam aliquam egestas pretium. Donec auctor semper
+          vestibulum. Phasellus in tempor lacus. Maecenas vehicula, ipsum id
+          malesuada placerat, diam lorem aliquet lectus, non lacinia quam leo
+          quis eros.")
 ```
 
 Or a list with the `title`, `subtitle` and `text` elements :
@@ -466,7 +473,11 @@ Or a list with the `title`, `subtitle` and `text` elements :
 scatterD3(data = mtcars, x = wt, y = mpg, col_var = cyl,
           caption = list(title = "Caption title",
                          subtitle = "Caption subtitle",
-                         text = "Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>. Nullam aliquam egestas pretium. Donec auctor semper vestibulum. Phasellus in tempor lacus. Maecenas vehicula, ipsum id malesuada placerat, diam lorem aliquet lectus, non lacinia quam leo quis eros."))
+                         text = "Lorem ipsum dolor sit amet, <strong>consectetur 
+                         adipiscing elit</strong>. Nullam aliquam egestas pretium. 
+                         Donec auctor semper vestibulum. Phasellus in tempor lacus. 
+                         Maecenas vehicula, ipsum id malesuada placerat, diam lorem 
+                         aliquet lectus, non lacinia quam leo quis eros."))
 ```
 
 ## Callbacks
@@ -483,12 +494,12 @@ scatterD3(data = mtcars, x = wt, y = mpg, lab = names, url_var = urls)
 
 ### JavaScript callback on clicking point
 
-The `click_callback` argument is a character string defining a JavaScript function to be called when a dot is clicked. It must accept two arguments : `html_id` (the unique `id` of the current scatterplot), and `i` (the index of the clicked point).
+The `click_callback` argument is a character string defining a JavaScript function to be called when a dot is clicked. It must accept two arguments : `id` (the unique `id` of the current scatterplot), and `d` (the datum of the clicked point). You can use the `d.key_var` property to identify which point has been clicked : its value will be either the corresponding `key_var` value, or the point index if `key_var` has not been defined.
 
 ```{r click_callback}
 scatterD3(data = mtcars, x = wt, y = mpg,
-   click_callback = "function(id, index) {
-   alert('scatterplot ID: ' + id + ' - Point index: ' + index) 
+   click_callback = "function(id, d) {
+      alert('scatterplot ID: ' + id + ' - Point key_var: ' + d.key_var)
    }")
 ```
 
@@ -496,9 +507,9 @@ One usage can be to pass the index of the clicked point back to Shiny when `scat
 
 ```{r, click_callback_shiny, eval=FALSE}
 scatterD3(data = mtcars, x = wt, y = mpg,
-  click_callback = "function(id, index) {
+  click_callback = "function(id, d) {
   if(id && typeof(Shiny) != 'undefined') {
-      Shiny.onInputChange('selected_point', index);
+      Shiny.onInputChange('selected_point', d.key_var);
   }
 }")
 ```
@@ -539,7 +550,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
 
 The `init_callback` argument allows to pass a JavaScript function that will be applied after the plot has been created or updated, with the JavaScript scatter object as `this`.
 
-This is not documented yet, and you'll have to dig into the JS package code to use it. Please note that to access `d3` functions you'll have to use the `d3v6` prefix.
+This is not documented yet, and you'll have to dig into the JS package code to use it. Please note that to access `d3` functions you'll have to use the `d3v7` prefix.
 
 Here is a bad but potentially useful example that formats the `x` axis as percentages :
 
@@ -548,7 +559,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
   init_callback = "function() {
     var scales = this.scales();
     var svg = this.svg();
-    new_x_axis = scales.xAxis.tickFormat(d3v6.format(',.0%'));
+    new_x_axis = scales.xAxis.tickFormat(d3v7.format(',.0%'));
     svg.select('.x.axis').call(new_x_axis);
   }"
 )
@@ -588,7 +599,7 @@ Here is an example which shows an alert with selected point labels :
 ```{r lasso_callback}
 mtcars$names <- rownames(mtcars)
 scatterD3(data = mtcars,
-          x = wt, y = mpg, lab = names, 
+          x = wt, y = mpg, lab = names,
           lasso = TRUE,
           lasso_callback = "function(sel) {alert(sel.data().map(function(d) {return d.lab}).join('\\n'));}")
 ```
