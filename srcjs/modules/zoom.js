@@ -68,7 +68,7 @@ export function reset(chart) {
 }
 
 // Update zoom function
-function update(chart) {
+export function update(chart) {
     var root = chart.svg().select(".root");
     root.select(".x.axis")
         .transition().duration(1000)
