@@ -127,13 +127,29 @@
 <p>Furthermore, <code>scatterD3</code> provides some additional handlers and callback hooks for a more complete JavaScript interactivity and integration.</p>
 <p>The <a href="https://data.nozav.org/app/scatterD3/">sample scatterD3 shiny app</a> allows you to see the different features described here. You can <a href="https://github.com/juba/scatterD3_shiny_app">check its source code on GitHub</a> and the <a href="https://juba.github.io/scatterD3/articles/introduction.html">visual guide</a> for a better understanding of the different arguments.</p>
 </div>
+<div id="development-notes" class="section level2">
+<h2 class="hasAnchor">
+<a href="#development-notes" class="anchor"></a>Development notes</h2>
+<p>This package uses <a href="https://github.com/JohnCoene/packer">packer</a> to manage JavaScript source code and dependencies. If you want to modify it, you’ll need a working installation of <a href="https://nodejs.org/en/">Node.js</a>.</p>
+<p>After cloning this repository, run the following in a terminal at the project root :</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">npm</span> install</span></code></pre></div>
+<p>Then, if you modify the JavaScript code in <code>srcjs</code>, you’ll have to run the following command to bundle and update the widget JavaScript code :</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle_dev</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>If you want to ship a minimized production version, use :</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle_prod</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+</div>
 <div id="credits" class="section level2">
 <h2 class="hasAnchor">
 <a href="#credits" class="anchor"></a>Credits</h2>
 <p>This package has been made possible by :</p>
 <ul>
 <li>Michael Bostock’s incredible <a href="https://d3js.org/">d3.js</a> library and documentation</li>
-<li>RStudio’s <a href="https://shiny.rstudio.com/">shiny</a> and <a href="https://www.htmlwidgets.org/">htmlwidgets</a> packages</li>
+<li>
+<a href="https://www.htmlwidgets.org/">htmlwidgets</a> packages</li>
+<li>
+<a href="https://twitter.com/jdatap">John Coene</a>’s <a href="https://github.com/JohnCoene/packer">packer</a> package</li>
 <li>Susie Lu’s <a href="https://github.com/susielu/d3-legend">d3-legend</a> module</li>
 <li>Rob Moore’s <a href="https://www.toptal.com/d3-js/towards-reusable-d3-js-charts">article on reusable d3.js charts</a>
 </li>
