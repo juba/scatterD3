@@ -1,5 +1,8 @@
+import * as d3 from "d3";
+import * as utils from "./utils";
+
 // Returns dot size from associated data
-function dot_size(d, chart) {
+export function dot_size(d, chart) {
     var size = chart.settings().point_size;
     if (chart.settings().has_size_var) { size = chart.scales().size(d.size_var); }
     return(size);
@@ -13,32 +16,32 @@ function dot_filter(d) {
 
 
 // Create dots
-function dots_create(chart) {
+export function create(chart) {
 
 	var chart_body = chart.svg().select(".chart-body")
 	var dot = chart_body.selectAll(".dot")
-		.data(chart.data().filter(dot_filter), key);
+		.data(chart.data().filter(dot_filter), utils.key);
 	dot.enter()
 		.append("path")
-		.call(dot_init, chart)
-		.call(dot_formatting, chart);
+		.call(init, chart)
+		.call(format, chart);
 }
 
 // Update dots
-function dots_update(chart) {
+export function update(chart) {
 
 	var duration = chart.settings().symbol_lab_changed ? 0 : 1000;
 
 	var chart_body = chart.svg().select(".chart-body")
 	var dots = chart_body.selectAll(".dot")
-		.data(chart.data().filter(dot_filter), key);
+		.data(chart.data().filter(dot_filter), utils.key);
 	dots.enter()
 	   .append("path")
-	   .call(dot_init, chart)
+	   .call(init, chart)
 	   .merge(dots)
-	   .call(dot_init, chart)
+	   .call(init, chart)
 	   .transition().duration(duration)
-	   .call(dot_formatting, chart);
+	   .call(format, chart);
 	dots.exit()
 	   .transition().duration(1000)
 	   .attr("transform", "translate(0,0)")
@@ -49,17 +52,17 @@ function dots_update(chart) {
 
 
 // Initial dot attributes
-function dot_init(selection, chart) {
+function init(selection, chart) {
 
 	var settings = chart.settings();
 	var scales = chart.scales();
 
     // tooltips when hovering points
-    var tooltip = d3v7.select(".scatterD3-tooltip");
+    var tooltip = d3.select(".scatterD3-tooltip");
     selection.on("mouseover", (event, d) => {
-        d3v7.select(event.currentTarget)
+        d3.select(event.currentTarget)
             .transition().duration(150)
-            .attr("d", d3v7.symbol()
+            .attr("d", d3.symbol()
 		  .type(v => scales.symbol(v.symbol_var))
 		  .size(v => dot_size(v, chart) * settings.hover_size)
 		 )
@@ -71,12 +74,12 @@ function dot_init(selection, chart) {
 		}
             });
 	if (settings.has_url_var) {
-            d3v7.select(event.currentTarget)
+            d3.select(event.currentTarget)
 		.style("cursor", d => d.url_var != "" ? "pointer" : "default");
 	}
 	if (settings.has_tooltips) {
 	    tooltip.style("visibility", "visible")
-		    .html(tooltip_content(d, chart));
+		    .html(utils.tooltip_content(d, chart));
 	}
     });
     selection.on("mousemove", event => {
@@ -96,9 +99,9 @@ function dot_init(selection, chart) {
 	}
     });
     selection.on("mouseout", function(event){
-        d3v7.select(event.currentTarget)
+        d3.select(event.currentTarget)
             .transition().duration(150)
-            .attr("d", d3v7.symbol()
+            .attr("d", d3.symbol()
 		  .type(d => scales.symbol(d.symbol_var))
 		  .size(d => dot_size(d, chart))
 		 )
@@ -121,16 +124,16 @@ function dot_init(selection, chart) {
 }
 
 // Apply format to dot
-function dot_formatting(selection, chart) {
+export function format(selection, chart) {
     selection
-		.attr("transform", d => translation(d, chart.scales()))
+		.attr("transform", d => utils.translation(d, chart.scales()))
     	// fill color
         .style("fill", d => chart.scales().color(d.col_var))
 		.style("opacity", d => d.opacity_var !== undefined ? chart.scales().opacity(d.opacity_var) : chart.settings().point_opacity)
     	// symbol and size
-        .attr("d", d3v7.symbol()
+        .attr("d", d3.symbol()
 	      	.type(d => chart.scales().symbol(d.symbol_var))
 	      	.size(d => dot_size(d, chart))
 	     )
-        .attr("class", (d, i) => "dot symbol symbol-c" + css_clean(d.symbol_var) + " color color-c" + css_clean(d.col_var));
+        .attr("class", (d, i) => "dot symbol symbol-c" + utils.css_clean(d.symbol_var) + " color color-c" + utils.css_clean(d.col_var));
 }

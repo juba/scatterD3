@@ -64,12 +64,35 @@ can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_ap
 and the [visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for
 a better understanding of the different arguments.
 
+## Development notes
+
+This package uses [packer](https://github.com/JohnCoene/packer) to manage JavaScript source code and dependencies. If you want to modify it, you'll need a working installation of [Node.js](https://nodejs.org/en/).
+
+After cloning this repository, run the following in a terminal at the project root :
+
+```sh
+npm install
+```
+
+Then, if you modify the JavaScript code in `srcjs`, you'll have to run the following command to bundle and update the widget JavaScript code :
+
+```r
+packer::bundle_dev()
+```
+
+If you want to ship a minimized production version, use :
+
+```r
+packer::bundle_prod()
+```
+
 ## Credits
 
 This package has been made possible by :
 
 - Michael Bostock's incredible [d3.js](https://d3js.org/) library and documentation
-- RStudio's [shiny](https://shiny.rstudio.com/) and [htmlwidgets](https://www.htmlwidgets.org/) packages
+- [htmlwidgets](https://www.htmlwidgets.org/) packages
+- [John Coene](https://twitter.com/jdatap)'s [packer](https://github.com/JohnCoene/packer) package
 - Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
 - Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
 - Speros Kokenes' [d3 lasso](https://github.com/skokenes/D3-Lasso-Plugin) plugin

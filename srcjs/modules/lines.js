@@ -1,11 +1,14 @@
+import "widgets";
+import * as d3 from "d3";
+
 // Zero horizontal and vertical lines
-var draw_line = d3v7.line()
+var draw_line = d3.line()
 	.x(d => d.x)
 	.y(d => d.y);
 
 
 
-function lines_create(chart) {
+export function create(chart) {
 
 	if (chart.settings().lines !== null) {
 		var lines = chart.svg().select(".chart-body")
@@ -14,23 +17,23 @@ function lines_create(chart) {
 
 		lines.enter()
 			.append("path")
-			.call(line_init)
-			.call(line_formatting, chart);
+			.call(init)
+			.call(format, chart);
 	}
 }
 
-function lines_update(chart) {
+export function update(chart) {
 
 	if (chart.settings().lines !== null) {
 		var lines = chart.svg().select(".chart-body")
 			.selectAll(".line")
 			.data(HTMLWidgets.dataframeToD3(chart.settings().lines));
 
-		lines.enter().append("path").call(line_init)
+		lines.enter().append("path").call(init)
 			.style("opacity", "0")
 			.merge(lines)
 			.transition().duration(1000)
-			.call(line_formatting, chart)
+			.call(format, chart)
 			.style("opacity", "1");
 
 		lines.exit()
@@ -40,14 +43,14 @@ function lines_update(chart) {
 	}
 }
 
-function line_init(selection) {
+function init(selection) {
 	selection
 		.attr("class", "line");
 
 	return selection;
 }
 
-function line_formatting(selection, chart) {
+export function format(selection, chart) {
 
 	var settings = chart.settings();
 	var scales = chart.scales();

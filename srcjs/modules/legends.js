@@ -1,6 +1,9 @@
+import * as utils from "./utils";
+import * as d3 from "d3";
+import { setup_legend_dims } from "./dims";
+import { legendColor, legendSymbol, legendSize } from '../plugins/d3-legend/index';
 
-
-function legends_create(chart) {
+export function create(chart) {
 
     chart.svg().append("g").attr("class", "legend")
         .style("font-size", chart.settings().legend_font_size);
@@ -21,7 +24,7 @@ function legends_create(chart) {
 
 
 
-function legends_update(chart) {
+export function update(chart) {
 
     if (!chart.settings().legend_changed) return;
 
@@ -94,7 +97,7 @@ function legends_update(chart) {
 
 
 // Move legends when chart is resized
-function legends_move(chart) {
+export function move(chart) {
     // Move legends
     var settings = chart.settings();
     if (settings.has_legend && settings.legend_width > 0) {
@@ -143,15 +146,16 @@ function add_color_legend(chart, duration) {
             .range(col_domain.map(d => chart.scales().color(d)));
     }
 
-    var color_legend = d3v7.legendColor()
+    var color_legend = legendColor()
         .shapePadding(3)
         .shape("rect")
         .scale(legend_color_scale);
 
     if (!chart.settings().col_continuous) {
         color_legend
-            .on("cellover", d => {
-                d = css_clean(d);
+            .on("cellover", (d) => {
+                console.log(d)
+                d = utils.css_clean(d);
                 var nsel = ".color:not(.color-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
                 var sel = ".color-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
                 svg.selectAll(nsel)
@@ -161,7 +165,7 @@ function add_color_legend(chart, duration) {
                     .transition()
                     .style("opacity", 1);
             })
-            .on("cellout", d => {
+            .on("cellout", (d) => {
                 var sel = ".color:not(.selected-lasso):not(.not-selected-lasso)";
                 svg.selectAll(sel)
                     .transition()
@@ -215,13 +219,13 @@ function add_symbol_legend(chart, duration) {
     symbol_domain = symbol_domain.filter(d => d != "");
     legend_symbol_scale
         .domain(symbol_domain)
-        .range(symbol_domain.map(d => d3v7.symbol().type(chart.scales().symbol(d))()));
+        .range(symbol_domain.map(d => d3.symbol().type(chart.scales().symbol(d))()));
 
-    var symbol_legend = d3v7.legendSymbol()
+    var symbol_legend = legendSymbol()
         .shapePadding(5)
         .scale(legend_symbol_scale)
-        .on("cellover", d => {
-            d = css_clean(d);
+        .on("cellover", (d) => {
+            d = utils.css_clean(d);
             var nsel = ".symbol:not(.symbol-c" + d + "):not(.selected-lasso):not(.not-selected-lasso)";
             var sel = ".symbol-c" + d + ":not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(nsel)
@@ -231,7 +235,7 @@ function add_symbol_legend(chart, duration) {
                 .transition()
                 .style("opacity", 1);
         })
-        .on("cellout", function (d) {
+        .on("cellout", (d) => {
             var sel = ".symbol:not(.selected-lasso):not(.not-selected-lasso)";
             svg.selectAll(sel)
                 .transition()
@@ -276,7 +280,7 @@ function add_size_legend(chart, duration) {
     // FIXME : find exact formula
     legend_size_scale.range(chart.scales().size.range().map(d => Math.sqrt(d) / 1.8));
 
-    var size_legend = d3v7.legendSize()
+    var size_legend = legendSize()
         .shapePadding(3)
         .shape('circle')
         .scale(legend_size_scale);

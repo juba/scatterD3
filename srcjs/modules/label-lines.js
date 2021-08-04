@@ -1,10 +1,13 @@
-function label_lines_update(chart, duration) {
+import * as utils from "./utils";
+import { default_label_dy } from "./labels";
+
+export function update(chart, duration) {
 
     if (!chart.settings().has_labels) return;
 
     const labels_lines = chart.svg().select(".chart-body")
         .selectAll(".point-label-line")
-        .data(chart.data().label_lines, key);
+        .data(chart.data().label_lines, utils.key);
 
     let t = labels_lines.enter()
         .append("svg:line")
@@ -13,21 +16,20 @@ function label_lines_update(chart, duration) {
 
     if (!chart.dragging()) t = t.transition().duration(duration)
 
-    t.call(label_line_formatting, chart);
+    t.call(format, chart);
 
     labels_lines.exit()
         .remove();
 
 }
 
-
 // Format line between point and label
-function label_line_formatting(selection, chart) {
+function format(selection, chart) {
 
     selection
-        .attr("transform", d => ( translation(d, chart.scales()) ))
+        .attr("transform", d => ( utils.translation(d, chart.scales()) ))
         .attr("class", (d, i) => (
-            `point-label-line label-line-${css_clean(key(d))} color color-c${css_clean(d.col_var)} symbol symbol-c${css_clean(d.symbol_var)}`
+            `point-label-line label-line-${utils.css_clean(utils.key(d))} color color-c${utils.css_clean(d.col_var)} symbol symbol-c${utils.css_clean(d.symbol_var)}`
         ))
         .attr("x1", d => (d.x1))
         .attr("x2", d => (d.x2))
@@ -37,7 +39,7 @@ function label_line_formatting(selection, chart) {
 }
 
 // Compute end of label line coordinates and distance with point
-function label_line_coordinates(label, x_orig, y_orig, x, y) {
+function coordinates(label, x_orig, y_orig, x, y) {
 
     var label_bb = label.node().getBBox();
     var bb = {left: x - label_bb.width / 2,
@@ -75,12 +77,12 @@ function label_line_coordinates(label, x_orig, y_orig, x, y) {
 }
 
 // Format line between point and label
-function label_line_display(selection, chart, duration) {
+export function display(selection, chart, duration) {
 
     const d = selection.datum()
     const x = chart.scales().x(d.x);
     const y = chart.scales().y(d.y);
-    const coord = label_line_coordinates(selection, x, y, x + d.lab_dx, y + d.lab_dy);
+    const coord = coordinates(selection, x, y, x + d.lab_dx, y + d.lab_dy);
 
 
     // Force negative gap for labels below arrows
@@ -91,7 +93,7 @@ function label_line_display(selection, chart, duration) {
     const x1 = - x2 * gap0 / coord.dist;
     const y1 = - y2 * gap0 / coord.dist;
 
-    chart.data().label_lines = chart.data().label_lines.filter(l => ( key(l) != key(d) ));
+    chart.data().label_lines = chart.data().label_lines.filter(l => ( utils.key(l) != utils.key(d) ));
     if (coord.dist > 15) {
         chart.data().label_lines.push(
             {
@@ -101,5 +103,5 @@ function label_line_display(selection, chart, duration) {
         )
     }
 
-    label_lines_update(chart, duration);
+    update(chart, duration);
 }

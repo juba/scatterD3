@@ -1,5 +1,5 @@
 // Create and draw x and y axes
-function add_axes(selection, chart) {
+export function add(selection, chart) {
 
     var dims = chart.dims();
     var settings = chart.settings();
@@ -38,25 +38,25 @@ function add_axes(selection, chart) {
 }
 
 
-function unit_circle_create(chart) {
+export function unit_circle_create(chart) {
     if (!chart.settings().unit_circle) return;
     chart.svg().select(".chart-body")
         .append('svg:ellipse')
         .attr('class', 'unit-circle')
-        .call(unit_circle_formatting, chart);
+        .call(unit_circle_format, chart);
 }
 
-function unit_circle_update(chart) {
+export function unit_circle_update(chart) {
     if (!chart.settings().unit_circle) return;
     chart.svg().select(".chart-body")
         .select(".unit-circle")
         .transition().duration(1000)
-        .call(unit_circle_formatting, chart);
+        .call(unit_circle_format, chart);
 }
 
 
 // Add unit circle
-function unit_circle_formatting(selection, chart) {
+export function unit_circle_format(selection, chart) {
 
     var scales = chart.scales();
 

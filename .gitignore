@@ -14,3 +14,4 @@ vignettes/rsconnect/*
 revdep/
 .vscode/
 docs/
+node_modules

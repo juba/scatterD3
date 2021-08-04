@@ -1,6 +1,4 @@
-(function() {
-
-d3v7.labeler = function() {
+export function labeler() {
   var lab = [],
       anc = [],
       w = 1, // box width
@@ -16,8 +14,8 @@ d3v7.labeler = function() {
   var w_len = 0.1, // leader line length
       w_inter = 30.0, // leader line intersection
       w_lab2 = 30.0, // label-label overlap
-      w_lab_anc = 30.0; // label-anchor overlap
-      w_line_lab = 30.0; // line-label overlap
+      w_lab_anc = 30.0, // label-anchor overlap
+      w_line_lab = 30.0, // line-label overlap
       w_orient = 0.2; // orientation bias
 
   // booleans for user defined functions
@@ -27,7 +25,7 @@ d3v7.labeler = function() {
   var user_defined_energy,
       user_defined_schedule;
 
-  energy = function(index) {
+  var energy = function(index) {
   // energy function, tailored for label placement
 
       var m = lab.length,
@@ -111,7 +109,7 @@ d3v7.labeler = function() {
       return ener;
   };
 
-  mcmove = function(currT) {
+  var mcmove = function(currT) {
   // Monte Carlo translation move
 
       // select a random label
@@ -155,7 +153,7 @@ d3v7.labeler = function() {
 
   };
 
-  mcrotate = function(currT) {
+  var mcrotate = function(currT) {
   // Monte Carlo rotation move
 
       // select a random label
@@ -213,7 +211,7 @@ d3v7.labeler = function() {
 
   };
 
-  intersect = function(x1, x2, x3, x4, y1, y2, y3, y4) {
+  var intersect = function(x1, x2, x3, x4, y1, y2, y3, y4) {
   // returns true if two lines intersect, else false
   // from http://paulbourke.net/geometry/lineline2d/
 
@@ -233,7 +231,7 @@ d3v7.labeler = function() {
     return false;
   }
 
-  cooling_schedule = function(currT, initialT, nsweeps) {
+  var cooling_schedule = function(currT, initialT, nsweeps) {
   // linear cooling
     return (currT - (initialT / nsweeps));
   }
@@ -299,6 +297,4 @@ d3v7.labeler = function() {
 
   return labeler;
 };
-
-})();
 

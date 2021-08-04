@@ -7,7 +7,7 @@ output:
     fig_width: 5
     toc: true
 vignette: >
-  %\VignetteIndexEntry{scatterD3 : A Visual Guide}
+  %\VignetteIndexEntry{scatterD3 : a Visual Guide}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -550,7 +550,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
 
 The `init_callback` argument allows to pass a JavaScript function that will be applied after the plot has been created or updated, with the JavaScript scatter object as `this`.
 
-This is not documented yet, and you'll have to dig into the JS package code to use it. Please note that to access `d3` functions you'll have to use the `d3v7` prefix.
+This is not documented yet, and you'll have to dig into the JS package code to use it.
 
 Here is a bad but potentially useful example that formats the `x` axis as percentages :
 
@@ -559,7 +559,7 @@ scatterD3(data = mtcars, x = wt, y = mpg,
   init_callback = "function() {
     var scales = this.scales();
     var svg = this.svg();
-    new_x_axis = scales.xAxis.tickFormat(d3v7.format(',.0%'));
+    new_x_axis = scales.xAxis.tickFormat(d3.format(',.0%'));
     svg.select('.x.axis').call(new_x_axis);
   }"
 )

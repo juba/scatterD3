@@ -1,5 +1,7 @@
+import * as d3 from "d3";
+
 // Export to SVG function
-function export_svg(sel, chart) {
+export function export_svg(sel, chart) {
     
     var svg_content = chart.svg()
         .attr("xmlns", "http://www.w3.org/2000/svg")
@@ -14,13 +16,13 @@ function export_svg(sel, chart) {
     
     var image_data = "data:image/octet-stream;base64," + window.btoa(unescape(encodeURIComponent(svg_content)));
 
-    d3v7.select(sel)
+    d3.select(sel)
         .attr("download", chart.settings().html_id + ".svg")
         .attr("href", image_data);
 }
 
 // Function to export custom labels position to CSV file
-function export_labels_position(sel, chart) {
+export function export_labels_position(sel, chart) {
 
     var scales = chart.scales();
     var settings = chart.settings();
@@ -44,7 +46,7 @@ function export_labels_position(sel, chart) {
 
     var csv_content = "data:text/csv;base64," + btoa(lines_data.join("\n"));
     
-    d3v7.select(sel)
+    d3.select(sel)
         .attr("download", settings.html_id + "_labels.csv")
         .attr("href", encodeURI(csv_content));
 }

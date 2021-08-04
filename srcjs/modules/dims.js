@@ -1,7 +1,5 @@
-
-
 // Setup dimensions
-function setup_dims(chart) {
+export function setup_dims(chart) {
 
     var dims = {},
         margins = { top: 5, right: 10, bottom: 20, left: 30 };
@@ -38,7 +36,7 @@ function setup_dims(chart) {
 }
 
 // Compute and setup legend positions
-function setup_legend_dims(chart) {
+export function setup_legend_dims(chart) {
 
     var dims = chart.dims();
 

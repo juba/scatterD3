@@ -1,6 +1,12 @@
+import * as arrows from "./arrows";
+import * as axes from "./axes";
+import * as ellipses from "./ellipses";
+import * as lines from "./lines";
+import * as utils from "./utils";
+import * as d3 from "d3";
 
 // Init and returns a zoom behavior
-function zoom_behavior(chart) {
+export function behavior(chart) {
 
     var root = chart.svg().select(".root");
     var viewport = chart.svg().select(".viewport");
@@ -14,7 +20,7 @@ function zoom_behavior(chart) {
     var y1 = viewport_bb.bottom - root_bb.top;
 
     // Zoom behavior
-    var zoom = d3v7.zoom()
+    var zoom = d3.zoom()
         .extent([[0, y0], [x1 - x0, y1]])
         .scaleExtent([0, 32])
         .on("zoom", (event) => zoomed(event, chart));
@@ -41,11 +47,11 @@ function zoomed(event, chart) {
     var chart_body = chart.svg().select(".chart-body");
 
     chart_body.selectAll(".dot, .point-label, .point-label-line")
-        .attr("transform", d => ( translation(d, chart.scales()) ));
-    chart_body.selectAll(".line").call(line_formatting, chart)
-    chart_body.selectAll(".arrow").call(draw_arrow, chart);
-    chart_body.selectAll(".ellipse").call(ellipse_formatting, chart);
-    chart.svg().select(".unit-circle").call(unit_circle_formatting, chart);
+        .attr("transform", d => ( utils.translation(d, chart.scales()) ));
+    chart_body.selectAll(".line").call(lines.format, chart)
+    chart_body.selectAll(".arrow").call(arrows.draw, chart);
+    chart_body.selectAll(".ellipse").call(ellipses.format, chart);
+    chart.svg().select(".unit-circle").call(axes.unit_circle_format, chart);
 
     if (typeof chart.settings().zoom_callback === 'function') {
         chart.settings().zoom_callback(chart.scales().x.domain()[0], chart.scales().x.domain()[1],
@@ -55,14 +61,14 @@ function zoomed(event, chart) {
 }
 
 // Reset zoom function
-function reset_zoom(chart) {
+export function reset(chart) {
     var root = chart.svg().select(".root");
     root.transition().duration(1000)
-        .call(chart.zoom().transform, d3v7.zoomIdentity);
+        .call(chart.zoom().transform, d3.zoomIdentity);
 }
 
 // Update zoom function
-function update_zoom(chart) {
+function update(chart) {
     var root = chart.svg().select(".root");
     root.select(".x.axis")
         .transition().duration(1000)
@@ -71,18 +77,18 @@ function update_zoom(chart) {
         .transition().duration(1000)
         .call(chart.scales().yAxis)
         .on("end", function() {
-            root.call(chart.zoom().transform, d3v7.zoomIdentity);
+            root.call(chart.zoom().transform, d3.zoomIdentity);
         });
 }
 
 
 // Zoom on
-function zoom_on(chart, duration) {
+export function on(chart, duration) {
 
     if (chart.settings().zoom_on === null) return;
 
     var root = chart.svg().select(".root");
-    var curZoom = d3v7.zoomTransform(root.node());
+    var curZoom = d3.zoomTransform(root.node());
     var zoom_x = chart.scales().x(chart.settings().zoom_on[0]);
     var zoom_y = chart.scales().y(chart.settings().zoom_on[1]);
     var zoom_dx = (chart.dims().width / 2 - zoom_x) / curZoom.k;

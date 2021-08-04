@@ -1,6 +1,7 @@
+import * as d3 from "d3";
+import * as utils from "./utils";
 
-
-function ellipses_create(chart) {
+export function create(chart) {
     if (chart.settings().ellipses) {
         var ellipses = chart.svg().select(".chart-body")
             .selectAll(".ellipse")
@@ -8,13 +9,13 @@ function ellipses_create(chart) {
 
         ellipses.enter()
             .append("svg:path")
-            .call(ellipse_init)
-            .call(ellipse_formatting, chart);
+            .call(init)
+            .call(format, chart);
     }
 }
 
 
-function ellipses_update(chart) {
+export function update(chart) {
     if (chart.settings().ellipses || chart.settings().ellipses_changed) {
         var ellipses = chart.svg().select(".chart-body")
             .selectAll(".ellipse")
@@ -22,11 +23,11 @@ function ellipses_update(chart) {
 
         ellipses.enter()
             .append("path")
-            .call(ellipse_init)
+            .call(init)
             .style("opacity", "0")
             .merge(ellipses)
             .transition().duration(1000)
-            .call(ellipse_formatting, chart)
+            .call(format, chart)
             .style("opacity", "1");
 
         ellipses.exit()
@@ -38,19 +39,19 @@ function ellipses_update(chart) {
 
 
 // Initial ellipse attributes
-function ellipse_init(selection) {
+function init(selection) {
     selection
         .style("fill", "none");
 }
 
 
 // Apply format to ellipse
-function ellipse_formatting(selection, chart) {
+export function format(selection, chart) {
 
     var scales = chart.scales();
 
     // Ellipses path function
-    var ellipseFunc = d3v7.line()
+    var ellipseFunc = d3.line()
         .x(d => scales.x(d.x))
         .y(d => scales.y(d.y));
 
@@ -63,7 +64,7 @@ function ellipse_formatting(selection, chart) {
 	    // Only one ellipse
 	    if (d.level == "_scatterD3_all") {
 		if (chart.settings().col_continuous) {
-		    return(d3v7.interpolateViridis(0));
+		    return(d3.interpolateViridis(0));
 		} else {
 		    return(scales.color.range()[0]);
 		}
@@ -71,5 +72,5 @@ function ellipse_formatting(selection, chart) {
 	    return( scales.color(d.level));
         })
         .style("opacity", 1)
-        .attr("class", d => "ellipse color color-c" + css_clean(d.level));
+        .attr("class", d => "ellipse color color-c" + utils.css_clean(d.level));
 }
