@@ -1,4 +1,4 @@
-# scatterD3 1.0.1
+# scatterD3 (development version)
 
 * Migration to packer
 
