@@ -461,16 +461,20 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
 
     ## create widget
     htmlwidgets::createWidget(
-                     name = 'scatterD3',
-                     x,
-                     width = width,
-                     height = height,
-                     package = 'scatterD3',
-                     sizingPolicy = htmlwidgets::sizingPolicy(
-                                                     browser.fill = TRUE,
-                                                     viewer.fill = TRUE
-                                                 )
-                 )
+        name = 'scatterD3',
+        x,
+        width = width,
+        height = height,
+        package = 'scatterD3',
+        sizingPolicy = htmlwidgets::sizingPolicy(
+            browser.fill = TRUE,
+            browser.defaultWidth = "100%",
+            browser.defaultHeight = "85vh",
+            viewer.fill = TRUE,
+            viewer.defaultWidth = "100%",
+            viewer.defaultHeight = "85vh"
+        )
+    )
 }
 
 #' @rdname scatterD3-shiny

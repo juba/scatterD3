@@ -1,5 +1,6 @@
 # scatterD3 (development version)
 
+* Fix sizing when only "width" or "height" is defined
 * Migration to packer
 
 # scatterD3 1.0.0
