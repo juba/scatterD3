@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2021-10-06T08:42Z
+last_built: 2021-10-06T08:53Z
 urls:
   reference: https://juba.github.io/scatterD3//reference
   article: https://juba.github.io/scatterD3//articles
