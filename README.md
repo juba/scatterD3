@@ -20,14 +20,13 @@ Here is a small preview of what you will get :
 
 ## Installation
 
-Install latest stable release from CRAN :
+Install from CRAN :
 
 ```r
 install.packages("scatterD3")
 ```
 
-Or from Github for the latest, bleeding edge, full of bugs version :
-
+Or from Github for the latest development version :
 ```r
 remotes::install_github("juba/scatterD3")
 ```
@@ -90,7 +89,7 @@ packer::bundle_prod()
 
 This package has been made possible by :
 
-- Michael Bostock's incredible [d3.js](https://d3js.org/) library and documentation
+- Mike Bostock's incredible [d3.js](https://d3js.org/) library and documentation
 - [htmlwidgets](https://www.htmlwidgets.org/) packages
 - [John Coene](https://twitter.com/jdatap)'s [packer](https://github.com/JohnCoene/packer) package
 - Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
