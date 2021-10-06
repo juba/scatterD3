@@ -1,5 +1,6 @@
 # scatterD3 (development version)
 
+* Upgrade to d3 7.1.1
 * Fix sizing when only "width" or "height" is defined
 * Migration to packer
 
