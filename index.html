@@ -20,6 +20,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -32,23 +34,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">scatterD3</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -65,7 +61,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/juba/scatterD3/">
+  <a href="https://github.com/juba/scatterD3/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -82,79 +78,81 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="scatterd3" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#scatterd3" class="anchor"></a>ScatterD3</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="scatterd3">ScatterD3<a class="anchor" aria-label="anchor" href="#scatterd3"></a>
+</h1></div>
 
-<p><code>scatterD3</code> is an HTML R widget for interactive scatter plots visualization. It is based on the <a href="https://www.htmlwidgets.org/">htmlwidgets</a> R package and on the <a href="https://d3js.org/">d3.js</a> javascript library.</p>
-<div id="features" class="section level2">
-<h2 class="hasAnchor">
-<a href="#features" class="anchor"></a>Features</h2>
+<p><code>scatterD3</code> is an HTML R widget for interactive scatter plots visualization. It is based on the <a href="https://www.htmlwidgets.org/" class="external-link">htmlwidgets</a> R package and on the <a href="https://d3js.org/" class="external-link">d3.js</a> javascript library.</p>
+<div class="section level2">
+<h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
+</h2>
 <p>Here is a small preview of what you will get :</p>
-<p><img src="https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif" alt="example"></p>
+<div class="figure">
+<img src="https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif" alt=""><p class="caption">example</p>
+</div>
 <ul>
 <li>The <a href="https://juba.github.io/scatterD3/articles/introduction.html">visual guide</a> gives a list of features and examples.</li>
-<li>The <a href="https://data.nozav.org/app/scatterD3/">sample shiny app</a> allows to live test the package features and its shiny integration.</li>
+<li>The <a href="https://data.nozav.org/app/scatterD3/" class="external-link">sample shiny app</a> allows to live test the package features and its shiny integration.</li>
 </ul>
 </div>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>Install from CRAN :</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"scatterD3"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"scatterD3"</span><span class="op">)</span></span></code></pre></div>
 <p>Or from Github for the latest development version :</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"juba/scatterD3"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"juba/scatterD3"</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <p>Quick example of the <code>scatterD3</code> function based on the <code>mtcars</code> dataset :</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">mtcars</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>
-<span class="fu"><a href="reference/scatterD3.html">scatterD3</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mtcars</span>, x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span>, lab <span class="op">=</span> <span class="va">names</span>,
-          col_var <span class="op">=</span> <span class="va">cyl</span>, symbol_var <span class="op">=</span> <span class="va">am</span>,
-          xlab <span class="op">=</span> <span class="st">"Weight"</span>, ylab <span class="op">=</span> <span class="st">"Mpg"</span>, col_lab <span class="op">=</span> <span class="st">"Cylinders"</span>,
-          symbol_lab <span class="op">=</span> <span class="st">"Manual transmission"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">mtcars</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/scatterD3.html">scatterD3</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">mtcars</span>, x <span class="op">=</span> <span class="va">wt</span>, y <span class="op">=</span> <span class="va">mpg</span>, lab <span class="op">=</span> <span class="va">names</span>,</span>
+<span>          col_var <span class="op">=</span> <span class="va">cyl</span>, symbol_var <span class="op">=</span> <span class="va">am</span>,</span>
+<span>          xlab <span class="op">=</span> <span class="st">"Weight"</span>, ylab <span class="op">=</span> <span class="st">"Mpg"</span>, col_lab <span class="op">=</span> <span class="st">"Cylinders"</span>,</span>
+<span>          symbol_lab <span class="op">=</span> <span class="st">"Manual transmission"</span><span class="op">)</span></span></code></pre></div>
 <p>See <a href="https://juba.github.io/scatterD3/articles/introduction.html">the visual guide</a> for a step-by-step guide and details about the different function arguments.</p>
-<p><code>scatterD3</code> provides a built-in SVG export of the current widget view. As an <a href="https://www.htmlwidgets.org/">HTML widget</a>, you can also include it in an <a href="https://rmarkdown.rstudio.com/">Rmarkdown</a> HTML document while keeping its interactive features.</p>
+<p><code>scatterD3</code> provides a built-in SVG export of the current widget view. As an <a href="https://www.htmlwidgets.org/" class="external-link">HTML widget</a>, you can also include it in an <a href="https://rmarkdown.rstudio.com/" class="external-link">Rmarkdown</a> HTML document while keeping its interactive features.</p>
 </div>
-<div id="shiny-integration" class="section level2">
-<h2 class="hasAnchor">
-<a href="#shiny-integration" class="anchor"></a>Shiny integration</h2>
+<div class="section level2">
+<h2 id="shiny-integration">Shiny integration<a class="anchor" aria-label="anchor" href="#shiny-integration"></a>
+</h2>
 <p>Like every R HTML widget, shiny integration is straightforward. But as a D3 widget, <code>scatterD3</code> is <em>updatable</em> : changes in settings or data can be displayed via smooth transitions instead of a complete chart redraw, which can provide interesting visual clues.</p>
 <p>Furthermore, <code>scatterD3</code> provides some additional handlers and callback hooks for a more complete JavaScript interactivity and integration.</p>
-<p>The <a href="https://data.nozav.org/app/scatterD3/">sample scatterD3 shiny app</a> allows you to see the different features described here. You can <a href="https://github.com/juba/scatterD3_shiny_app">check its source code on GitHub</a> and the <a href="https://juba.github.io/scatterD3/articles/introduction.html">visual guide</a> for a better understanding of the different arguments.</p>
+<p>The <a href="https://data.nozav.org/app/scatterD3/" class="external-link">sample scatterD3 shiny app</a> allows you to see the different features described here. You can <a href="https://github.com/juba/scatterD3_shiny_app" class="external-link">check its source code on GitHub</a> and the <a href="https://juba.github.io/scatterD3/articles/introduction.html">visual guide</a> for a better understanding of the different arguments.</p>
 </div>
-<div id="development-notes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#development-notes" class="anchor"></a>Development notes</h2>
-<p>This package uses <a href="https://github.com/JohnCoene/packer">packer</a> to manage JavaScript source code and dependencies. If you want to modify it, you’ll need a working installation of <a href="https://nodejs.org/en/">Node.js</a>.</p>
+<div class="section level2">
+<h2 id="development-notes">Development notes<a class="anchor" aria-label="anchor" href="#development-notes"></a>
+</h2>
+<p>This package uses <a href="https://github.com/JohnCoene/packer" class="external-link">packer</a> to manage JavaScript source code and dependencies. If you want to modify it, you’ll need a working installation of <a href="https://nodejs.org/en/" class="external-link">Node.js</a>.</p>
 <p>After cloning this repository, run the following in a terminal at the project root :</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1"></a><span class="ex">npm</span> install</span></code></pre></div>
 <p>Then, if you modify the JavaScript code in <code>srcjs</code>, you’ll have to run the following command to bundle and update the widget JavaScript code :</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle_dev</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle_dev</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>If you want to ship a minimized production version, use :</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle_prod</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">packer</span><span class="fu">::</span><span class="fu">bundle_prod</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div id="credits" class="section level2">
-<h2 class="hasAnchor">
-<a href="#credits" class="anchor"></a>Credits</h2>
+<div class="section level2">
+<h2 id="credits">Credits<a class="anchor" aria-label="anchor" href="#credits"></a>
+</h2>
 <p>This package has been made possible by :</p>
 <ul>
-<li>Mike Bostock’s incredible <a href="https://d3js.org/">d3.js</a> library and documentation</li>
+<li>Mike Bostock’s incredible <a href="https://d3js.org/" class="external-link">d3.js</a> library and documentation</li>
 <li>
-<a href="https://www.htmlwidgets.org/">htmlwidgets</a> packages</li>
+<a href="https://www.htmlwidgets.org/" class="external-link">htmlwidgets</a> packages</li>
 <li>
-<a href="https://twitter.com/jdatap">John Coene</a>’s <a href="https://github.com/JohnCoene/packer">packer</a> package</li>
-<li>Susie Lu’s <a href="https://github.com/susielu/d3-legend">d3-legend</a> module</li>
-<li>Rob Moore’s <a href="https://www.toptal.com/d3-js/towards-reusable-d3-js-charts">article on reusable d3.js charts</a>
+<a href="https://twitter.com/jdatap" class="external-link">John Coene</a>’s <a href="https://github.com/JohnCoene/packer" class="external-link">packer</a> package</li>
+<li>Susie Lu’s <a href="https://github.com/susielu/d3-legend" class="external-link">d3-legend</a> module</li>
+<li>Rob Moore’s <a href="https://www.toptal.com/d3-js/towards-reusable-d3-js-charts" class="external-link">article on reusable d3.js charts</a>
 </li>
-<li>Speros Kokenes’ <a href="https://github.com/skokenes/D3-Lasso-Plugin">d3 lasso</a> plugin</li>
-<li>Evan Wang’s <a href="https://github.com/tinker10/D3-Labeler">d3-labeler</a> plugin</li>
+<li>Speros Kokenes’ <a href="https://github.com/skokenes/D3-Lasso-Plugin" class="external-link">d3 lasso</a> plugin</li>
+<li>Evan Wang’s <a href="https://github.com/tinker10/D3-Labeler" class="external-link">d3-labeler</a> plugin</li>
 </ul>
 </div>
 </div>
@@ -162,53 +160,62 @@
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/juba/scatterD3/">https://​github.com/​juba/​scatterD3/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/juba/scatterD3/issues">https://​github.com/​juba/​scatterD3/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=scatterD3" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/juba/scatterD3/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/juba/scatterD3/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>GPL (&gt;=3)</li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Julien Barnier <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Kent Russell <br><small class="roles"> Author, contributor </small>  </li>
-<li>Mike Bostock <br><small class="roles"> Author, copyright holder </small>  <br><small>(d3.js library, https://d3js.org)</small>
-</li>
-<li>Susie Lu <br><small class="roles"> Author, copyright holder </small>  <br><small>(d3-legend library, https://d3-legend.susielu.com/)</small>
-</li>
-<li>Speros Kokenes <br><small class="roles"> Author, copyright holder </small>  <br><small>(d3-lasso-plugin library, https://github.com/skokenes/D3-Lasso-Plugin)</small>
-</li>
-<li>Evan Wang <br><small class="roles"> Author, copyright holder </small>  <br><small>(d3-labeler plugin, https://github.com/tinker10/D3-Labeler)</small>
-</li>
+<li><a href="authors.html#citation">Citing scatterD3</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://cran.r-project.org/package=scatterD3"><img src="https://www.r-pkg.org/badges/version-ago/scatterD3" alt="CRAN_Status_Badge"></a></li>
-<li><a href="https://github.com/juba/scatterD3/actions?query=workflow%3AR-CMD-check"><img src="https://github.com/juba/scatterD3/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li>Julien Barnier <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Kent Russell <br><small class="roles"> Author, contributor </small>  </li>
+<li>Mike Bostock <br><small class="roles"> Author, copyright holder </small>  </li>
+<li>Susie Lu <br><small class="roles"> Author, copyright holder </small>  </li>
+<li>Speros Kokenes <br><small class="roles"> Author, copyright holder </small>  </li>
+<li>Evan Wang <br><small class="roles"> Author, copyright holder </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://cran.r-project.org/package=scatterD3" class="external-link"><img src="https://www.r-pkg.org/badges/version-ago/scatterD3" alt="CRAN_Status_Badge"></a></li>
+<li><a href="https://github.com/juba/scatterD3/actions?query=workflow%3AR-CMD-check" class="external-link"><img src="https://github.com/juba/scatterD3/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Julien Barnier, Kent Russell, Mike Bostock, Susie Lu, Speros Kokenes, Evan Wang.</p>
+  <p></p>
+<p>Developed by Julien Barnier, Kent Russell, Mike Bostock, Susie Lu, Speros Kokenes, Evan Wang.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
@@ -216,6 +223,8 @@
 
   
 
+
+  
 
   </body>
 </html>
