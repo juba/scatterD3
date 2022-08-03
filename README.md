@@ -70,7 +70,7 @@ This package uses [packer](https://github.com/JohnCoene/packer) to manage JavaSc
 After cloning this repository, run the following in a terminal at the project root :
 
 ```sh
-npm install
+npm install --production=false
 ```
 
 Then, if you modify the JavaScript code in `srcjs`, you'll have to run the following command to bundle and update the widget JavaScript code :
