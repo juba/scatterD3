@@ -1,6 +1,6 @@
 import { dot_size } from "./dots";
 import * as label_lines from "./label-lines";
-import {labeler} from "../plugins/labeler";
+import { labeler } from "../plugins/labeler";
 import * as utils from "./utils";
 import * as d3 from "d3";
 
@@ -14,7 +14,7 @@ export function create(chart, duration) {
 
     labels.enter()
         .append("text")
-	    .call(init)
+        .call(init)
         .call(format, chart)
         .call(drag_behavior(chart, duration));
 
@@ -29,9 +29,12 @@ export function update(chart, duration) {
     if (!chart.settings().has_labels) return;
     if (chart.settings().positions_changed) labels_placement(chart, duration);
 
-    var labels = chart.svg().select(".chart-body")
+    const data = chart.data().filter(d => (d.lab !== "" && d.lab !== null))
+
+    const labels = chart.svg().select(".chart-body")
         .selectAll(".point-label")
-        .data(chart.data(), utils.key);
+        .data(data, utils.key);
+
     labels.enter()
         .append("text")
         .call(init)
@@ -41,7 +44,7 @@ export function update(chart, duration) {
         .call(format, chart);
 
     labels.exit()
-        .each(function(d) {
+        .each(function (d) {
             chart.svg()
                 .select(".label-line-" + utils.css_clean(utils.key(d)))
                 .remove();
@@ -116,16 +119,16 @@ function get_label_dy(d, i, chart) {
 function format(selection, chart) {
 
     selection
-	    .filter(d => (d.lab !== "" && d.lab !== null))
+        .filter(d => (d.lab !== "" && d.lab !== null))
         .text(d => (d.lab))
         .style("font-size", chart.settings().labels_size + "px")
         .attr("class", (d, i) =>
             (`point-label color color-c${utils.css_clean(d.col_var)} symbol symbol-c${utils.css_clean(d.symbol_var)}`)
         )
-        .attr("transform", d => ( utils.translation(d, chart.scales()) ))
-        .style("fill",   d => ( chart.scales().color(d.col_var) ))
-        .attr("dx", (d, i) => ( get_label_dx(d, i, chart) + "px" ))
-        .attr("dy", (d, i) => ( get_label_dy(d, i, chart) + "px" ))
+        .attr("transform", d => (utils.translation(d, chart.scales())))
+        .style("fill", d => (chart.scales().color(d.col_var)))
+        .attr("dx", (d, i) => (get_label_dx(d, i, chart) + "px"))
+        .attr("dy", (d, i) => (get_label_dy(d, i, chart) + "px"))
 
 }
 
@@ -172,7 +175,7 @@ function labels_placement(chart, duration) {
         d.lab_dx = label_array[i].x - chart.scales().x(d.x);
         d.lab_dy = label_array[i].y - chart.scales().y(d.y);
         positions = positions.filter(p => utils.key(p) != utils.key(d))
-        positions.push({lab_dx: d.lab_dx, lab_dy: d.lab_dy, key_var: d.key_var})
+        positions.push({ lab_dx: d.lab_dx, lab_dy: d.lab_dy, key_var: d.key_var })
     })
     chart.positions(positions);
 
@@ -210,13 +213,13 @@ function drag_behavior(chart, duration) {
                 var dx = event.x - scales.x(d.x);
                 var dy = event.y - scales.y(d.y);
                 label.attr('dx', dx + "px")
-                     .attr('dy', dy + "px");
+                    .attr('dy', dy + "px");
                 d.lab_dx = dx;
                 d.lab_dy = dy;
                 label.call(label_lines.display, chart);
                 let positions = chart.positions();
                 positions = positions.filter(p => utils.key(p) != utils.key(d))
-                positions.push({lab_dx: d.lab_dx, lab_dy: d.lab_dy, key_var: d.key_var})
+                positions.push({ lab_dx: d.lab_dx, lab_dy: d.lab_dy, key_var: d.key_var })
                 chart.positions(positions)
             }
         })

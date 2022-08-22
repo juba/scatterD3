@@ -1,6 +1,7 @@
 # scatterD3 (development version)
 
 * Upgrade to d3 7.6.1
+* Fix labels not updating when setting min contrib value (thanks @gabrielparriaux)
 
 
 # scatterD3 1.0.1
