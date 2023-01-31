@@ -1,9 +1,9 @@
-pandoc: 2.7.3
-pkgdown: 2.0.6
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   introduction: introduction.html
-last_built: 2022-09-30T09:27Z
+last_built: 2023-01-31T12:49Z
 urls:
   reference: https://juba.github.io/scatterD3/reference
   article: https://juba.github.io/scatterD3/articles
