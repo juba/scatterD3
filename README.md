@@ -14,9 +14,7 @@ Here is a small preview of what you will get :
 
 ![example](https://raw.github.com/juba/scatterD3/master/resources/scatterD3.gif)
 
-- The
-[visual guide](https://juba.github.io/scatterD3/articles/introduction.html) gives a list of features and examples.
-- The [sample shiny app](https://data.nozav.org/app/scatterD3/) allows to live test the package features and its shiny integration.
+The [visual guide](https://juba.github.io/scatterD3/articles/introduction.html) gives a list of features and examples.
 
 ## Installation
 
@@ -27,13 +25,14 @@ install.packages("scatterD3")
 ```
 
 Or from Github for the latest development version :
+
 ```r
 remotes::install_github("juba/scatterD3")
 ```
 
 ## Usage
 
-Quick example of the `scatterD3`  function based on the `mtcars` dataset :
+Quick example of the `scatterD3` function based on the `mtcars` dataset :
 
 ```r
 mtcars$names <- rownames(mtcars)
@@ -50,16 +49,14 @@ See [the visual guide](https://juba.github.io/scatterD3/articles/introduction.ht
 ## Shiny integration
 
 Like every R HTML widget, shiny integration is straightforward. But as a D3
-widget, `scatterD3` is *updatable* : changes in settings or data can be
+widget, `scatterD3` is _updatable_ : changes in settings or data can be
 displayed via smooth transitions instead of a complete chart redraw, which can
 provide interesting visual clues.
 
 Furthermore, `scatterD3` provides some additional handlers and callback hooks
 for a more complete JavaScript interactivity and integration.
 
-The [sample scatterD3 shiny app](https://data.nozav.org/app/scatterD3/) allows
-you to see the different features described here. You
-can [check its source code on GitHub](https://github.com/juba/scatterD3_shiny_app)
+You can [check the sample scatterD3 shiny app](https://github.com/juba/scatterD3_shiny_app)
 and the [visual guide](https://juba.github.io/scatterD3/articles/introduction.html) for
 a better understanding of the different arguments.
 
@@ -89,10 +86,10 @@ packer::bundle_prod()
 
 This package has been made possible by :
 
-- Mike Bostock's incredible [d3.js](https://d3js.org/) library and documentation
-- [htmlwidgets](https://www.htmlwidgets.org/) packages
-- [John Coene](https://twitter.com/jdatap)'s [packer](https://github.com/JohnCoene/packer) package
-- Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
-- Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
-- Speros Kokenes' [d3 lasso](https://github.com/skokenes/D3-Lasso-Plugin) plugin
-- Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
+-   Mike Bostock's incredible [d3.js](https://d3js.org/) library and documentation
+-   [htmlwidgets](https://www.htmlwidgets.org/) packages
+-   [John Coene](https://twitter.com/jdatap)'s [packer](https://github.com/JohnCoene/packer) package
+-   Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
+-   Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
+-   Speros Kokenes' [d3 lasso](https://github.com/skokenes/D3-Lasso-Plugin) plugin
+-   Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
