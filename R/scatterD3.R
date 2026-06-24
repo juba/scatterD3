@@ -375,7 +375,7 @@ scatterD3 <- function(x, y, data = NULL, lab = NULL,
     }
 
     ## Disable automatic labels position if too many labels
-    n_lab <- sum(lab != "")
+    n_lab <- sum(lab != "" & !is.na(lab))
     if (n_lab > 500 && !is.null(labels_positions) && labels_positions == "auto") {
         warning(gettext("More than 500 labels, automatic labels positioning has been disabled"))
         labels_positions <- NULL
@@ -489,7 +489,3 @@ renderScatterD3 <- function(expr, env = parent.frame(), quoted = FALSE) {
     if (!quoted) { expr <- substitute(expr) } # force quoted
     htmlwidgets::shinyRenderWidget(expr, scatterD3Output, env, quoted = TRUE)
 }
-
-
-
-
