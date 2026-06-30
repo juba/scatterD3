@@ -65,8 +65,7 @@ scatterD3(
   zoom_on = NULL,
   zoom_on_level = NULL,
   disable_wheel = FALSE,
-  lines = data.frame(slope = c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5,
-    5)),
+  lines = data.frame(slope = c(0, Inf), intercept = c(0, 0), stroke_dasharray = c(5, 5)),
   axes_font_size = "100\%",
   legend_font_size = "100\%",
   caption = NULL
@@ -205,8 +204,7 @@ shiny apps.}
 
 \item{menu}{wether to display the tools menu (gear icon)}
 
-\item{lasso}{logical value to add
-{https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature}
+\item{lasso}{logical value to add lasso selection feature}
 
 \item{lasso_callback}{the body of a JavaScript callback function with the
 argument \code{sel} to be applied to a lasso plugin selection}

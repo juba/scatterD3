@@ -52,4 +52,4 @@ Imports:
 Suggests:
     knitr,
     rmarkdown
-RoxygenNote: 7.1.1
+Config/roxygen2/version: 8.0.0

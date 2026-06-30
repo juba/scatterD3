@@ -72,8 +72,7 @@
 #' @param xlim numeric vector of length 2, manual x axis limits
 #' @param ylim numeric vector of length 2, manual y axis limits
 #' @param menu wether to display the tools menu (gear icon)
-#' @param lasso logical value to add
-#'     {https://github.com/skokenes/D3-Lasso-Plugin}{d3-lasso-plugin} feature
+#' @param lasso logical value to add lasso selection feature
 #' @param lasso_callback the body of a JavaScript callback function with the
 #'     argument \code{sel} to be applied to a lasso plugin selection
 #' @param click_callback the body of a JavaScript callback function whose
