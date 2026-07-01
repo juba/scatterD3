@@ -86,10 +86,10 @@ packer::bundle_prod()
 
 This package has been made possible by :
 
--   Mike Bostock's incredible [d3.js](https://d3js.org/) library and documentation
--   [htmlwidgets](https://www.htmlwidgets.org/) packages
--   [John Coene](https://twitter.com/jdatap)'s [packer](https://github.com/JohnCoene/packer) package
--   Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
--   Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/d3-js/towards-reusable-d3-js-charts)
--   Speros Kokenes' [d3 lasso](https://github.com/skokenes/D3-Lasso-Plugin) plugin
--   Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
+- Mike Bostock's incredible [d3.js](https://d3js.org/) library and documentation
+- [htmlwidgets](https://www.htmlwidgets.org/) packages
+- [John Coene](https://twitter.com/jdatap)'s [packer](https://github.com/JohnCoene/packer) package
+- Susie Lu's [d3-legend](https://github.com/susielu/d3-legend) module
+- Rob Moore's [article on reusable d3.js charts](https://www.toptal.com/developers/d3-js/towards-reusable-d3-js-charts)
+- Speros Kokenes' [d3 lasso](https://github.com/skokenes/D3-Lasso-Plugin) plugin
+- Evan Wang's [d3-labeler](https://github.com/tinker10/D3-Labeler) plugin
